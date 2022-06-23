@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2795" />
+        <entry key="app/src/main/res/drawable/background_cardview.xml" value="0.2795" />
+        <entry key="app/src/main/res/drawable/background_qrcode.xml" value="0.2795" />
+        <entry key="app/src/main/res/drawable/btn_round_light_pink.xml" value="0.276" />
+        <entry key="app/src/main/res/drawable/cursor_drawable.xml" value="0.203" />
+        <entry key="app/src/main/res/drawable/ic_baseline_arrow_back_ios_24.xml" value="0.2795" />
+        <entry key="app/src/main/res/drawable/ic_baseline_person_outline_24.xml" value="0.2795" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.276" />
+        <entry key="app/src/main/res/drawable/ic_outline_account_circle_24.xml" value="0.276" />
+        <entry key="app/src/main/res/drawable/play_count.xml" value="0.2795" />
+        <entry key="app/src/main/res/drawable/round_button_background_transparent.xml" value="0.2795" />
+        <entry key="app/src/main/res/layout-land/fragment_video_playing.xml" value="0.32708333333333334" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="1.5169082125603865" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.9287469287469288" />
+        <entry key="app/src/main/res/layout/activity_photo_view.xml" value="1.0222222222222221" />
+        <entry key="app/src/main/res/layout/activity_search_result.xml" value="0.11435394003714514" />
+        <entry key="app/src/main/res/layout/activity_video.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/cell_comment_list.xml" value="1.270935960591133" />
+        <entry key="app/src/main/res/layout/cell_video_list.xml" value="1.8470588235294119" />
+        <entry key="app/src/main/res/layout/fragment_comment.xml" value="0.5186721991701245" />
+        <entry key="app/src/main/res/layout/fragment_profile.xml" value="1.8470588235294119" />
+        <entry key="app/src/main/res/layout/fragment_recommend.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_search.xml" value="0.43043180260452363" />
+        <entry key="app/src/main/res/layout/fragment_video_info.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_video_playing.xml" value="1.1972222222222222" />
+        <entry key="app/src/main/res/layout/layout_video_controller.xml" value="1.1026392961876832" />
+        <entry key="app/src/main/res/layout/video_list_cell.xml" value="1.5436353514794592" />
+        <entry key="app/src/main/res/menu/action_drawer_menu.xml" value="1.3954545454545455" />
+        <entry key="app/src/main/res/xml/network_security_config.xml" value="0.1" />
+        <entry key="app/src/main/res/xml/test_danmakus.xml" value="0.1" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="1.538812449596361" />
+      </ProjectState>
+    </option>
+  </component>
+</project>
