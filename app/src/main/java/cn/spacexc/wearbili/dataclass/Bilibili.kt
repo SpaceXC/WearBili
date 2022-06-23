@@ -297,8 +297,8 @@ data class CommentContentData(
     var parent_str: String,
     var like: Int,
     var action: Int,
-    var member: Member,
-    var content: Content,
+    var member: Member?,
+    var content: Content?,
     var assist: Int,
     var folder: Folder,
     var up_action: UpAction,
@@ -307,7 +307,7 @@ data class CommentContentData(
     var reply_control: ReplyControl,
     var replies: Array<Replies>,
     var card_label: Array<CardLabel>,
-    var is_top : Boolean = false
+    var is_top: Boolean = false
 ) {
     data class CardLabel(
         var rpid: Long,
@@ -614,7 +614,7 @@ data class CommentContentData(
 
 data class VideoRecommendItem(
     val av_feature: String,
-    val bvid: String,
+    val bvid: String?,
     val cid: Int,
     val duration: Int,
     val goto: String,

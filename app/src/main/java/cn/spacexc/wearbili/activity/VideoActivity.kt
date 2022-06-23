@@ -1,19 +1,11 @@
 package cn.spacexc.wearbili.activity
 
-import android.media.AudioManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.MotionEvent
-import androidx.core.content.ContextCompat
-import cn.spacexc.wearbili.Application
+import androidx.appcompat.app.AppCompatActivity
 import cn.spacexc.wearbili.adapter.VideoViewPagerAdapter
 import cn.spacexc.wearbili.databinding.ActivityVideoBinding
 import cn.spacexc.wearbili.dataclass.VideoInfoData
 import cn.spacexc.wearbili.utils.TimeThread
-import com.blankj.utilcode.util.BrightnessUtils
-import com.blankj.utilcode.util.ScreenUtils
-import kotlin.math.abs
 
 class VideoActivity : AppCompatActivity() {
     private lateinit var binding : ActivityVideoBinding
@@ -36,11 +28,11 @@ class VideoActivity : AppCompatActivity() {
         binding.viewPager2.currentItem = page - 1
     }
 
-    private var startY = 0f //手指按下时的Y坐标
+    /*private var startY = 0f //手指按下时的Y坐标
 
-    private var startX = 0f //手指按下时的Y坐标
+    private var startX = 0f //手指按下时的Y坐标*/
 
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
+    /*override fun onTouchEvent(event: MotionEvent?): Boolean {
         if(binding.viewPager2.currentItem == 1){
             Log.i(Application.getTag(), "onTouch事件被触发了")
             val screenWidth: Int = ScreenUtils.getScreenWidth()
@@ -104,5 +96,5 @@ class VideoActivity : AppCompatActivity() {
             }
         }
         return super.onTouchEvent(event)
-    }
+    }*/
 }

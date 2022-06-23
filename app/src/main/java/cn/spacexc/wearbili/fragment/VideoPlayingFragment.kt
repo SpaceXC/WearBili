@@ -1,16 +1,12 @@
 package cn.spacexc.wearbili.fragment
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.media.AudioManager
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.SeekBar
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -23,8 +19,6 @@ import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.utils.TimeUtils
 import cn.spacexc.wearbili.viewmodel.PlayerStatus
 import cn.spacexc.wearbili.viewmodel.VideoPlayerViewModel
-import com.blankj.utilcode.util.BrightnessUtils
-import com.blankj.utilcode.util.ScreenUtils
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

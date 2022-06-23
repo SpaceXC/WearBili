@@ -16,7 +16,6 @@ import cn.spacexc.wearbili.dataclass.LoginQrCode
 import cn.spacexc.wearbili.dataclass.QrCodeLoginStats
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.QRCodeUtil
-import cn.spacexc.wearbili.utils.TimeThread
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import kotlinx.coroutines.cancel
@@ -34,10 +33,10 @@ import java.util.concurrent.Executors
 
 class LoginActivity : AppCompatActivity() {
     val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
-    lateinit var qrImageView : ImageView
-    lateinit var back : TextView
-    lateinit var time : TextView
-    lateinit var scanStat : TextView
+    lateinit var qrImageView: ImageView
+    private lateinit var back: TextView
+    private lateinit var time: TextView
+    lateinit var scanStat: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -45,8 +44,8 @@ class LoginActivity : AppCompatActivity() {
         back = findViewById(R.id.goBack)
         time = findViewById(R.id.time)
         scanStat = findViewById(R.id.scanStat)
-        qrImageView.setOnClickListener{refreshQrCode()}
-        back.setOnClickListener{ finish() }
+        qrImageView.setOnClickListener { refreshQrCode() }
+        back.setOnClickListener { finish() }
         lifecycleScope.launch{
             @SuppressLint("SimpleDateFormat") val sdf = SimpleDateFormat("HH:mm")
             while (true){

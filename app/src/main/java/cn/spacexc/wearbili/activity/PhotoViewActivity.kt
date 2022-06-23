@@ -1,9 +1,8 @@
 package cn.spacexc.wearbili.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import cn.spacexc.wearbili.R
-import cn.spacexc.wearbili.utils.GlideUtils
 import com.bumptech.glide.Glide
 import com.github.chrisbanes.photoview.PhotoView
 

@@ -3,7 +3,10 @@ package cn.spacexc.wearbili.manager
 import android.widget.Toast
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.utils.NetworkUtils
+import okhttp3.Call
 import okhttp3.Callback
+import okhttp3.Response
+import java.io.IOException
 
 /**
  * Created by XC-Qan on 2022/6/10.
@@ -15,10 +18,25 @@ import okhttp3.Callback
 
 object VideoManager {
     fun getRecommendVideo(callback: Callback) {
-        NetworkUtils.getUrl(
-            "https://api.bilibili.com/x/web-interface/index/top/rcmd?fresh_type=3&version=1&ps=10&fresh_idx=1&fresh_idx_1h=1&homepage_ver=1",
-            callback
-        )
+        if (CookiesManager.getCookies().isEmpty()) NetworkUtils.getUrl(
+            "https://bilibili.com",
+            object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    NetworkUtils.getUrl(
+                        "https://api.bilibili.com/x/web-interface/index/top/rcmd?fresh_type=3&version=1&ps=10&fresh_idx=1&fresh_idx_1h=1&homepage_ver=1",
+                        callback
+                    )
+                }
+            })
+        else {
+            NetworkUtils.getUrl(
+                "https://api.bilibili.com/x/web-interface/index/top/rcmd?fresh_type=3&version=1&ps=10&fresh_idx=1&fresh_idx_1h=1&homepage_ver=1",
+                callback
+            )
+        }
     }
 
     fun getVideoById(id: String?, callback: Callback) {

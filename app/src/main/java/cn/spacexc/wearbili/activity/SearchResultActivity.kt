@@ -1,20 +1,16 @@
 package cn.spacexc.wearbili.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
-import cn.spacexc.wearbili.R
-import cn.spacexc.wearbili.adapter.MainViewPagerAdapter
 import cn.spacexc.wearbili.adapter.SearchResultAdapter
-import cn.spacexc.wearbili.databinding.ActivityMainBinding
 import cn.spacexc.wearbili.databinding.ActivitySearchResultBinding
 import cn.spacexc.wearbili.dataclass.VideoSearch
 import cn.spacexc.wearbili.manager.VideoManager
-import cn.spacexc.wearbili.utils.TimeThread
 import com.google.gson.Gson
 import okhttp3.Call
 import okhttp3.Callback

@@ -3,7 +3,6 @@ package cn.spacexc.wearbili.utils
 import android.media.MediaPlayer
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 
 /**

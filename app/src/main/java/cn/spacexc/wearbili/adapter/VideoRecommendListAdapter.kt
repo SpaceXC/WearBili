@@ -19,7 +19,6 @@ import cn.spacexc.wearbili.utils.NumberUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import kotlinx.coroutines.DelicateCoroutinesApi
 
 
 /**
@@ -48,7 +47,6 @@ class VideoRecommendListAdapter : ListAdapter<VideoRecommendItem, VideoRecommend
         return VideoViewHolder(inflater.inflate(R.layout.cell_video_list, parent, false))
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
         val video : VideoRecommendItem = getItem(position)

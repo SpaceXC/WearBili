@@ -4,20 +4,18 @@ import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.PhotoViewActivity
 import cn.spacexc.wearbili.activity.VideoActivity
-import cn.spacexc.wearbili.databinding.FragmentRecommendBinding
 import cn.spacexc.wearbili.databinding.FragmentVideoInfoBinding
 import cn.spacexc.wearbili.dataclass.VideoInfo
 import cn.spacexc.wearbili.manager.VideoManager
@@ -60,9 +58,9 @@ class VideoInfoFragment : Fragment() {
         getVideo()
     }
 
-    fun getVideo(){
+    private fun getVideo() {
         val id = (activity as VideoActivity).getId()
-        VideoManager.getVideoById(id, object : Callback{
+        VideoManager.getVideoById(id, object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Toast.makeText(Application.getContext(), "加载失败了", Toast.LENGTH_SHORT).show()
             }
@@ -70,7 +68,7 @@ class VideoInfoFragment : Fragment() {
             @SuppressLint("SetTextI18n")
             override fun onResponse(call: Call, response: Response) {
                 val video = Gson().fromJson(response.body?.string(), VideoInfo::class.java)
-                mThreadPool.execute{
+                mThreadPool.execute {
                     requireActivity().runOnUiThread{
                         if(response.code == 200 && video.code == 0){
                             (activity as VideoActivity).currentVideo = video.data

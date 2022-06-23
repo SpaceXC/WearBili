@@ -94,12 +94,13 @@ class CommentFragment : Fragment() {
             override fun onResponse(call: Call, response: Response) {
                 val comments = Gson().fromJson(response.body?.string(), VideoComment::class.java)
                 mThreadPool.execute{
-                    requireActivity().runOnUiThread{
-                        if(comments.code == 0){
-                            val replies : MutableList<CommentContentData> = comments.data.replies.toMutableList()
-                            if(replies != prevList){
+                    (activity as VideoActivity).runOnUiThread {
+                        if (comments.code == 0) {
+                            val replies: MutableList<CommentContentData> =
+                                comments.data.replies.toMutableList()
+                            if (replies != prevList) {
                                 prevList = replies
-                                if(comments.data.top.member != null && comments.data.top.content != null){
+                                if (comments.data.top.member != null && comments.data.top.content != null) {
                                     val top = comments.data.top
                                     top.is_top = true
                                     replies.remove(comments.data.top)

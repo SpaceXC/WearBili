@@ -29,7 +29,7 @@ object CookiesManager {
     }
 
     fun getCookieByName(name : String) : String?{
-        var cookieList : List<Cookie> = getCookies()
+        val cookieList: List<Cookie> = getCookies()
         for (item in cookieList){
             if(item.domain == "bilibili.com" && item.name == name){
                 return item.value

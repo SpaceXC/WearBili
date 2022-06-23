@@ -15,7 +15,6 @@ import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.VideoActivity
 import cn.spacexc.wearbili.dataclass.VideoSearch
-import cn.spacexc.wearbili.utils.GlideUtils
 import cn.spacexc.wearbili.utils.NumberUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners

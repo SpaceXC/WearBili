@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import cn.spacexc.wearbili.adapter.MainViewPagerAdapter
 import cn.spacexc.wearbili.databinding.ActivityMainBinding
-import cn.spacexc.wearbili.utils.TimeThread
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
