@@ -666,3 +666,100 @@ data class VideoRecommend(
     val message: String,
     val ttl: Int
 )
+
+data class VideoStreamUrls(
+    val code: Int,
+    val `data`: Data,
+    val message: String,
+    val ttl: Int
+)
+
+data class SegmentBaseX(
+    val index_range: String,
+    val initialization: String
+)
+
+data class Dash(
+    val audio: List<Audio>,
+    val dolby: Any?,
+    val duration: Int,
+    val minBufferTime: Double,
+    val min_buffer_time: Double,
+    val video: List<Video>
+)
+
+data class SegmentBase(
+    val Initialization: String,
+    val indexRange: String
+)
+
+data class SupportFormat(
+    val codecs: List<String>,
+    val display_desc: String,
+    val format: String,
+    val new_description: String,
+    val quality: Int,
+    val superscript: String
+)
+
+data class Audio(
+    val SegmentBase: SegmentBase,
+    val backupUrl: List<String>?,
+    val backup_url: List<String>?,
+    val bandwidth: Int,
+    val baseUrl: String,
+    val base_url: String,
+    val codecid: Int,
+    val codecs: String,
+    val frameRate: String,
+    val frame_rate: String,
+    val height: Int,
+    val id: Int,
+    val mimeType: String,
+    val mime_type: String,
+    val sar: String,
+    val segment_base: SegmentBaseX,
+    val startWithSap: Int,
+    val start_with_sap: Int,
+    val width: Int
+)
+
+data class Data(
+    val accept_description: List<String>,
+    val accept_format: String,
+    val accept_quality: List<Int>,
+    val dash: Dash,
+    val format: String,
+    val from: String,
+    val high_format: Any?,
+    val message: String,
+    val quality: Int,
+    val result: String,
+    val seek_param: String,
+    val seek_type: String,
+    val support_formats: List<SupportFormat>,
+    val timelength: Int,
+    val video_codecid: Int
+)
+
+data class Video(
+    val SegmentBase: SegmentBase,
+    val backupUrl: List<String>?,
+    val backup_url: List<String>?,
+    val bandwidth: Int,
+    val baseUrl: String,
+    val base_url: String,
+    val codecid: Int,
+    val codecs: String,
+    val frameRate: String,
+    val frame_rate: String,
+    val height: Int,
+    val id: Int,
+    val mimeType: String,
+    val mime_type: String,
+    val sar: String,
+    val segment_base: SegmentBaseX,
+    val startWithSap: Int,
+    val start_with_sap: Int,
+    val width: Int
+)

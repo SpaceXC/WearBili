@@ -9,19 +9,15 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.VideoActivity
 import cn.spacexc.wearbili.databinding.FragmentVideoPlayingBinding
-import cn.spacexc.wearbili.dataclass.VideoStreams
+import cn.spacexc.wearbili.dataclass.VideoStreamUrls
 import cn.spacexc.wearbili.manager.VideoManager
-import cn.spacexc.wearbili.utils.TimeUtils
 import cn.spacexc.wearbili.viewmodel.PlayerStatus
 import cn.spacexc.wearbili.viewmodel.VideoPlayerViewModel
 import com.google.gson.Gson
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import master.flame.danmaku.controller.DrawHandler
 import master.flame.danmaku.danmaku.loader.ILoader
 import master.flame.danmaku.danmaku.loader.IllegalDataException
@@ -36,9 +32,11 @@ import master.flame.danmaku.danmaku.parser.android.BiliDanmukuParser
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
+import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.zip.Inflater
 
 
 class VideoPlayingFragment : Fragment() {
@@ -48,7 +46,6 @@ class VideoPlayingFragment : Fragment() {
     val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
 
     lateinit var playerViewModel: VideoPlayerViewModel
-
 
 
     init {
@@ -73,12 +70,19 @@ class VideoPlayingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         playerViewModel = ViewModelProvider(this)[VideoPlayerViewModel::class.java].apply {     //获取Viewmodel
+            danmakuView = binding.danmakuView
+            controllerBinding = binding.controllerInclude
             progressBarVisibility.observe(viewLifecycleOwner) {
                 binding.progressBar.visibility = it     //播放控制器加载显示
             }
             videoResolution.observe(viewLifecycleOwner) {
                 binding.controllerInclude.progress.max = mediaPlayer.duration       //获取视频分辨率
-                binding.surfaceView.post{ resizeVideo(it.first, it.second) }        //调整surfaceview大小
+                binding.surfaceView.post {
+                    resizeVideo(
+                        it.first,
+                        it.second
+                    )
+                }        //调整surfaceview大小
             }
             controllerVisibility.observe(viewLifecycleOwner) {
                 binding.controllerInclude.controllerFrame.visibility = it       //播放控制器显示
@@ -113,19 +117,21 @@ class VideoPlayingFragment : Fragment() {
             }
             override fun onStartTrackingTouch(p0: SeekBar?) {
                 playerViewModel.canDisappear = false        //拖动进度条时控制器不可消失
+                //playerViewModel.togglePlayerStatus()
                 playerViewModel.mediaPlayer.pause()     //拖动时暂停视频
             }
             override fun onStopTrackingTouch(p0: SeekBar?) {
                 playerViewModel.canDisappear = true     //松开进度条控制器可以消失
+                //playerViewModel.togglePlayerStatus()
                 playerViewModel.mediaPlayer.start()     //视频开始
             }
 
         })
-        updatePlayerProgress()      //无限循环监听播放进度显示
+        //updatePlayerProgress()      //无限循环监听播放进度显示
 
         val danmakuContext : DanmakuContext = DanmakuContext.create()       //弹幕上下文
 
-        val maxLinesPair  = HashMap<Int, Int>()     //弹幕最多行数
+        val maxLinesPair = HashMap<Int, Int>()     //弹幕最多行数
         maxLinesPair[BaseDanmaku.TYPE_SCROLL_RL] = 5
         maxLinesPair[BaseDanmaku.TYPE_SCROLL_LR] = 5
 
@@ -134,18 +140,21 @@ class VideoPlayingFragment : Fragment() {
         overlappingEnablePair[BaseDanmaku.TYPE_SCROLL_RL] = true
         overlappingEnablePair[BaseDanmaku.TYPE_FIX_BOTTOM] = true
 
-        danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 3F) //设置描边样式
-            .setDuplicateMergingEnabled(false)      //显示重复弹幕
+        danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 1F) //设置描边样式
+            .setDuplicateMergingEnabled(true)      //合并重复弹幕
             .setScrollSpeedFactor(1.2f)     //弹幕速度
-            .setScaleTextSize(1.5f)     //文字大小
+            .setScaleTextSize(0.6f)     //文字大小
             .setCacheStuffer(SpannedCacheStuffer()) // 图文混排使用SpannedCacheStuffer  设置缓存绘制填充器，默认使用{@link SimpleTextCacheStuffer}只支持纯文字显示, 如果需要图文混排请设置{@link SpannedCacheStuffer}如果需要定制其他样式请扩展{@link SimpleTextCacheStuffer}|{@link SpannedCacheStuffer}
             .setMaximumLines(maxLinesPair) //设置最大显示行数
             .preventOverlapping(overlappingEnablePair) //设置防弹幕重叠，null为允许重叠
 
-        val loader : ILoader = DanmakuLoaderFactory.create(DanmakuLoaderFactory.TAG_BILI)       //设置解析b站xml弹幕
+        val loader: ILoader =
+            DanmakuLoaderFactory.create(DanmakuLoaderFactory.TAG_BILI)       //设置解析b站xml弹幕
         //loader.load(NetworkUtils.sendRequestWithHttpURLConnection(("http://api.bilibili.com/x/v1/dm/list.so?oid=${(activity as VideoActivity).currentVideo.cid}")).byteInputStream())
-
-        VideoManager.getDanmaku((activity as VideoActivity).currentVideo.cid, object : Callback{        //获取弹幕数据
+        if ((activity as VideoActivity).currentVideo == null) return
+        VideoManager.getDanmaku(
+            (activity as VideoActivity).currentVideo.cid,
+            object : Callback {        //获取弹幕数据
             //网络请求失败
             override fun onFailure(call: Call, e: IOException) {
                 mThreadPool.execute{
@@ -156,12 +165,13 @@ class VideoPlayingFragment : Fragment() {
             }
             //网络请求成功
             override fun onResponse(call: Call, response: Response) {
-                try{
-                    val responseIs = response.body?.byteStream()
-                    val str = String(responseIs?.readBytes()!!)
-                    Log.d(Application.getTag(), "onResponse: ${response.body?.string()}")
-                    loader.load(responseIs)
-
+                try {
+                    //val responseIs = response.body?.byteStream()
+                    //val str = String(decompress(responseIs.readBytes()).inputStream()!!)
+                    //Log.d(Application.getTag(), "onResponse: ${response.body?.string()}")
+                    val danmakuIs: ByteArray? = decompress(response.body?.bytes()!!)
+                    loader.load(danmakuIs!!.inputStream())
+                    Log.d(Application.getTag(), "onResponse: ${String(danmakuIs)}")
                 }
                 catch (e : IllegalDataException){
                     e.printStackTrace()
@@ -194,10 +204,16 @@ class VideoPlayingFragment : Fragment() {
                             override fun onResponse(call: Call, response: Response) {
                                 val responseString = response.body?.string()
                                 mThreadPool.execute{
-                                    val videoUrls : VideoStreams = Gson().fromJson(responseString, VideoStreams::class.java)        //创建视频数据对象
-                                    requireActivity().runOnUiThread{
-
-                                        playerViewModel.loadVideo(videoUrls.data.durl[0].url)       //viewmodel加载视频
+                                    val videoUrls: VideoStreamUrls = Gson().fromJson(
+                                        responseString,
+                                        VideoStreamUrls::class.java
+                                    )        //创建视频数据对象
+                                    requireActivity().runOnUiThread {
+                                        //TODO
+                                        //playerViewModel.loadVideo("https://upos-sz-mirrorhw.bilivideo.com/upgcxcode/98/13/735201398/735201398-1-30080.m4s?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfqXBvEqxTEto8BTrNvN0GvT90W5JZMkX_YN0MvXg8gNEV4NC8xNEV4N03eN0B5tZlqNxTEto8BTrNvNeZVuJ10Kj_g2UB02J0mN0B5tZlqNCNEto8BTrNvNC7MTX502C8f2jmMQJ6mqF2fka1mqx6gqj0eN0B599M=&uipk=5&nbs=1&deadline=1656124801&gen=playurlv2&os=hwbv&oi=1972173892&trid=d626ae5ea2134c94900f31d36063f731u&mid=0&platform=pc&upsig=d6b9abad1badf0064977a501a8988f28&uparams=e,uipk,nbs,deadline,gen,os,oi,trid,mid,platform&bvc=vod&nettype=0&orderid=0,3&agrr=0&bw=277413&logo=80000000")       //viewmodel加载视频
+                                        playerViewModel.loadVideo(videoUrls.data.dash.video[0].baseUrl)       //viewmodel加载视频
+                                        //playerViewModel.loadVideo("https://upos-sz-mirrorhw.bilivideo.com/upgcxcode/98/13/735201398/735201398-1-64.flv?e=ig8euxZM2rNcNbNVhbdVhwdlhbdghwdVhoNvNC8BqJIzNbfqXBvEqxTEto8BTrNvN0GvT90W5JZMkX_YN0MvXg8gNEV4NC8xNEV4N03eN0B5tZlqNxTEto8BTrNvNeZVuJ10Kj_g2UB02J0mN0B5tZlqNCNEto8BTrNvNC7MTX502C8f2jmMQJ6mqF2fka1mqx6gqj0eN0B599M=&uipk=5&nbs=1&deadline=1656093171&gen=playurlv2&os=hwbv&oi=1972173843&trid=39c7c20fb4624b97948991a7c8f94d2du&mid=0&platform=pc&upsig=052fd3fc21794c0c0030ecc586206068&uparams=e,uipk,nbs,deadline,gen,os,oi,trid,mid,platform&bvc=vod&nettype=0&orderid=0,3&agrr=1&bw=202991&logo=80000000")       //viewmodel加载视频
+                                        //playerViewModel.loadVideo("https://upos-sz-mirrorhw.bilivideo.com/upgcxcode/98/13/735201398/735201398-1-30080.m4s?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfqXBvEqxTEto8BTrNvN0GvT90W5JZMkX_YN0MvXg8gNEV4NC8xNEV4N03eN0B5tZlqNxTEto8BTrNvNeZVuJ10Kj_g2UB02J0mN0B5tZlqNCNEto8BTrNvNC7MTX502C8f2jmMQJ6mqF2fka1mqx6gqj0eN0B599M=&uipk=5&nbs=1&deadline=1656092539&gen=playurlv2&os=hwbv&oi=1972173843&trid=0684327603cb49ef84df9bd3cc4549e9u&mid=0&platform=pc&upsig=c1c1fc6ff1ef73c5112c0d8075b006fe&uparams=e,uipk,nbs,deadline,gen,os,oi,trid,mid,platform&bvc=vod&nettype=0&orderid=0,3&agrr=1&bw=277413&logo=80000000")       //viewmodel加载视频
 //                                        val uri : Uri = Uri.parse(videoUrls.data.durl[0].url)
 //                                        val headers = HashMap<String, String>()
 //                                        headers["User-Agent"] = "Mozilla/5.0 BiliDroid/*.*.* (bbcallen@gmail.com)"
@@ -259,17 +275,7 @@ class VideoPlayingFragment : Fragment() {
 
     }
 
-    //更新视频播放进度显示
-    @SuppressLint("SetTextI18n")
-    private fun updatePlayerProgress() {
-        lifecycleScope.launch {
-            while (true) {
-                delay(500)
-                binding.controllerInclude.progress.progress = playerViewModel.mediaPlayer.currentPosition       //seekbar进度显示
-                binding.controllerInclude.currentPositionText.text = "${TimeUtils.secondToTime((playerViewModel.mediaPlayer.currentPosition / 1000).toLong())}/${TimeUtils.secondToTime((playerViewModel.mediaPlayer.duration / 1000).toLong())}"       //文字进度显示
-            }
-        }
-    }
+
 
 
     //更改视频播放状态
@@ -291,7 +297,38 @@ class VideoPlayingFragment : Fragment() {
                 binding.controllerInclude.control.setImageResource(R.drawable.ic_baseline_replay_24)
                 playerViewModel.startedPlaying = false      //播放结束
             }
-            PlayerStatus.NOT_READY -> binding.controllerInclude.control.isEnabled = false       //视频未准备好，控制按钮不能按下
+            PlayerStatus.NOT_READY -> binding.controllerInclude.control.isEnabled =
+                false       //视频未准备好，控制按钮不能按下
         }
+    }
+
+    /**
+     *  解压弹幕数据
+     */
+    fun decompress(data: ByteArray): ByteArray? {
+        var output: ByteArray
+        val decompresser = Inflater(true)
+        decompresser.reset()
+        decompresser.setInput(data)
+        val o = ByteArrayOutputStream(data.size)
+        try {
+            val buf = ByteArray(1024)
+            while (!decompresser.finished()) {
+                val i = decompresser.inflate(buf)
+                o.write(buf, 0, i)
+            }
+            output = o.toByteArray()
+        } catch (e: Exception) {
+            output = data
+            e.printStackTrace()
+        } finally {
+            try {
+                o.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+        decompresser.end()
+        return output
     }
 }

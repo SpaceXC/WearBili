@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.dataclass.CommentContentData
-import cn.spacexc.wearbili.utils.GlideUtils
 import com.bumptech.glide.Glide
 
 /**
@@ -38,7 +37,7 @@ class CommentAdapter :
             oldItem: CommentContentData,
             newItem: CommentContentData
         ): Boolean {
-            return oldItem.content.message == newItem.content.message && oldItem.member.uname == newItem.member.uname
+            return oldItem.content?.message == newItem.content?.message && oldItem.member?.uname == newItem.member?.uname
         }
 
     }) {
@@ -60,12 +59,17 @@ class CommentAdapter :
         //println(itemCount)
         val comment = getItem(position)
         println(position)
-        holder.userName.text = comment.member.uname
-        if(comment.member.vip.nickname_color.isNotEmpty()) holder.userName.setTextColor(Color.parseColor(comment.member.vip.nickname_color))
-        holder.userLevel.text = "LV${comment.member.level_info.current_level}"
+        holder.userName.text = comment.member!!.uname
+        if (comment.member!!.vip.nickname_color.isNotEmpty()) holder.userName.setTextColor(
+            Color.parseColor(
+                comment.member!!.vip.nickname_color
+            )
+        )
+        holder.userLevel.text = "LV${comment.member!!.level_info.current_level}"
         holder.pubDate.text = comment.reply_control.time_desc
-        holder.content.text = comment.content.message
-        Glide.with(Application.getContext()).load(comment.member.avatar).placeholder(R.drawable.akari).circleCrop().into(holder.avatar)
+        holder.content.text = comment.content!!.message
+        Glide.with(Application.getContext()).load(comment.member!!.avatar)
+            .placeholder(R.drawable.akari).circleCrop().into(holder.avatar)
     }
 
     class VideoCommentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
