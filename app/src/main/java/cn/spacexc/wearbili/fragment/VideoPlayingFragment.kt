@@ -103,7 +103,6 @@ class VideoPlayingFragment : Fragment() {
                 playerViewModel.mediaPlayer.setScreenOnWhilePlaying(true)       //播放时不息屏
             }
             override fun surfaceDestroyed(p0: SurfaceHolder) {}
-
         })
         binding.playerFrame.setOnClickListener { playerViewModel.toggleControllerVisibility() }     //点击屏幕触发播放控制器显示
         binding.controllerInclude.control.setOnClickListener{ playerViewModel.togglePlayerStatus() }        //播放控制按钮修改播放状态
@@ -125,7 +124,6 @@ class VideoPlayingFragment : Fragment() {
                 //playerViewModel.togglePlayerStatus()
                 playerViewModel.mediaPlayer.start()     //视频开始
             }
-
         })
         //updatePlayerProgress()      //无限循环监听播放进度显示
 

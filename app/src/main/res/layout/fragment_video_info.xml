@@ -16,43 +16,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/bvid"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="2dp"
-                android:alpha="0.8"
-                android:fontFamily="@font/roboto_medium"
-                android:textColor="#000"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/upName" />
-
-            <TextView
-                android:id="@+id/videoTitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="2dp"
-                android:fontFamily="@font/roboto_medium"
-                android:textColor="#000"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cover" />
-
             <ImageView
                 android:id="@+id/cover"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="2dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="10dp"
                 android:adjustViewBounds="true"
                 android:clickable="true"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -62,62 +32,139 @@
                 tools:ignore="ImageContrastCheck,SpeakableTextPresentCheck" />
 
             <TextView
-                android:id="@+id/upName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="2dp"
-                android:alpha="0.8"
-                android:fontFamily="@font/roboto_medium"
-                android:textColor="#000"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/videoTitle" />
-
-            <TextView
                 android:id="@+id/duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="2dp"
+                android:layout_marginEnd="4dp"
                 android:layout_marginBottom="2dp"
                 android:fontFamily="@font/roboto_medium"
+                android:text="12:00"
                 android:textColor="#fff"
                 app:layout_constraintBottom_toBottomOf="@+id/cover"
                 app:layout_constraintEnd_toEndOf="@+id/cover" />
 
             <TextView
-                android:id="@+id/videoSurvey"
+                android:id="@+id/videoTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="2dp"
-                android:alpha="0.8"
+                android:layout_marginTop="6dp"
                 android:fontFamily="@font/roboto_medium"
-                android:textColor="#000"
-                android:textSize="12sp"
+                android:textColor="#fff"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/cover"
+                app:layout_constraintStart_toStartOf="@+id/cover"
+                app:layout_constraintTop_toBottomOf="@+id/cover" />
+
+            <ImageView
+                android:id="@+id/viewsIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:adjustViewBounds="true"
+                android:alpha="0.5"
+                android:src="@drawable/ic_baseline_play_circle_outline_24"
+                app:layout_constraintBottom_toBottomOf="@+id/viewsCount"
+                app:layout_constraintStart_toStartOf="@+id/videoTitle"
+                app:layout_constraintTop_toTopOf="@+id/viewsCount" />
+
+            <TextView
+                android:id="@+id/viewsCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="4dp"
+                android:alpha="0.5"
+                android:fontFamily="@font/roboto"
+                android:textColor="#fff"
+                app:layout_constraintStart_toEndOf="@+id/viewsIcon"
+                app:layout_constraintTop_toBottomOf="@+id/videoTitle" />
+
+            <ImageView
+                android:id="@+id/danmakuIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginStart="6dp"
+                android:adjustViewBounds="true"
+                android:alpha="0.5"
+                android:src="@drawable/ic_danmaku"
+                app:layout_constraintBottom_toBottomOf="@+id/danmakusCount"
+                app:layout_constraintStart_toEndOf="@+id/viewsCount"
+                app:layout_constraintTop_toTopOf="@+id/danmakusCount" />
+
+            <TextView
+                android:id="@+id/danmakusCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:alpha="0.5"
+                android:fontFamily="@font/roboto"
+                android:textColor="#fff"
+                app:layout_constraintStart_toEndOf="@+id/danmakuIcon"
+                app:layout_constraintTop_toBottomOf="@+id/videoTitle" />
+
+            <ImageView
+                android:id="@+id/upIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:adjustViewBounds="true"
+                android:alpha="0.5"
+                android:src="@drawable/ic_baseline_person_outline_24"
+                app:layout_constraintBottom_toBottomOf="@+id/upNameText"
+                app:layout_constraintStart_toStartOf="@+id/viewsIcon"
+                app:layout_constraintTop_toTopOf="@+id/upNameText" />
+
+            <TextView
+                android:id="@+id/upNameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="10dp"
+                android:alpha="0.5"
+                android:fontFamily="@font/roboto"
+                android:textColor="#fff"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/bvid" />
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/upIcon"
+                app:layout_constraintTop_toBottomOf="@+id/viewsCount" />
+
+            <TextView
+                android:id="@+id/bvidText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="10dp"
+                android:alpha="0.5"
+                android:fontFamily="@font/roboto"
+                android:textColor="#fff"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/bvidIcon"
+                app:layout_constraintTop_toBottomOf="@+id/upNameText" />
+
+            <ImageView
+                android:id="@+id/bvidIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:adjustViewBounds="true"
+                android:alpha="0.5"
+                android:src="@drawable/ic_baseline_movie_24"
+                app:layout_constraintBottom_toBottomOf="@+id/bvidText"
+                app:layout_constraintStart_toStartOf="@+id/upIcon"
+                app:layout_constraintTop_toTopOf="@+id/bvidText" />
 
             <TextView
                 android:id="@+id/videoDesc"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="2dp"
-                android:layout_marginBottom="4dp"
-                android:alpha="0.8"
-                android:fontFamily="@font/roboto_medium"
-                android:textColor="#000"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/videoSurvey" />
+                android:fontFamily="@font/roboto"
+                android:textColor="#fff"
+                app:layout_constraintEnd_toEndOf="@+id/videoTitle"
+                app:layout_constraintStart_toStartOf="@+id/bvidIcon"
+                app:layout_constraintTop_toBottomOf="@+id/bvidText" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

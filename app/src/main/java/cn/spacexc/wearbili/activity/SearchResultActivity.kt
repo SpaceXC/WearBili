@@ -1,9 +1,11 @@
 package cn.spacexc.wearbili.activity
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
@@ -12,10 +14,14 @@ import cn.spacexc.wearbili.databinding.ActivitySearchResultBinding
 import cn.spacexc.wearbili.dataclass.VideoSearch
 import cn.spacexc.wearbili.manager.VideoManager
 import com.google.gson.Gson
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -46,6 +52,15 @@ class SearchResultActivity : AppCompatActivity() {
                 }
             }
         })
+        binding.pageName.setOnClickListener { finish() }
+        lifecycleScope.launch {
+            @SuppressLint("SimpleDateFormat") val sdf = SimpleDateFormat("HH:mm")
+            while (true) {
+                val date = sdf.format(Date())
+                binding.timeText.text = date
+                delay(500)
+            }
+        }
         searchVideo()
     }
 
@@ -54,40 +69,44 @@ class SearchResultActivity : AppCompatActivity() {
         val keyword = intent.getStringExtra("keyword")
 
         VideoManager.searchVideo(keyword!!, currentPage, object : Callback{
+
+
             override fun onFailure(call: Call, e: IOException) {
-                mThreadPool.execute{
-                    this@SearchResultActivity.runOnUiThread{Toast.makeText(this@SearchResultActivity, "搜索失败了", Toast.LENGTH_SHORT).show()}
-                }
+                Toast.makeText(this@SearchResultActivity, "搜索失败了", Toast.LENGTH_SHORT).show()
+
             }
 
             override fun onResponse(call: Call, response: Response) {
                 val result = Gson().fromJson(response.body?.string(), VideoSearch::class.java)
-                mThreadPool.execute{
-                    if(result.code == 0) {
-                        if (currentPage <= 50) {
-                            this@SearchResultActivity.runOnUiThread {
+                mThreadPool.execute {
+                    this@SearchResultActivity.runOnUiThread {
+                        binding.pageName.text = "搜索结果 (${result.data.numResults})"
+                        if (result.code == 0) {
+                            if (currentPage <= 50) {
 
                                 adapter.submitList(adapter.currentList + result.data.result)
                                 binding.swipeRefreshLayout.isRefreshing = false
                                 currentPage++
-                            }
-                        } else {
-                            binding.swipeRefreshLayout.isRefreshing = false
-                            this@SearchResultActivity.runOnUiThread {
+
+                            } else {
+                                binding.swipeRefreshLayout.isRefreshing = false
                                 Toast.makeText(
                                     this@SearchResultActivity,
                                     "搜索到底了",
                                     Toast.LENGTH_SHORT
                                 ).show()
+
                             }
+                        } else {
+                            binding.swipeRefreshLayout.isRefreshing = false
+                            Toast.makeText(this@SearchResultActivity, "搜索失败了", Toast.LENGTH_SHORT)
+                                .show()
                         }
                     }
-                    else{
-                        binding.swipeRefreshLayout.isRefreshing = false
-                        this@SearchResultActivity.runOnUiThread{Toast.makeText(this@SearchResultActivity, "搜索失败了", Toast.LENGTH_SHORT).show()}
-                    }
                 }
+
             }
+
 
         })
     }

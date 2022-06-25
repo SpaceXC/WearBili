@@ -10,23 +10,24 @@
         <entry key="app/src/main/res/drawable/cursor_drawable.xml" value="0.203" />
         <entry key="app/src/main/res/drawable/ic_baseline_arrow_back_ios_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_baseline_person_outline_24.xml" value="0.2795" />
+        <entry key="app/src/main/res/drawable/ic_danmaku.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.276" />
         <entry key="app/src/main/res/drawable/ic_outline_account_circle_24.xml" value="0.276" />
         <entry key="app/src/main/res/drawable/play_count.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/round_button_background_transparent.xml" value="0.2795" />
         <entry key="app/src/main/res/layout-land/fragment_video_playing.xml" value="0.32708333333333334" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.7700410872916735" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.9287469287469288" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.4435590969455511" />
         <entry key="app/src/main/res/layout/activity_photo_view.xml" value="1.0222222222222221" />
-        <entry key="app/src/main/res/layout/activity_search_result.xml" value="0.11435394003714514" />
-        <entry key="app/src/main/res/layout/activity_video.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_search_result.xml" value="0.9968253968253968" />
+        <entry key="app/src/main/res/layout/activity_video.xml" value="0.9277777777777778" />
         <entry key="app/src/main/res/layout/cell_comment_list.xml" value="1.270935960591133" />
         <entry key="app/src/main/res/layout/cell_video_list.xml" value="1.8470588235294119" />
         <entry key="app/src/main/res/layout/fragment_comment.xml" value="0.5186721991701245" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.15897435897435896" />
         <entry key="app/src/main/res/layout/fragment_recommend.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.43043180260452363" />
-        <entry key="app/src/main/res/layout/fragment_video_info.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_video_info.xml" value="1.374347383682042" />
         <entry key="app/src/main/res/layout/fragment_video_playing.xml" value="0.20554664223881086" />
         <entry key="app/src/main/res/layout/layout_video_controller.xml" value="1.1026392961876832" />
         <entry key="app/src/main/res/layout/video_list_cell.xml" value="1.5436353514794592" />
@@ -45,7 +46,7 @@
   <component name="VisualizationToolProject">
     <option name="state">
       <ProjectState>
-        <option name="scale" value="0.7700410872916735" />
+        <option name="scale" value="0.9120137044828232" />
       </ProjectState>
     </option>
   </component>

@@ -61,6 +61,9 @@ dependencies {
     implementation 'com.github.ctiao:ndkbitmap-armv5:0.9.21'
     implementation 'com.github.ctiao:ndkbitmap-x86:0.9.21'*/
     def appCenterSdkVersion = '4.3.1'
+    //noinspection GradleDependency
     implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
+    //noinspection GradleDependency
     implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
+    implementation 'com.google.android.exoplayer:exoplayer:2.18.0'
 }

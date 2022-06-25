@@ -19,8 +19,11 @@ import cn.spacexc.wearbili.activity.VideoActivity
 import cn.spacexc.wearbili.databinding.FragmentVideoInfoBinding
 import cn.spacexc.wearbili.dataclass.VideoInfo
 import cn.spacexc.wearbili.manager.VideoManager
-import cn.spacexc.wearbili.utils.GlideUtils
+import cn.spacexc.wearbili.utils.NumberUtils
 import cn.spacexc.wearbili.utils.TimeUtils
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.google.gson.Gson
 import okhttp3.Call
 import okhttp3.Callback
@@ -62,7 +65,15 @@ class VideoInfoFragment : Fragment() {
         val id = (activity as VideoActivity).getId()
         VideoManager.getVideoById(id, object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Toast.makeText(Application.getContext(), "加载失败了", Toast.LENGTH_SHORT).show()
+                mThreadPool.execute {
+                    requireActivity().runOnUiThread {
+                        Toast.makeText(
+                            Application.getContext(),
+                            "加载失败了",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
             }
 
             @SuppressLint("SetTextI18n")
@@ -79,21 +90,25 @@ class VideoInfoFragment : Fragment() {
                                 startActivity(intent)
                                 true
                             }
-                            binding.cover.setOnClickListener{
+                            binding.cover.setOnClickListener {
                                 (activity as VideoActivity).setPage(2)
                             }
                             binding.videoTitle.text = video.data.title
-                            binding.bvid.text = video.data.bvid
+                            binding.bvidText.text = video.data.bvid
                             binding.duration.text = TimeUtils.secondToTime(video.data.duration)
-                            binding.upName.text = "UP: ${video.data.owner.name}"
-                            binding.videoSurvey.text = "${video.data.stat.danmaku}弹幕  ${video.data.stat.view}播放"
+                            binding.upNameText.text = video.data.owner.name
+                            binding.danmakusCount.text =
+                                NumberUtils.num2Chinese(video.data.stat.danmaku)
+                            binding.viewsCount.text =
+                                NumberUtils.num2Chinese(video.data.stat.view.toInt())
                             binding.videoDesc.text = video.data.desc
 
-                            binding.bvid.setOnLongClickListener {
-                                val clipboardManager: ClipboardManager = ContextCompat.getSystemService(
-                                    requireContext(),
-                                    ClipboardManager::class.java
-                                ) as ClipboardManager
+                            binding.bvidText.setOnLongClickListener {
+                                val clipboardManager: ClipboardManager =
+                                    ContextCompat.getSystemService(
+                                        requireContext(),
+                                        ClipboardManager::class.java
+                                    ) as ClipboardManager
                                 val clip: ClipData =
                                     ClipData.newPlainText("wearbili bvid", video.data.bvid)
                                 clipboardManager.setPrimaryClip(clip)
@@ -114,7 +129,12 @@ class VideoInfoFragment : Fragment() {
                                     .show()
                                 true
                             }
-                            GlideUtils.loadPicsFitWidth(Application.getContext(), video.data.pic, R.drawable.placeholder, R.drawable.placeholder, binding.cover)
+                            val roundedCorners = RoundedCorners(10)
+                            val options = RequestOptions.bitmapTransform(roundedCorners)
+                            Glide.with(Application.getContext()).load(video.data.pic)
+                                .placeholder(R.drawable.placeholder).apply(options)
+                                .into(binding.cover)
+                            //GlideUtils.loadPicsFitWidth(Application.getContext(), video.data.pic, R.drawable.placeholder, R.drawable.placeholder, binding.cover)
                         }else{
                             Toast.makeText(requireContext(), "加载失败了", Toast.LENGTH_SHORT).show()
                         }
