@@ -26,6 +26,12 @@
             android:layout_gravity="center"
             android:foregroundGravity="center" />
 
+        <master.flame.danmaku.ui.widget.DanmakuView
+            android:id="@+id/danmakuView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
+
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyle"
@@ -33,11 +39,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
 
-        <master.flame.danmaku.ui.widget.DanmakuView
-            android:id="@+id/danmakuView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center" />
     </FrameLayout>
 
     <include

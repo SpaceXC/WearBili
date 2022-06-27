@@ -16,6 +16,7 @@ import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.PhotoViewActivity
 import cn.spacexc.wearbili.activity.VideoActivity
+import cn.spacexc.wearbili.activity.VideoPlayerActivity
 import cn.spacexc.wearbili.databinding.FragmentVideoInfoBinding
 import cn.spacexc.wearbili.dataclass.VideoInfo
 import cn.spacexc.wearbili.manager.VideoManager
@@ -91,7 +92,12 @@ class VideoInfoFragment : Fragment() {
                                 true
                             }
                             binding.cover.setOnClickListener {
-                                (activity as VideoActivity).setPage(2)
+                                //(activity as VideoActivity).setPage(2)
+                                val intent =
+                                    Intent(requireActivity(), VideoPlayerActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                intent.putExtra("videoData", video.data)
+                                startActivity(intent)
                             }
                             binding.videoTitle.text = video.data.title
                             binding.bvidText.text = video.data.bvid

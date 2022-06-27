@@ -1,6 +1,8 @@
 package cn.spacexc.wearbili.dataclass
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
 /**
  * Created by XC-Qan on 2022/6/8.
@@ -112,37 +114,42 @@ data class VideoInfo(
     val data : VideoInfoData
 )
 
+@Parcelize
 data class VideoInfoData(
-    val bvid : String,
-    val aid : Long,
-    val cid : Long,
-    val videos : Int,
-    val pic : String,
-    val tid : Int,
-    val tname : String,
-    val title : String,
-    val pubdate : Long,
-    val duration : Long,
-    val ctime : Long,
-    val desc : String,
+    val bvid: String,
+    val aid: Long,
+    val cid: Long,
+    val videos: Int,
+    val pic: String,
+    val tid: Int,
+    val tname: String,
+    val title: String,
+    val pubdate: Long,
+    val duration: Long,
+    val ctime: Long,
+    val desc: String,
     val owner: VideoOwner,
     val stat: VideoStat,
-)
+) : Parcelable
+
+@Parcelize
 data class VideoOwner(
-    val mid : Long,
+    val mid: Long,
     val name: String,
     val face: String
-)
+) : Parcelable
+
+@Parcelize
 data class VideoStat(
-    val danmaku : Int,
-    val reply : Int,
-    val favorite : Int,
-    val coin : Int,
-    val share : Int,
-    val like : Int,
-    val dislike : Int,
-    val view : Long
-)
+    val danmaku: Int,
+    val reply: Int,
+    val favorite: Int,
+    val coin: Int,
+    val share: Int,
+    val like: Int,
+    val dislike: Int,
+    val view: Long
+) : Parcelable
 
 data class VideoStreams(
     val data : VideoStreamData
@@ -207,7 +214,7 @@ data class VideoSearch(
             var type: String,
             var id: Int,
             var author: String,
-            var mid: Int,
+            var mid: Long,
             var typeid: String,
             var typename: String,
             var arcurl: String,
@@ -282,7 +289,7 @@ data class CommentContentData(
     var rpid: Long,
     var oid: Int,
     var type: Int,
-    var mid: Int,
+    var mid: Long,
     var root: Int,
     var parent: Int,
     var dialog: Int,
@@ -324,7 +331,7 @@ data class CommentContentData(
         var jump_url: String
     )
     data class Member(
-        var mid: String,
+        var mid: Long,
         var uname: String,
         var sex: String,
         var sign: String,
@@ -418,7 +425,7 @@ data class CommentContentData(
         var rpid: Long,
         var oid: Int,
         var type: Int,
-        var mid: Int,
+        var mid: Long,
         var root: Long,
         var parent: Long,
         var dialog: Long,
@@ -444,7 +451,7 @@ data class CommentContentData(
         var reply_control: ReplyControl
     ) {
         data class Member(
-            var mid: String,
+            var mid: Long,
             var uname: String,
             var sex: String,
             var sign: String,
@@ -582,7 +589,7 @@ data class CommentContentData(
         var result = rpid.hashCode()
         result = 31 * result + oid
         result = 31 * result + type
-        result = 31 * result + mid
+        result = (31 * result + mid).toInt()
         result = 31 * result + root
         result = 31 * result + parent
         result = 31 * result + dialog
@@ -638,7 +645,7 @@ data class VideoRecommendItem(
 
 data class VideoRecommendOwner(
     val face: String,
-    val mid: Int,
+    val mid: Long,
     val name: String
 )
 
@@ -667,6 +674,7 @@ data class VideoRecommend(
     val ttl: Int
 )
 
+/*
 data class VideoStreamUrls(
     val code: Int,
     val `data`: Data,
@@ -762,4 +770,70 @@ data class Video(
     val startWithSap: Int,
     val start_with_sap: Int,
     val width: Int
+)*/
+data class VideoStreamUrlData(
+    val accept_description: List<String>,
+    val accept_format: String,
+    val accept_quality: List<Int>,
+    val durl: List<VideoStreamDurl>,
+    val format: String,
+    val from: String,
+    val high_format: Any?,
+    val message: String,
+    val quality: Int,
+    val result: String,
+    val seek_param: String,
+    val seek_type: String,
+    val support_formats: List<SupportFormat>,
+    val timelength: Int,
+    val video_codecid: Int
+)
+
+data class VideoStreamDurl(
+    val ahead: String,
+    val backup_url: List<String>,
+    val length: Int,
+    val order: Int,
+    val size: Int,
+    val url: String,
+    val vhead: String
+)
+
+data class SupportFormat(
+    val codecs: Any?,
+    val display_desc: String,
+    val format: String,
+    val new_description: String,
+    val quality: Int,
+    val superscript: String
+)
+
+data class VideoStreamsFlv(
+    val code: Int,
+    val `data`: VideoStreamUrlData,
+    val message: String,
+    val ttl: Int
+)
+
+data class OnlineInfos(
+    val code: Int,
+    val `data`: OnlineInfoData,
+    val message: String,
+    val ttl: Int
+)
+
+data class OnlineInfoData(
+    val abtest: Abtest,
+    val count: String,
+    val show_switch: ShowSwitch,
+    val total: String
+)
+
+data class Abtest(
+    val group: String
+)
+
+data class ShowSwitch(
+    val count: Boolean,
+    val total: Boolean
 )

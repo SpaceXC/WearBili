@@ -20,7 +20,7 @@ class XCMediaPlayer : MediaPlayer(), LifecycleEventObserver {
                 pause()
             }
             Lifecycle.Event.ON_RESUME -> {
-                 start()
+                start()
             }
             else -> {}
         }

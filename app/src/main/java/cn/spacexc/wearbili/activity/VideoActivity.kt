@@ -35,6 +35,7 @@ class VideoActivity : AppCompatActivity() {
         }
         binding.pageName.setOnClickListener { finish() }
         //TimeThread(binding.timeText, binding.viewPager2, "VideoPage").start()
+
     }
 
     lateinit var currentVideo : VideoInfoData

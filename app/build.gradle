@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android-extensions'
+
 }
 
 android {
@@ -32,6 +34,10 @@ android {
 
     viewBinding {
         enabled = true
+    }
+
+    androidExtensions {
+        experimental = true
     }
 }
 
@@ -66,4 +72,5 @@ dependencies {
     //noinspection GradleDependency
     implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
     implementation 'com.google.android.exoplayer:exoplayer:2.18.0'
+
 }

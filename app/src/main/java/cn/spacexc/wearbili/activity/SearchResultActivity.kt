@@ -72,8 +72,12 @@ class SearchResultActivity : AppCompatActivity() {
 
 
             override fun onFailure(call: Call, e: IOException) {
-                Toast.makeText(this@SearchResultActivity, "搜索失败了", Toast.LENGTH_SHORT).show()
-
+                mThreadPool.execute {
+                    this@SearchResultActivity.runOnUiThread {
+                        Toast.makeText(this@SearchResultActivity, "搜索失败了", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
             }
 
             override fun onResponse(call: Call, response: Response) {

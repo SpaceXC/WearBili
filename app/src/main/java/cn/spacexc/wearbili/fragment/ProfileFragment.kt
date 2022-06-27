@@ -57,17 +57,19 @@ class ProfileFragment : Fragment() {
         Log.d(Application.getTag(), "refreshLogin: ")
         Glide
             .with(this)
-            .load(R.drawable.akari)
+            .load(R.drawable.default_avatar)
             .circleCrop()
             .into(binding.avatar)
         binding.usernameText.text = "加载中..."
         binding.avatar.isEnabled = false
-        if(UserManager.getUserCookie() == null){
-            binding.usernameText.text = "还没登录吖"
-            binding.login.visibility = View.VISIBLE
-            binding.login.setOnClickListener {
+        if(UserManager.getUserCookie() == null) {
+            binding.usernameText.text = "轻点登入"
+            binding.survey.text = "你还没有登入哦（*゜ー゜*）"
+
+            binding.cardView.setOnClickListener {
                 startActivity(
-                    Intent(requireActivity(),
+                    Intent(
+                        requireActivity(),
                         LoginActivity::class.java
                     )
                 )
@@ -90,7 +92,9 @@ class ProfileFragment : Fragment() {
                     mThreadPool.execute{
                         requireActivity().runOnUiThread{
                             val user : SpaceProfileResult = Gson().fromJson(response.body?.string(), SpaceProfileResult::class.java)
-                            Glide.with(requireActivity()).load(Uri.parse(user.data.face)).circleCrop().into(binding.avatar)
+                            Glide.with(requireActivity()).load(Uri.parse(user.data.face))
+                                .placeholder(R.drawable.default_avatar).circleCrop()
+                                .into(binding.avatar)
                             binding.usernameText.text = user.data.name
                             binding.survey.text = "硬币: ${user.data.coins}  粉丝: ${user.data.follower}"
                             //binding.uidText.text = "UID ${user.data.mid}"
@@ -102,7 +106,7 @@ class ProfileFragment : Fragment() {
                                 binding.usernameText.setTextColor(Color.parseColor(user.data.vip.nickname_color))
                                 //binding.vipText.setTextColor(Color.parseColor(user.data.vip.label.bg_color))
                             }
-                            binding.login.visibility = View.INVISIBLE
+                            //binding.login.visibility = View.INVISIBLE
                             binding.avatar.isEnabled = true
 
                             /*binding.uidText.setOnLongClickListener {

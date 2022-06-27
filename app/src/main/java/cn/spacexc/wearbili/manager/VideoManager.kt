@@ -59,27 +59,40 @@ object VideoManager {
         if (id == null) {
             Toast.makeText(Application.getContext(), "视频不见了", Toast.LENGTH_SHORT).show()
         } else {
-            NetworkUtils.getUrl("http://api.bilibili.com/x/web-interface/view?bvid=$id", callback)
+            NetworkUtils.getUrl("https://api.bilibili.com/x/web-interface/view?bvid=$id", callback)
         }
     }
 
     fun getVideoUrl(bvid : String, cid : Long, callback: Callback) {
         //NetworkUtils.getUrl("http://api.bilibili.com/x/player/playurl?cid=$cid&bvid=$bvid&fnval=1", callback)
         NetworkUtils.getUrl(
-            "http://api.bilibili.com/x/player/playurl?cid=$cid&bvid=$bvid&fnval=16&platform=android",
+            "https://api.bilibili.com/x/player/playurl?cid=$cid&bvid=$bvid&platform=web&qn=80",
             callback
         )
     }
 
-    fun getDanmaku(cid : Long, callback: Callback){
-        NetworkUtils.getUrlComp("http://api.bilibili.com/x/v1/dm/list.so?oid=$cid", callback)
+    fun getDanmaku(cid: Long, callback: Callback) {
+        NetworkUtils.getUrlComp("https://api.bilibili.com/x/v1/dm/list.so?oid=$cid", callback)
     }
 
-    fun searchVideo(keyword : String, page : Int, callback: Callback){
-        NetworkUtils.getUrl("http://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword=$keyword&page=$page", callback)
+    fun searchVideo(keyword: String, page: Int, callback: Callback) {
+        NetworkUtils.getUrl(
+            "https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword=$keyword&page=$page",
+            callback
+        )
     }
 
-    fun getCommentsByLikes(aid : Long, page : Int, callback: Callback){
-        NetworkUtils.getUrl("http://api.bilibili.com/x/v2/reply/main?type=1&oid=$aid&sort=1&pn=$page", callback)
+    fun getCommentsByLikes(aid: Long, page: Int, callback: Callback) {
+        NetworkUtils.getUrl(
+            "https://api.bilibili.com/x/v2/reply/main?type=1&oid=$aid&sort=1&pn=$page",
+            callback
+        )
+    }
+
+    fun getOnlineCount(bvid: String, cid: Long, callback: Callback) {
+        NetworkUtils.getUrl(
+            "https://api.bilibili.com/x/player/online/total?bvid=$bvid&cid=$cid",
+            callback
+        )
     }
 }

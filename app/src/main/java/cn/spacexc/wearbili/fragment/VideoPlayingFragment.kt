@@ -13,7 +13,7 @@ import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.VideoActivity
 import cn.spacexc.wearbili.databinding.FragmentVideoPlayingBinding
-import cn.spacexc.wearbili.dataclass.VideoStreamUrls
+import cn.spacexc.wearbili.dataclass.VideoStreamsFlv
 import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.viewmodel.PlayerStatus
 import cn.spacexc.wearbili.viewmodel.VideoPlayerViewModel
@@ -76,7 +76,7 @@ class VideoPlayingFragment : Fragment() {
                 binding.progressBar.visibility = it     //播放控制器加载显示
             }
             videoResolution.observe(viewLifecycleOwner) {
-                binding.controllerInclude.progress.max = mediaPlayer.duration       //获取视频分辨率
+                binding.controllerInclude.progress.max = mediaPlayer.duration.toInt()       //获取视频长度
                 binding.surfaceView.post {
                     resizeVideo(
                         it.first,
@@ -95,12 +95,12 @@ class VideoPlayingFragment : Fragment() {
                 toggleControlButton(it)     //更改控制按钮
             }
         }
-        lifecycle.addObserver(playerViewModel.mediaPlayer)      //给mediaplayer添加生命周期
+        //lifecycle.addObserver(playerViewModel.mediaPlayer)      //给mediaplayer添加生命周期
         binding.surfaceView.holder.addCallback(object : SurfaceHolder.Callback{     //surfaceview监听
             override fun surfaceCreated(p0: SurfaceHolder) {}
             override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-                playerViewModel.mediaPlayer.setDisplay(holder)      //设置视频显示surfaceview
-                playerViewModel.mediaPlayer.setScreenOnWhilePlaying(true)       //播放时不息屏
+                playerViewModel.mediaPlayer.setVideoSurfaceHolder(holder)      //设置视频显示surfaceview
+                //playerViewModel.mediaPlayer.setScreenOnWhilePlaying(true)       //播放时不息屏//TODO
             }
             override fun surfaceDestroyed(p0: SurfaceHolder) {}
         })
@@ -122,7 +122,7 @@ class VideoPlayingFragment : Fragment() {
             override fun onStopTrackingTouch(p0: SeekBar?) {
                 playerViewModel.canDisappear = true     //松开进度条控制器可以消失
                 //playerViewModel.togglePlayerStatus()
-                playerViewModel.mediaPlayer.start()     //视频开始
+                playerViewModel.mediaPlayer.play()     //视频开始
             }
         })
         //updatePlayerProgress()      //无限循环监听播放进度显示
@@ -202,14 +202,14 @@ class VideoPlayingFragment : Fragment() {
                             override fun onResponse(call: Call, response: Response) {
                                 val responseString = response.body?.string()
                                 mThreadPool.execute{
-                                    val videoUrls: VideoStreamUrls = Gson().fromJson(
+                                    val videoUrls: VideoStreamsFlv = Gson().fromJson(
                                         responseString,
-                                        VideoStreamUrls::class.java
+                                        VideoStreamsFlv::class.java
                                     )        //创建视频数据对象
                                     requireActivity().runOnUiThread {
                                         //TODO
                                         //playerViewModel.loadVideo("https://upos-sz-mirrorhw.bilivideo.com/upgcxcode/98/13/735201398/735201398-1-30080.m4s?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfqXBvEqxTEto8BTrNvN0GvT90W5JZMkX_YN0MvXg8gNEV4NC8xNEV4N03eN0B5tZlqNxTEto8BTrNvNeZVuJ10Kj_g2UB02J0mN0B5tZlqNCNEto8BTrNvNC7MTX502C8f2jmMQJ6mqF2fka1mqx6gqj0eN0B599M=&uipk=5&nbs=1&deadline=1656124801&gen=playurlv2&os=hwbv&oi=1972173892&trid=d626ae5ea2134c94900f31d36063f731u&mid=0&platform=pc&upsig=d6b9abad1badf0064977a501a8988f28&uparams=e,uipk,nbs,deadline,gen,os,oi,trid,mid,platform&bvc=vod&nettype=0&orderid=0,3&agrr=0&bw=277413&logo=80000000")       //viewmodel加载视频
-                                        playerViewModel.loadVideo(videoUrls.data.dash.video[0].baseUrl)       //viewmodel加载视频
+                                        playerViewModel.loadVideo(videoUrls.data.durl[0].url)       //viewmodel加载视频
                                         //playerViewModel.loadVideo("https://upos-sz-mirrorhw.bilivideo.com/upgcxcode/98/13/735201398/735201398-1-64.flv?e=ig8euxZM2rNcNbNVhbdVhwdlhbdghwdVhoNvNC8BqJIzNbfqXBvEqxTEto8BTrNvN0GvT90W5JZMkX_YN0MvXg8gNEV4NC8xNEV4N03eN0B5tZlqNxTEto8BTrNvNeZVuJ10Kj_g2UB02J0mN0B5tZlqNCNEto8BTrNvNC7MTX502C8f2jmMQJ6mqF2fka1mqx6gqj0eN0B599M=&uipk=5&nbs=1&deadline=1656093171&gen=playurlv2&os=hwbv&oi=1972173843&trid=39c7c20fb4624b97948991a7c8f94d2du&mid=0&platform=pc&upsig=052fd3fc21794c0c0030ecc586206068&uparams=e,uipk,nbs,deadline,gen,os,oi,trid,mid,platform&bvc=vod&nettype=0&orderid=0,3&agrr=1&bw=202991&logo=80000000")       //viewmodel加载视频
                                         //playerViewModel.loadVideo("https://upos-sz-mirrorhw.bilivideo.com/upgcxcode/98/13/735201398/735201398-1-30080.m4s?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfqXBvEqxTEto8BTrNvN0GvT90W5JZMkX_YN0MvXg8gNEV4NC8xNEV4N03eN0B5tZlqNxTEto8BTrNvNeZVuJ10Kj_g2UB02J0mN0B5tZlqNCNEto8BTrNvNC7MTX502C8f2jmMQJ6mqF2fka1mqx6gqj0eN0B599M=&uipk=5&nbs=1&deadline=1656092539&gen=playurlv2&os=hwbv&oi=1972173843&trid=0684327603cb49ef84df9bd3cc4549e9u&mid=0&platform=pc&upsig=c1c1fc6ff1ef73c5112c0d8075b006fe&uparams=e,uipk,nbs,deadline,gen,os,oi,trid,mid,platform&bvc=vod&nettype=0&orderid=0,3&agrr=1&bw=277413&logo=80000000")       //viewmodel加载视频
 //                                        val uri : Uri = Uri.parse(videoUrls.data.durl[0].url)
@@ -232,7 +232,7 @@ class VideoPlayingFragment : Fragment() {
                     }
 
                     override fun updateTimer(timer: DanmakuTimer?) {
-                        Log.d(Application.getTag(), "updateTimer: ${timer?.currMillisecond}")
+                        //Log.d(Application.getTag(), "updateTimer: ${timer?.currMillisecond}")
                     }
 
                     override fun drawingFinished() {

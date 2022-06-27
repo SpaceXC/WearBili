@@ -5,7 +5,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import cn.spacexc.wearbili.fragment.CommentFragment
 import cn.spacexc.wearbili.fragment.VideoInfoFragment
-import cn.spacexc.wearbili.fragment.VideoPlayingFragment
 
 /**
  * Created by XC-Qan on 2022/6/12.
@@ -17,13 +16,12 @@ import cn.spacexc.wearbili.fragment.VideoPlayingFragment
 
 class VideoViewPagerAdapter(fragmentActivity: FragmentActivity) :
     FragmentStateAdapter(fragmentActivity) {
-    override fun getItemCount(): Int = 3
+    override fun getItemCount(): Int = 2
 
     override fun createFragment(position: Int): Fragment {
         return when(position){
             0 -> VideoInfoFragment()
-            1 -> VideoPlayingFragment()
-            2 -> CommentFragment()
+            1 -> CommentFragment()
             else -> VideoInfoFragment()
         }
     }

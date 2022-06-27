@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="cn.spacexc.wearbili">
 
-
-<uses-feature android:name="android.hardware.type.watch" />
+    <uses-feature android:name="android.hardware.type.watch" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -21,6 +20,9 @@
         android:theme="@style/Theme.WearBili"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".activity.VideoPlayerActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.SearchResultActivity"
             android:exported="false" />
