@@ -6,18 +6,37 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.activity.SearchResultActivity
 import cn.spacexc.wearbili.activity.VideoActivity
+import cn.spacexc.wearbili.adapter.HotSearchAdapter
 import cn.spacexc.wearbili.databinding.FragmentSearchBinding
+import cn.spacexc.wearbili.dataclass.HotSearch
+import cn.spacexc.wearbili.manager.SearchManager
 import cn.spacexc.wearbili.utils.VideoUtils
+import com.google.gson.Gson
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Response
+import java.io.IOException
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 import kotlin.math.pow
 
 
 class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
+
+    val adapter: HotSearchAdapter = HotSearchAdapter()
+
+
+    val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
+
+    var currentPage: Int = 1
 
 
     override fun onCreateView(
@@ -36,7 +55,74 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.searchButton.setOnClickListener { searchKeyword() }
+        //binding.searchButton.setOnClickListener { searchKeyword() }
+        binding.hotSearchRecyclerView.adapter = adapter
+        val layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL)
+        binding.hotSearchRecyclerView.layoutManager = layoutManager
+        getHotSearch()
+//        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+//                val lm = recyclerView.layoutManager as LinearLayoutManager?
+//                val totalItemCount = recyclerView.adapter!!.itemCount
+//                val lastVisibleItemPosition = lm!!.findLastVisibleItemPosition()
+//                val visibleItemCount = recyclerView.childCount
+//                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItemPosition == totalItemCount - 1 && visibleItemCount > 0) {
+//                    searchKeyword(binding.keywordInput.text.toString(), false)
+//                }
+//            }
+//        })
+//        binding.keywordInput.addTextChangedListener(object : TextWatcher{
+//            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+//
+//            }
+//
+//            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) =
+//                if(p0?.isNotEmpty() == true) {
+//                    binding.recyclerView.smoothScrollToPosition(0)
+//                    currentPage = 1
+//                    searchKeyword(p0.toString(), true)
+//                }
+//                else{
+//                    adapter.submitList(emptyList())
+//                }
+//
+//            override fun afterTextChanged(p0: Editable?) {
+//
+//            }
+//
+//        })
+    }
+
+    private fun getHotSearch() {
+        SearchManager.getHotSearch(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                if (isAdded) {
+                    mThreadPool.execute {
+                        requireActivity().runOnUiThread {
+                            Toast.makeText(
+                                requireContext(),
+                                "热搜获取失败",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (isAdded) {
+                    mThreadPool.execute {
+                        requireActivity().runOnUiThread {
+                            val result =
+                                Gson().fromJson(response.body?.string(), HotSearch::class.java)
+                            adapter.submitList(result.list)
+                        }
+                    }
+                }
+            }
+
+        })
     }
 
     private fun searchKeyword() {
@@ -64,6 +150,60 @@ class SearchFragment : Fragment() {
             startActivity(intent)
         }
     }
+
+//    fun searchKeyword(keyword : String, isNew: Boolean) {
+//        VideoManager.searchVideo(keyword, currentPage, object : Callback {
+//            override fun onFailure(call: Call, e: IOException) {
+//                mThreadPool.execute {
+//                    requireActivity().runOnUiThread {
+//                        Toast.makeText(requireActivity(), "搜索失败了", Toast.LENGTH_SHORT)
+//                            .show()
+//                    }
+//                }
+//            }
+//
+//            override fun onResponse(call: Call, response: Response) {
+//                val result = Gson().fromJson(response.body?.string(), VideoSearch::class.java)
+//                mThreadPool.execute {
+//                    requireActivity().runOnUiThread {
+//                        //binding.pageName.text = "搜索结果 (${result.data.numResults})"
+//                        if (result.code == 0) {
+//                            if (currentPage <= 50) {
+//                                if(isNew) {
+//                                    adapter.submitList(result.data.result)
+//                                }
+//                                else{
+//                                    if(result.data.result != null){
+//                                        adapter.submitList(adapter.currentList + result.data.result!!)
+//                                    }
+//
+//                                }
+//
+//                                binding.swipeRefreshLayout.isRefreshing = false
+//                                currentPage++
+//
+//                            } else {
+//                                binding.swipeRefreshLayout.isRefreshing = false
+//                                Toast.makeText(
+//                                    requireActivity(),
+//                                    "搜索到底了",
+//                                    Toast.LENGTH_SHORT
+//                                ).show()
+//
+//                            }
+//                        } else {
+//                            binding.swipeRefreshLayout.isRefreshing = false
+//                            Toast.makeText(requireActivity(), "搜索失败了", Toast.LENGTH_SHORT)
+//                                .show()
+//                        }
+//                    }
+//                }
+//
+//            }
+//
+//
+//        })
+//    }
 
     private fun isAV(av: String): Boolean {   //av号转换bv号
         val avstr = av.substring(2, av.length)

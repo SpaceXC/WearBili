@@ -2,7 +2,7 @@ package cn.spacexc.wearbili.dataclass
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 /**
  * Created by XC-Qan on 2022/6/8.
@@ -197,7 +197,7 @@ data class VideoSearch(
         var show_column: Int,
         var in_black_key: Int,
         var in_white_key: Int,
-        var result: List<VideoSearchResult>
+        var result: List<VideoSearchResult>?
     ) {
         data class CostTime(
             var params_check: String,
@@ -836,4 +836,26 @@ data class Abtest(
 data class ShowSwitch(
     val count: Boolean,
     val total: Boolean
+)
+
+data class HotSearch(
+    val code: Int,
+    val list: List<HotSearchData>,
+    val message: String,
+)
+
+data class HotSearchData(
+    val goto_type: Int,
+    val goto_value: String,
+    val hot_id: Int,
+    val icon: String,
+    val id: Int,
+    val keyword: String,
+    val name_type: String,
+    val pos: Int,
+    val res: List<Any>,
+    val resource_id: Int,
+    val show_name: String,
+    val status: String,
+    val word_type: Int
 )

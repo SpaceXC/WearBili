@@ -18,6 +18,7 @@ import cn.spacexc.wearbili.dataclass.OnlineInfos
 import cn.spacexc.wearbili.dataclass.VideoInfoData
 import cn.spacexc.wearbili.dataclass.VideoStreamsFlv
 import cn.spacexc.wearbili.manager.VideoManager
+import cn.spacexc.wearbili.utils.TimeUtils
 import cn.spacexc.wearbili.viewmodel.PlayerStatus
 import cn.spacexc.wearbili.viewmodel.VideoPlayerViewModel
 import com.google.gson.Gson
@@ -39,8 +40,6 @@ import okhttp3.Callback
 import okhttp3.Response
 import java.io.ByteArrayOutputStream
 import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.zip.Inflater
@@ -79,10 +78,9 @@ class VideoPlayerActivity : AppCompatActivity() {
 
                 })
             }
-            @SuppressLint("SimpleDateFormat") val sdf = SimpleDateFormat("HH:mm")
+
             while (true) {
-                val date = sdf.format(Date())
-                binding.timeText.text = date
+                binding.timeText.text = TimeUtils.getCurrentTime()
                 delay(500)
             }
         }

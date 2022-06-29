@@ -1,5 +1,7 @@
 package cn.spacexc.wearbili.utils
 
+import java.util.*
+
 /**
  * Created by XC-Qan on 2022/6/12.
  * I'm very cute so please be nice to my code!
@@ -26,6 +28,18 @@ object TimeUtils {
 
     private fun unitFormat(i: Long): String {
         return if (i in 0..9) "0$i" else "" + i
+    }
+
+    fun getCurrentTime(): String {
+        var minute: String = Calendar.getInstance().get(Calendar.MINUTE).toString()
+        var hour: String = Calendar.getInstance().get(Calendar.HOUR_OF_DAY).toString()
+        if (minute.length == 1) {
+            minute = "0$minute"
+        }
+        if (hour.length == 1) {
+            hour = "0$hour"
+        }
+        return "$hour:$minute"
     }
 }
 

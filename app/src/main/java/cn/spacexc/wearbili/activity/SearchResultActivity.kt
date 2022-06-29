@@ -88,7 +88,7 @@ class SearchResultActivity : AppCompatActivity() {
                         if (result.code == 0) {
                             if (currentPage <= 50) {
 
-                                adapter.submitList(adapter.currentList + result.data.result)
+                                adapter.submitList(adapter.currentList + result.data.result!!)
                                 binding.swipeRefreshLayout.isRefreshing = false
                                 currentPage++
 

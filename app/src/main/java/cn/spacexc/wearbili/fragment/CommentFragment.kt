@@ -81,76 +81,87 @@ class CommentFragment : Fragment() {
     }
 
     fun getComment() {
-        VideoManager.getCommentsByLikes((activity as VideoActivity).currentVideo.aid, page, object : Callback{
-            override fun onFailure(call: Call, e: IOException) {
-                mThreadPool.execute{
-                    requireActivity().runOnUiThread{
-                        binding.swipeRefreshLayout.isRefreshing = false
-                        Toast.makeText(requireContext(), "评论加载失败啦", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                val comments = Gson().fromJson(response.body?.string(), VideoComment::class.java)
-                mThreadPool.execute{
-                    (activity as VideoActivity).runOnUiThread {
-                        if (comments.code == 0) {
-                            val replies: MutableList<CommentContentData> =
-                                comments.data.replies.toMutableList()
-                            if (replies != prevList) {
-                                prevList = replies
-                                if (comments.data.top.member != null && comments.data.top.content != null) {
-                                    val top = comments.data.top
-                                    top.is_top = true
-                                    replies.remove(comments.data.top)
-                                    val topList = mutableListOf(top)
-
-                                    val finalList = topList + replies
-                                    adapter.submitList(finalList)
+        if ((activity as VideoActivity).currentVideo != null) {
+            VideoManager.getCommentsByLikes(
+                (activity as VideoActivity).currentVideo!!.aid,
+                page,
+                object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        if (isAdded) {
+                            mThreadPool.execute {
+                                requireActivity().runOnUiThread {
+                                    binding.swipeRefreshLayout.isRefreshing = false
+                                    Toast.makeText(requireContext(), "评论加载失败啦", Toast.LENGTH_SHORT)
+                                        .show()
                                 }
-                                else{
-                                    adapter.submitList(adapter.currentList + replies)
-
-                                }
-                                page++
-                                binding.swipeRefreshLayout.isRefreshing = false
                             }
-                            else{
-                                //Toast.makeText(requireContext(), "再怎么翻都没有啦", Toast.LENGTH_SHORT).show()
-                            }
-
-
-                            /*if(comments.data.cursor.is_begin){
-                                val replies : MutableList<CommentContentData> = comments.data.replies.toMutableList()
-
-                                if(comments.data.top_replies != null){
-                                    val top = mutableListOf(comments.data.top_replies)
-                                    replies.remove(comments.data.top_replies)
-                                    adapter.submitList(top + replies)
-                                }
-                                else{
-                                    adapter.submitList(replies)
-
-                                }
-
-//                                println(adapter.currentList)
-                            }
-                            else{
-                                if(comments.data.cursor.is_end) isEnd = true
-                                adapter.submitList(adapter.currentList + comments.data.replies)
-                            }*/
-
-                        }
-                        else{
-                            binding.swipeRefreshLayout.isRefreshing = false
-                            Toast.makeText(requireContext(), "评论加载失败啦", Toast.LENGTH_SHORT).show()
                         }
                     }
-                }
 
-            }
+                    override fun onResponse(call: Call, response: Response) {
+                        val comments =
+                            Gson().fromJson(response.body?.string(), VideoComment::class.java)
+                        if (isAdded) {
+                            mThreadPool.execute {
+                                (activity as VideoActivity).runOnUiThread {
+                                    if (comments.code == 0) {
+                                        val replies: MutableList<CommentContentData> =
+                                            comments.data.replies.toMutableList()
+                                        if (replies != prevList) {
+                                            prevList = replies
+                                            if (comments.data.top.member != null && comments.data.top.content != null) {
+                                                val top = comments.data.top
+                                                top.is_top = true
+                                                replies.remove(comments.data.top)
+                                                val topList = mutableListOf(top)
 
-        })
+                                                val finalList = topList + replies
+                                                adapter.submitList(finalList)
+                                            } else {
+                                                adapter.submitList(adapter.currentList + replies)
+
+                                            }
+                                            page++
+                                            binding.swipeRefreshLayout.isRefreshing = false
+                                        } else {
+                                            //Toast.makeText(requireContext(), "再怎么翻都没有啦", Toast.LENGTH_SHORT).show()
+                                        }
+
+
+                                        /*if(comments.data.cursor.is_begin){
+                                            val replies : MutableList<CommentContentData> = comments.data.replies.toMutableList()
+
+                                            if(comments.data.top_replies != null){
+                                                val top = mutableListOf(comments.data.top_replies)
+                                                replies.remove(comments.data.top_replies)
+                                                adapter.submitList(top + replies)
+                                            }
+                                            else{
+                                                adapter.submitList(replies)
+
+                                            }
+
+            //                                println(adapter.currentList)
+                                        }
+                                        else{
+                                            if(comments.data.cursor.is_end) isEnd = true
+                                            adapter.submitList(adapter.currentList + comments.data.replies)
+                                        }*/
+
+                                    } else {
+                                        binding.swipeRefreshLayout.isRefreshing = false
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "评论加载失败啦",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                })
+        }
     }
 }

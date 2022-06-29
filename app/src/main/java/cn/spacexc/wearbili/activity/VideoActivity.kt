@@ -1,16 +1,14 @@
 package cn.spacexc.wearbili.activity
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import cn.spacexc.wearbili.adapter.VideoViewPagerAdapter
 import cn.spacexc.wearbili.databinding.ActivityVideoBinding
 import cn.spacexc.wearbili.dataclass.VideoInfoData
+import cn.spacexc.wearbili.utils.TimeUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
 
 class VideoActivity : AppCompatActivity() {
     private lateinit var binding : ActivityVideoBinding
@@ -20,14 +18,12 @@ class VideoActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.viewPager2.adapter = VideoViewPagerAdapter(this)
         lifecycleScope.launch {
-            @SuppressLint("SimpleDateFormat") val sdf = SimpleDateFormat("HH:mm")
+
             while (true) {
-                val date = sdf.format(Date())
-                binding.timeText.text = date
+                binding.timeText.text = TimeUtils.getCurrentTime()
                 binding.pageName.text = (when (binding.viewPager2.currentItem) {
                     0 -> "详情"
-                    1 -> "播放"
-                    2 -> "评论"
+                    1 -> "评论"
                     else -> ""
                 })
                 delay(500)
@@ -38,7 +34,7 @@ class VideoActivity : AppCompatActivity() {
 
     }
 
-    lateinit var currentVideo : VideoInfoData
+    var currentVideo: VideoInfoData? = null
     var isInitialized = false
 
     fun getId() : String? {

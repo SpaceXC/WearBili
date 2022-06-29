@@ -1,5 +1,7 @@
 package cn.spacexc.wearbili.utils
 
+import okio.ArrayIndexOutOfBoundsException
+
 /**
  * Created by XC-Qan on 2022/6/27.
  * I'm very cute so please be nice to my code!
@@ -45,21 +47,25 @@ object VideoUtils {
 
     //av转bv方法
     fun av2bv(st: String): String? {
-        var s = java.lang.Long.valueOf(st.split("av".toRegex()).dropLastWhile { it.isEmpty() }
-            .toTypedArray()[1])
-        val sb = StringBuffer("BV1  4 1 7  ")
-        //逆向思路，先将随机数还原
-        s = (s xor xor) + add
-        //58进制转回
-        for (i in 0..57) {
-            val s1 = table.substring(i, i + 1)
-            mp2[i] = s1
+        try {
+            var s = java.lang.Long.valueOf(st.split("av".toRegex()).dropLastWhile { it.isEmpty() }
+                .toTypedArray()[1])
+            val sb = StringBuffer("BV1  4 1 7  ")
+            //逆向思路，先将随机数还原
+            s = (s xor xor) + add
+            //58进制转回
+            for (i in 0..57) {
+                val s1 = table.substring(i, i + 1)
+                mp2[i] = s1
+            }
+            for (i in 0..5) {
+                val r = mp2[(s / power(58, i) % 58).toInt()]
+                sb.replace(ss[i], ss[i] + 1, r)
+            }
+            return sb.toString()
+        } catch (e: ArrayIndexOutOfBoundsException) {
+            return ""
         }
-        for (i in 0..5) {
-            val r = mp2[(s / power(58, i) % 58).toInt()]
-            sb.replace(ss[i], ss[i] + 1, r)
-        }
-        return sb.toString()
     }
 
 }

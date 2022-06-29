@@ -64,7 +64,7 @@ class SearchResultAdapter : ListAdapter<VideoSearch.SearchData.VideoSearchResult
     override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
         val video : VideoSearch.SearchData.VideoSearchResult = getItem(position)
         holder.listVideoTitle.text = Html.fromHtml(video.title)
-        holder.listUpName.text = "UP: ${video.author}"
+        holder.listUpName.text = video.author
         holder.listVideoViews.text = NumberUtils.num2Chinese(video.play)
         holder.itemView.setOnClickListener {
             val intent = Intent(Application.getContext(), VideoActivity::class.java)
