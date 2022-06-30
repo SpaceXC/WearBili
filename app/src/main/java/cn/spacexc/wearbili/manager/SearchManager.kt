@@ -15,4 +15,8 @@ object SearchManager {
     fun getHotSearch(callback: Callback) {
         NetworkUtils.getUrl("http://s.search.bilibili.com/main/hotword", callback)
     }
+
+    fun getDefaultSearchContent(callback: Callback) {
+        NetworkUtils.getUrl("http://api.bilibili.com/x/web-interface/search/default", callback)
+    }
 }

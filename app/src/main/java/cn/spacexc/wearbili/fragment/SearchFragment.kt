@@ -14,6 +14,7 @@ import cn.spacexc.wearbili.activity.SearchResultActivity
 import cn.spacexc.wearbili.activity.VideoActivity
 import cn.spacexc.wearbili.adapter.HotSearchAdapter
 import cn.spacexc.wearbili.databinding.FragmentSearchBinding
+import cn.spacexc.wearbili.dataclass.DefaultSearchContent
 import cn.spacexc.wearbili.dataclass.HotSearch
 import cn.spacexc.wearbili.manager.SearchManager
 import cn.spacexc.wearbili.utils.VideoUtils
@@ -38,6 +39,10 @@ class SearchFragment : Fragment() {
 
     var currentPage: Int = 1
 
+    var defaultContent = ""
+    var defaultType: Int? = null
+    var defaultVideoAv: String? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,6 +64,10 @@ class SearchFragment : Fragment() {
         binding.hotSearchRecyclerView.adapter = adapter
         val layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL)
         binding.hotSearchRecyclerView.layoutManager = layoutManager
+        binding.search.setOnClickListener {
+            searchKeyword()
+        }
+        getDefaultSearchContent()
         getHotSearch()
 //        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 //            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -91,6 +100,43 @@ class SearchFragment : Fragment() {
 //            }
 //
 //        })
+    }
+
+    fun getDefaultSearchContent() {
+        SearchManager.getDefaultSearchContent(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                if (isAdded) {
+                    mThreadPool.execute {
+                        requireActivity().runOnUiThread {
+                            Toast.makeText(
+                                requireContext(),
+                                "热搜获取失败",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (isAdded) {
+                    mThreadPool.execute {
+                        requireActivity().runOnUiThread {
+                            val result =
+                                Gson().fromJson(
+                                    response.body?.string(),
+                                    DefaultSearchContent::class.java
+                                )
+                            binding.keywordInput.hint = result.data.show_name
+                            defaultContent = result.data.show_name
+                            defaultType = result.data.goto_type
+                            defaultVideoAv = result.data.goto_value
+                        }
+                    }
+                }
+            }
+
+        })
     }
 
     private fun getHotSearch() {
@@ -126,10 +172,29 @@ class SearchFragment : Fragment() {
     }
 
     private fun searchKeyword() {
-        if (binding.keywordInput.text.isNullOrBlank() || binding.keywordInput.text.contains("&") || binding.keywordInput.text.contains(
+        if (binding.keywordInput.text.contains("&") || binding.keywordInput.text.contains(
                 "/"
             ) || binding.keywordInput.text.contains("?")
         ) return
+
+        if (binding.keywordInput.text.isNullOrBlank()) {
+            if (defaultType != null && defaultContent.isNotEmpty()) {
+                if (defaultType == 1 && !defaultVideoAv.isNullOrBlank()) {
+                    val bv = VideoUtils.av2bv("av$defaultVideoAv")
+                    val intent = Intent(Application.getContext(), VideoActivity::class.java)
+                    intent.putExtra("videoId", bv)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                    return
+                } else {
+                    val intent = Intent(requireActivity(), SearchResultActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    intent.putExtra("keyword", defaultContent)
+                    startActivity(intent)
+                    return
+                }
+            }
+        }
         val keyword: String = binding.keywordInput.text.toString()
 
         if (isAV(keyword)) {
@@ -205,21 +270,27 @@ class SearchFragment : Fragment() {
 //        })
 //    }
 
-    private fun isAV(av: String): Boolean {   //av号转换bv号
-        val avstr = av.substring(2, av.length)
-        Log.d(Application.getTag(), "isAV: $avstr")
-        return if (av.isEmpty()) {
-            false
-        } else {
-            try {
-                val avn1 = avstr.toLong()
-                //av号是绝对不可能大于2的32次方的，不然此算法也将作废
-                return avn1 < 2.0.pow(32.0)
-            } catch (e: NumberFormatException) {
-                return false
-            }
+    private fun isAV(av: String): Boolean {
+        if (!av.startsWith("av")) return false
+        try {
+            val avstr = av.substring(2, av.length)
+            Log.d(Application.getTag(), "isAV: $avstr")
+            return if (av.isEmpty()) {
+                false
+            } else {
+                try {
+                    val avn1 = avstr.toLong()
+                    //av号是绝对不可能大于2的32次方的，不然此算法也将作废
+                    return avn1 < 2.0.pow(32.0)
+                } catch (e: NumberFormatException) {
+                    return false
+                }
 
+            }
+        } catch (e: IndexOutOfBoundsException) {
+            return false
         }
+
     }
 
     fun isBV(bv: String): Boolean {   //bv号转换av号

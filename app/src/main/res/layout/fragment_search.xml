@@ -39,6 +39,14 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
+            <View
+                android:id="@+id/search"
+                android:layout_width="32dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="@+id/keywordInput"
+                app:layout_constraintStart_toStartOf="@+id/keywordInput"
+                app:layout_constraintTop_toTopOf="@+id/keywordInput" />
+
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="0dp"
@@ -67,6 +75,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView">
 
             </androidx.recyclerview.widget.RecyclerView>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

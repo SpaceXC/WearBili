@@ -859,3 +859,18 @@ data class HotSearchData(
     val status: String,
     val word_type: Int
 )
+
+data class DefaultSearchContent(
+    val code: Int,
+    val `data`: DefaultSearchContentData,
+    val message: String,
+    val ttl: Int
+)
+
+data class DefaultSearchContentData(
+    val goto_type: Int,
+    val goto_value: String,
+    val name: String,
+    val show_name: String,
+    val type: Int
+)
