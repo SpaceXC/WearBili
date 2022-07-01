@@ -11,10 +11,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.LoginActivity
+import cn.spacexc.wearbili.adapter.ButtonsAdapter
 import cn.spacexc.wearbili.databinding.FragmentProfileBinding
+import cn.spacexc.wearbili.dataclass.ButtonData
 import cn.spacexc.wearbili.dataclass.SpaceProfileResult
 import cn.spacexc.wearbili.manager.UserManager
 import com.bumptech.glide.Glide
@@ -32,6 +35,28 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
     val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
 
+    //TODO 个人页按钮
+    private val buttonList = listOf(
+        ButtonData(R.drawable.ic_outline_person_add_alt_1_24, "我的关注") {
+
+        },
+        ButtonData(R.drawable.ic_baseline_update_24, "历史记录") {
+
+        },
+        ButtonData(R.drawable.ic_baseline_play_circle_outline_24, "稍后再看") {
+
+        },
+        ButtonData(R.drawable.ic_round_star_border_24, "个人收藏") {
+
+        },
+        ButtonData(R.drawable.cloud_download, "离线缓存") {
+
+        },
+        ButtonData(R.drawable.ic_outline_settings_24, "应用设置") {
+
+        },
+    )
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,9 +73,14 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 2).also {
+            it.orientation = GridLayoutManager.VERTICAL
+        }
+        binding.recyclerView.adapter = ButtonsAdapter().also {
+            it.submitList(buttonList)
+        }
         refreshLogin()
-        binding.avatar.setOnClickListener{refreshLogin()}
+        binding.avatar.setOnClickListener { refreshLogin() }
     }
 
     private fun refreshLogin() {
@@ -129,3 +159,6 @@ class ProfileFragment : Fragment() {
         }
     }
 }
+
+
+

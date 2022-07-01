@@ -5,32 +5,39 @@
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.1" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2795" />
+        <entry key="app/src/main/res/drawable/background_button.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/background_cardview.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/background_edit_text.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/background_qrcode.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/btn_round_light_pink.xml" value="0.276" />
+        <entry key="app/src/main/res/drawable/cloud_download-48px.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/cursor_drawable.xml" value="0.203" />
         <entry key="app/src/main/res/drawable/ic_baseline_arrow_back_ios_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_baseline_person_outline_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.2795" />
+        <entry key="app/src/main/res/drawable/ic_cloud_download_fill0_wght400_grad0_opsz48.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_danmaku.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.276" />
         <entry key="app/src/main/res/drawable/ic_outline_account_circle_24.xml" value="0.276" />
+        <entry key="app/src/main/res/drawable/ic_outline_person_add_alt_1_24.xml" value="0.2795" />
+        <entry key="app/src/main/res/drawable/mode_fan-48px.xml" value="0.112" />
         <entry key="app/src/main/res/drawable/play_count.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/round_button_background_transparent.xml" value="0.2795" />
         <entry key="app/src/main/res/layout-land/fragment_video_playing.xml" value="0.32708333333333334" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="1.6354166666666667" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.4435590969455511" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="1.1847742405999284" />
+        <entry key="app/src/main/res/layout/activity_menu.xml" value="1.8470588235294119" />
         <entry key="app/src/main/res/layout/activity_photo_view.xml" value="1.0222222222222221" />
         <entry key="app/src/main/res/layout/activity_search_result.xml" value="0.9968253968253968" />
         <entry key="app/src/main/res/layout/activity_video.xml" value="0.9277777777777778" />
         <entry key="app/src/main/res/layout/activity_video_player.xml" value="0.6086235489220564" />
         <entry key="app/src/main/res/layout/cell_comment_list.xml" value="0.5022814086792841" />
         <entry key="app/src/main/res/layout/cell_hot_search.xml" value="0.7733990147783252" />
+        <entry key="app/src/main/res/layout/cell_round_button.xml" value="1.3730459505624144" />
         <entry key="app/src/main/res/layout/cell_video_list.xml" value="1.8470588235294119" />
         <entry key="app/src/main/res/layout/fragment_comment.xml" value="0.5186721991701245" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.3825629209860777" />
-        <entry key="app/src/main/res/layout/fragment_recommend.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_recommend.xml" value="0.41192626953125" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.8882602545968883" />
         <entry key="app/src/main/res/layout/fragment_video_info.xml" value="1.374347383682042" />
         <entry key="app/src/main/res/layout/fragment_video_playing.xml" value="0.20554664223881086" />
