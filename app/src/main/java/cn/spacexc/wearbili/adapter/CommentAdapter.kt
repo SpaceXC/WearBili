@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.dataclass.CommentContentData
+import cn.spacexc.wearbili.utils.NumberUtils
 import com.bumptech.glide.Glide
 
 /**
@@ -42,6 +43,7 @@ class CommentAdapter :
 
     }) {
 
+    var uploaderMid: Long? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoCommentViewHolder {
         val inflater : LayoutInflater = LayoutInflater.from(parent.context)
@@ -65,26 +67,35 @@ class CommentAdapter :
                 comment.member!!.vip.nickname_color
             )
         )
-        holder.userLevel.text = "LV${comment.member!!.level_info.current_level}"
+        //holder.userLevel.text = "LV${comment.member!!.level_info.current_level}"
         holder.pubDate.text = comment.reply_control.time_desc
         holder.content.text = comment.content!!.message
-        Glide.with(Application.getContext()).load(comment.member!!.avatar)
-            .placeholder(R.drawable.akari).circleCrop().into(holder.avatar)
+        holder.likes.text = NumberUtils.num2Chinese(comment.like)
+        if (comment.member!!.mid == uploaderMid) {
+            holder.isUp.visibility = View.VISIBLE
+        }
+        Glide.with(Application.getContext()).load(comment.member!!.avatar).circleCrop()
+            .into(holder.avatar)
     }
 
     class VideoCommentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var avatar : ImageView
-        var userName : TextView
-        var userLevel : TextView
-        var pubDate : TextView
-        var content : TextView
+        var avatar: ImageView
+        var userName: TextView
+
+        //var userLevel : TextView
+        var pubDate: TextView
+        var content: TextView
+        var likes: TextView
+        var isUp: TextView
 
         init {
             avatar = itemView.findViewById(R.id.commentAvatar)
             userName = itemView.findViewById(R.id.commentUserName)
-            userLevel = itemView.findViewById(R.id.commentUserLevel)
+            //userLevel = itemView.findViewById(R.id.commentUserLevel)
             pubDate = itemView.findViewById(R.id.commentPubDate)
             content = itemView.findViewById(R.id.commentText)
+            likes = itemView.findViewById(R.id.likes)
+            isUp = itemView.findViewById(R.id.isUp)
         }
     }
 }

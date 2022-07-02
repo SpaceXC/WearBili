@@ -60,7 +60,10 @@ class CommentFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.recyclerView.adapter = adapter
+        if (!isAdded) return
+        binding.recyclerView.adapter = adapter.also {
+            adapter.uploaderMid = (activity as VideoActivity).currentVideo?.owner?.mid
+        }
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {

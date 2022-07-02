@@ -32,8 +32,6 @@ class MainActivity : AppCompatActivity(), Parcelable {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         val navController = navHostFragment.navController
-        //binding.viewPager2.adapter = MainViewPagerAdapter(this)
-        //TimeThread(binding.timeText, binding.viewPager2, "HomePage").start()
         if (cn.spacexc.wearbili.manager.UserManager.getUserCookie() == null) navController.navigate(
             R.id.profileFragment
         )
@@ -46,17 +44,17 @@ class MainActivity : AppCompatActivity(), Parcelable {
 
         currentPageId.observe(this) {
             navController.navigate(it)
+            binding.pageName.text = (when (it) {
+                R.id.recommendFragment -> "推荐"
+                R.id.searchFragment -> "搜索"
+                R.id.profileFragment -> "我的"
+                else -> ""
+            })
         }
 
         lifecycleScope.launch {
             while (true) {
                 binding.timeText.text = TimeUtils.getCurrentTime()
-                binding.pageName.text = (when (navController.currentDestination?.id) {
-                    R.id.recommendFragment -> "推荐"
-                    R.id.searchFragment -> "搜索"
-                    R.id.profileFragment -> "我的"
-                    else -> ""
-                })
                 delay(500)
             }
         }
