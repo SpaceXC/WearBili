@@ -15,6 +15,7 @@ import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.dataclass.CommentContentData
 import cn.spacexc.wearbili.utils.NumberUtils
 import com.bumptech.glide.Glide
+import com.wyx.components.widgets.ExpandCollpaseTextView
 
 /**
  * Created by XC-Qan on 2022/6/16.
@@ -69,7 +70,7 @@ class CommentAdapter() :
         )
         //holder.userLevel.text = "LV${comment.member!!.level_info.current_level}"
         holder.pubDate.text = comment.reply_control.time_desc
-        holder.content.text = comment.content!!.message
+        holder.content.setText(comment.content!!.message)
         holder.likes.text = NumberUtils.num2Chinese(comment.like)
         if (comment.member!!.mid == uploaderMid) {
             holder.isUp.visibility = View.VISIBLE
@@ -84,7 +85,7 @@ class CommentAdapter() :
 
         //var userLevel : TextView
         var pubDate: TextView
-        var content: TextView
+        var content: ExpandCollpaseTextView
         var likes: TextView
         var isUp: TextView
 

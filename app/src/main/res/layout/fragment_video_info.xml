@@ -179,17 +179,23 @@
                 app:layout_constraintStart_toStartOf="@+id/upIcon"
                 app:layout_constraintTop_toTopOf="@+id/bvidText" />
 
-            <TextView
+            <com.wyx.components.widgets.ExpandCollpaseTextView
                 android:id="@+id/videoDesc"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:ellipsize="end"
-                android:fontFamily="@font/roboto"
-                android:lines="3"
+                app:collapse_line_space_percent="30"
                 android:textColor="#fff"
                 app:layout_constraintEnd_toEndOf="@+id/videoTitle"
                 app:layout_constraintStart_toStartOf="@+id/bvidIcon"
+                app:collapse_show_line_number="3"
+                app:collapse_text="  收起"
+                app:content_text_color="#999999"
+                app:expand_text="  展开"
+                app:expand_text_color="#FB7299"
+                app:expend_click_event_on="expand_text"
+                app:fontFamily="@font/roboto"
                 app:layout_constraintTop_toBottomOf="@+id/bvidText" />
 
             <TextView

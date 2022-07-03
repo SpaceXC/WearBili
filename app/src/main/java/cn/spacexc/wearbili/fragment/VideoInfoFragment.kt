@@ -200,7 +200,8 @@ class VideoInfoFragment : Fragment() {
                                 NumberUtils.num2Chinese(video.data.stat.danmaku)
                             binding.viewsCount.text =
                                 NumberUtils.num2Chinese(video.data.stat.view.toInt())
-                            binding.videoDesc.text = video.data.desc
+                            binding.videoDesc.setText(video.data.desc)
+
 
                             binding.bvidText.setOnLongClickListener {
                                 val clipboardManager: ClipboardManager =
