@@ -15,7 +15,6 @@ import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.databinding.ActivityVideoPlayerBinding
 import cn.spacexc.wearbili.dataclass.OnlineInfos
-import cn.spacexc.wearbili.dataclass.VideoInfoData
 import cn.spacexc.wearbili.dataclass.VideoStreamsFlv
 import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.utils.TimeUtils
@@ -55,20 +54,22 @@ class VideoPlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityVideoPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val video: VideoInfoData? = intent.getParcelableExtra("videoData")
+        //val video: VideoInfoData? = intent.getParcelableExtra("videoData")
+        val videoBvid = intent.getStringExtra("videoBvid")!!
+        val videoCid = intent.getLongExtra("videoCid", 0)
+        Log.d(Application.getTag(), "onCreate: BVID:$videoBvid, CID: $videoCid")
         lifecycleScope.launch {
-            if (video != null) {
-                VideoManager.getOnlineCount(video.bvid, video.cid, object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
+            VideoManager.getOnlineCount(videoBvid, videoCid, object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
 
-                    }
+                }
 
-                    @SuppressLint("SetTextI18n")
-                    override fun onResponse(call: Call, response: Response) {
-                        mThreadPool.execute {
-                            this@VideoPlayerActivity.runOnUiThread {
-                                val info = Gson().fromJson(
-                                    response.body?.string(),
+                @SuppressLint("SetTextI18n")
+                override fun onResponse(call: Call, response: Response) {
+                    mThreadPool.execute {
+                        this@VideoPlayerActivity.runOnUiThread {
+                            val info = Gson().fromJson(
+                                response.body?.string(),
                                     OnlineInfos::class.java
                                 )
                                 binding.onlineCount.text = "${info.data.total}人在看"
@@ -77,7 +78,7 @@ class VideoPlayerActivity : AppCompatActivity() {
                     }
 
                 })
-            }
+
 
             while (true) {
                 binding.timeText.text = TimeUtils.getCurrentTime()
@@ -202,9 +203,29 @@ class VideoPlayerActivity : AppCompatActivity() {
             val loader: ILoader =
                 DanmakuLoaderFactory.create(DanmakuLoaderFactory.TAG_BILI)       //设置解析b站xml弹幕
 
-            if (video != null) {
-                VideoManager.getDanmaku(video.cid, object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
+            VideoManager.getDanmaku(videoCid, object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    mThreadPool.execute {
+                        this@VideoPlayerActivity.runOnUiThread {
+                            Toast.makeText(
+                                this@VideoPlayerActivity,
+                                "加载弹幕失败！",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    try {
+                        //val responseIs = response.body?.byteStream()
+                        //val str = String(decompress(responseIs.readBytes()).inputStream()!!)
+                        //Log.d(Application.getTag(), "onResponse: ${response.body?.string()}")
+                        val danmakuIs: ByteArray? = decompress(response.body?.bytes()!!)
+                        loader.load(danmakuIs!!.inputStream())
+                        Log.d(Application.getTag(), "onResponse: ${String(danmakuIs)}")
+                    } catch (e: IllegalDataException) {
+                        e.printStackTrace()
                         mThreadPool.execute {
                             this@VideoPlayerActivity.runOnUiThread {
                                 Toast.makeText(
@@ -215,83 +236,61 @@ class VideoPlayerActivity : AppCompatActivity() {
                             }
                         }
                     }
+                    val danmukuParser = BiliDanmukuParser()
+                    val dataSource: IDataSource<*> = loader.dataSource
+                    danmukuParser.load(dataSource)
 
-                    override fun onResponse(call: Call, response: Response) {
-                        try {
-                            //val responseIs = response.body?.byteStream()
-                            //val str = String(decompress(responseIs.readBytes()).inputStream()!!)
-                            //Log.d(Application.getTag(), "onResponse: ${response.body?.string()}")
-                            val danmakuIs: ByteArray? = decompress(response.body?.bytes()!!)
-                            loader.load(danmakuIs!!.inputStream())
-                            Log.d(Application.getTag(), "onResponse: ${String(danmakuIs)}")
-                        } catch (e: IllegalDataException) {
-                            e.printStackTrace()
-                            mThreadPool.execute {
-                                this@VideoPlayerActivity.runOnUiThread {
-                                    Toast.makeText(
-                                        this@VideoPlayerActivity,
-                                        "加载弹幕失败！",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            }
+                    binding.danmakuView.setCallback(object : DrawHandler.Callback {
+                        override fun updateTimer(timer: DanmakuTimer?) {
+
                         }
-                        val danmukuParser = BiliDanmukuParser()
-                        val dataSource: IDataSource<*> = loader.dataSource
-                        danmukuParser.load(dataSource)
 
-                        binding.danmakuView.setCallback(object : DrawHandler.Callback {
-                            override fun updateTimer(timer: DanmakuTimer?) {
+                        override fun drawingFinished() {
 
-                            }
+                        }
 
-                            override fun drawingFinished() {
+                        override fun prepared() {
+                            //-----------弹幕相关区域⬆️️️️-----------
 
-                            }
+                            //-----------视频相关区域⬇️-----------
 
-                            override fun prepared() {
-                                //-----------弹幕相关区域⬆️️️️-----------
-
-                                //-----------视频相关区域⬇️-----------
-
-                                VideoManager.getVideoUrl(video.bvid, video.cid, object : Callback {
-                                    override fun onFailure(call: Call, e: IOException) {
-                                        mThreadPool.execute {
-                                            this@VideoPlayerActivity.runOnUiThread {
-                                                Toast.makeText(
-                                                    this@VideoPlayerActivity,
-                                                    "加载视频失败！",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                            }
+                            VideoManager.getVideoUrl(videoBvid, videoCid, object : Callback {
+                                override fun onFailure(call: Call, e: IOException) {
+                                    mThreadPool.execute {
+                                        this@VideoPlayerActivity.runOnUiThread {
+                                            Toast.makeText(
+                                                this@VideoPlayerActivity,
+                                                "加载视频失败！",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
                                         }
                                     }
+                                }
 
-                                    override fun onResponse(call: Call, response: Response) {
-                                        val responseString = response.body?.string()
-                                        mThreadPool.execute {
-                                            val videoUrls: VideoStreamsFlv = Gson().fromJson(
-                                                responseString,
-                                                VideoStreamsFlv::class.java
-                                            )        //创建视频数据对象
-                                            this@VideoPlayerActivity.runOnUiThread {
-                                                viewModel.loadVideo(videoUrls.data.durl[0].url)
+                                override fun onResponse(call: Call, response: Response) {
+                                    val responseString = response.body?.string()
+                                    mThreadPool.execute {
+                                        val videoUrls: VideoStreamsFlv = Gson().fromJson(
+                                            responseString,
+                                            VideoStreamsFlv::class.java
+                                        )        //创建视频数据对象
+                                        this@VideoPlayerActivity.runOnUiThread {
+                                            viewModel.loadVideo(videoUrls.data.durl[0].url)
 
-                                            }
                                         }
                                     }
+                                }
 
-                                })
+                            })
 
-                                //-----------视频相关区域⬆️️️-----------
-                            }
-                        })
-                        binding.danmakuView.prepare(danmukuParser, danmakuContext)      //准备弹幕
-                        binding.danmakuView.enableDanmakuDrawingCache(true)
-                    }
+                            //-----------视频相关区域⬆️️️-----------
+                        }
+                    })
+                    binding.danmakuView.prepare(danmukuParser, danmakuContext)      //准备弹幕
+                    binding.danmakuView.enableDanmakuDrawingCache(true)
+                }
 
-                })
-            }
+            })
 
 
         }

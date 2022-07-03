@@ -24,7 +24,7 @@ import com.bumptech.glide.Glide
  * 给！爷！写！注！释！
  */
 
-class CommentAdapter :
+class CommentAdapter() :
     ListAdapter<CommentContentData, CommentAdapter.VideoCommentViewHolder>(object :
         DiffUtil.ItemCallback<CommentContentData>() {
         override fun areItemsTheSame(

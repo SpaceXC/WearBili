@@ -87,7 +87,6 @@ class SearchResultActivity : AppCompatActivity() {
                         binding.pageName.text = "搜索结果 (${result.data.numResults})"
                         if (result.code == 0) {
                             if (currentPage <= 50) {
-
                                 adapter.submitList(adapter.currentList + result.data.result!!)
                                 binding.swipeRefreshLayout.isRefreshing = false
                                 currentPage++

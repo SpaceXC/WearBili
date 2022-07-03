@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000"
+    tools:context=".activity.PlayOnPhoneActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:alpha="0.78"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/circle_right_x05_cropped" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:alpha="0.78"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/circle_left_x05_cropped" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.25" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.8"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.75" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:minHeight="80dp"
+        app:cardBackgroundColor="#78242424"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        app:cardMaxElevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout"
+        app:strokeColor="#70707070"
+        app:strokeWidth="0.1dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ScrollView
+                android:id="@+id/scrollView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="SpeakableTextPresentCheck">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/innerCardView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="80dp"
+                        app:cardBackgroundColor="#C4587D"
+                        app:cardCornerRadius="0dp"
+                        app:cardElevation="0dp"
+                        app:cardMaxElevation="0dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:paddingTop="20dp">
+
+                            <ImageView
+                                android:id="@+id/imageView5"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom|start"
+                                android:layout_marginEnd="20dp"
+                                android:layout_weight="1"
+                                android:adjustViewBounds="true"
+                                app:srcCompat="@drawable/two_tow_icon" />
+
+                            <ImageView
+                                android:id="@+id/imageView8"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom|end"
+                                android:layout_marginStart="20dp"
+                                android:layout_weight="1"
+                                android:adjustViewBounds="true"
+                                app:srcCompat="@drawable/three_three_icon" />
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <ImageView
+                        android:id="@+id/qrImageBg2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="45dp"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginEnd="45dp"
+                        android:adjustViewBounds="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/background_qrcode" />
+
+                    <ImageView
+                        android:id="@+id/qrImage2"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:adjustViewBounds="true"
+                        app:layout_constraintBottom_toBottomOf="@+id/qrImageBg2"
+                        app:layout_constraintEnd_toEndOf="@+id/qrImageBg2"
+                        app:layout_constraintStart_toStartOf="@+id/qrImageBg2"
+                        app:layout_constraintTop_toTopOf="@+id/qrImageBg2"
+                        app:srcCompat="@drawable/loading" />
+
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:fontFamily="@font/roboto"
+                        android:gravity="center_horizontal"
+                        android:text="手机扫描二维码\n继续观看"
+                        android:textColor="#fff"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/qrImageBg2"
+                        app:layout_constraintVertical_bias="0.0" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </ScrollView>
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto"
+                android:gravity="center_horizontal"
+                android:lines="1000"
+                android:textColor="#fff"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/pageName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7.5dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
+            android:drawableStart="@drawable/ic_baseline_arrow_back_ios_24"
+            android:fontFamily="@font/roboto_bold"
+            android:text="手机观看"
+            android:textColor="#fff"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/timeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="7.5dp"
+            android:layout_marginBottom="6dp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="12:00"
+            android:textColor="#fff"
+            android:textSize="16sp" />
+
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

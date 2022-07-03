@@ -76,7 +76,7 @@ class ProfileFragment : Fragment() {
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 2).also {
             it.orientation = GridLayoutManager.VERTICAL
         }
-        binding.recyclerView.adapter = ButtonsAdapter().also {
+        binding.recyclerView.adapter = ButtonsAdapter(false).also {
             it.submitList(buttonList)
         }
         refreshLogin()

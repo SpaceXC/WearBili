@@ -49,7 +49,7 @@ class MenuActivity : AppCompatActivity() {
         recyclerView.layoutManager = GridLayoutManager(this, 2).also {
             it.orientation = GridLayoutManager.VERTICAL
         }
-        recyclerView.adapter = ButtonsAdapter().also {
+        recyclerView.adapter = ButtonsAdapter(false).also {
             it.submitList(buttonList)
         }
 

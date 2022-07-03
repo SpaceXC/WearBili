@@ -95,4 +95,11 @@ object VideoManager {
             callback
         )
     }
+
+    fun getVideoParts(bvid: String?, callback: Callback) {
+        NetworkUtils.getUrl(
+            "http://api.bilibili.com/x/player/pagelist?bvid=$bvid",
+            callback
+        )
+    }
 }

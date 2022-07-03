@@ -19,26 +19,43 @@ import cn.spacexc.wearbili.dataclass.ButtonData
  * 给！爷！写！注！释！
  */
 
-class ButtonsAdapter : ListAdapter<ButtonData, ButtonsAdapter.ButtonViewHolder>(object :
-    DiffUtil.ItemCallback<ButtonData>() {
-    override fun areItemsTheSame(oldItem: ButtonData, newItem: ButtonData): Boolean {
-        return false
+class ButtonsAdapter(isOutlined: Boolean) :
+    ListAdapter<ButtonData, ButtonsAdapter.ButtonViewHolder>(object :
+        DiffUtil.ItemCallback<ButtonData>() {
+        override fun areItemsTheSame(oldItem: ButtonData, newItem: ButtonData): Boolean {
+            return false
+        }
+
+        override fun areContentsTheSame(oldItem: ButtonData, newItem: ButtonData): Boolean {
+            return false
+        }
+    }) {
+
+    private var outline: Boolean = false
+
+    init {
+        outline = isOutlined
     }
 
-    override fun areContentsTheSame(oldItem: ButtonData, newItem: ButtonData): Boolean {
-        return false
-    }
-
-}) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ButtonViewHolder {
         val inflater: LayoutInflater = LayoutInflater.from(parent.context)
-        return ButtonViewHolder(
-            inflater.inflate(
-                R.layout.cell_round_button,
-                parent,
-                false
+        if (outline) {
+            return ButtonViewHolder(
+                inflater.inflate(
+                    R.layout.cell_round_button_otld,
+                    parent,
+                    false
+                )
             )
-        )
+        } else {
+            return ButtonViewHolder(
+                inflater.inflate(
+                    R.layout.cell_round_button,
+                    parent,
+                    false
+                )
+            )
+        }
     }
 
     override fun onBindViewHolder(holder: ButtonViewHolder, position: Int) {

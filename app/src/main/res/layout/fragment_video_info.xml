@@ -16,6 +16,32 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <TextView
+                android:id="@+id/videoPartsTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:drawableEnd="@drawable/ic_baseline_arrow_forward_ios_24"
+                android:fontFamily="@font/roboto"
+                android:text="视频分P"
+                android:textColor="#fff"
+                android:textSize="18sp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/videoDesc" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewParts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                app:layout_constraintHeight_max="160dp"
+                app:layout_constraintStart_toStartOf="@+id/videoDesc"
+                app:layout_constraintTop_toBottomOf="@+id/videoPartsTitle" />
+
             <ImageView
                 android:id="@+id/cover"
                 android:layout_width="0dp"
@@ -158,11 +184,33 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:ellipsize="end"
                 android:fontFamily="@font/roboto"
+                android:lines="3"
                 android:textColor="#fff"
                 app:layout_constraintEnd_toEndOf="@+id/videoTitle"
                 app:layout_constraintStart_toStartOf="@+id/bvidIcon"
                 app:layout_constraintTop_toBottomOf="@+id/bvidText" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/roboto"
+                android:text="操作"
+                android:textColor="#fff"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recyclerViewParts" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewButtons"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintStart_toStartOf="@+id/videoDesc"
+                app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

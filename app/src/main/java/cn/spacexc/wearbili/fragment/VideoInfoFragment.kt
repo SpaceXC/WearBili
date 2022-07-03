@@ -12,13 +12,17 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
-import cn.spacexc.wearbili.activity.PhotoViewActivity
-import cn.spacexc.wearbili.activity.VideoActivity
-import cn.spacexc.wearbili.activity.VideoPlayerActivity
+import cn.spacexc.wearbili.activity.*
+import cn.spacexc.wearbili.adapter.ButtonsAdapter
+import cn.spacexc.wearbili.adapter.VideoPartsAdapter
 import cn.spacexc.wearbili.databinding.FragmentVideoInfoBinding
+import cn.spacexc.wearbili.dataclass.ButtonData
 import cn.spacexc.wearbili.dataclass.VideoInfo
+import cn.spacexc.wearbili.dataclass.VideoPages
 import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.utils.NumberUtils
 import cn.spacexc.wearbili.utils.TimeUtils
@@ -38,6 +42,43 @@ class VideoInfoFragment : Fragment() {
     private val binding get() = _binding!!
 
     val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
+
+    lateinit var videoPartsAdapter: VideoPartsAdapter
+
+    private val btnListUpperRow = listOf(
+        ButtonData(R.drawable.ic_outline_thumb_up_24, "点赞") {
+
+        },
+        ButtonData(R.drawable.ic_outline_thumb_down_24, "点踩") {
+
+        },
+        ButtonData(R.drawable.ic_outline_monetization_on_24, "投币") {
+
+        },
+        ButtonData(R.drawable.ic_round_star_border_24, "收藏") {
+
+        },
+        ButtonData(R.drawable.send_to_mobile, "手机观看") {
+            if (isAdded) {
+                val intent = Intent(requireActivity(), PlayOnPhoneActivity::class.java)
+                intent.putExtra(
+                    "qrCodeUrl",
+                    "https://www.bilibili.com/video/${(activity as VideoActivity).getId()}"
+                )
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                requireActivity().startActivity(intent)
+            }
+        },
+        ButtonData(R.drawable.cloud_download, "缓存") {
+
+        },
+        ButtonData(R.drawable.ic_baseline_history_24, "稍后再看") {
+
+        },
+        ButtonData(R.drawable.ic_baseline_update_24, "历史记录") {
+
+        }
+    )
 
     init {
         Log.d(Application.getTag(), "VideoInfoFragmentLoaded")
@@ -59,7 +100,58 @@ class VideoInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.recyclerViewButtons.layoutManager = GridLayoutManager(requireContext(), 3)
+        binding.recyclerViewButtons.adapter =
+            ButtonsAdapter(true).also { it.submitList(btnListUpperRow) }
+        binding.recyclerViewParts.layoutManager = LinearLayoutManager(requireContext())
+        videoPartsAdapter = VideoPartsAdapter((activity as VideoActivity).getId()!!)
+        binding.recyclerViewParts.adapter = videoPartsAdapter
+        //binding.recyclerViewLower.adapter = ButtonsAdapter(true).also { it.submitList(btnListLowerRow) }
         getVideo()
+        getVideoParts()
+    }
+
+    private fun getVideoParts() {
+        val id = (activity as VideoActivity).getId()
+        VideoManager.getVideoParts(id, object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                mThreadPool.execute {
+                    requireActivity().runOnUiThread {
+                        Toast.makeText(
+                            Application.getContext(),
+                            "加载失败了",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (!isAdded) return
+                val responseStr = response.body?.string()
+                val result = Gson().fromJson(responseStr, VideoPages::class.java)
+                mThreadPool.execute {
+                    requireActivity().runOnUiThread {
+                        if (response.code == 200 && result.code == 0 && result.data.size != 1 or 0) {
+                            videoPartsAdapter?.submitList(result.data.toList())
+                            binding.videoPartsTitle.visibility = View.VISIBLE
+                            binding.recyclerViewParts.visibility = View.VISIBLE
+                            binding.videoPartsTitle.setOnClickListener {
+                                val intent = Intent(
+                                    requireActivity(),
+                                    ViewFullVideoPartsActivity::class.java
+                                )
+                                intent.putExtra("data", responseStr)
+                                intent.putExtra("bvid", (activity as VideoActivity).getId())
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                Application.getContext().startActivity(intent)
+                            }
+                        }
+                    }
+                }
+            }
+
+        })
     }
 
     private fun getVideo() {
@@ -96,7 +188,8 @@ class VideoInfoFragment : Fragment() {
                                 val intent =
                                     Intent(requireActivity(), VideoPlayerActivity::class.java)
                                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                intent.putExtra("videoData", video.data)
+                                intent.putExtra("videoBvid", video.data.bvid)
+                                intent.putExtra("videoCid", video.data.cid)
                                 startActivity(intent)
                             }
                             binding.videoTitle.text = video.data.title

@@ -942,3 +942,53 @@ data class RecommendVideoByVideoStat(
     val share: Int,
     val view: Int
 )
+
+@Parcelize
+data class Dimension(
+    val height: Int,
+    val rotate: Int,
+    val width: Int
+) : Parcelable
+
+@Parcelize
+data class VideoPages(
+    val code: Int,
+    val `data`: Array<VideoPagesData>,
+    val message: String,
+    val ttl: Int
+) : Parcelable {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as VideoPages
+
+        if (code != other.code) return false
+        if (!`data`.contentEquals(other.`data`)) return false
+        if (message != other.message) return false
+        if (ttl != other.ttl) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = code
+        result = 31 * result + `data`.contentHashCode()
+        result = 31 * result + message.hashCode()
+        result = 31 * result + ttl
+        return result
+    }
+}
+
+@Parcelize
+data class VideoPagesData(
+    val cid: Long,
+    val dimension: Dimension,
+    val duration: Int,
+    val first_frame: String,
+    val from: String,
+    val page: Int,
+    val part: String,
+    val vid: String,
+    val weblink: String
+) : Parcelable
