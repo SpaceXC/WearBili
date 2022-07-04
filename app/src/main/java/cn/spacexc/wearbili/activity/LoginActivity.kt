@@ -17,6 +17,7 @@ import cn.spacexc.wearbili.dataclass.QrCodeLoginStats
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.QRCodeUtil
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.gson.Gson
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
@@ -75,24 +76,36 @@ class LoginActivity : AppCompatActivity() {
                 mThreadPool.execute{
                     this@LoginActivity.runOnUiThread{
                         qrImageView.isEnabled = true
-                        if(response.code == 200){
-                            val qrCode : LoginQrCode = Gson().fromJson(response.body?.string(), LoginQrCode::class.java)
+                        if(response.code == 200) {
+                            val qrCode: LoginQrCode =
+                                Gson().fromJson(response.body?.string(), LoginQrCode::class.java)
                             Log.d(Application.getTag(), "onResponse: ${qrCode.data.url}")
                             val bitmap: Bitmap? =
-                                QRCodeUtil.createQRCodeBitmap(qrCode.data.url, 128, 128)
-                            Glide.with(this@LoginActivity)
-                                .load(bitmap)
-                                .into(qrImageView)
+                                QRCodeUtil.createQRCodeBitmap(qrCode.data.url, 64, 64)
+                            //qrImageView.setImageBitmap(bitmap)
+                            try {
+                                Glide.with(this@LoginActivity)
+                                    .load(bitmap)
+                                    .skipMemoryCache(true)
+                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                    .into(qrImageView)
 
-                            lifecycleScope.launch{
-                                while(true){
-                                    val body : FormBody = FormBody.Builder()
+                            } catch (e: OutOfMemoryError) {
+
+                            }
+
+                            lifecycleScope.launch {
+                                while (true) {
+                                    val body: FormBody = FormBody.Builder()
                                         .add("oauthKey", qrCode.data.oauthKey)
                                         .build()
-                                    NetworkUtils.postUrl("https://passport.bilibili.com/qrcode/getLoginInfo", body, object : Callback{
-                                        override fun onFailure(call: Call, e: IOException) {
-                                            this@LoginActivity.runOnUiThread {
-                                                //next.isEnabled = true
+                                    NetworkUtils.postUrl(
+                                        "https://passport.bilibili.com/qrcode/getLoginInfo",
+                                        body,
+                                        object : Callback {
+                                            override fun onFailure(call: Call, e: IOException) {
+                                                this@LoginActivity.runOnUiThread {
+                                                    //next.isEnabled = true
                                                 Toast.makeText(this@LoginActivity, "网络连接错误", Toast.LENGTH_SHORT).show()
                                             }
                                         }

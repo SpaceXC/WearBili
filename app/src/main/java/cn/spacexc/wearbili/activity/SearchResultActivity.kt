@@ -13,6 +13,7 @@ import cn.spacexc.wearbili.adapter.SearchResultAdapter
 import cn.spacexc.wearbili.databinding.ActivitySearchResultBinding
 import cn.spacexc.wearbili.dataclass.VideoSearch
 import cn.spacexc.wearbili.manager.VideoManager
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -29,7 +30,7 @@ class SearchResultActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchResultBinding
     val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
 
-    val adapter : SearchResultAdapter = SearchResultAdapter()
+    lateinit var adapter: SearchResultAdapter
     private val layoutManager = LinearLayoutManager(this)
 
     var currentPage : Int = 1
@@ -38,11 +39,17 @@ class SearchResultActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchResultBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        adapter = SearchResultAdapter(this)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = layoutManager
         binding.swipeRefreshLayout.isRefreshing = true
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING or RecyclerView.SCROLL_STATE_SETTLING) {
+                    Glide.with(this@SearchResultActivity).pauseRequests()
+                } else {
+                    Glide.with(this@SearchResultActivity).resumeRequests()
+                }
                 val lm = recyclerView.layoutManager as LinearLayoutManager?
                 val totalItemCount = recyclerView.adapter!!.itemCount
                 val lastVisibleItemPosition = lm!!.findLastVisibleItemPosition()

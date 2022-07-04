@@ -2,6 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:keepScreenOn="true"
     android:background="#000">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -122,16 +123,20 @@
 
             <TextView
                 android:id="@+id/onlineCount"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
                 android:layout_marginBottom="7dp"
                 android:alpha="0.8"
+                android:ellipsize="end"
                 android:fontFamily="@font/roboto"
+                android:lines="1"
                 android:text="-人在看"
                 android:textColor="#fff"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/timeText"
                 app:layout_constraintStart_toEndOf="@+id/pageName" />
 
             <TextView

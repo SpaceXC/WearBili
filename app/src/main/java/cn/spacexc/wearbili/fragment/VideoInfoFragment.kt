@@ -27,6 +27,7 @@ import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.utils.NumberUtils
 import cn.spacexc.wearbili.utils.TimeUtils
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.google.gson.Gson
@@ -133,7 +134,7 @@ class VideoInfoFragment : Fragment() {
                 mThreadPool.execute {
                     requireActivity().runOnUiThread {
                         if (response.code == 200 && result.code == 0 && result.data.size != 1 or 0) {
-                            videoPartsAdapter?.submitList(result.data.toList())
+                            videoPartsAdapter.submitList(result.data.toList())
                             binding.videoPartsTitle.visibility = View.VISIBLE
                             binding.recyclerViewParts.visibility = View.VISIBLE
                             binding.videoPartsTitle.setOnClickListener {
@@ -231,9 +232,12 @@ class VideoInfoFragment : Fragment() {
                             }
                             val roundedCorners = RoundedCorners(10)
                             val options = RequestOptions.bitmapTransform(roundedCorners)
-                            Glide.with(Application.getContext()).load(video.data.pic)
-                                .placeholder(R.drawable.placeholder).apply(options)
+                            Glide.with(requireContext()).load(video.data.pic)
+                                .placeholder(R.drawable.placeholder).skipMemoryCache(true)
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .apply(options)
                                 .into(binding.cover)
+                            //TODO
                             //GlideUtils.loadPicsFitWidth(Application.getContext(), video.data.pic, R.drawable.placeholder, R.drawable.placeholder, binding.cover)
                         }else{
                             Toast.makeText(requireContext(), "加载失败了", Toast.LENGTH_SHORT).show()

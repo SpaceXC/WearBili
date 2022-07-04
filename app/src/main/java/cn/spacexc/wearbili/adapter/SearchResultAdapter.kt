@@ -1,6 +1,7 @@
 package cn.spacexc.wearbili.adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.text.Html
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import cn.spacexc.wearbili.activity.VideoActivity
 import cn.spacexc.wearbili.dataclass.VideoSearch
 import cn.spacexc.wearbili.utils.NumberUtils
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 
@@ -28,29 +30,34 @@ import com.bumptech.glide.request.RequestOptions
  * 给！爷！写！注！释！
  */
 
-class SearchResultAdapter : ListAdapter<VideoSearch.SearchData.VideoSearchResult, SearchResultAdapter.VideoViewHolder>(object :
-        DiffUtil.ItemCallback<VideoSearch.SearchData.VideoSearchResult>() {
-        override fun areItemsTheSame(
-            oldItem: VideoSearch.SearchData.VideoSearchResult,
+class SearchResultAdapter(contextIn: Context) :
+    ListAdapter<VideoSearch.SearchData.VideoSearchResult, SearchResultAdapter.VideoViewHolder>(
+        object :
+            DiffUtil.ItemCallback<VideoSearch.SearchData.VideoSearchResult>() {
+            override fun areItemsTheSame(
+                oldItem: VideoSearch.SearchData.VideoSearchResult,
+                newItem: VideoSearch.SearchData.VideoSearchResult
+            ): Boolean {
+                return oldItem.bvid == newItem.bvid
+            }
+
+            override fun areContentsTheSame(
+                oldItem: VideoSearch.SearchData.VideoSearchResult,
             newItem: VideoSearch.SearchData.VideoSearchResult
         ): Boolean {
             return oldItem.bvid == newItem.bvid
         }
 
-        override fun areContentsTheSame(
-            oldItem: VideoSearch.SearchData.VideoSearchResult,
-            newItem: VideoSearch.SearchData.VideoSearchResult
-        ): Boolean {
-            return oldItem.bvid == newItem.bvid
-        }
+    }) {
 
-    })
-{
+    var context: Context
 
-
+    init {
+        context = contextIn
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoViewHolder {
-        val inflater : LayoutInflater = LayoutInflater.from(parent.context)
+        val inflater: LayoutInflater = LayoutInflater.from(parent.context)
         return VideoViewHolder(
             inflater.inflate(
                 R.layout.cell_video_list,
@@ -76,7 +83,14 @@ class SearchResultAdapter : ListAdapter<VideoSearch.SearchData.VideoSearchResult
         val options = RequestOptions.bitmapTransform(roundedCorners)
 
 
-        Glide.with(Application.getContext()).load("https:${video.pic}").placeholder(R.drawable.placeholder).apply(options).into(holder.listCover)
+        try {
+            Glide.with(context).load("https:${video.pic}").skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .placeholder(R.drawable.placeholder).apply(options).into(holder.listCover)
+        } catch (e: OutOfMemoryError) {
+
+        }
+
 
         //GlideUtils.loadPicsFitWidth(Application.getContext(), "https:${video.pic}", R.drawable.placeholder, R.drawable.placeholder, holder.listCover)
     }

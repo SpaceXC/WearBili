@@ -14,6 +14,7 @@ import cn.spacexc.wearbili.databinding.FragmentRecommendBinding
 import cn.spacexc.wearbili.dataclass.VideoRecommend
 import cn.spacexc.wearbili.dataclass.VideoRecommendItem
 import cn.spacexc.wearbili.manager.VideoManager
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import okhttp3.Call
@@ -28,7 +29,7 @@ class RecommendFragment : Fragment() {
     private var _binding: FragmentRecommendBinding? = null
     private val binding get() = _binding!!
 
-    private val adapter : VideoRecommendListAdapter = VideoRecommendListAdapter()
+    lateinit var adapter: VideoRecommendListAdapter
 
     val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
 
@@ -51,10 +52,16 @@ class RecommendFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        adapter = VideoRecommendListAdapter(requireContext())
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING or RecyclerView.SCROLL_STATE_SETTLING) {
+                    Glide.with(requireContext()).pauseRequests()
+                } else {
+                    Glide.with(requireContext()).resumeRequests()
+                }
                 val lm = recyclerView.layoutManager as LinearLayoutManager?
                 val totalItemCount = recyclerView.adapter!!.itemCount
                 val lastVisibleItemPosition = lm!!.findLastVisibleItemPosition()
