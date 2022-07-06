@@ -27,12 +27,13 @@
 
         <ImageView
             android:id="@+id/hotType"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginEnd="6dp"
             android:adjustViewBounds="true"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@+id/mainText"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@+id/mainText"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"

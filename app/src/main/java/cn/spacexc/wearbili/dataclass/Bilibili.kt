@@ -14,20 +14,20 @@ import kotlinx.parcelize.Parcelize
 
 data class SpaceProfileResult(
     val code: Int,
-    val data : User
+    val data: SelfUser
 )
 
-data class User(
-    val mid : Long,
-    val name : String,
-    val sex : String,
-    val face : String,
-    val sign : String,
-    val level : Int,
-    val silence : Int,
-    val coins : Float,
+data class SelfUser(
+    val mid: Long,
+    val name: String,
+    val sex: String,
+    val face: String,
+    val sign: String,
+    val level: Int,
+    val silence: Int,
+    val coins: Float,
     val vip: VIP,
-    val follower : Int
+    val follower: Int
 )
 
 data class VIP(
@@ -992,3 +992,4 @@ data class VideoPagesData(
     val vid: String,
     val weblink: String
 ) : Parcelable
+

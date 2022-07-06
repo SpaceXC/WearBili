@@ -14,7 +14,6 @@ import cn.spacexc.wearbili.utils.TimeUtils
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
@@ -72,10 +71,6 @@ class VideoPlayerViewModel() : ViewModel() {
         httpDataSourceFactory.setDefaultRequestProperties(headers)
             .setDefaultRequestProperties(headers)
         mediaPlayer = ExoPlayer.Builder(Application.getContext())
-            .setMediaSourceFactory(
-                DefaultMediaSourceFactory(Application.getContext())
-                    .setDataSourceFactory(httpDataSourceFactory)
-            )
             .build()
     }
 

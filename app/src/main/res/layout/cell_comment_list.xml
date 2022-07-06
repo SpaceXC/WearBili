@@ -29,12 +29,13 @@
 
     <ImageView
         android:id="@+id/commentAvatar"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="8dp"
         android:adjustViewBounds="true"
         app:layout_constraintBottom_toBottomOf="@+id/commentPubDate"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/button_bg" />

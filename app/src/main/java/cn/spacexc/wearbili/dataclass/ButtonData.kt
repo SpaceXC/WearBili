@@ -11,5 +11,4 @@ package cn.spacexc.wearbili.dataclass
 data class ButtonData(
     val resId: Int,
     val buttonName: String,
-    val block: () -> Unit
 )

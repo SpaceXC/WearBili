@@ -20,9 +20,7 @@ import cn.spacexc.wearbili.activity.*
 import cn.spacexc.wearbili.adapter.ButtonsAdapter
 import cn.spacexc.wearbili.adapter.VideoPartsAdapter
 import cn.spacexc.wearbili.databinding.FragmentVideoInfoBinding
-import cn.spacexc.wearbili.dataclass.ButtonData
-import cn.spacexc.wearbili.dataclass.VideoInfo
-import cn.spacexc.wearbili.dataclass.VideoPages
+import cn.spacexc.wearbili.dataclass.*
 import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.utils.NumberUtils
 import cn.spacexc.wearbili.utils.TimeUtils
@@ -46,39 +44,17 @@ class VideoInfoFragment : Fragment() {
 
     lateinit var videoPartsAdapter: VideoPartsAdapter
 
+    var isFollowed = false
+
     private val btnListUpperRow = listOf(
-        ButtonData(R.drawable.ic_outline_thumb_up_24, "点赞") {
-
-        },
-        ButtonData(R.drawable.ic_outline_thumb_down_24, "点踩") {
-
-        },
-        ButtonData(R.drawable.ic_outline_monetization_on_24, "投币") {
-
-        },
-        ButtonData(R.drawable.ic_round_star_border_24, "收藏") {
-
-        },
-        ButtonData(R.drawable.send_to_mobile, "手机观看") {
-            if (isAdded) {
-                val intent = Intent(requireActivity(), PlayOnPhoneActivity::class.java)
-                intent.putExtra(
-                    "qrCodeUrl",
-                    "https://www.bilibili.com/video/${(activity as VideoActivity).getId()}"
-                )
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                requireActivity().startActivity(intent)
-            }
-        },
-        ButtonData(R.drawable.cloud_download, "缓存") {
-
-        },
-        ButtonData(R.drawable.ic_baseline_history_24, "稍后再看") {
-
-        },
-        ButtonData(R.drawable.ic_baseline_update_24, "历史记录") {
-
-        }
+        ButtonData(R.drawable.ic_outline_thumb_up_24, "点赞"),
+        ButtonData(R.drawable.ic_outline_thumb_down_24, "点踩"),
+        ButtonData(R.drawable.ic_outline_monetization_on_24, "投币"),
+        ButtonData(R.drawable.ic_round_star_border_24, "收藏"),
+        ButtonData(R.drawable.send_to_mobile, "手机观看"),
+        ButtonData(R.drawable.cloud_download, "缓存"),
+        ButtonData(R.drawable.ic_baseline_history_24, "稍后再看"),
+        ButtonData(R.drawable.ic_baseline_update_24, "历史记录")
     )
 
     init {
@@ -103,7 +79,25 @@ class VideoInfoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.recyclerViewButtons.layoutManager = GridLayoutManager(requireContext(), 3)
         binding.recyclerViewButtons.adapter =
-            ButtonsAdapter(true).also { it.submitList(btnListUpperRow) }
+            ButtonsAdapter(true, object : ButtonsAdapter.OnItemViewClickListener {
+                override fun onClick(buttonName: String) {
+                    when (buttonName) {
+                        "手机观看" -> {
+                            if (isAdded) {
+                                val intent =
+                                    Intent(requireActivity(), PlayOnPhoneActivity::class.java)
+                                intent.putExtra(
+                                    "qrCodeUrl",
+                                    "https://www.bilibili.com/video/${(activity as VideoActivity).getId()}"
+                                )
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                requireActivity().startActivity(intent)
+                            }
+                        }
+                    }
+                }
+
+            }).also { it.submitList(btnListUpperRow) }
         binding.recyclerViewParts.layoutManager = LinearLayoutManager(requireContext())
         videoPartsAdapter = VideoPartsAdapter((activity as VideoActivity).getId()!!)
         binding.recyclerViewParts.adapter = videoPartsAdapter
@@ -156,6 +150,7 @@ class VideoInfoFragment : Fragment() {
     }
 
     private fun getVideo() {
+        if (!isAdded) return
         val id = (activity as VideoActivity).getId()
         VideoManager.getVideoById(id, object : Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -173,6 +168,7 @@ class VideoInfoFragment : Fragment() {
             @SuppressLint("SetTextI18n")
             override fun onResponse(call: Call, response: Response) {
                 val video = Gson().fromJson(response.body?.string(), VideoInfo::class.java)
+                updateVideoFansStat(video)
                 mThreadPool.execute {
                     requireActivity().runOnUiThread{
                         if(response.code == 200 && video.code == 0){
@@ -196,12 +192,20 @@ class VideoInfoFragment : Fragment() {
                             binding.videoTitle.text = video.data.title
                             binding.bvidText.text = video.data.bvid
                             binding.duration.text = TimeUtils.secondToTime(video.data.duration)
-                            binding.upNameText.text = video.data.owner.name
+                            binding.uploaderName.text = video.data.owner.name
                             binding.danmakusCount.text =
                                 NumberUtils.num2Chinese(video.data.stat.danmaku)
                             binding.viewsCount.text =
                                 NumberUtils.num2Chinese(video.data.stat.view.toInt())
                             binding.videoDesc.setText(video.data.desc)
+                            binding.follow.setOnClickListener {
+                                followUser(video.data.owner.mid, video)
+                            }
+                            Glide.with(this@VideoInfoFragment).load(video.data.owner.face)
+                                .skipMemoryCache(true)
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .placeholder(R.drawable.default_avatar).circleCrop()
+                                .into(binding.uploaderAvatar)
 
 
                             binding.bvidText.setOnLongClickListener {
@@ -249,5 +253,134 @@ class VideoInfoFragment : Fragment() {
             }
 
         })
+    }
+
+    fun switchFollowStat(isFollowed: Boolean) {
+        if (isFollowed) {
+            binding.follow.setBackgroundResource(R.drawable.background_small_circle_grey)
+            binding.follow.setImageResource(R.drawable.ic_baseline_done_24)
+        } else {
+            binding.follow.setBackgroundResource(R.drawable.background_small_circle)
+            binding.follow.setImageResource(R.drawable.ic_baseline_add_24)
+        }
+    }
+
+    fun updateVideoFansStat(video: VideoInfo) {
+        if (!isAdded) return
+        cn.spacexc.wearbili.manager.UserManager.getUserById(
+            video.data.owner.mid,
+            object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    mThreadPool.execute {
+                        requireActivity().runOnUiThread {
+                            Toast.makeText(
+                                Application.getContext(),
+                                "加载失败了",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val uploader: User = Gson().fromJson(response.body?.string(), User::class.java)
+                    cn.spacexc.wearbili.manager.UserManager.getUserFans(
+                        uploader.data.mid,
+                        object : Callback {
+                            override fun onFailure(call: Call, e: IOException) {}
+
+                            override fun onResponse(call: Call, response: Response) {
+                                val userFans =
+                                    Gson().fromJson(response.body?.string(), UserFans::class.java)
+                                mThreadPool.execute {
+                                    requireActivity().runOnUiThread {
+                                        binding.uploaderFans.text =
+                                            "${NumberUtils.num2Chinese(userFans.data.card.fans)}粉丝"
+                                    }
+                                }
+                            }
+
+                        })
+                    mThreadPool.execute {
+                        requireActivity().runOnUiThread {
+                            isFollowed = uploader.data.is_followed
+                            switchFollowStat(uploader.data.is_followed)
+                        }
+                    }
+                }
+
+            })
+    }
+
+    fun followUser(mid: Long, video: VideoInfo) {
+        if (cn.spacexc.wearbili.manager.UserManager.getUserCookie() == null) {
+            Toast.makeText(requireContext(), "你还没有登录哦", Toast.LENGTH_SHORT).show()
+            val intent = Intent(requireActivity(), LoginActivity::class.java)
+            intent.putExtra("fromHome", false)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+            return
+        }
+        if (!isAdded) return
+        if (!isFollowed) {
+            cn.spacexc.wearbili.manager.UserManager.subscribeUser(mid, 14, object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    mThreadPool.execute {
+                        requireActivity().runOnUiThread {
+                            Toast.makeText(
+                                Application.getContext(),
+                                "关注失败了",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+
+                    mThreadPool.execute {
+                        requireActivity().runOnUiThread {
+                            Toast.makeText(
+                                Application.getContext(),
+                                "关注成功了",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            updateVideoFansStat(video)
+                        }
+                    }
+
+
+                }
+
+            })
+        } else {
+            cn.spacexc.wearbili.manager.UserManager.deSubscribeUser(mid, 14, object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    mThreadPool.execute {
+                        requireActivity().runOnUiThread {
+                            Toast.makeText(
+                                Application.getContext(),
+                                "取关失败了",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    mThreadPool.execute {
+                        requireActivity().runOnUiThread {
+                            Toast.makeText(
+                                Application.getContext(),
+                                "取关成功了",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            updateVideoFansStat(video)
+                        }
+                    }
+                }
+
+            })
+        }
     }
 }

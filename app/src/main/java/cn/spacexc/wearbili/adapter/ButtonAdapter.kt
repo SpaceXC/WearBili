@@ -19,7 +19,7 @@ import cn.spacexc.wearbili.dataclass.ButtonData
  * 给！爷！写！注！释！
  */
 
-class ButtonsAdapter(isOutlined: Boolean) :
+class ButtonsAdapter(isOutlined: Boolean, onItemViewClickListener: OnItemViewClickListener) :
     ListAdapter<ButtonData, ButtonsAdapter.ButtonViewHolder>(object :
         DiffUtil.ItemCallback<ButtonData>() {
         override fun areItemsTheSame(oldItem: ButtonData, newItem: ButtonData): Boolean {
@@ -32,10 +32,12 @@ class ButtonsAdapter(isOutlined: Boolean) :
     }) {
 
     private var outline: Boolean = false
-
+    private var onItemViewClickListener: OnItemViewClickListener
     init {
         outline = isOutlined
+        this.onItemViewClickListener = onItemViewClickListener
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ButtonViewHolder {
         val inflater: LayoutInflater = LayoutInflater.from(parent.context)
@@ -62,7 +64,7 @@ class ButtonsAdapter(isOutlined: Boolean) :
         holder.icon.setImageResource(getItem(position).resId)
         holder.name.text = getItem(position).buttonName
         holder.itemView.setOnClickListener {
-            getItem(position).block.invoke()
+            onItemViewClickListener.onClick(getItem(position).buttonName)
         }
     }
 
@@ -74,5 +76,9 @@ class ButtonsAdapter(isOutlined: Boolean) :
             icon = itemView.findViewById(R.id.icon)
             name = itemView.findViewById(R.id.buttonName)
         }
+    }
+
+    public interface OnItemViewClickListener {
+        fun onClick(buttonName: String)
     }
 }

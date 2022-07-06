@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">WearBili</string>
+    <string name="exo_download_notification_channel_name">WearBili Cache Searvice</string>
 </resources>

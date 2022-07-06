@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">WearBili</string>
+    <string name="exo_download_notification_channel_name">WearBili缓存服务</string>
 </resources>

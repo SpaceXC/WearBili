@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.LoginActivity
+import cn.spacexc.wearbili.activity.VideoCacheActivity
 import cn.spacexc.wearbili.adapter.ButtonsAdapter
 import cn.spacexc.wearbili.databinding.FragmentProfileBinding
 import cn.spacexc.wearbili.dataclass.ButtonData
@@ -37,24 +38,12 @@ class ProfileFragment : Fragment() {
 
     //TODO 个人页按钮
     private val buttonList = listOf(
-        ButtonData(R.drawable.ic_outline_person_add_alt_1_24, "我的关注") {
-
-        },
-        ButtonData(R.drawable.ic_baseline_update_24, "历史记录") {
-
-        },
-        ButtonData(R.drawable.ic_baseline_play_circle_outline_24, "稍后再看") {
-
-        },
-        ButtonData(R.drawable.ic_round_star_border_24, "个人收藏") {
-
-        },
-        ButtonData(R.drawable.cloud_download, "离线缓存") {
-
-        },
-        ButtonData(R.drawable.ic_outline_settings_24, "应用设置") {
-
-        },
+        ButtonData(R.drawable.ic_outline_person_add_alt_1_24, "我的关注"),
+        ButtonData(R.drawable.ic_baseline_update_24, "历史记录"),
+        ButtonData(R.drawable.ic_baseline_play_circle_outline_24, "稍后再看"),
+        ButtonData(R.drawable.ic_round_star_border_24, "个人收藏"),
+        ButtonData(R.drawable.cloud_download, "离线缓存"),
+        ButtonData(R.drawable.ic_outline_settings_24, "应用设置")
     )
 
     override fun onCreateView(
@@ -66,19 +55,34 @@ class ProfileFragment : Fragment() {
         return binding.root
     }
 
-    override fun onDestroyView() {
+    /*override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
+    }*/
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 2).also {
             it.orientation = GridLayoutManager.VERTICAL
         }
-        binding.recyclerView.adapter = ButtonsAdapter(false).also {
-            it.submitList(buttonList)
-        }
+        binding.recyclerView.adapter =
+            ButtonsAdapter(false, object : ButtonsAdapter.OnItemViewClickListener {
+                override fun onClick(buttonName: String) {
+                    when (buttonName) {
+                        "离线缓存" -> {
+                            if (isAdded) {
+                                val intent =
+                                    Intent(requireContext(), VideoCacheActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                startActivity(intent)
+                            }
+                        }
+                    }
+                }
+
+            }).also {
+                it.submitList(buttonList)
+            }
         refreshLogin()
         binding.avatar.setOnClickListener { refreshLogin() }
     }
@@ -92,7 +96,7 @@ class ProfileFragment : Fragment() {
             .into(binding.avatar)
         binding.usernameText.text = "加载中..."
         binding.avatar.isEnabled = false
-        if(UserManager.getUserCookie() == null) {
+        if (UserManager.getUserCookie() == null) {
             binding.usernameText.text = "轻点登入"
             binding.survey.text = "你还没有登入哦（*゜ー゜*）"
 
@@ -104,13 +108,13 @@ class ProfileFragment : Fragment() {
                     )
                 )
             }
-        }
-        else{
-            UserManager.getCurrentUser(object : Callback{
+        } else {
+            UserManager.getCurrentUser(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
-                    mThreadPool.execute{
-                        requireActivity().runOnUiThread{
-                            Toast.makeText(requireContext(), "获取用户信息失败，点击头像重试", Toast.LENGTH_SHORT).show()
+                    mThreadPool.execute {
+                        requireActivity().runOnUiThread {
+                            Toast.makeText(requireContext(), "获取用户信息失败，点击头像重试", Toast.LENGTH_SHORT)
+                                .show()
                             binding.usernameText.text = "加载失败"
                             binding.avatar.isEnabled = true
                         }
@@ -119,19 +123,23 @@ class ProfileFragment : Fragment() {
 
                 @SuppressLint("SetTextI18n")
                 override fun onResponse(call: Call, response: Response) {
-                    mThreadPool.execute{
-                        requireActivity().runOnUiThread{
-                            val user : SpaceProfileResult = Gson().fromJson(response.body?.string(), SpaceProfileResult::class.java)
+                    mThreadPool.execute {
+                        requireActivity().runOnUiThread {
+                            val user: SpaceProfileResult = Gson().fromJson(
+                                response.body?.string(),
+                                SpaceProfileResult::class.java
+                            )
                             Glide.with(requireActivity()).load(Uri.parse(user.data.face))
                                 .placeholder(R.drawable.default_avatar).circleCrop()
                                 .into(binding.avatar)
                             binding.usernameText.text = user.data.name
-                            binding.survey.text = "硬币: ${user.data.coins}  粉丝: ${user.data.follower}"
+                            binding.survey.text =
+                                "硬币: ${user.data.coins}  粉丝: ${user.data.follower}"
                             //binding.uidText.text = "UID ${user.data.mid}"
                             //binding.signText.text = user.data.sign.ifEmpty { "这个人什么都没写..." }
                             binding.levelText.text = "LV${user.data.level}"
                             binding.levelText.visibility = View.VISIBLE
-                            if(user.data.vip.type != 0) {
+                            if (user.data.vip.type != 0) {
                                 //binding.vipText.text = user.data.vip.label.text
                                 binding.usernameText.setTextColor(Color.parseColor(user.data.vip.nickname_color))
                                 //binding.vipText.setTextColor(Color.parseColor(user.data.vip.label.bg_color))

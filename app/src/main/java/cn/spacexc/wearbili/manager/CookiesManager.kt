@@ -44,7 +44,6 @@ object CookiesManager {
         properties["DeviceInfo"] = DeviceManager.getDeviceName()!!
         properties["UploadTime"] = System.currentTimeMillis().toString()
         properties["HasCookies"] = getCookies().isNotEmpty().toString()
-        //properties["Cookies"] = getCookies().toString()
         for (cookie in getCookies()) {
             properties[cookie.name] = cookie.value
         }

@@ -114,12 +114,23 @@ class LoginActivity : AppCompatActivity() {
                                             this@LoginActivity.runOnUiThread {
                                                 val codeStat : QrCodeLoginStats = Gson().fromJson(response.body?.string(), QrCodeLoginStats::class.java)
                                                 if(codeStat.status){
-                                                    Toast.makeText(this@LoginActivity, "登录成功", Toast.LENGTH_SHORT).show()
+                                                    Toast.makeText(
+                                                        this@LoginActivity,
+                                                        "登录成功",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
                                                     cancel()
-                                                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                                                    intent.flags =
-                                                        Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                                                    startActivity(intent)
+                                                    if (intent.getBooleanExtra("fromHome", true)) {
+                                                        val intent = Intent(
+                                                            this@LoginActivity,
+                                                            MainActivity::class.java
+                                                        )
+                                                        intent.flags =
+                                                            Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                                        startActivity(intent)
+                                                    } else {
+                                                        finish()
+                                                    }
                                                 }
                                                 else{
                                                     when(codeStat.data as Number){

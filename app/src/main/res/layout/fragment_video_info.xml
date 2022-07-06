@@ -33,6 +33,117 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/videoDesc" />
 
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="10dp"
+                android:minHeight="80dp"
+                app:cardBackgroundColor="#78242424"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="0dp"
+                app:cardMaxElevation="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/videoTitle"
+                app:strokeColor="#70707070"
+                app:strokeWidth="0.1dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:minHeight="80dp">
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.3" />
+
+                    <ImageView
+                        android:id="@+id/uploaderAvatar"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginEnd="6dp"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/default_avatar"
+                        app:layout_constraintBottom_toTopOf="@+id/guideline7"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintEnd_toStartOf="@+id/guideline6"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/guideline8" />
+
+                    <TextView
+                        android:id="@+id/uploaderName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:ellipsize="marquee"
+                        android:fontFamily="@font/roboto_bold"
+                        android:maxWidth="70dp"
+                        android:maxLines="1"
+                        android:textColor="#fff"
+                        android:textSize="16sp"
+                        app:autoSizeTextType="uniform"
+                        app:layout_constraintBottom_toTopOf="@+id/uploaderFans"
+                        app:layout_constraintEnd_toStartOf="@+id/follow"
+                        app:layout_constraintStart_toStartOf="@+id/guideline6"
+                        app:layout_constraintTop_toTopOf="@+id/guideline8" />
+
+                    <TextView
+                        android:id="@+id/uploaderFans"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="2dp"
+                        android:alpha="0.6"
+                        android:ellipsize="marquee"
+                        android:fontFamily="@font/roboto_bold"
+                        android:textColor="#fff"
+                        android:textSize="14sp"
+                        app:autoSizeTextType="uniform"
+                        app:layout_constraintBottom_toTopOf="@+id/guideline7"
+                        app:layout_constraintEnd_toStartOf="@+id/follow"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="@+id/guideline6"
+                        app:layout_constraintTop_toBottomOf="@+id/uploaderName" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_percent="0.85" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_percent="0.15" />
+
+                    <ImageView
+                        android:id="@+id/follow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/background_small_circle"
+                        android:paddingStart="4dp"
+                        android:paddingTop="4dp"
+                        android:paddingEnd="4dp"
+                        android:paddingBottom="4dp"
+                        android:src="@drawable/ic_baseline_add_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewParts"
                 android:layout_width="match_parent"
@@ -97,12 +208,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="6dp"
                 android:alpha="0.5"
                 android:fontFamily="@font/roboto"
                 android:textColor="#fff"
                 app:layout_constraintStart_toEndOf="@+id/viewsIcon"
-                app:layout_constraintTop_toBottomOf="@+id/videoTitle" />
+                app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
             <ImageView
                 android:id="@+id/danmakuIcon"
@@ -120,38 +231,12 @@
                 android:id="@+id/danmakusCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="6dp"
                 android:alpha="0.5"
                 android:fontFamily="@font/roboto"
                 android:textColor="#fff"
                 app:layout_constraintStart_toEndOf="@+id/danmakuIcon"
-                app:layout_constraintTop_toBottomOf="@+id/videoTitle" />
-
-            <ImageView
-                android:id="@+id/upIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:adjustViewBounds="true"
-                android:alpha="0.5"
-                android:src="@drawable/ic_baseline_person_outline_24"
-                app:layout_constraintBottom_toBottomOf="@+id/upNameText"
-                app:layout_constraintStart_toStartOf="@+id/viewsIcon"
-                app:layout_constraintTop_toTopOf="@+id/upNameText" />
-
-            <TextView
-                android:id="@+id/upNameText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="10dp"
-                android:alpha="0.5"
-                android:fontFamily="@font/roboto"
-                android:textColor="#fff"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/upIcon"
-                app:layout_constraintTop_toBottomOf="@+id/viewsCount" />
+                app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
             <TextView
                 android:id="@+id/bvidText"
@@ -166,7 +251,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/bvidIcon"
-                app:layout_constraintTop_toBottomOf="@+id/upNameText" />
+                app:layout_constraintTop_toBottomOf="@+id/viewsIcon" />
 
             <ImageView
                 android:id="@+id/bvidIcon"
@@ -176,7 +261,7 @@
                 android:alpha="0.5"
                 android:src="@drawable/ic_baseline_movie_24"
                 app:layout_constraintBottom_toBottomOf="@+id/bvidText"
-                app:layout_constraintStart_toStartOf="@+id/upIcon"
+                app:layout_constraintStart_toStartOf="@+id/viewsIcon"
                 app:layout_constraintTop_toTopOf="@+id/bvidText" />
 
             <com.wyx.components.widgets.ExpandCollpaseTextView
@@ -185,10 +270,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:ellipsize="end"
-                app:collapse_line_space_percent="30"
                 android:textColor="#fff"
-                app:layout_constraintEnd_toEndOf="@+id/videoTitle"
-                app:layout_constraintStart_toStartOf="@+id/bvidIcon"
+                app:collapse_line_space_percent="30"
                 app:collapse_show_line_number="3"
                 app:collapse_text="  收起"
                 app:content_text_color="#999999"
@@ -196,7 +279,10 @@
                 app:expand_text_color="#FB7299"
                 app:expend_click_event_on="expand_text"
                 app:fontFamily="@font/roboto"
-                app:layout_constraintTop_toBottomOf="@+id/bvidText" />
+                app:layout_constraintEnd_toEndOf="@+id/videoTitle"
+                app:layout_constraintStart_toStartOf="@+id/bvidIcon"
+                app:layout_constraintTop_toBottomOf="@+id/bvidText"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <TextView
                 android:id="@+id/textView2"

@@ -15,30 +15,13 @@ import kotlinx.coroutines.launch
 
 class MenuActivity : AppCompatActivity() {
     private val buttonList = listOf(
-        ButtonData(R.drawable.ic_outline_home_24, "首页") {
-            MainActivity.currentPageId.value = R.id.recommendFragment
-            finish()
-        },
-        ButtonData(R.drawable.ic_baseline_person_outline_24, "我的") {
-            MainActivity.currentPageId.value = R.id.profileFragment
-            finish()
-        },
-        ButtonData(R.drawable.mode_fan, "动态") {
-
-        },
-        ButtonData(R.drawable.ic_baseline_search_24, "搜索") {
-            MainActivity.currentPageId.value = R.id.searchFragment
-            finish()
-        },
-        ButtonData(R.drawable.ic_outline_local_fire_department_24, "热门") {
-
-        },
-        ButtonData(R.drawable.ic_baseline_movie_24, "番剧") {
-
-        },
-        ButtonData(R.drawable.ic_outline_tv_24, "影视") {
-
-        }
+        ButtonData(R.drawable.ic_outline_home_24, "首页"),
+        ButtonData(R.drawable.ic_baseline_person_outline_24, "我的"),
+        ButtonData(R.drawable.mode_fan, "动态"),
+        ButtonData(R.drawable.ic_baseline_search_24, "搜索"),
+        ButtonData(R.drawable.ic_outline_local_fire_department_24, "热门"),
+        ButtonData(R.drawable.ic_baseline_movie_24, "番剧"),
+        ButtonData(R.drawable.ic_outline_tv_24, "影视")
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,9 +32,25 @@ class MenuActivity : AppCompatActivity() {
         recyclerView.layoutManager = GridLayoutManager(this, 2).also {
             it.orientation = GridLayoutManager.VERTICAL
         }
-        recyclerView.adapter = ButtonsAdapter(false).also {
-            it.submitList(buttonList)
-        }
+        recyclerView.adapter =
+            ButtonsAdapter(false, object : ButtonsAdapter.OnItemViewClickListener {
+                override fun onClick(buttonName: String) {
+                    when (buttonName) {
+                        "首页" -> {
+                            MainActivity.currentPageId.value = R.id.recommendFragment; finish()
+                        }
+                        "我的" -> {
+                            MainActivity.currentPageId.value = R.id.profileFragment; finish()
+                        }
+                        "搜索" -> {
+                            MainActivity.currentPageId.value = R.id.searchFragment; finish()
+                        }
+                    }
+                }
+
+            }).also {
+                it.submitList(buttonList)
+            }
 
         lifecycleScope.launch {
             while (true) {
