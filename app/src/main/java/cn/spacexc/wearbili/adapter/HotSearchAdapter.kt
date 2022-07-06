@@ -59,7 +59,8 @@ class HotSearchAdapter : ListAdapter<HotSearchData, HotSearchAdapter.HotSearchVi
         if (searchData.word_type == 1) {
             holder.hotTypeImageView.visibility = View.GONE
         } else {
-            Glide.with(Application.getContext()).load(searchData.icon).into(holder.hotTypeImageView)
+            Glide.with(Application.getContext()).load(searchData.icon.replace("http", "https"))
+                .into(holder.hotTypeImageView)
         }
     }
 

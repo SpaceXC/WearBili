@@ -108,8 +108,10 @@ class CommentFragment : Fragment() {
                             mThreadPool.execute {
                                 (activity as VideoActivity).runOnUiThread {
                                     if (comments.code == 0) {
+
                                         val replies: MutableList<CommentContentData> =
-                                            comments.data.replies.toMutableList()
+                                            (comments.data.replies?.toMutableList()
+                                                ?: emptyList()) as MutableList<CommentContentData>
                                         if (replies != prevList) {
                                             prevList = replies
                                             if (comments.data.top.member != null && comments.data.top.content != null) {

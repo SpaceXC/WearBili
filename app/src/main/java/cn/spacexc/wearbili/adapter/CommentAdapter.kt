@@ -75,7 +75,8 @@ class CommentAdapter() :
         if (comment.member!!.mid == uploaderMid) {
             holder.isUp.visibility = View.VISIBLE
         }
-        Glide.with(Application.getContext()).load(comment.member!!.avatar).circleCrop()
+        Glide.with(Application.getContext()).load(comment.member!!.avatar.replace("http", "https"))
+            .circleCrop()
             .into(holder.avatar)
     }
 

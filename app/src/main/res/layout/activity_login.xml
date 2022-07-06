@@ -21,7 +21,7 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/guideline3"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/circle_right" />
+            app:srcCompat="@drawable/circle_right_x05_cropped" />
 
         <ImageView
             android:id="@+id/imageView2"
@@ -32,7 +32,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline4"
             app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/circle_left" />
+            app:srcCompat="@drawable/circle_left_x05_cropped" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline3"
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:layout_marginEnd="7.5dp"
-                android:fontFamily="@font/roboto_bold"
+                android:fontFamily="@font/googlesans_medium"
                 android:paddingBottom="2dp"
                 android:textColor="#fff"
                 android:textSize="16sp"
@@ -81,7 +81,7 @@
                 android:layout_marginStart="7.5dp"
                 android:layout_marginTop="6dp"
                 android:drawableStart="@drawable/ic_baseline_arrow_back_ios_24"
-                android:fontFamily="@font/roboto_bold"
+                android:fontFamily="@font/puhui_bold"
                 android:gravity="top"
                 android:paddingBottom="2dp"
                 android:text="登入"

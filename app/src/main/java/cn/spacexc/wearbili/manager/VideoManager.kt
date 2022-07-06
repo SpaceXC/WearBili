@@ -4,9 +4,8 @@ import android.util.Log
 import android.widget.Toast
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.utils.NetworkUtils
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Response
+import cn.spacexc.wearbili.utils.VideoUtils
+import okhttp3.*
 import java.io.IOException
 
 /**
@@ -98,8 +97,33 @@ object VideoManager {
 
     fun getVideoParts(bvid: String?, callback: Callback) {
         NetworkUtils.getUrl(
-            "http://api.bilibili.com/x/player/pagelist?bvid=$bvid",
+            "https://api.bilibili.com/x/player/pagelist?bvid=$bvid",
             callback
         )
+    }
+
+    fun uploadVideoViewingProgress(bvid: String, cid: Long, progress: Int) {
+        val body: RequestBody = FormBody.Builder()
+            .add("aid", VideoUtils.bv2av(bvid))
+            .add("cid", cid.toString())
+            .add("progress", progress.toString())
+            .add("platform", "android")
+            .add("csrf", CookiesManager.getCookieByName("bili_jct")!!)
+            .build()
+        NetworkUtils.postUrl(
+            "https://api.bilibili.com/x/v2/history/report",
+            body,
+            object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    Log.d(Application.getTag(), "onFailure: 上报播放进度失败")
+
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    Log.d(Application.getTag(), "onResponse: 上报播放进度成功")
+                    response.close()
+                }
+
+            })
     }
 }

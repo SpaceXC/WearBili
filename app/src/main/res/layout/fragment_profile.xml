@@ -22,7 +22,7 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/guideline3"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/circle_right" />
+            app:srcCompat="@drawable/circle_right_x05_cropped" />
 
         <ImageView
             android:id="@+id/imageView2"
@@ -33,7 +33,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline4"
             app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/circle_left" />
+            app:srcCompat="@drawable/circle_left_x05_cropped" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline3"
@@ -112,7 +112,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ellipsize="marquee"
-                        android:fontFamily="@font/roboto_bold"
+                        android:fontFamily="@font/puhui_bold"
                         android:maxWidth="70dp"
                         android:maxLines="1"
                         android:textColor="#fff"
@@ -120,25 +120,24 @@
                         app:autoSizeTextType="uniform"
                         app:layout_constraintBottom_toTopOf="@+id/survey"
                         app:layout_constraintStart_toStartOf="@+id/guideline6"
-                        app:layout_constraintTop_toTopOf="@+id/guideline8" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/survey"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="4dp"
-                        android:layout_marginBottom="2dp"
                         android:alpha="0.8"
                         android:ellipsize="marquee"
-                        android:fontFamily="@font/roboto"
+                        android:fontFamily="@font/puhui"
                         android:textColor="#fff"
                         android:textSize="10sp"
                         app:autoSizeTextType="none"
-                        app:layout_constraintBottom_toTopOf="@+id/guideline7"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="@+id/guideline6"
-                        app:layout_constraintTop_toBottomOf="@+id/uploaderName" />
+                        app:layout_constraintTop_toBottomOf="@+id/usernameText" />
 
                     <androidx.constraintlayout.widget.Guideline
                         android:id="@+id/guideline7"
@@ -158,10 +157,10 @@
                         android:id="@+id/levelText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
+                        android:layout_marginStart="6dp"
                         android:layout_marginEnd="10dp"
                         android:background="@drawable/background_level_card"
-                        android:fontFamily="@font/roboto"
+                        android:fontFamily="@font/puhui"
                         android:paddingStart="6dp"
                         android:paddingTop="1dp"
                         android:paddingEnd="6dp"
@@ -170,11 +169,11 @@
                         android:textColor="#fff"
                         android:textSize="10sp"
                         android:visibility="invisible"
-                        app:layout_constraintBottom_toBottomOf="@+id/uploaderName"
+                        app:layout_constraintBottom_toBottomOf="@+id/usernameText"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@+id/uploaderName"
-                        app:layout_constraintTop_toTopOf="@+id/uploaderName"
+                        app:layout_constraintStart_toEndOf="@+id/usernameText"
+                        app:layout_constraintTop_toTopOf="@+id/usernameText"
                         app:layout_constraintVertical_bias="0.5" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

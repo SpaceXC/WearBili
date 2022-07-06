@@ -260,12 +260,12 @@ data class VideoComment(
     val data : CommentData
 )
 data class CommentData(
-    val cursor : CommentCursor,
-    val hots : List<CommentContentData>,
-    val notice : CommentNotice,
-    val replies : List<CommentContentData>,
-    val top : CommentContentData,
-    val upper : UpperInfo
+    val cursor: CommentCursor,
+    val hots: List<CommentContentData>,
+    val notice: CommentNotice,
+    val replies: List<CommentContentData>?,
+    val top: CommentContentData,
+    val upper: UpperInfo
 ) {
 
 }

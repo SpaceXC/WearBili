@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.R
-import cn.spacexc.wearbili.dataclass.ButtonData
+import cn.spacexc.wearbili.dataclass.RoundButtonData
 
 /**
  * Created by XC-Qan on 2022/6/30.
@@ -20,13 +20,16 @@ import cn.spacexc.wearbili.dataclass.ButtonData
  */
 
 class ButtonsAdapter(isOutlined: Boolean, onItemViewClickListener: OnItemViewClickListener) :
-    ListAdapter<ButtonData, ButtonsAdapter.ButtonViewHolder>(object :
-        DiffUtil.ItemCallback<ButtonData>() {
-        override fun areItemsTheSame(oldItem: ButtonData, newItem: ButtonData): Boolean {
+    ListAdapter<RoundButtonData, ButtonsAdapter.ButtonViewHolder>(object :
+        DiffUtil.ItemCallback<RoundButtonData>() {
+        override fun areItemsTheSame(oldItem: RoundButtonData, newItem: RoundButtonData): Boolean {
             return false
         }
 
-        override fun areContentsTheSame(oldItem: ButtonData, newItem: ButtonData): Boolean {
+        override fun areContentsTheSame(
+            oldItem: RoundButtonData,
+            newItem: RoundButtonData
+        ): Boolean {
             return false
         }
     }) {
@@ -78,7 +81,5 @@ class ButtonsAdapter(isOutlined: Boolean, onItemViewClickListener: OnItemViewCli
         }
     }
 
-    public interface OnItemViewClickListener {
-        fun onClick(buttonName: String)
-    }
+
 }

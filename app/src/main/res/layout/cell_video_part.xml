@@ -35,7 +35,7 @@
             android:layout_marginBottom="15dp"
             android:alpha="0.76"
             android:ellipsize="end"
-            android:fontFamily="@font/roboto_bold"
+            android:fontFamily="@font/puhui_bold"
             android:gravity="start"
             android:maxLines="2"
             android:text="P1 - 日和（ヒヨリ）"

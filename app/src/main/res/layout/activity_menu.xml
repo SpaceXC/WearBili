@@ -35,7 +35,7 @@
             android:layout_marginStart="7.5dp"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="6dp"
-            android:fontFamily="@font/roboto_bold"
+            android:fontFamily="@font/puhui_bold"
             android:text="菜单"
             android:textColor="#fff"
             android:textSize="16sp" />
@@ -48,7 +48,7 @@
             android:layout_marginTop="6dp"
             android:layout_marginEnd="7.5dp"
             android:layout_marginBottom="6dp"
-            android:fontFamily="@font/roboto_bold"
+            android:fontFamily="@font/googlesans_medium"
             android:text="12:00"
             android:textColor="#fff"
             android:textSize="16sp" />

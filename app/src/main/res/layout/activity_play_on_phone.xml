@@ -89,7 +89,6 @@
                         android:id="@+id/innerCardView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:minHeight="80dp"
                         app:cardBackgroundColor="#C4587D"
                         app:cardCornerRadius="0dp"
                         app:cardElevation="0dp"
@@ -108,21 +107,9 @@
                                 android:id="@+id/imageView5"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="bottom|start"
-                                android:layout_marginEnd="20dp"
                                 android:layout_weight="1"
                                 android:adjustViewBounds="true"
-                                app:srcCompat="@drawable/two_tow_icon" />
-
-                            <ImageView
-                                android:id="@+id/imageView8"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="bottom|end"
-                                android:layout_marginStart="20dp"
-                                android:layout_weight="1"
-                                android:adjustViewBounds="true"
-                                app:srcCompat="@drawable/three_three_icon" />
+                                app:srcCompat="@drawable/twotwo_threethree" />
                         </LinearLayout>
 
                     </com.google.android.material.card.MaterialCardView>
@@ -132,12 +119,10 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="45dp"
                         android:layout_marginTop="30dp"
-                        android:layout_marginEnd="45dp"
                         android:adjustViewBounds="true"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/guideline12"
+                        app:layout_constraintStart_toStartOf="@+id/guideline11"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/background_qrcode" />
 
@@ -161,7 +146,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
-                        android:fontFamily="@font/roboto"
+                        android:fontFamily="@font/puhui"
                         android:gravity="center_horizontal"
                         android:text="手机扫描二维码\n继续观看"
                         android:textColor="#fff"
@@ -170,6 +155,20 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/qrImageBg2"
                         app:layout_constraintVertical_bias="0.0" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline11"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.2" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline12"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.8" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </ScrollView>
 
@@ -177,7 +176,7 @@
                 android:id="@+id/textView4"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto"
+                android:fontFamily="@font/puhui"
                 android:gravity="center_horizontal"
                 android:lines="1000"
                 android:textColor="#fff"
@@ -204,7 +203,7 @@
             android:layout_marginTop="6dp"
             android:layout_marginBottom="6dp"
             android:drawableStart="@drawable/ic_baseline_arrow_back_ios_24"
-            android:fontFamily="@font/roboto_bold"
+            android:fontFamily="@font/puhui_bold"
             android:text="手机观看"
             android:textColor="#fff"
             android:textSize="16sp" />
@@ -217,7 +216,7 @@
             android:layout_marginTop="6dp"
             android:layout_marginEnd="7.5dp"
             android:layout_marginBottom="6dp"
-            android:fontFamily="@font/roboto_bold"
+            android:fontFamily="@font/googlesans_medium"
             android:text="12:00"
             android:textColor="#fff"
             android:textSize="16sp" />

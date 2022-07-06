@@ -161,14 +161,19 @@ class LoginActivity : AppCompatActivity() {
                                     delay(1500)
                                 }
                             }
-                        }
-                        else{
-                            Toast.makeText(this@LoginActivity, "获取登录二维码失败", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this@LoginActivity, "获取登录二维码失败", Toast.LENGTH_SHORT)
+                                .show()
                         }
                     }
                 }
             }
 
         })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        lifecycleScope.cancel()
     }
 }

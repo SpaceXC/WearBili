@@ -100,6 +100,8 @@ class VideoPlayerViewModel() : ViewModel() {
 
     private var isPlaying: Boolean = false
 
+    lateinit var onSeekCompleteListener: OnSeekCompleteListener
+
     fun loadVideo(videoUrl: String) {
 //        /*val httpDataSourceFactory = DefaultHttpDataSource.Factory()
 //        val dataSourceFactory: DataSource.Factory = DataSource.Factory {
@@ -143,6 +145,7 @@ class VideoPlayerViewModel() : ViewModel() {
                             )
                             //danmakuView.seekTo(mediaPlayer.currentPosition)
                             danmakuView.start(mediaPlayer.currentPosition)
+                            onSeekCompleteListener.onSeek(mediaPlayer.currentPosition)
                             this@VideoPlayerViewModel.isPlaying = true
                             updatePlayerProgress()
 
@@ -274,4 +277,8 @@ class VideoPlayerViewModel() : ViewModel() {
         mediaPlayer.release()
         danmakuView.release()
     }
+}
+
+interface OnSeekCompleteListener {
+    fun onSeek(progress: Long)
 }

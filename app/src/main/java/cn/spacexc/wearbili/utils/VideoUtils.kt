@@ -31,7 +31,7 @@ object VideoUtils {
     }
 
     //bv转av方法
-    fun bv2av(s: String): String? {
+    fun bv2av(s: String): String {
         var r: Long = 0
         //58进制转换
         for (i in 0..57) {
@@ -42,7 +42,7 @@ object VideoUtils {
             r += mp[s.substring(ss[i], ss[i] + 1)]!! * power(58, i)
         }
         //转换完成后，需要处理，带上两个随机数
-        return "av" + (r - add xor xor)
+        return (r - add xor xor).toString()
     }
 
     //av转bv方法

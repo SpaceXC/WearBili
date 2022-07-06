@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,9 +19,14 @@ import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.*
 import cn.spacexc.wearbili.adapter.ButtonsAdapter
+import cn.spacexc.wearbili.adapter.OnItemViewClickListener
 import cn.spacexc.wearbili.adapter.VideoPartsAdapter
 import cn.spacexc.wearbili.databinding.FragmentVideoInfoBinding
-import cn.spacexc.wearbili.dataclass.*
+import cn.spacexc.wearbili.dataclass.RoundButtonData
+import cn.spacexc.wearbili.dataclass.VideoInfo
+import cn.spacexc.wearbili.dataclass.VideoPages
+import cn.spacexc.wearbili.dataclass.user.User
+import cn.spacexc.wearbili.dataclass.user.UserFans
 import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.utils.NumberUtils
 import cn.spacexc.wearbili.utils.TimeUtils
@@ -47,14 +53,14 @@ class VideoInfoFragment : Fragment() {
     var isFollowed = false
 
     private val btnListUpperRow = listOf(
-        ButtonData(R.drawable.ic_outline_thumb_up_24, "点赞"),
-        ButtonData(R.drawable.ic_outline_thumb_down_24, "点踩"),
-        ButtonData(R.drawable.ic_outline_monetization_on_24, "投币"),
-        ButtonData(R.drawable.ic_round_star_border_24, "收藏"),
-        ButtonData(R.drawable.send_to_mobile, "手机观看"),
-        ButtonData(R.drawable.cloud_download, "缓存"),
-        ButtonData(R.drawable.ic_baseline_history_24, "稍后再看"),
-        ButtonData(R.drawable.ic_baseline_update_24, "历史记录")
+        RoundButtonData(R.drawable.ic_outline_thumb_up_24, "点赞"),
+        RoundButtonData(R.drawable.ic_outline_thumb_down_24, "点踩"),
+        RoundButtonData(R.drawable.ic_outline_monetization_on_24, "投币"),
+        RoundButtonData(R.drawable.ic_round_star_border_24, "收藏"),
+        RoundButtonData(R.drawable.send_to_mobile, "手机观看"),
+        RoundButtonData(R.drawable.cloud_download, "缓存"),
+        RoundButtonData(R.drawable.ic_baseline_history_24, "稍后再看"),
+        RoundButtonData(R.drawable.ic_baseline_update_24, "历史记录")
     )
 
     init {
@@ -79,7 +85,7 @@ class VideoInfoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.recyclerViewButtons.layoutManager = GridLayoutManager(requireContext(), 3)
         binding.recyclerViewButtons.adapter =
-            ButtonsAdapter(true, object : ButtonsAdapter.OnItemViewClickListener {
+            ButtonsAdapter(true, object : OnItemViewClickListener {
                 override fun onClick(buttonName: String) {
                     when (buttonName) {
                         "手机观看" -> {
@@ -284,6 +290,11 @@ class VideoInfoFragment : Fragment() {
 
                 override fun onResponse(call: Call, response: Response) {
                     val uploader: User = Gson().fromJson(response.body?.string(), User::class.java)
+                    if (uploader.data.vip.type != 0 && uploader.data.vip.nickname_color.isNotEmpty()) {
+                        //binding.vipText.text = user.data.vip.label.text
+                        binding.uploaderName.setTextColor(Color.parseColor(uploader.data.vip.nickname_color))
+                        //binding.vipText.setTextColor(Color.parseColor(user.data.vip.label.bg_color))
+                    }
                     cn.spacexc.wearbili.manager.UserManager.getUserFans(
                         uploader.data.mid,
                         object : Callback {

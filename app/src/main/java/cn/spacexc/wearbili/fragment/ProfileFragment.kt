@@ -17,8 +17,9 @@ import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.LoginActivity
 import cn.spacexc.wearbili.activity.VideoCacheActivity
 import cn.spacexc.wearbili.adapter.ButtonsAdapter
+import cn.spacexc.wearbili.adapter.OnItemViewClickListener
 import cn.spacexc.wearbili.databinding.FragmentProfileBinding
-import cn.spacexc.wearbili.dataclass.ButtonData
+import cn.spacexc.wearbili.dataclass.RoundButtonData
 import cn.spacexc.wearbili.dataclass.SpaceProfileResult
 import cn.spacexc.wearbili.manager.UserManager
 import com.bumptech.glide.Glide
@@ -38,12 +39,12 @@ class ProfileFragment : Fragment() {
 
     //TODO 个人页按钮
     private val buttonList = listOf(
-        ButtonData(R.drawable.ic_outline_person_add_alt_1_24, "我的关注"),
-        ButtonData(R.drawable.ic_baseline_update_24, "历史记录"),
-        ButtonData(R.drawable.ic_baseline_play_circle_outline_24, "稍后再看"),
-        ButtonData(R.drawable.ic_round_star_border_24, "个人收藏"),
-        ButtonData(R.drawable.cloud_download, "离线缓存"),
-        ButtonData(R.drawable.ic_outline_settings_24, "应用设置")
+        RoundButtonData(R.drawable.ic_outline_person_add_alt_1_24, "我的关注"),
+        RoundButtonData(R.drawable.ic_baseline_update_24, "历史记录"),
+        RoundButtonData(R.drawable.ic_baseline_play_circle_outline_24, "稍后再看"),
+        RoundButtonData(R.drawable.ic_round_star_border_24, "个人收藏"),
+        RoundButtonData(R.drawable.cloud_download, "离线缓存"),
+        RoundButtonData(R.drawable.ic_outline_settings_24, "应用设置")
     )
 
     override fun onCreateView(
@@ -66,7 +67,7 @@ class ProfileFragment : Fragment() {
             it.orientation = GridLayoutManager.VERTICAL
         }
         binding.recyclerView.adapter =
-            ButtonsAdapter(false, object : ButtonsAdapter.OnItemViewClickListener {
+            ButtonsAdapter(false, object : OnItemViewClickListener {
                 override fun onClick(buttonName: String) {
                     when (buttonName) {
                         "离线缓存" -> {

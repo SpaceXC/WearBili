@@ -16,11 +16,14 @@ import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.databinding.ActivityVideoPlayerBinding
 import cn.spacexc.wearbili.dataclass.OnlineInfos
 import cn.spacexc.wearbili.dataclass.VideoStreamsFlv
+import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.utils.TimeUtils
+import cn.spacexc.wearbili.viewmodel.OnSeekCompleteListener
 import cn.spacexc.wearbili.viewmodel.PlayerStatus
 import cn.spacexc.wearbili.viewmodel.VideoPlayerViewModel
 import com.google.gson.Gson
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import master.flame.danmaku.controller.DrawHandler
@@ -70,14 +73,14 @@ class VideoPlayerActivity : AppCompatActivity() {
                         this@VideoPlayerActivity.runOnUiThread {
                             val info = Gson().fromJson(
                                 response.body?.string(),
-                                    OnlineInfos::class.java
-                                )
-                                binding.onlineCount.text = "${info.data.total}人在看"
-                            }
+                                OnlineInfos::class.java
+                            )
+                            binding.onlineCount.text = "${info.data.total}人在看"
                         }
                     }
+                }
 
-                })
+            })
 
 
             while (true) {
@@ -128,83 +131,117 @@ class VideoPlayerActivity : AppCompatActivity() {
             }
             //-----------LiveData监听区域⬆️-----------
 
-            //-----------Layout视图监听区域⬇️️-----------
-            binding.surfaceView.holder.addCallback(object :
-                SurfaceHolder.Callback {     //surfaceview监听
-                override fun surfaceCreated(p0: SurfaceHolder) {}
-                override fun surfaceChanged(
-                    holder: SurfaceHolder,
-                    format: Int,
-                    width: Int,
-                    height: Int
-                ) {
-                    viewModel.mediaPlayer.setVideoSurfaceHolder(holder)      //设置视频显示surfaceview
-                    //playerViewModel.mediaPlayer.setScreenOnWhilePlaying(true)       //播放时不息屏//TODO
-                }
 
-                override fun surfaceDestroyed(p0: SurfaceHolder) {}
-            })
-            //TODO:点击屏幕触发播放控制器显示
-            binding.playerFrame.setOnClickListener {
-                viewModel.toggleControllerVisibility()
+        }
+        viewModel.onSeekCompleteListener = object : OnSeekCompleteListener {
+            override fun onSeek(progress: Long) {
+                VideoManager.uploadVideoViewingProgress(
+                    videoBvid,
+                    videoCid,
+                    (progress / 1000).toInt()
+                )
             }
-            //TODO:播放控制按钮修改播放状态
-            binding.controllerInclude.control.setOnClickListener {
-                viewModel.togglePlayerStatus()
+
+        }
+        uploadVideoViewingProgress(videoBvid, videoCid)
+        //-----------Layout视图监听区域⬇️️-----------
+        binding.surfaceView.holder.addCallback(object :
+            SurfaceHolder.Callback {     //surfaceview监听
+            override fun surfaceCreated(p0: SurfaceHolder) {}
+            override fun surfaceChanged(
+                holder: SurfaceHolder,
+                format: Int,
+                width: Int,
+                height: Int
+            ) {
+                viewModel.mediaPlayer.setVideoSurfaceHolder(holder)      //设置视频显示surfaceview
+                //playerViewModel.mediaPlayer.setScreenOnWhilePlaying(true)       //播放时不息屏//TODO
             }
-            //TODO:快进3秒
-            //TODO:快退3秒
-            binding.controllerInclude.progress.setOnSeekBarChangeListener(object :
-                SeekBar.OnSeekBarChangeListener {     //进度条拖动监听
-                override fun onProgressChanged(p0: SeekBar?, progress: Int, fromUser: Boolean) {
-                    if (fromUser) {
-                        viewModel.playerSeekTo(progress)      //mediaplayer进度更改
+
+            override fun surfaceDestroyed(p0: SurfaceHolder) {}
+        })
+        //TODO:点击屏幕触发播放控制器显示
+        binding.playerFrame.setOnClickListener {
+            viewModel.toggleControllerVisibility()
+        }
+        //TODO:播放控制按钮修改播放状态
+        binding.controllerInclude.control.setOnClickListener {
+            viewModel.togglePlayerStatus()
+        }
+        //TODO:快进3秒
+        //TODO:快退3秒
+        binding.controllerInclude.progress.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {     //进度条拖动监听
+            override fun onProgressChanged(p0: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    viewModel.playerSeekTo(progress)      //mediaplayer进度更改
+                }
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar?) {
+                viewModel.canDisappear = false        //拖动进度条时控制器不可消失
+                //playerViewModel.togglePlayerStatus()
+                viewModel.mediaPlayer.pause()     //拖动时暂停视频
+            }
+
+            override fun onStopTrackingTouch(p0: SeekBar?) {
+                viewModel.canDisappear = true     //松开进度条控制器可以消失
+                //playerViewModel.togglePlayerStatus()
+                viewModel.mediaPlayer.play()     //视频开始
+            }
+        })
+
+        binding.pageName.setOnClickListener {
+            finish()
+        }
+        //-----------Layout视图监听区域⬆️-----------
+
+        //-----------弹幕相关区域⬇️️️-----------
+        val danmakuContext: DanmakuContext = DanmakuContext.create()       //弹幕上下文
+
+        val maxLinesPair = HashMap<Int, Int>()     //弹幕最多行数
+        maxLinesPair[BaseDanmaku.TYPE_SCROLL_RL] = 5
+        maxLinesPair[BaseDanmaku.TYPE_SCROLL_LR] = 5
+
+        val overlappingEnablePair = HashMap<Int, Boolean>()     //防弹幕重叠
+        overlappingEnablePair[BaseDanmaku.TYPE_SCROLL_LR] = true
+        overlappingEnablePair[BaseDanmaku.TYPE_SCROLL_RL] = true
+        overlappingEnablePair[BaseDanmaku.TYPE_FIX_BOTTOM] = true
+
+        danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 1f) //设置默认样式
+            .setDuplicateMergingEnabled(true)      //合并重复弹幕
+            .setScrollSpeedFactor(1.2f)     //弹幕速度
+            .setScaleTextSize(0.6f)     //文字大小
+            .setCacheStuffer(SpannedCacheStuffer()) // 图文混排使用SpannedCacheStuffer  设置缓存绘制填充器，默认使用{@link SimpleTextCacheStuffer}只支持纯文字显示, 如果需要图文混排请设置{@link SpannedCacheStuffer}如果需要定制其他样式请扩展{@link SimpleTextCacheStuffer}|{@link SpannedCacheStuffer}
+            .setMaximumLines(maxLinesPair) //设置最大显示行数
+            .preventOverlapping(overlappingEnablePair) //设置防弹幕重叠，null为允许重叠
+
+        val loader: ILoader =
+            DanmakuLoaderFactory.create(DanmakuLoaderFactory.TAG_BILI)       //设置解析b站xml弹幕
+
+        VideoManager.getDanmaku(videoCid, object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                mThreadPool.execute {
+                    this@VideoPlayerActivity.runOnUiThread {
+                        Toast.makeText(
+                            this@VideoPlayerActivity,
+                            "加载弹幕失败！",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
-
-                override fun onStartTrackingTouch(p0: SeekBar?) {
-                    viewModel.canDisappear = false        //拖动进度条时控制器不可消失
-                    //playerViewModel.togglePlayerStatus()
-                    viewModel.mediaPlayer.pause()     //拖动时暂停视频
-                }
-
-                override fun onStopTrackingTouch(p0: SeekBar?) {
-                    viewModel.canDisappear = true     //松开进度条控制器可以消失
-                    //playerViewModel.togglePlayerStatus()
-                    viewModel.mediaPlayer.play()     //视频开始
-                }
-            })
-
-            binding.pageName.setOnClickListener {
-                finish()
             }
-            //-----------Layout视图监听区域⬆️-----------
 
-            //-----------弹幕相关区域⬇️️️-----------
-            val danmakuContext: DanmakuContext = DanmakuContext.create()       //弹幕上下文
-
-            val maxLinesPair = HashMap<Int, Int>()     //弹幕最多行数
-            maxLinesPair[BaseDanmaku.TYPE_SCROLL_RL] = 5
-            maxLinesPair[BaseDanmaku.TYPE_SCROLL_LR] = 5
-
-            val overlappingEnablePair = HashMap<Int, Boolean>()     //防弹幕重叠
-            overlappingEnablePair[BaseDanmaku.TYPE_SCROLL_LR] = true
-            overlappingEnablePair[BaseDanmaku.TYPE_SCROLL_RL] = true
-            overlappingEnablePair[BaseDanmaku.TYPE_FIX_BOTTOM] = true
-
-            danmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 1f) //设置默认样式
-                .setDuplicateMergingEnabled(true)      //合并重复弹幕
-                .setScrollSpeedFactor(1.2f)     //弹幕速度
-                .setScaleTextSize(0.6f)     //文字大小
-                .setCacheStuffer(SpannedCacheStuffer()) // 图文混排使用SpannedCacheStuffer  设置缓存绘制填充器，默认使用{@link SimpleTextCacheStuffer}只支持纯文字显示, 如果需要图文混排请设置{@link SpannedCacheStuffer}如果需要定制其他样式请扩展{@link SimpleTextCacheStuffer}|{@link SpannedCacheStuffer}
-                .setMaximumLines(maxLinesPair) //设置最大显示行数
-                .preventOverlapping(overlappingEnablePair) //设置防弹幕重叠，null为允许重叠
-
-            val loader: ILoader =
-                DanmakuLoaderFactory.create(DanmakuLoaderFactory.TAG_BILI)       //设置解析b站xml弹幕
-
-            VideoManager.getDanmaku(videoCid, object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
+            override fun onResponse(call: Call, response: Response) {
+                try {
+                    //val responseIs = response.body?.byteStream()
+                    //val str = String(decompress(responseIs.readBytes()).inputStream()!!)
+                    //Log.d(Application.getTag(), "onResponse: ${response.body?.string()}")
+                    val danmakuIs: ByteArray? = decompress(response.body?.bytes()!!)
+                    loader.load(danmakuIs!!.inputStream())
+                    Log.d(Application.getTag(), "onResponse: ${String(danmakuIs)}")
+                } catch (e: IllegalDataException) {
+                    e.printStackTrace()
                     mThreadPool.execute {
                         this@VideoPlayerActivity.runOnUiThread {
                             Toast.makeText(
@@ -215,85 +252,61 @@ class VideoPlayerActivity : AppCompatActivity() {
                         }
                     }
                 }
+                val danmukuParser = BiliDanmukuParser()
+                val dataSource: IDataSource<*> = loader.dataSource
+                danmukuParser.load(dataSource)
 
-                override fun onResponse(call: Call, response: Response) {
-                    try {
-                        //val responseIs = response.body?.byteStream()
-                        //val str = String(decompress(responseIs.readBytes()).inputStream()!!)
-                        //Log.d(Application.getTag(), "onResponse: ${response.body?.string()}")
-                        val danmakuIs: ByteArray? = decompress(response.body?.bytes()!!)
-                        loader.load(danmakuIs!!.inputStream())
-                        Log.d(Application.getTag(), "onResponse: ${String(danmakuIs)}")
-                    } catch (e: IllegalDataException) {
-                        e.printStackTrace()
-                        mThreadPool.execute {
-                            this@VideoPlayerActivity.runOnUiThread {
-                                Toast.makeText(
-                                    this@VideoPlayerActivity,
-                                    "加载弹幕失败！",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
+                binding.danmakuView.setCallback(object : DrawHandler.Callback {
+                    override fun updateTimer(timer: DanmakuTimer?) {
+
                     }
-                    val danmukuParser = BiliDanmukuParser()
-                    val dataSource: IDataSource<*> = loader.dataSource
-                    danmukuParser.load(dataSource)
 
-                    binding.danmakuView.setCallback(object : DrawHandler.Callback {
-                        override fun updateTimer(timer: DanmakuTimer?) {
+                    override fun drawingFinished() {
 
-                        }
+                    }
 
-                        override fun drawingFinished() {
+                    override fun prepared() {
+                        //-----------弹幕相关区域⬆️️️️-----------
 
-                        }
+                        //-----------视频相关区域⬇️-----------
 
-                        override fun prepared() {
-                            //-----------弹幕相关区域⬆️️️️-----------
-
-                            //-----------视频相关区域⬇️-----------
-
-                            VideoManager.getVideoUrl(videoBvid, videoCid, object : Callback {
-                                override fun onFailure(call: Call, e: IOException) {
-                                    mThreadPool.execute {
-                                        this@VideoPlayerActivity.runOnUiThread {
-                                            Toast.makeText(
-                                                this@VideoPlayerActivity,
-                                                "加载视频失败！",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                        }
+                        VideoManager.getVideoUrl(videoBvid, videoCid, object : Callback {
+                            override fun onFailure(call: Call, e: IOException) {
+                                mThreadPool.execute {
+                                    this@VideoPlayerActivity.runOnUiThread {
+                                        Toast.makeText(
+                                            this@VideoPlayerActivity,
+                                            "加载视频失败！",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                     }
                                 }
+                            }
 
-                                override fun onResponse(call: Call, response: Response) {
-                                    val responseString = response.body?.string()
-                                    mThreadPool.execute {
-                                        val videoUrls: VideoStreamsFlv = Gson().fromJson(
-                                            responseString,
-                                            VideoStreamsFlv::class.java
-                                        )        //创建视频数据对象
-                                        this@VideoPlayerActivity.runOnUiThread {
-                                            viewModel.loadVideo(videoUrls.data.durl[0].url)
+                            override fun onResponse(call: Call, response: Response) {
+                                val responseString = response.body?.string()
+                                mThreadPool.execute {
+                                    val videoUrls: VideoStreamsFlv = Gson().fromJson(
+                                        responseString,
+                                        VideoStreamsFlv::class.java
+                                    )        //创建视频数据对象
+                                    this@VideoPlayerActivity.runOnUiThread {
+                                        viewModel.loadVideo(videoUrls.data.durl[0].url)
 
-                                        }
                                     }
                                 }
+                            }
 
-                            })
+                        })
 
-                            //-----------视频相关区域⬆️️️-----------
-                        }
-                    })
-                    binding.danmakuView.prepare(danmukuParser, danmakuContext)      //准备弹幕
-                    binding.danmakuView.enableDanmakuDrawingCache(true)
-                }
+                        //-----------视频相关区域⬆️️️-----------
+                    }
+                })
+                binding.danmakuView.prepare(danmukuParser, danmakuContext)      //准备弹幕
+                binding.danmakuView.enableDanmakuDrawingCache(true)
+            }
 
-            })
-
-
-        }
+        })
     }
 
 
@@ -353,5 +366,25 @@ class VideoPlayerActivity : AppCompatActivity() {
         }
         decompresser.end()
         return output
+    }
+
+    fun uploadVideoViewingProgress(bvid: String, cid: Long) {
+        if (UserManager.getUserCookie() != null) {
+            lifecycleScope.launch {
+                while (true) {
+                    VideoManager.uploadVideoViewingProgress(
+                        bvid,
+                        cid,
+                        ((viewModel.mediaPlayer.currentPosition) / 1000).toInt()
+                    )
+                    delay(4000)
+                }
+            }
+        } else return
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        lifecycleScope.cancel()
     }
 }
