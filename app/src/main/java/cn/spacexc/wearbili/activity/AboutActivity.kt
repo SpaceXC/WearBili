@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.adapter.HorizontalButtonAdapter
-import cn.spacexc.wearbili.adapter.OnItemViewClickListener
 import cn.spacexc.wearbili.adapter.UserHorizontalButtonAdapter
 import cn.spacexc.wearbili.dataclass.HorizontalButtonData
+import cn.spacexc.wearbili.listener.OnItemViewClickListener
 import cn.spacexc.wearbili.utils.TimeUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

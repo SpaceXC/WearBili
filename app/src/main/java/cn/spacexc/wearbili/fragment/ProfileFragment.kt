@@ -17,10 +17,10 @@ import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.LoginActivity
 import cn.spacexc.wearbili.activity.VideoCacheActivity
 import cn.spacexc.wearbili.adapter.ButtonsAdapter
-import cn.spacexc.wearbili.adapter.OnItemViewClickListener
 import cn.spacexc.wearbili.databinding.FragmentProfileBinding
 import cn.spacexc.wearbili.dataclass.RoundButtonData
 import cn.spacexc.wearbili.dataclass.SpaceProfileResult
+import cn.spacexc.wearbili.listener.OnItemViewClickListener
 import cn.spacexc.wearbili.manager.UserManager
 import com.bumptech.glide.Glide
 import com.google.gson.Gson

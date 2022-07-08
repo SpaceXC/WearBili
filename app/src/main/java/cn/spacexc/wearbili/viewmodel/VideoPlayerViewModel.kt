@@ -133,6 +133,7 @@ class VideoPlayerViewModel() : ViewModel() {
                         }
                         ExoPlayer.STATE_BUFFERING -> {
                             _progressBarVisibility.value = View.VISIBLE
+                            danmakuView.pause()
                         }
                         ExoPlayer.STATE_READY -> {
                             _videoResolution.value = Pair(videoSize.width, videoSize.height)
@@ -208,18 +209,28 @@ class VideoPlayerViewModel() : ViewModel() {
 //        }
     }
 
-    fun toggleControllerVisibility() {
-
-        if(_controllerVisibility.value == View.INVISIBLE){
+    fun togglePlayerPlayStat() {
+        if (mediaPlayer.isPlaying) {
+            mediaPlayer.pause()
+            danmakuView.pause()
             _controllerVisibility.value = View.VISIBLE
+        } else {
+            mediaPlayer.play()
+            danmakuView.resume()
+        }
+    }
+
+    fun toggleControllerVisibility() {
+        if (_controllerVisibility.value == View.INVISIBLE) {
+            _controllerVisibility.postValue(View.VISIBLE)
             controllerShowTime = System.currentTimeMillis()
             viewModelScope.launch {
                 delay(3000)
                 if (System.currentTimeMillis() - controllerShowTime > 3000 && canDisappear) {
-                    _controllerVisibility.value = View.INVISIBLE
+                    _controllerVisibility.postValue(View.INVISIBLE)
                 }
             }
-        } else _controllerVisibility.value = View.INVISIBLE
+        } else _controllerVisibility.postValue(View.INVISIBLE)
     }
 
     //更新视频播放进度显示

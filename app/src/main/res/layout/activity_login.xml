@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:alpha="0.8"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="170dp" />
+            app:layout_constraintGuide_end="223dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -61,45 +61,58 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:layout_marginEnd="7.5dp"
-                android:fontFamily="@font/googlesans_medium"
-                android:paddingBottom="2dp"
-                android:textColor="#fff"
-                android:textSize="16sp"
+                android:background="#55000000"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/goBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="7.5dp"
-                android:layout_marginTop="6dp"
-                android:drawableStart="@drawable/ic_baseline_arrow_back_ios_24"
-                android:fontFamily="@font/puhui_bold"
-                android:gravity="top"
-                android:paddingBottom="2dp"
-                android:text="登入"
-                android:textColor="#fff"
-                android:textSize="16sp"
-                app:autoSizeTextType="uniform"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/pageName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="7dp"
+                    android:drawableStart="@drawable/ic_baseline_arrow_back_ios_24"
+                    android:fontFamily="@font/puhui_bold"
+                    android:gravity="center"
+                    android:text="登录"
+                    android:textColor="#fff"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/timeText"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/timeText" />
+
+                <TextView
+                    android:id="@+id/timeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/googlesans_medium"
+                    android:gravity="center"
+                    android:paddingTop="1dp"
+                    android:text="12:00"
+                    android:textColor="#fff"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ImageView
                 android:id="@+id/qrImageBg"
                 android:layout_width="128dp"
                 android:layout_height="128dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/goBack"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
                 app:srcCompat="@drawable/background_qrcode" />
 
             <ImageView

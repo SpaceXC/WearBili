@@ -1,6 +1,5 @@
 package cn.spacexc.wearbili.activity
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -16,6 +15,7 @@ import cn.spacexc.wearbili.dataclass.LoginQrCode
 import cn.spacexc.wearbili.dataclass.QrCodeLoginStats
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.QRCodeUtil
+import cn.spacexc.wearbili.utils.TimeUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.gson.Gson
@@ -27,8 +27,6 @@ import okhttp3.Callback
 import okhttp3.FormBody
 import okhttp3.Response
 import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -42,17 +40,15 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         qrImageView = findViewById(R.id.qrImage)
-        back = findViewById(R.id.goBack)
-        time = findViewById(R.id.time)
+        back = findViewById(R.id.pageName)
+        time = findViewById(R.id.timeText)
         scanStat = findViewById(R.id.scanStat)
         qrImageView.setOnClickListener { refreshQrCode() }
         back.setOnClickListener { finish() }
-        lifecycleScope.launch{
-            @SuppressLint("SimpleDateFormat") val sdf = SimpleDateFormat("HH:mm")
-            while (true){
-                val date = sdf.format(Date())
-                time.text = date
-                delay(100)
+        lifecycleScope.launch {
+            while (true) {
+                time.text = TimeUtils.getCurrentTime()
+                delay(500)
             }
         }
         refreshQrCode()
@@ -81,7 +77,7 @@ class LoginActivity : AppCompatActivity() {
                                 Gson().fromJson(response.body?.string(), LoginQrCode::class.java)
                             Log.d(Application.getTag(), "onResponse: ${qrCode.data.url}")
                             val bitmap: Bitmap? =
-                                QRCodeUtil.createQRCodeBitmap(qrCode.data.url, 64, 64)
+                                QRCodeUtil.createQRCodeBitmap(qrCode.data.url, 128, 128)
                             //qrImageView.setImageBitmap(bitmap)
                             try {
                                 Glide.with(this@LoginActivity)

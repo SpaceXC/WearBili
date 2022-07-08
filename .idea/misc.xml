@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable-v24/calendar_month.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable-v24/reply-48px.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable-v24/reply.xml" value="0.2795" />
@@ -50,14 +51,14 @@
         <entry key="app/src/main/res/font/roboto_medium.xml" value="0.3384615384615385" />
         <entry key="app/src/main/res/layout-land/fragment_video_playing.xml" value="0.32708333333333334" />
         <entry key="app/src/main/res/layout/activity_about.xml" value="1.0049118041992189" />
-        <entry key="app/src/main/res/layout/activity_login.xml" value="0.14151313210505684" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.43813526324207475" />
-        <entry key="app/src/main/res/layout/activity_menu.xml" value="1.7468375710880055" />
-        <entry key="app/src/main/res/layout/activity_photo_view.xml" value="1.0222222222222221" />
-        <entry key="app/src/main/res/layout/activity_play_on_phone.xml" value="1.5131629435221354" />
-        <entry key="app/src/main/res/layout/activity_search_result.xml" value="0.7135248196467381" />
-        <entry key="app/src/main/res/layout/activity_video.xml" value="0.9277777777777778" />
-        <entry key="app/src/main/res/layout/activity_video_cache.xml" value="1.8470588235294119" />
+        <entry key="app/src/main/res/layout/activity_menu.xml" value="0.3250251321231616" />
+        <entry key="app/src/main/res/layout/activity_photo_view.xml" value="0.13593597412109376" />
+        <entry key="app/src/main/res/layout/activity_play_on_phone.xml" value="1.0790832519531253" />
+        <entry key="app/src/main/res/layout/activity_search_result.xml" value="0.585491372381113" />
+        <entry key="app/src/main/res/layout/activity_video.xml" value="0.47918088737201364" />
+        <entry key="app/src/main/res/layout/activity_video_cache.xml" value="0.314471707561342" />
         <entry key="app/src/main/res/layout/activity_video_player.xml" value="0.5131578947368421" />
         <entry key="app/src/main/res/layout/activity_view_full_video_parts.xml" value="0.22436295835922934" />
         <entry key="app/src/main/res/layout/activity_view_full_video_parts_actvity.xml" value="0.18247863247863247" />
@@ -67,13 +68,13 @@
         <entry key="app/src/main/res/layout/cell_hot_search.xml" value="0.7733990147783252" />
         <entry key="app/src/main/res/layout/cell_round_button.xml" value="0.35803070068359377" />
         <entry key="app/src/main/res/layout/cell_round_button_otld.xml" value="0.24302081246661322" />
-        <entry key="app/src/main/res/layout/cell_video_list.xml" value="0.5665335159825516" />
+        <entry key="app/src/main/res/layout/cell_video_list.xml" value="0.6638477801268499" />
         <entry key="app/src/main/res/layout/cell_video_part.xml" value="0.5738951332548745" />
         <entry key="app/src/main/res/layout/fragment_comment.xml" value="1.8470588235294119" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.3825629209860777" />
         <entry key="app/src/main/res/layout/fragment_recommend.xml" value="0.41192626953125" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.6908690869086909" />
-        <entry key="app/src/main/res/layout/fragment_video_info.xml" value="0.5508474576271186" />
+        <entry key="app/src/main/res/layout/fragment_video_info.xml" value="0.4131578947368421" />
         <entry key="app/src/main/res/layout/fragment_video_playing.xml" value="0.20554664223881086" />
         <entry key="app/src/main/res/layout/layout_video_controller.xml" value="0.3667155589872193" />
         <entry key="app/src/main/res/layout/video_list_cell.xml" value="1.5436353514794592" />

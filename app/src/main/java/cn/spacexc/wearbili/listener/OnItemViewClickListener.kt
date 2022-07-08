@@ -1,4 +1,4 @@
-package cn.spacexc.wearbili.adapter
+package cn.spacexc.wearbili.listener
 
 /**
  * Created by XC-Qan on 2022/7/6.

@@ -1,5 +1,6 @@
 package cn.spacexc.wearbili.activity
 
+import OnClickListerExtended
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
@@ -12,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import cn.spacexc.wearbili.Application
-import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.databinding.ActivityVideoPlayerBinding
 import cn.spacexc.wearbili.dataclass.OnlineInfos
 import cn.spacexc.wearbili.dataclass.VideoStreamsFlv
@@ -20,7 +20,6 @@ import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.utils.TimeUtils
 import cn.spacexc.wearbili.viewmodel.OnSeekCompleteListener
-import cn.spacexc.wearbili.viewmodel.PlayerStatus
 import cn.spacexc.wearbili.viewmodel.VideoPlayerViewModel
 import com.google.gson.Gson
 import kotlinx.coroutines.cancel
@@ -112,7 +111,7 @@ class VideoPlayerActivity : AppCompatActivity() {
                 binding.controllerInclude.controllerFrame.visibility = it
             }
             //FIXME("在viewmodel监听播放状态，更改控制按钮图标")
-            playerStat.observe(this@VideoPlayerActivity) {
+            /*playerStat.observe(this@VideoPlayerActivity) {
                 when (it) {
                     PlayerStatus.PLAYING -> {
                         binding.controllerInclude.control.setImageResource(R.drawable.ic_baseline_pause_24)
@@ -128,7 +127,7 @@ class VideoPlayerActivity : AppCompatActivity() {
                     }
                     else -> {}
                 }
-            }
+            }*/
             //-----------LiveData监听区域⬆️-----------
 
 
@@ -155,19 +154,38 @@ class VideoPlayerActivity : AppCompatActivity() {
                 height: Int
             ) {
                 viewModel.mediaPlayer.setVideoSurfaceHolder(holder)      //设置视频显示surfaceview
-                //playerViewModel.mediaPlayer.setScreenOnWhilePlaying(true)       //播放时不息屏//TODO
             }
 
             override fun surfaceDestroyed(p0: SurfaceHolder) {}
         })
         //TODO:点击屏幕触发播放控制器显示
-        binding.playerFrame.setOnClickListener {
+        binding.playerFrame.setOnTouchListener(OnClickListerExtended(object :
+            OnClickListerExtended.OnClickCallback {
+            override fun onSingleClick() {
+                mThreadPool.execute {
+                    this@VideoPlayerActivity.runOnUiThread {
+                        viewModel.toggleControllerVisibility()
+                    }
+                }
+
+            }
+
+            override fun onDoubleClick() {
+                mThreadPool.execute {
+                    this@VideoPlayerActivity.runOnUiThread {
+                        viewModel.togglePlayerPlayStat()
+                    }
+                }
+
+            }
+
+        }))/*{
             viewModel.toggleControllerVisibility()
-        }
+        }*/
         //TODO:播放控制按钮修改播放状态
-        binding.controllerInclude.control.setOnClickListener {
+        /*binding.controllerInclude.control.setOnClickListener {
             viewModel.togglePlayerStatus()
-        }
+        }*/
         //TODO:快进3秒
         //TODO:快退3秒
         binding.controllerInclude.progress.setOnSeekBarChangeListener(object :

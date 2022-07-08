@@ -19,7 +19,6 @@ import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.*
 import cn.spacexc.wearbili.adapter.ButtonsAdapter
-import cn.spacexc.wearbili.adapter.OnItemViewClickListener
 import cn.spacexc.wearbili.adapter.VideoPartsAdapter
 import cn.spacexc.wearbili.databinding.FragmentVideoInfoBinding
 import cn.spacexc.wearbili.dataclass.RoundButtonData
@@ -27,9 +26,11 @@ import cn.spacexc.wearbili.dataclass.VideoInfo
 import cn.spacexc.wearbili.dataclass.VideoPages
 import cn.spacexc.wearbili.dataclass.user.User
 import cn.spacexc.wearbili.dataclass.user.UserFans
+import cn.spacexc.wearbili.listener.OnItemViewClickListener
 import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.utils.NumberUtils
 import cn.spacexc.wearbili.utils.TimeUtils
+import cn.spacexc.wearbili.utils.TimeUtils.toDateStr
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -203,6 +204,7 @@ class VideoInfoFragment : Fragment() {
                                 NumberUtils.num2Chinese(video.data.stat.danmaku)
                             binding.viewsCount.text =
                                 NumberUtils.num2Chinese(video.data.stat.view.toInt())
+                            binding.pubdateText.text = (video.data.pubdate * 1000).toDateStr()
                             binding.videoDesc.setText(video.data.desc)
                             binding.follow.setOnClickListener {
                                 followUser(video.data.owner.mid, video)

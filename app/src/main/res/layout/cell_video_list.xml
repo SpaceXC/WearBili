@@ -31,15 +31,18 @@
                 android:id="@+id/listCover"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="6dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="-10dp"
                 android:layout_marginEnd="6dp"
+                android:layout_marginBottom="-10dp"
                 android:adjustViewBounds="true"
                 android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="@+id/listVideoTitle"
                 app:layout_constraintDimensionRatio="16:10"
                 app:layout_constraintEnd_toStartOf="@+id/guideline2"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/listVideoTitle"
                 app:srcCompat="@drawable/placeholder" />
 
             <androidx.constraintlayout.widget.Guideline
@@ -54,13 +57,12 @@
                 android:id="@+id/imageView3"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_marginStart="6dp"
                 android:layout_marginTop="1dp"
                 android:layout_marginBottom="1dp"
                 android:adjustViewBounds="true"
                 android:alpha="0.5"
                 app:layout_constraintBottom_toBottomOf="@+id/listPlayTimes"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/listCover"
                 app:layout_constraintTop_toTopOf="@+id/listPlayTimes"
                 app:layout_constraintVertical_bias="0.5"
                 app:srcCompat="@drawable/ic_baseline_play_circle_outline_24" />
@@ -93,14 +95,12 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView3"
                 app:layout_constraintTop_toBottomOf="@+id/listCover"
-                app:layout_constraintVertical_bias="0.5" />
+                app:layout_constraintVertical_bias="0.0" />
 
             <TextView
                 android:id="@+id/listUpName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="6dp"
                 android:alpha="0.5"
                 android:ellipsize="end"
                 android:fontFamily="@font/puhui_medium"
@@ -108,30 +108,28 @@
                 android:text="影视飓风111111"
                 android:textColor="#fff"
                 android:textSize="9sp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/listPlayTimes"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView4"
-                app:layout_constraintTop_toBottomOf="@+id/listCover" />
+                app:layout_constraintTop_toTopOf="@+id/listPlayTimes" />
 
             <TextView
                 android:id="@+id/listVideoTitle"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="2dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="10dp"
                 android:ellipsize="end"
                 android:fontFamily="@font/puhui_medium"
                 android:gravity="center_vertical"
                 android:lines="3"
-                android:text="重新定义稳定器？ 大疆RS3系列评测1111111起111111111"
+                android:text="重新定义稳定器？ 大疆RS3系列评测1111111起111111111重新定义稳定器？ 大疆RS3系列评测1111111起111111111"
                 android:textColor="#fff"
                 android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@+id/listCover"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintTop_toTopOf="@+id/listCover" />
+                app:layout_constraintStart_toEndOf="@+id/listCover"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

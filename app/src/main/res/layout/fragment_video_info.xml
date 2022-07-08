@@ -240,18 +240,37 @@
 
             <TextView
                 android:id="@+id/bvidText"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="10dp"
                 android:alpha="0.5"
                 android:fontFamily="@font/puhui"
+                android:lines="1"
                 android:textColor="#fff"
+                app:autoSizeTextType="uniform"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/bvidIcon"
                 app:layout_constraintTop_toBottomOf="@+id/viewsIcon" />
+
+            <TextView
+                android:id="@+id/pubdateText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="10dp"
+                android:alpha="0.5"
+                android:fontFamily="@font/puhui"
+                android:lines="1"
+                android:textColor="#fff"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/bvidIcon"
+                app:layout_constraintTop_toBottomOf="@+id/bvidIcon" />
 
             <ImageView
                 android:id="@+id/bvidIcon"
@@ -264,11 +283,22 @@
                 app:layout_constraintStart_toStartOf="@+id/viewsIcon"
                 app:layout_constraintTop_toTopOf="@+id/bvidText" />
 
+            <ImageView
+                android:id="@+id/pubDateIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:adjustViewBounds="true"
+                android:alpha="0.5"
+                android:src="@drawable/calendar_month"
+                app:layout_constraintBottom_toBottomOf="@+id/pubdateText"
+                app:layout_constraintStart_toStartOf="@+id/viewsIcon"
+                app:layout_constraintTop_toTopOf="@+id/pubdateText" />
+
             <com.wyx.components.widgets.ExpandCollpaseTextView
                 android:id="@+id/videoDesc"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="6dp"
                 android:ellipsize="end"
                 android:textColor="#fff"
                 app:collapse_line_space_percent="30"
@@ -281,7 +311,7 @@
                 app:fontFamily="@font/puhui"
                 app:layout_constraintEnd_toEndOf="@+id/videoTitle"
                 app:layout_constraintStart_toStartOf="@+id/bvidIcon"
-                app:layout_constraintTop_toBottomOf="@+id/bvidText"
+                app:layout_constraintTop_toBottomOf="@+id/pubDateIcon"
                 tools:ignore="TouchTargetSizeCheck" />
 
             <TextView

@@ -62,15 +62,18 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frameLayout"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
             app:navGraph="@navigation/main_nav" />
 
-        <FrameLayout
-            android:id="@+id/frameLayout"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#55000000"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -78,26 +81,31 @@
                 android:id="@+id/pageName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="7.5dp"
+                android:layout_marginStart="7dp"
                 android:fontFamily="@font/puhui_bold"
-                android:text="推荐"
+                android:gravity="center"
+                android:text="登录"
                 android:textColor="#fff"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/timeText"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/timeText" />
 
             <TextView
                 android:id="@+id/timeText"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|end"
-                android:layout_marginTop="6dp"
-                android:layout_marginEnd="7.5dp"
-                android:layout_marginBottom="6dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="8dp"
                 android:fontFamily="@font/googlesans_medium"
+                android:gravity="center"
+                android:paddingTop="1dp"
                 android:text="12:00"
                 android:textColor="#fff"
-                android:textSize="16sp" />
-        </FrameLayout>
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

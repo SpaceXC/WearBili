@@ -1,5 +1,7 @@
 package cn.spacexc.wearbili.utils
 
+import android.annotation.SuppressLint
+import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -40,6 +42,13 @@ object TimeUtils {
             hour = "0$hour"
         }
         return "$hour:$minute"
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    fun Long.toDateStr(pattern: String = "yyyy-MM-dd HH:mm:ss"): String {
+        val date = Date(this)
+        val format = SimpleDateFormat(pattern)
+        return format.format(date)
     }
 }
 

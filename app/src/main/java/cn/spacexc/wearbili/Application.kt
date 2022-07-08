@@ -18,7 +18,7 @@ import com.microsoft.appcenter.crashes.Crashes
 @SuppressLint("StaticFieldLeak")
 class Application : android.app.Application() {
     companion object {
-        var context:Application? = null
+        var context: Application? = null
         fun getContext():Context{
             return context!!
         }
