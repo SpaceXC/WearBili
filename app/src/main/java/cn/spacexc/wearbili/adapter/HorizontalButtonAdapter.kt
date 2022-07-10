@@ -76,9 +76,9 @@ class HorizontalButtonAdapter(onItemViewClickListener: OnItemViewClickListener) 
         val description: TextView
 
         init {
-            icon = itemView.findViewById(R.id.icon)
-            name = itemView.findViewById(R.id.mainText)
-            description = itemView.findViewById(R.id.description)
+            icon = itemView.findViewById(R.id.uploaderAvatar)
+            name = itemView.findViewById(R.id.usernameText)
+            description = itemView.findViewById(R.id.survey)
         }
     }
 }

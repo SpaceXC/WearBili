@@ -28,6 +28,7 @@
                 android:ems="10"
                 android:fontFamily="@font/puhui"
                 android:hint="搜点什么"
+                android:imeOptions="actionSearch"
                 android:inputType="textPersonName"
                 android:minHeight="48dp"
                 android:paddingStart="8dp"

@@ -22,7 +22,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:strokeColor="#70707070"
-        app:strokeWidth="0.1dp">>
+        android:foreground="?selectableItemBackground"
+        app:strokeWidth="0.1dp">
 
         <TextView
             android:id="@+id/partName"
@@ -37,7 +38,6 @@
             android:ellipsize="end"
             android:fontFamily="@font/puhui_bold"
             android:gravity="start"
-            android:maxLines="2"
             android:text="P1 - 日和（ヒヨリ）"
             android:textColor="#fff"
             android:textSize="16sp" />

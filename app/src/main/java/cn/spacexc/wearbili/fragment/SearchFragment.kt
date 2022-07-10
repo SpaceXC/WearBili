@@ -3,9 +3,11 @@ package cn.spacexc.wearbili.fragment
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -66,6 +68,15 @@ class SearchFragment : Fragment() {
         binding.hotSearchRecyclerView.layoutManager = layoutManager
         binding.search.setOnClickListener {
             searchKeyword()
+        }
+
+        binding.keywordInput.setOnEditorActionListener { _, actionId, event -> //当actionId == XX_SEND 或者 XX_DONE时都触发
+            //或者event.getKeyCode == ENTER 且 event.getAction == ACTION_DOWN时也触发
+            //注意，这是一定要判断event != null。因为在某些输入法上会返回null。
+            if (actionId == EditorInfo.IME_ACTION_SEND || actionId == EditorInfo.IME_ACTION_DONE || event != null && KeyEvent.KEYCODE_ENTER == event.keyCode && KeyEvent.ACTION_DOWN == event.action) {
+                searchKeyword()
+            }
+            false
         }
         getDefaultSearchContent()
         getHotSearch()

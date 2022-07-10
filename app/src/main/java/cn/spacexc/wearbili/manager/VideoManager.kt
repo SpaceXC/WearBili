@@ -103,27 +103,30 @@ object VideoManager {
     }
 
     fun uploadVideoViewingProgress(bvid: String, cid: Long, progress: Int) {
-        val body: RequestBody = FormBody.Builder()
-            .add("aid", VideoUtils.bv2av(bvid))
-            .add("cid", cid.toString())
-            .add("progress", progress.toString())
-            .add("platform", "android")
-            .add("csrf", CookiesManager.getCookieByName("bili_jct")!!)
-            .build()
-        NetworkUtils.postUrl(
-            "https://api.bilibili.com/x/v2/history/report",
-            body,
-            object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-                    Log.d(Application.getTag(), "onFailure: 上报播放进度失败")
+        if (UserManager.getUserCookie() != null && CookiesManager.getCookieByName("bili_jct") != null) {
+            val body: RequestBody = FormBody.Builder()
+                .add("aid", VideoUtils.bv2av(bvid))
+                .add("cid", cid.toString())
+                .add("progress", progress.toString())
+                .add("platform", "android")
+                .add("csrf", CookiesManager.getCookieByName("bili_jct")!!)
+                .build()
+            NetworkUtils.postUrl(
+                "https://api.bilibili.com/x/v2/history/report",
+                body,
+                object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        Log.d(Application.getTag(), "onFailure: 上报播放进度失败")
 
-                }
+                    }
 
-                override fun onResponse(call: Call, response: Response) {
-                    Log.d(Application.getTag(), "onResponse: 上报播放进度成功")
-                    response.close()
-                }
+                    override fun onResponse(call: Call, response: Response) {
+                        Log.d(Application.getTag(), "onResponse: 上报播放进度成功")
+                        response.close()
+                    }
 
-            })
+                })
+        }
+
     }
 }

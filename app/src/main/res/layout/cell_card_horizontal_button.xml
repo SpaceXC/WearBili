@@ -24,7 +24,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/icon"
+                android:id="@+id/uploaderAvatar"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_marginStart="10dp"
@@ -51,7 +51,7 @@
                 app:layout_constraintGuide_percent="0.85" />
 
             <TextView
-                android:id="@+id/mainText"
+                android:id="@+id/usernameText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -62,29 +62,28 @@
                 android:textColor="#fff"
                 android:textSize="16sp"
                 app:autoSizeTextType="uniform"
-                app:layout_constraintBottom_toTopOf="@+id/description"
+                app:layout_constraintBottom_toTopOf="@+id/survey"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/icon"
+                app:layout_constraintStart_toEndOf="@+id/uploaderAvatar"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/description"
+                android:id="@+id/survey"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="15dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
                 android:fontFamily="@font/puhui"
-                android:text="扫码查看我们的开源项目木木木木"
+                android:text="点击扫码查看我们的开源项目"
                 android:textColor="#fff"
-                android:textSize="14sp"
-                app:autoSizeTextType="uniform"
+                android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/icon"
-                app:layout_constraintTop_toBottomOf="@+id/mainText" />
+                app:layout_constraintStart_toEndOf="@+id/uploaderAvatar"
+                app:layout_constraintTop_toBottomOf="@+id/usernameText" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -85,11 +85,12 @@ class UserHorizontalButtonAdapter(context: Activity) :
 
             override fun onResponse(call: Call, response: Response) {
                 val user = Gson().fromJson(response.body?.string(), User::class.java)
-                holder.name.text = user.data.name
-                holder.description.text = getItem(position).description
+
                 try {
                     Executors.newCachedThreadPool().execute {
                         context.runOnUiThread {
+                            holder.name.text = user.data.name
+                            holder.description.text = getItem(position).description
                             Glide.with(context).load(user.data.face).skipMemoryCache(true)
                                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                                 .placeholder(R.drawable.default_avatar).circleCrop()
@@ -110,9 +111,9 @@ class UserHorizontalButtonAdapter(context: Activity) :
         val description: TextView
 
         init {
-            icon = itemView.findViewById(R.id.icon)
-            name = itemView.findViewById(R.id.mainText)
-            description = itemView.findViewById(R.id.description)
+            icon = itemView.findViewById(R.id.uploaderAvatar)
+            name = itemView.findViewById(R.id.usernameText)
+            description = itemView.findViewById(R.id.survey)
         }
     }
 }

@@ -16,6 +16,9 @@ import okhttp3.RequestBody
 object UserManager {
     fun getUserCookie(): String? = CookiesManager.getCookieByName("SESSDATA")
 
+    fun isLoggedIn(): Boolean =
+        CookiesManager.getCookieByName("SESSDATA") != null && CookiesManager.getCookieByName("bili_jct") != null
+
     fun getCurrentUser(callback: Callback) {
         NetworkUtils.getUrl("https://api.bilibili.com/x/space/myinfo", callback)
     }

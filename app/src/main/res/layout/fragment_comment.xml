@@ -55,10 +55,11 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="-10dp"
         android:minHeight="80dp"
+
         app:cardBackgroundColor="#78242424"
         app:cardCornerRadius="10dp"
-
         app:cardElevation="0dp"
         app:cardMaxElevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"

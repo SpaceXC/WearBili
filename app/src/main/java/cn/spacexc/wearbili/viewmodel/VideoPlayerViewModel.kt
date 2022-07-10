@@ -38,7 +38,7 @@ enum class PlayerStatus {
     NOT_READY
 }
 
-class VideoPlayerViewModel() : ViewModel() {
+class VideoPlayerViewModel : ViewModel() {
     private var httpDataSourceFactory = DefaultHttpDataSource.Factory()
 
     //    private val dataSourceFactory: DataSource.Factory = DataSource.Factory {

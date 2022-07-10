@@ -46,7 +46,7 @@ object VideoUtils {
     }
 
     //av转bv方法
-    fun av2bv(st: String): String? {
+    fun av2bv(st: String): String {
         try {
             var s = java.lang.Long.valueOf(st.split("av".toRegex()).dropLastWhile { it.isEmpty() }
                 .toTypedArray()[1])

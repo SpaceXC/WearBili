@@ -4,10 +4,13 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable-v24/arrow_back_ios_new-48px.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable-v24/calendar_month.xml" value="0.2795" />
+        <entry key="app/src/main/res/drawable-v24/ic_baseline_arrow_back_ios_24.xml" value="0.201" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable-v24/reply-48px.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable-v24/reply.xml" value="0.2795" />
+        <entry key="app/src/main/res/drawable-v24/warning.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/background_button.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/background_cardview.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/background_edit_text.xml" value="0.2795" />
@@ -21,10 +24,12 @@
         <entry key="app/src/main/res/drawable/cursor_drawable.xml" value="0.203" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.196" />
         <entry key="app/src/main/res/drawable/ic_baseline_arrow_back_ios_24.xml" value="0.2795" />
+        <entry key="app/src/main/res/drawable/ic_baseline_arrow_back_ios_new_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_baseline_arrow_forward_ios_24.xml" value="0.229" />
         <entry key="app/src/main/res/drawable/ic_baseline_done_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_baseline_fast_forward_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_baseline_fast_rewind_24.xml" value="0.2795" />
+        <entry key="app/src/main/res/drawable/ic_baseline_history_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_baseline_person_outline_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_baseline_sort_24.xml" value="0.2795" />
@@ -36,6 +41,7 @@
         <entry key="app/src/main/res/drawable/ic_outline_account_circle_24.xml" value="0.276" />
         <entry key="app/src/main/res/drawable/ic_outline_cloud_download_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_outline_home_24.xml" value="0.2795" />
+        <entry key="app/src/main/res/drawable/ic_outline_info_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_outline_local_fire_department_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_outline_monetization_on_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_outline_person_add_alt_1_24.xml" value="0.2795" />
@@ -50,33 +56,35 @@
         <entry key="app/src/main/res/font/roboto_bold.xml" value="0.3247863247863248" />
         <entry key="app/src/main/res/font/roboto_medium.xml" value="0.3384615384615385" />
         <entry key="app/src/main/res/layout-land/fragment_video_playing.xml" value="0.32708333333333334" />
-        <entry key="app/src/main/res/layout/activity_about.xml" value="1.0049118041992189" />
-        <entry key="app/src/main/res/layout/activity_login.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_about.xml" value="0.36808471679687504" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.4085881587508133" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.43813526324207475" />
         <entry key="app/src/main/res/layout/activity_menu.xml" value="0.3250251321231616" />
         <entry key="app/src/main/res/layout/activity_photo_view.xml" value="0.13593597412109376" />
         <entry key="app/src/main/res/layout/activity_play_on_phone.xml" value="1.0790832519531253" />
-        <entry key="app/src/main/res/layout/activity_search_result.xml" value="0.585491372381113" />
-        <entry key="app/src/main/res/layout/activity_video.xml" value="0.47918088737201364" />
-        <entry key="app/src/main/res/layout/activity_video_cache.xml" value="0.314471707561342" />
-        <entry key="app/src/main/res/layout/activity_video_player.xml" value="0.5131578947368421" />
+        <entry key="app/src/main/res/layout/activity_search_result.xml" value="0.5472560975609756" />
+        <entry key="app/src/main/res/layout/activity_video.xml" value="0.4251190185546876" />
+        <entry key="app/src/main/res/layout/activity_video_cache.xml" value="0.5268648960379045" />
+        <entry key="app/src/main/res/layout/activity_video_long_click.xml" value="1.7640449438202248" />
+        <entry key="app/src/main/res/layout/activity_video_player.xml" value="0.22959771407277962" />
         <entry key="app/src/main/res/layout/activity_view_full_video_parts.xml" value="0.22436295835922934" />
         <entry key="app/src/main/res/layout/activity_view_full_video_parts_actvity.xml" value="0.18247863247863247" />
-        <entry key="app/src/main/res/layout/cell_card_horizontal_button.xml" value="1.8470588235294119" />
-        <entry key="app/src/main/res/layout/cell_card_horizontal_button_large_avatar.xml" value="0.6408163265306123" />
+        <entry key="app/src/main/res/layout/cell_card_horizontal_button.xml" value="0.7154909506611438" />
+        <entry key="app/src/main/res/layout/cell_card_horizontal_button_large_avatar.xml" value="1.8470588235294119" />
         <entry key="app/src/main/res/layout/cell_comment_list.xml" value="0.7772277227722773" />
-        <entry key="app/src/main/res/layout/cell_hot_search.xml" value="0.7733990147783252" />
-        <entry key="app/src/main/res/layout/cell_round_button.xml" value="0.35803070068359377" />
-        <entry key="app/src/main/res/layout/cell_round_button_otld.xml" value="0.24302081246661322" />
-        <entry key="app/src/main/res/layout/cell_video_list.xml" value="0.6638477801268499" />
+        <entry key="app/src/main/res/layout/cell_hot_search.xml" value="0.4475079014970752" />
+        <entry key="app/src/main/res/layout/cell_round_button.xml" value="1.544867661420037" />
+        <entry key="app/src/main/res/layout/cell_round_button_otld.xml" value="0.45596789498614443" />
+        <entry key="app/src/main/res/layout/cell_video_list.xml" value="1.8470588235294119" />
         <entry key="app/src/main/res/layout/cell_video_part.xml" value="0.5738951332548745" />
-        <entry key="app/src/main/res/layout/fragment_comment.xml" value="1.8470588235294119" />
-        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.3825629209860777" />
+        <entry key="app/src/main/res/layout/fragment_comment.xml" value="0.2053775743707094" />
+        <entry key="app/src/main/res/layout/fragment_profile.xml" value="1.8470588235294119" />
         <entry key="app/src/main/res/layout/fragment_recommend.xml" value="0.41192626953125" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.6908690869086909" />
-        <entry key="app/src/main/res/layout/fragment_video_info.xml" value="0.4131578947368421" />
+        <entry key="app/src/main/res/layout/fragment_video_info.xml" value="1.2053742802303262" />
         <entry key="app/src/main/res/layout/fragment_video_playing.xml" value="0.20554664223881086" />
         <entry key="app/src/main/res/layout/layout_video_controller.xml" value="0.3667155589872193" />
+        <entry key="app/src/main/res/layout/layout_video_operates_dialog.xml" value="0.5838640434276341" />
         <entry key="app/src/main/res/layout/video_list_cell.xml" value="1.5436353514794592" />
         <entry key="app/src/main/res/menu/action_drawer_menu.xml" value="1.3954545454545455" />
         <entry key="app/src/main/res/xml/network_security_config.xml" value="0.1" />

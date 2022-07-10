@@ -6,6 +6,7 @@
     android:foreground="?selectableItemBackground">
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
@@ -89,7 +90,6 @@
                 android:layout_marginBottom="6dp"
                 android:alpha="0.5"
                 android:fontFamily="@font/puhui_medium"
-                android:text="888888.8w"
                 android:textColor="#fff"
                 android:textSize="9sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -105,7 +105,6 @@
                 android:ellipsize="end"
                 android:fontFamily="@font/puhui_medium"
                 android:lines="1"
-                android:text="影视飓风111111"
                 android:textColor="#fff"
                 android:textSize="9sp"
                 app:layout_constraintBottom_toBottomOf="@+id/listPlayTimes"
@@ -118,13 +117,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
                 android:ellipsize="end"
                 android:fontFamily="@font/puhui_medium"
                 android:gravity="center_vertical"
                 android:lines="3"
-                android:text="重新定义稳定器？ 大疆RS3系列评测1111111起111111111重新定义稳定器？ 大疆RS3系列评测1111111起111111111"
                 android:textColor="#fff"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"

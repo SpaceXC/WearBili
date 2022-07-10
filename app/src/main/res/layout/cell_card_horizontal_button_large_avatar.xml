@@ -24,14 +24,15 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/icon"
-                android:layout_width="wrap_content"
+                android:id="@+id/uploaderAvatar"
+                android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="4dp"
                 android:adjustViewBounds="true"
                 app:layout_constraintBottom_toTopOf="@+id/guideline10"
+                app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/guideline9"
                 app:srcCompat="@drawable/ic_outline_account_circle_24" />
@@ -41,52 +42,52 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.15" />
+                app:layout_constraintGuide_percent="0.2" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.85" />
+                app:layout_constraintGuide_percent="0.8" />
 
             <TextView
-                android:id="@+id/mainText"
+                android:id="@+id/usernameText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="4dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
                 android:fontFamily="@font/puhui_bold"
-                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
                 android:text="XCちゃん"
                 android:textColor="#fff"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:autoSizeTextType="uniform"
-                app:layout_constraintBottom_toTopOf="@+id/description"
+                app:layout_constraintBottom_toTopOf="@+id/survey"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/icon"
+                app:layout_constraintStart_toEndOf="@+id/uploaderAvatar"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/description"
+                android:id="@+id/survey"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="4dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="10dp"
                 android:fontFamily="@font/puhui"
-                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
                 android:text="开发者 项目发起人"
                 android:textColor="#fff"
-                android:textSize="12sp"
+                android:textSize="10sp"
                 app:autoSizeTextType="uniform"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/icon"
-                app:layout_constraintTop_toBottomOf="@+id/mainText" />
+                app:layout_constraintStart_toEndOf="@+id/uploaderAvatar"
+                app:layout_constraintTop_toBottomOf="@+id/usernameText" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

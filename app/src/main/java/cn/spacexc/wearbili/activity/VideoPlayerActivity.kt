@@ -9,8 +9,8 @@ import android.view.SurfaceHolder
 import android.widget.FrameLayout
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.databinding.ActivityVideoPlayerBinding
@@ -50,7 +50,7 @@ class VideoPlayerActivity : AppCompatActivity() {
 
     val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
 
-    lateinit var viewModel: VideoPlayerViewModel
+    val viewModel by viewModels<VideoPlayerViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,7 +88,7 @@ class VideoPlayerActivity : AppCompatActivity() {
             }
         }
 
-        viewModel = ViewModelProvider(this)[VideoPlayerViewModel::class.java].apply {
+        viewModel.apply {
             danmakuView = binding.danmakuView       //赋值viewmodel弹幕视图
             controllerBinding = binding.controllerInclude       //赋值viewmodel控制器视图
 
@@ -215,7 +215,7 @@ class VideoPlayerActivity : AppCompatActivity() {
         //-----------Layout视图监听区域⬆️-----------
 
         //-----------弹幕相关区域⬇️️️-----------
-        val danmakuContext: DanmakuContext = DanmakuContext.create()       //弹幕上下文
+        val danmakuContext: DanmakuContext = DanmakuContext.create()       //弹幕context
 
         val maxLinesPair = HashMap<Int, Int>()     //弹幕最多行数
         maxLinesPair[BaseDanmaku.TYPE_SCROLL_RL] = 5
@@ -359,7 +359,7 @@ class VideoPlayerActivity : AppCompatActivity() {
      *  解压弹幕数据
      *  From CSDN
      */
-    fun decompress(data: ByteArray): ByteArray? {
+    fun decompress(data: ByteArray): ByteArray {
         var output: ByteArray
         val decompresser = Inflater(true)
         decompresser.reset()
@@ -386,8 +386,8 @@ class VideoPlayerActivity : AppCompatActivity() {
         return output
     }
 
-    fun uploadVideoViewingProgress(bvid: String, cid: Long) {
-        if (UserManager.getUserCookie() != null) {
+    private fun uploadVideoViewingProgress(bvid: String, cid: Long) {
+        if (UserManager.isLoggedIn()) {
             lifecycleScope.launch {
                 while (true) {
                     VideoManager.uploadVideoViewingProgress(

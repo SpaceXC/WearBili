@@ -61,7 +61,7 @@ object DeviceManager {
      * SDK 版本
      * @return
      */
-    fun getSDKVersion(): String? {
+    fun getSDKVersion(): String {
         return Build.VERSION.SDK_INT.toString()
     }
 

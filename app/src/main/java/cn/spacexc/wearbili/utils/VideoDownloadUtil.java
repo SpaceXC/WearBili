@@ -94,7 +94,7 @@ public final class VideoDownloadUtil {
                 .setExtensionRendererMode(extensionRendererMode);
     }
 
-    public static synchronized HttpDataSource.Factory getHttpDataSourceFactory(Context context) {
+    public static synchronized HttpDataSource.Factory getHttpDataSourceFactory() {
         if (httpDataSourceFactory == null) {
             // We don't want to use Cronet, or we failed to instantiate a CronetEngine.
             CookieManager cookieManager = new CookieManager();
@@ -112,7 +112,7 @@ public final class VideoDownloadUtil {
         if (dataSourceFactory == null) {
             context = context.getApplicationContext();
             DefaultDataSource.Factory upstreamFactory =
-                    new DefaultDataSource.Factory(context, getHttpDataSourceFactory(context));
+                    new DefaultDataSource.Factory(context, getHttpDataSourceFactory());
             dataSourceFactory = buildReadOnlyCacheDataSource(upstreamFactory, getDownloadCache(context));
         }
         return dataSourceFactory;
@@ -158,7 +158,7 @@ public final class VideoDownloadUtil {
                             context,
                             getDatabaseProvider(context),
                             getDownloadCache(context),
-                            getHttpDataSourceFactory(context),
+                            getHttpDataSourceFactory(),
                             Executors.newFixedThreadPool(/* nThreads= */ 6));
         }
     }

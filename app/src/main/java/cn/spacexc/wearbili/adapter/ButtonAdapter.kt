@@ -77,7 +77,7 @@ class ButtonsAdapter(isOutlined: Boolean, onItemViewClickListener: OnItemViewCli
         val name: TextView
 
         init {
-            icon = itemView.findViewById(R.id.icon)
+            icon = itemView.findViewById(R.id.uploaderAvatar)
             name = itemView.findViewById(R.id.buttonName)
         }
     }

@@ -266,9 +266,7 @@ data class CommentData(
     val replies: List<CommentContentData>?,
     val top: CommentContentData,
     val upper: UpperInfo
-) {
-
-}
+)
 
 data class UpperInfo(
     val mid : Long

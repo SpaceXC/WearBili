@@ -110,8 +110,8 @@ class CommentFragment : Fragment() {
                                     if (comments.code == 0) {
 
                                         val replies: MutableList<CommentContentData> =
-                                            (comments.data.replies?.toMutableList()
-                                                ?: emptyList()) as MutableList<CommentContentData>
+                                            comments.data.replies?.toMutableList()
+                                                ?: mutableListOf()
                                         if (replies != prevList) {
                                             prevList = replies
                                             if (comments.data.top.member != null && comments.data.top.content != null) {

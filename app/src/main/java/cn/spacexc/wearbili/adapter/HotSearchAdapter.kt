@@ -14,6 +14,7 @@ import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.SearchResultActivity
 import cn.spacexc.wearbili.dataclass.HotSearchData
 import com.bumptech.glide.Glide
+import com.google.android.material.card.MaterialCardView
 
 /**
  * Created by XC-Qan on 2022/6/29.
@@ -50,7 +51,7 @@ class HotSearchAdapter : ListAdapter<HotSearchData, HotSearchAdapter.HotSearchVi
     override fun onBindViewHolder(holder: HotSearchViewHolder, position: Int) {
         val searchData = getItem(position)
         holder.showNameText.text = searchData.show_name
-        holder.itemView.setOnClickListener {
+        holder.cardView.setOnClickListener {
             val intent = Intent(Application.getContext(), SearchResultActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             intent.putExtra("keyword", searchData.keyword)
@@ -67,10 +68,11 @@ class HotSearchAdapter : ListAdapter<HotSearchData, HotSearchAdapter.HotSearchVi
     class HotSearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val hotTypeImageView: ImageView
         val showNameText: TextView
-
+        val cardView: MaterialCardView
         init {
             hotTypeImageView = itemView.findViewById(R.id.hotType)
-            showNameText = itemView.findViewById(R.id.mainText)
+            showNameText = itemView.findViewById(R.id.usernameText)
+            cardView = itemView.findViewById(R.id.cardView)
         }
     }
 }

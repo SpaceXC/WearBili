@@ -135,12 +135,12 @@ class ProfileFragment : Fragment() {
                                 .into(binding.avatar)
                             binding.usernameText.text = user.data.name
                             binding.survey.text =
-                                "硬币: ${user.data.coins}  粉丝: ${user.data.follower}"
+                                "${user.data.coins}硬币 ${user.data.follower}粉丝"
                             //binding.uidText.text = "UID ${user.data.mid}"
                             //binding.signText.text = user.data.sign.ifEmpty { "这个人什么都没写..." }
                             binding.levelText.text = "LV${user.data.level}"
                             binding.levelText.visibility = View.VISIBLE
-                            if (user.data.vip.type != 0) {
+                            if (user.data.vip.nickname_color.isNotEmpty()) {
                                 //binding.vipText.text = user.data.vip.label.text
                                 binding.usernameText.setTextColor(Color.parseColor(user.data.vip.nickname_color))
                                 //binding.vipText.setTextColor(Color.parseColor(user.data.vip.label.bg_color))

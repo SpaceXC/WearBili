@@ -28,7 +28,7 @@ import cn.spacexc.wearbili.dataclass.user.User
 import cn.spacexc.wearbili.dataclass.user.UserFans
 import cn.spacexc.wearbili.listener.OnItemViewClickListener
 import cn.spacexc.wearbili.manager.VideoManager
-import cn.spacexc.wearbili.utils.NumberUtils
+import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import cn.spacexc.wearbili.utils.TimeUtils
 import cn.spacexc.wearbili.utils.TimeUtils.toDateStr
 import com.bumptech.glide.Glide
@@ -60,8 +60,7 @@ class VideoInfoFragment : Fragment() {
         RoundButtonData(R.drawable.ic_round_star_border_24, "收藏"),
         RoundButtonData(R.drawable.send_to_mobile, "手机观看"),
         RoundButtonData(R.drawable.cloud_download, "缓存"),
-        RoundButtonData(R.drawable.ic_baseline_history_24, "稍后再看"),
-        RoundButtonData(R.drawable.ic_baseline_update_24, "历史记录")
+        RoundButtonData(R.drawable.ic_baseline_history_24, "稍后再看")
     )
 
     init {
@@ -77,10 +76,10 @@ class VideoInfoFragment : Fragment() {
         return binding.root
     }
 
-    override fun onDestroyView() {
+    /*override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
+    }*/
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -200,15 +199,18 @@ class VideoInfoFragment : Fragment() {
                             binding.bvidText.text = video.data.bvid
                             binding.duration.text = TimeUtils.secondToTime(video.data.duration)
                             binding.uploaderName.text = video.data.owner.name
-                            binding.danmakusCount.text =
-                                NumberUtils.num2Chinese(video.data.stat.danmaku)
-                            binding.viewsCount.text =
-                                NumberUtils.num2Chinese(video.data.stat.view.toInt())
+                            binding.danmakusCount.text = video.data.stat.danmaku.toShortChinese()
+                            binding.viewsCount.text = video.data.stat.view.toShortChinese()
                             binding.pubdateText.text = (video.data.pubdate * 1000).toDateStr()
                             binding.videoDesc.setText(video.data.desc)
                             binding.follow.setOnClickListener {
                                 followUser(video.data.owner.mid, video)
                             }
+                            VideoManager.uploadVideoViewingProgress(
+                                video.data.bvid,
+                                video.data.cid,
+                                0
+                            )
                             Glide.with(this@VideoInfoFragment).load(video.data.owner.face)
                                 .skipMemoryCache(true)
                                 .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -264,6 +266,7 @@ class VideoInfoFragment : Fragment() {
     }
 
     fun switchFollowStat(isFollowed: Boolean) {
+        binding.follow.visibility = View.VISIBLE
         if (isFollowed) {
             binding.follow.setBackgroundResource(R.drawable.background_small_circle_grey)
             binding.follow.setImageResource(R.drawable.ic_baseline_done_24)
@@ -308,7 +311,7 @@ class VideoInfoFragment : Fragment() {
                                 mThreadPool.execute {
                                     requireActivity().runOnUiThread {
                                         binding.uploaderFans.text =
-                                            "${NumberUtils.num2Chinese(userFans.data.card.fans)}粉丝"
+                                            "${userFans.data.card.fans.toShortChinese()}粉丝"
                                     }
                                 }
                             }

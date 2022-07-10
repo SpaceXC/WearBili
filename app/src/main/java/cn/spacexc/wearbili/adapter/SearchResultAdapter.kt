@@ -16,11 +16,12 @@ import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.VideoActivity
 import cn.spacexc.wearbili.dataclass.VideoSearch
-import cn.spacexc.wearbili.utils.NumberUtils
+import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.card.MaterialCardView
 
 /**
  * Created by XC-Qan on 2022/6/14.
@@ -69,11 +70,11 @@ class SearchResultAdapter(contextIn: Context) :
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
-        val video : VideoSearch.SearchData.VideoSearchResult = getItem(position)
+        val video: VideoSearch.SearchData.VideoSearchResult = getItem(position)
         holder.listVideoTitle.text = Html.fromHtml(video.title)
         holder.listUpName.text = video.author
-        holder.listVideoViews.text = NumberUtils.num2Chinese(video.play)
-        holder.itemView.setOnClickListener {
+        holder.listVideoViews.text = video.play.toShortChinese()
+        holder.cardView.setOnClickListener {
             val intent = Intent(Application.getContext(), VideoActivity::class.java)
             intent.putExtra("videoId", video.bvid)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -99,14 +100,15 @@ class SearchResultAdapter(contextIn: Context) :
         var listCover : ImageView
         var listVideoTitle : TextView
         var listUpName : TextView
-        var listVideoViews : TextView
-
+        var listVideoViews: TextView
+        var cardView: MaterialCardView
 
         init {
             listCover = itemView.findViewById(R.id.listCover)
             listVideoTitle = itemView.findViewById(R.id.listVideoTitle)
             listUpName = itemView.findViewById(R.id.listUpName)
             listVideoViews = itemView.findViewById(R.id.listPlayTimes)
+            cardView = itemView.findViewById(R.id.cardView)
         }
     }
 }

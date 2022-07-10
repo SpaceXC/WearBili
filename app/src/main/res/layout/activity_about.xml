@@ -128,7 +128,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:layout_marginEnd="6dp"
+                    android:layout_marginEnd="50dp"
                     android:adjustViewBounds="true"
                     app:layout_constraintEnd_toEndOf="@+id/textView3"
                     app:layout_constraintStart_toStartOf="@+id/textView3"

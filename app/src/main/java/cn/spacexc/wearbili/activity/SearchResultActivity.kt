@@ -59,6 +59,9 @@ class SearchResultActivity : AppCompatActivity() {
                 }
             }
         })
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            searchVideo()
+        }
         binding.pageName.setOnClickListener { finish() }
         lifecycleScope.launch {
             @SuppressLint("SimpleDateFormat") val sdf = SimpleDateFormat("HH:mm")

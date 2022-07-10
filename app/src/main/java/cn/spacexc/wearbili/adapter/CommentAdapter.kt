@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.dataclass.CommentContentData
-import cn.spacexc.wearbili.utils.NumberUtils
+import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import com.bumptech.glide.Glide
 import com.wyx.components.widgets.ExpandCollpaseTextView
 
@@ -25,7 +25,7 @@ import com.wyx.components.widgets.ExpandCollpaseTextView
  * 给！爷！写！注！释！
  */
 
-class CommentAdapter() :
+class CommentAdapter :
     ListAdapter<CommentContentData, CommentAdapter.VideoCommentViewHolder>(object :
         DiffUtil.ItemCallback<CommentContentData>() {
         override fun areItemsTheSame(
@@ -71,7 +71,7 @@ class CommentAdapter() :
         //holder.userLevel.text = "LV${comment.member!!.level_info.current_level}"
         holder.pubDate.text = comment.reply_control.time_desc
         holder.content.setText(comment.content!!.message)
-        holder.likes.text = NumberUtils.num2Chinese(comment.like)
+        holder.likes.text = comment.like.toShortChinese()
         if (comment.member!!.mid == uploaderMid) {
             holder.isUp.visibility = View.VISIBLE
         }
