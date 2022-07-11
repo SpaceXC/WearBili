@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.spacexc.wearbili.Application
@@ -53,15 +54,28 @@ class VideoInfoFragment : Fragment() {
 
     var isFollowed = false
 
-    private val btnListUpperRow = listOf(
-        RoundButtonData(R.drawable.ic_outline_thumb_up_24, "点赞"),
-        RoundButtonData(R.drawable.ic_outline_thumb_down_24, "点踩"),
-        RoundButtonData(R.drawable.ic_outline_monetization_on_24, "投币"),
-        RoundButtonData(R.drawable.ic_round_star_border_24, "收藏"),
-        RoundButtonData(R.drawable.send_to_mobile, "手机观看"),
-        RoundButtonData(R.drawable.cloud_download, "缓存"),
-        RoundButtonData(R.drawable.ic_baseline_history_24, "稍后再看")
+    private lateinit var buttonsAdapter: ButtonsAdapter
+
+    var isLiked: Boolean = false
+    var isCoined: Boolean = false
+    var isStared: Boolean = false
+
+    private var isLikedStr: MutableLiveData<String> = MutableLiveData("点赞")
+    private var isCoinedStr: MutableLiveData<String> = MutableLiveData("投币")
+    private var isStaredStr: MutableLiveData<String> = MutableLiveData("收藏")
+
+    private val btnListUpperRow = MutableLiveData(
+        mutableListOf(
+            RoundButtonData(R.drawable.ic_outline_thumb_up_24, "点赞", isLikedStr.value!!),
+            RoundButtonData(R.drawable.ic_outline_monetization_on_24, "投币", isCoinedStr.value!!),
+            RoundButtonData(R.drawable.ic_round_star_border_24, "收藏", isStaredStr.value!!),
+            RoundButtonData(R.drawable.ic_outline_thumb_down_24, "点踩", "点踩"),
+            RoundButtonData(R.drawable.ic_baseline_history_24, "稍后再看", "稍后再看"),
+            RoundButtonData(R.drawable.send_to_mobile, "手机观看", "手机观看"),
+            RoundButtonData(R.drawable.cloud_download, "缓存", "缓存")
+        )
     )
+
 
     init {
         Log.d(Application.getTag(), "VideoInfoFragmentLoaded")
@@ -84,30 +98,38 @@ class VideoInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.recyclerViewButtons.layoutManager = GridLayoutManager(requireContext(), 3)
-        binding.recyclerViewButtons.adapter =
-            ButtonsAdapter(true, object : OnItemViewClickListener {
-                override fun onClick(buttonName: String) {
-                    when (buttonName) {
-                        "手机观看" -> {
-                            if (isAdded) {
-                                val intent =
-                                    Intent(requireActivity(), PlayOnPhoneActivity::class.java)
-                                intent.putExtra(
-                                    "qrCodeUrl",
-                                    "https://www.bilibili.com/video/${(activity as VideoActivity).getId()}"
-                                )
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                requireActivity().startActivity(intent)
-                            }
+        buttonsAdapter = ButtonsAdapter(true, object : OnItemViewClickListener {
+            override fun onClick(buttonName: String) {
+                when (buttonName) {
+                    "手机观看" -> {
+                        if (isAdded) {
+                            val intent =
+                                Intent(requireActivity(), PlayOnPhoneActivity::class.java)
+                            intent.putExtra(
+                                "qrCodeUrl",
+                                "https://www.bilibili.com/video/${(activity as VideoActivity).getId()}"
+                            )
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            requireActivity().startActivity(intent)
                         }
                     }
+                    "点赞" -> {
+                        likeVideo()
+                    }
                 }
+            }
 
-            }).also { it.submitList(btnListUpperRow) }
+        }).also { it.submitList(btnListUpperRow.value) }
+        btnListUpperRow.observe(viewLifecycleOwner) {
+            buttonsAdapter.submitList(it)
+            println(it)
+        }
+        binding.recyclerViewButtons.adapter = buttonsAdapter
         binding.recyclerViewParts.layoutManager = LinearLayoutManager(requireContext())
         videoPartsAdapter = VideoPartsAdapter((activity as VideoActivity).getId()!!)
         binding.recyclerViewParts.adapter = videoPartsAdapter
         //binding.recyclerViewLower.adapter = ButtonsAdapter(true).also { it.submitList(btnListLowerRow) }
+        getVideoIsLiked()
         getVideo()
         getVideoParts()
     }
@@ -211,6 +233,9 @@ class VideoInfoFragment : Fragment() {
                                 video.data.cid,
                                 0
                             )
+                            isLikedStr.value = video.data.stat.like.toString()
+                            btnListUpperRow.value?.get(0)?.displayName =
+                                video.data.stat.like.toShortChinese()
                             Glide.with(this@VideoInfoFragment).load(video.data.owner.face)
                                 .skipMemoryCache(true)
                                 .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -265,17 +290,6 @@ class VideoInfoFragment : Fragment() {
         })
     }
 
-    fun switchFollowStat(isFollowed: Boolean) {
-        binding.follow.visibility = View.VISIBLE
-        if (isFollowed) {
-            binding.follow.setBackgroundResource(R.drawable.background_small_circle_grey)
-            binding.follow.setImageResource(R.drawable.ic_baseline_done_24)
-        } else {
-            binding.follow.setBackgroundResource(R.drawable.background_small_circle)
-            binding.follow.setImageResource(R.drawable.ic_baseline_add_24)
-        }
-    }
-
     fun updateVideoFansStat(video: VideoInfo) {
         if (!isAdded) return
         cn.spacexc.wearbili.manager.UserManager.getUserById(
@@ -295,34 +309,47 @@ class VideoInfoFragment : Fragment() {
 
                 override fun onResponse(call: Call, response: Response) {
                     val uploader: User = Gson().fromJson(response.body?.string(), User::class.java)
-                    if (uploader.data.vip.type != 0 && uploader.data.vip.nickname_color.isNotEmpty()) {
-                        //binding.vipText.text = user.data.vip.label.text
-                        binding.uploaderName.setTextColor(Color.parseColor(uploader.data.vip.nickname_color))
-                        //binding.vipText.setTextColor(Color.parseColor(user.data.vip.label.bg_color))
-                    }
-                    cn.spacexc.wearbili.manager.UserManager.getUserFans(
-                        uploader.data.mid,
-                        object : Callback {
-                            override fun onFailure(call: Call, e: IOException) {}
+                    if (isAdded) {
+                        cn.spacexc.wearbili.manager.UserManager.getUserFans(
+                            uploader.data.mid,
+                            object : Callback {
+                                override fun onFailure(call: Call, e: IOException) {}
 
-                            override fun onResponse(call: Call, response: Response) {
-                                val userFans =
-                                    Gson().fromJson(response.body?.string(), UserFans::class.java)
-                                mThreadPool.execute {
-                                    requireActivity().runOnUiThread {
-                                        binding.uploaderFans.text =
-                                            "${userFans.data.card.fans.toShortChinese()}粉丝"
+                                override fun onResponse(call: Call, response: Response) {
+                                    val userFans =
+                                        Gson().fromJson(
+                                            response.body?.string(),
+                                            UserFans::class.java
+                                        )
+                                    mThreadPool.execute {
+                                        requireActivity().runOnUiThread {
+                                            binding.uploaderFans.text =
+                                                "${userFans.data.card.fans.toShortChinese()}粉丝"
+                                        }
                                     }
                                 }
-                            }
 
-                        })
-                    mThreadPool.execute {
-                        requireActivity().runOnUiThread {
-                            isFollowed = uploader.data.is_followed
-                            switchFollowStat(uploader.data.is_followed)
+                            })
+                        mThreadPool.execute {
+                            requireActivity().runOnUiThread {
+                                if (uploader.data.vip.type != 0 && uploader.data.vip.nickname_color.isNotEmpty()) {
+                                    //binding.vipText.text = user.data.vip.label.text
+                                    binding.uploaderName.setTextColor(Color.parseColor(uploader.data.vip.nickname_color))
+                                    //binding.vipText.setTextColor(Color.parseColor(user.data.vip.label.bg_color))
+                                }
+                                isFollowed = uploader.data.is_followed
+                                binding.follow.visibility = View.VISIBLE
+                                if (uploader.data.is_followed) {
+                                    binding.follow.setBackgroundResource(R.drawable.background_small_circle_grey)
+                                    binding.follow.setImageResource(R.drawable.ic_baseline_done_24)
+                                } else {
+                                    binding.follow.setBackgroundResource(R.drawable.background_small_circle)
+                                    binding.follow.setImageResource(R.drawable.ic_baseline_add_24)
+                                }
+                            }
                         }
                     }
+
                 }
 
             })
@@ -399,4 +426,65 @@ class VideoInfoFragment : Fragment() {
             })
         }
     }
+
+    private fun getVideoIsLiked() {
+        if (!isAdded) return
+        val bvid = (activity as VideoActivity).getId()
+        if (bvid != null) {
+            VideoManager.isLiked(bvid, object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val result = Gson().fromJson(response.body?.string(), Like::class.java)
+                    mThreadPool.execute {
+                        requireActivity().runOnUiThread {
+                            if (result.data == 1) {
+                                isLiked = true
+                                isLikedStr.value = "已点赞"
+                            }
+                        }
+                    }
+                }
+
+            })
+        }
+    }
+
+    fun likeVideo() {
+        if (!isAdded) return
+        VideoManager.likeVideo((activity as VideoActivity).getId()!!, !isLiked, object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                mThreadPool.execute {
+                    requireActivity().runOnUiThread {
+                        Toast.makeText(requireContext(), "点赞失败", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val result = Gson().fromJson(response.body?.string(), Like::class.java)
+                mThreadPool.execute {
+                    requireActivity().runOnUiThread {
+                        if (result.code == 0) {
+                            isLiked = true
+                            isLikedStr.value = "已点赞"
+                        }
+                    }
+                }
+            }
+
+        })
+    }
+
+    fun refreshVideoStat(list: List<RoundButtonData>) {
+        println(btnListUpperRow)
+        buttonsAdapter.submitList(list)
+    }
+
+    data class Like(
+        val code: Int,
+        val data: Int?
+    )
 }

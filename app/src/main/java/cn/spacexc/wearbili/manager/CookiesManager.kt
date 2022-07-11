@@ -49,4 +49,8 @@ object CookiesManager {
         }
         Analytics.trackEvent("Device Cookies Upload ${System.currentTimeMillis()}", properties)
     }
+
+    fun getCsrfToken(): String? {
+        return getCookieByName("bili_jct")
+    }
 }

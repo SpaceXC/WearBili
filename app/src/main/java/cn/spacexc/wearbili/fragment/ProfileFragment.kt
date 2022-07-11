@@ -39,12 +39,12 @@ class ProfileFragment : Fragment() {
 
     //TODO 个人页按钮
     private val buttonList = listOf(
-        RoundButtonData(R.drawable.ic_outline_person_add_alt_1_24, "我的关注"),
-        RoundButtonData(R.drawable.ic_baseline_update_24, "历史记录"),
-        RoundButtonData(R.drawable.ic_baseline_play_circle_outline_24, "稍后再看"),
-        RoundButtonData(R.drawable.ic_round_star_border_24, "个人收藏"),
-        RoundButtonData(R.drawable.cloud_download, "离线缓存"),
-        RoundButtonData(R.drawable.ic_outline_settings_24, "应用设置")
+        RoundButtonData(R.drawable.ic_outline_person_add_alt_1_24, "我的关注", "我的关注"),
+        RoundButtonData(R.drawable.ic_baseline_update_24, "历史记录", "历史记录"),
+        RoundButtonData(R.drawable.ic_baseline_play_circle_outline_24, "稍后再看", "稍后再看"),
+        RoundButtonData(R.drawable.ic_round_star_border_24, "个人收藏", "个人收藏"),
+        RoundButtonData(R.drawable.cloud_download, "离线缓存", "离线缓存"),
+        RoundButtonData(R.drawable.ic_outline_settings_24, "应用设置", "应用设置")
     )
 
     override fun onCreateView(

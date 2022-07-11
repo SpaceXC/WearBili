@@ -72,15 +72,8 @@ class UserHorizontalButtonAdapter(context: Activity) :
         UserManager.getUserById((getItem(position).mainText).toLong(), object : okhttp3.Callback {
             override fun onFailure(call: Call, e: IOException) {
                 holder.icon.setImageResource(R.drawable.default_avatar)
-                holder.name.text = getItem(position).description
-                when (position) {
-                    0 -> {
-                        holder.name.text = "XCちゃん"
-                    }
-                    1 -> {
-                        holder.name.text = "Rechrd-Qan"
-                    }
-                }
+                holder.name.text = getItem(position).mainText
+                holder.description.text = getItem(position).description
             }
 
             override fun onResponse(call: Call, response: Response) {

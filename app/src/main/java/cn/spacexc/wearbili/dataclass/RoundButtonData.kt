@@ -11,4 +11,5 @@ package cn.spacexc.wearbili.dataclass
 data class RoundButtonData(
     val resId: Int,
     val buttonName: String,
+    var displayName: String
 )

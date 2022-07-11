@@ -38,7 +38,11 @@ class VideoActivity : AppCompatActivity() {
     var isInitialized = false
 
     fun getId() : String? {
-        return intent.getStringExtra("videoId")
+        return if (intent.data?.getQueryParameter("bvid") == null) {
+            intent.getStringExtra("videoId")
+        } else {
+            intent.data?.getQueryParameter("bvid")
+        }
     }
 
     fun setPage(page : Int){

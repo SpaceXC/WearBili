@@ -83,7 +83,7 @@ object VideoManager {
 
     fun getCommentsByLikes(aid: Long, page: Int, callback: Callback) {
         NetworkUtils.getUrl(
-            "https://api.bilibili.com/x/v2/reply/main?type=1&oid=$aid&sort=1&pn=$page",
+            "https://api.bilibili.com/x/v2/reply/main?type=1&oid=$aid&sort=1&next=$page",
             callback
         )
     }
@@ -127,6 +127,20 @@ object VideoManager {
 
                 })
         }
+    }
 
+    fun likeVideo(bvid: String, isLike: Boolean, callback: Callback): Boolean {
+        if (!UserManager.isLoggedIn()) return false
+        val body: RequestBody = FormBody.Builder()
+            .add("bvid", bvid)
+            .add("like", "1")
+            .add("csrf", CookiesManager.getCsrfToken()!!)
+            .build()
+        NetworkUtils.postUrl("http://api.bilibili.com/x/web-interface/archive/like", body, callback)
+        return true
+    }
+
+    fun isLiked(bvid: String, callback: Callback) {
+        NetworkUtils.getUrl("http://api.bilibili.com/x/web-interface/archive/has/like", callback)
     }
 }

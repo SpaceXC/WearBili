@@ -53,18 +53,14 @@
         app:boxedEdges="all"
         android:layout_height="match_parent">
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/fragmentContainerView"
-            android:name="androidx.navigation.fragment.NavHostFragment"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewpager"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="2dp"
-            app:defaultNavHost="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-            app:navGraph="@navigation/main_nav" />
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
@@ -83,9 +79,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="7dp"
+                android:drawableEnd="@drawable/ic_baseline_keyboard_arrow_down_24"
                 android:fontFamily="@font/puhui_bold"
                 android:gravity="center"
-                android:text="登录"
+                android:text="主页"
                 android:textColor="#fff"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="@+id/timeText"

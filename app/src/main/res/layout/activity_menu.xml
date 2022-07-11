@@ -40,6 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="7dp"
+                android:drawableEnd="@drawable/ic_baseline_keyboard_arrow_up_24"
                 android:fontFamily="@font/puhui_bold"
                 android:gravity="center"
                 android:text="菜单"

@@ -15,7 +15,7 @@ import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.activity.SearchResultActivity
 import cn.spacexc.wearbili.activity.VideoActivity
 import cn.spacexc.wearbili.adapter.HotSearchAdapter
-import cn.spacexc.wearbili.databinding.FragmentSearchBinding
+import cn.spacexc.wearbili.databinding.ActivitySearchBinding
 import cn.spacexc.wearbili.dataclass.DefaultSearchContent
 import cn.spacexc.wearbili.dataclass.HotSearch
 import cn.spacexc.wearbili.manager.SearchManager
@@ -31,7 +31,7 @@ import kotlin.math.pow
 
 
 class SearchFragment : Fragment() {
-    private var _binding: FragmentSearchBinding? = null
+    private var _binding: ActivitySearchBinding? = null
     private val binding get() = _binding!!
 
     val adapter: HotSearchAdapter = HotSearchAdapter()
@@ -51,7 +51,7 @@ class SearchFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        _binding = ActivitySearchBinding.inflate(inflater, container, false)
         return binding.root
     }
 

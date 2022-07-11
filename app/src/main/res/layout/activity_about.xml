@@ -106,6 +106,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <RelativeLayout
+                    android:id="@+id/relativeLayout4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView4">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView4"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </RelativeLayout>
+
                 <TextView
                     android:id="@+id/textView3"
                     android:layout_width="0dp"
@@ -113,7 +131,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="10dp"
-                    android:fontFamily="@font/puhui_bold"
+                    android:fontFamily="@font/puhui_medium"
                     android:text="关于我们"
                     android:textColor="#fff"
                     android:textSize="22sp"
@@ -141,7 +159,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
                     android:layout_marginEnd="10dp"
-                    android:fontFamily="@font/puhui"
+                    android:fontFamily="@font/puhui_medium"
                     android:text="一个第三方哔哩哔哩手表客户端"
                     android:textColor="#fff"
                     android:textSize="14sp"
@@ -188,13 +206,25 @@
                     app:layout_constraintTop_toTopOf="@+id/textView8"
                     app:srcCompat="@drawable/ic_outline_supervisor_account_24" />
 
+                <ImageView
+                    android:id="@+id/imageView11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="10dp"
+                    android:adjustViewBounds="true"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView4"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/textView4"
+                    app:srcCompat="@drawable/volunteer_activism" />
+
                 <TextView
                     android:id="@+id/textView7"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="7.5dp"
-                    android:text="开发者和设计师们"
+                    android:fontFamily="@font/puhui_medium"
+                    android:text="开发者&amp;设计师"
                     android:textColor="#fff"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -208,6 +238,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="7.5dp"
+                    android:fontFamily="@font/puhui_medium"
                     android:text="第三方团体"
                     android:textColor="#fff"
                     android:textSize="16sp"
@@ -217,14 +248,30 @@
                     app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" />
 
                 <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="7.5dp"
+                    android:fontFamily="@font/puhui_medium"
+                    android:text="特别鸣谢"
+                    android:textColor="#fff"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/imageView13"
+                    app:layout_constraintTop_toBottomOf="@+id/relativeLayout3" />
+
+                <TextView
                     android:id="@+id/textView9"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="6dp"
                     android:layout_marginEnd="7.5dp"
-                    android:layout_marginBottom="6dp"
+                    android:layout_marginBottom="10dp"
                     android:alpha="0.8"
+                    android:fontFamily="@font/puhui_medium"
                     android:text="*哔哩哔哩商标是上海宽娱数码科技有限公司的商标"
                     android:textColor="#fff"
                     android:textSize="9sp"
@@ -232,7 +279,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/relativeLayout3" />
+                    app:layout_constraintTop_toBottomOf="@+id/relativeLayout4" />
 
                 <RelativeLayout
                     android:id="@+id/relativeLayout2"
@@ -240,7 +287,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="6dp"
-                    android:layout_marginEnd="7.5dp"
+                    android:layout_marginEnd="10dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView7">
@@ -258,7 +305,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="6dp"
-                    android:layout_marginEnd="7.5dp"
+                    android:layout_marginEnd="10dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView8">

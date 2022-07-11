@@ -10,6 +10,7 @@
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable-v24/reply-48px.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable-v24/reply.xml" value="0.2795" />
+        <entry key="app/src/main/res/drawable-v24/volunteer_activism.xml" value="0.201" />
         <entry key="app/src/main/res/drawable-v24/warning.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/background_button.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/background_cardview.xml" value="0.2795" />
@@ -30,6 +31,7 @@
         <entry key="app/src/main/res/drawable/ic_baseline_fast_forward_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_baseline_fast_rewind_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_baseline_history_24.xml" value="0.2795" />
+        <entry key="app/src/main/res/drawable/ic_baseline_keyboard_arrow_down_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_baseline_person_outline_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_baseline_sort_24.xml" value="0.2795" />
@@ -56,37 +58,40 @@
         <entry key="app/src/main/res/font/roboto_bold.xml" value="0.3247863247863248" />
         <entry key="app/src/main/res/font/roboto_medium.xml" value="0.3384615384615385" />
         <entry key="app/src/main/res/layout-land/fragment_video_playing.xml" value="0.32708333333333334" />
-        <entry key="app/src/main/res/layout/activity_about.xml" value="0.36808471679687504" />
+        <entry key="app/src/main/res/layout/activity_about.xml" value="0.36776977835349667" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.4085881587508133" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.43813526324207475" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.36343536376953123" />
         <entry key="app/src/main/res/layout/activity_menu.xml" value="0.3250251321231616" />
         <entry key="app/src/main/res/layout/activity_photo_view.xml" value="0.13593597412109376" />
         <entry key="app/src/main/res/layout/activity_play_on_phone.xml" value="1.0790832519531253" />
+        <entry key="app/src/main/res/layout/activity_search.xml" value="0.2845818470075307" />
         <entry key="app/src/main/res/layout/activity_search_result.xml" value="0.5472560975609756" />
+        <entry key="app/src/main/res/layout/activity_splash_screen.xml" value="1.2030651340996168" />
         <entry key="app/src/main/res/layout/activity_video.xml" value="0.4251190185546876" />
         <entry key="app/src/main/res/layout/activity_video_cache.xml" value="0.5268648960379045" />
         <entry key="app/src/main/res/layout/activity_video_long_click.xml" value="1.7640449438202248" />
         <entry key="app/src/main/res/layout/activity_video_player.xml" value="0.22959771407277962" />
-        <entry key="app/src/main/res/layout/activity_view_full_video_parts.xml" value="0.22436295835922934" />
+        <entry key="app/src/main/res/layout/activity_view_full_video_parts.xml" value="1.7252747252747254" />
         <entry key="app/src/main/res/layout/activity_view_full_video_parts_actvity.xml" value="0.18247863247863247" />
-        <entry key="app/src/main/res/layout/cell_card_horizontal_button.xml" value="0.7154909506611438" />
-        <entry key="app/src/main/res/layout/cell_card_horizontal_button_large_avatar.xml" value="1.8470588235294119" />
+        <entry key="app/src/main/res/layout/cell_card_horizontal_button.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/cell_card_horizontal_button_large_avatar.xml" value="0.501201051190623" />
         <entry key="app/src/main/res/layout/cell_comment_list.xml" value="0.7772277227722773" />
         <entry key="app/src/main/res/layout/cell_hot_search.xml" value="0.4475079014970752" />
-        <entry key="app/src/main/res/layout/cell_round_button.xml" value="1.544867661420037" />
+        <entry key="app/src/main/res/layout/cell_round_button.xml" value="0.24121928495519304" />
         <entry key="app/src/main/res/layout/cell_round_button_otld.xml" value="0.45596789498614443" />
         <entry key="app/src/main/res/layout/cell_video_list.xml" value="1.8470588235294119" />
         <entry key="app/src/main/res/layout/cell_video_part.xml" value="0.5738951332548745" />
         <entry key="app/src/main/res/layout/fragment_comment.xml" value="0.2053775743707094" />
-        <entry key="app/src/main/res/layout/fragment_profile.xml" value="1.8470588235294119" />
+        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.17121046892039257" />
         <entry key="app/src/main/res/layout/fragment_recommend.xml" value="0.41192626953125" />
-        <entry key="app/src/main/res/layout/fragment_search.xml" value="0.6908690869086909" />
-        <entry key="app/src/main/res/layout/fragment_video_info.xml" value="1.2053742802303262" />
+        <entry key="app/src/main/res/layout/fragment_search.xml" value="0.2584748417629714" />
+        <entry key="app/src/main/res/layout/fragment_video_info.xml" value="0.3051506316812439" />
         <entry key="app/src/main/res/layout/fragment_video_playing.xml" value="0.20554664223881086" />
         <entry key="app/src/main/res/layout/layout_video_controller.xml" value="0.3667155589872193" />
         <entry key="app/src/main/res/layout/layout_video_operates_dialog.xml" value="0.5838640434276341" />
         <entry key="app/src/main/res/layout/video_list_cell.xml" value="1.5436353514794592" />
         <entry key="app/src/main/res/menu/action_drawer_menu.xml" value="1.3954545454545455" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.201" />
         <entry key="app/src/main/res/xml/network_security_config.xml" value="0.1" />
         <entry key="app/src/main/res/xml/test_danmakus.xml" value="0.1" />
       </map>

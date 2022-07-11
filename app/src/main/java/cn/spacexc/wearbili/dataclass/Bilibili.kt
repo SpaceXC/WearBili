@@ -146,7 +146,7 @@ data class VideoStat(
     val favorite: Int,
     val coin: Int,
     val share: Int,
-    val like: Int,
+    val like: Long,
     val dislike: Int,
     val view: Long
 ) : Parcelable
@@ -783,8 +783,8 @@ data class VideoStreamUrlData(
     val seek_param: String,
     val seek_type: String,
     val support_formats: List<SupportFormat>,
-    val timelength: Int,
-    val video_codecid: Int
+    val timelength: Long,
+    val video_codecid: Long
 )
 
 data class VideoStreamDurl(
@@ -792,7 +792,7 @@ data class VideoStreamDurl(
     val backup_url: List<String>,
     val length: Int,
     val order: Int,
-    val size: Int,
+    val size: Long,
     val url: String,
     val vhead: String
 )

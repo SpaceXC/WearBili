@@ -15,16 +15,17 @@ import cn.spacexc.wearbili.utils.TimeUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+
 class MenuActivity : AppCompatActivity() {
     private val buttonList = listOf(
-        RoundButtonData(R.drawable.ic_outline_home_24, "首页"),
-        RoundButtonData(R.drawable.ic_baseline_person_outline_24, "我的"),
+        RoundButtonData(R.drawable.ic_outline_home_24, "首页", "首页"),
+        RoundButtonData(R.drawable.ic_baseline_person_outline_24, "我的", "我的"),
         //RoundButtonData(R.drawable.mode_fan, "动态"),
-        RoundButtonData(R.drawable.ic_baseline_search_24, "搜索"),
+        RoundButtonData(R.drawable.ic_baseline_search_24, "搜索", "搜索"),
         //RoundButtonData(R.drawable.ic_outline_local_fire_department_24, "热门"),
         //RoundButtonData(R.drawable.ic_baseline_movie_24, "番剧"),
         //RoundButtonData(R.drawable.ic_outline_tv_24, "影视"),
-        RoundButtonData(R.drawable.ic_outline_info_24, "关于")
+        RoundButtonData(R.drawable.ic_outline_info_24, "关于", "关于")
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,26 +41,67 @@ class MenuActivity : AppCompatActivity() {
                 override fun onClick(buttonName: String) {
                     when (buttonName) {
                         "首页" -> {
-                            MainActivity.currentPageId.value = R.id.recommendFragment; finish()
+                            MainActivity.currentPageId.value =
+                                R.id.recommendFragment; finish(); overridePendingTransition(
+                                R.anim.activity_in_y,
+                                R.anim.activity_out_y
+                            )
                         }
                         "我的" -> {
-                            MainActivity.currentPageId.value = R.id.profileFragment; finish()
+                            MainActivity.currentPageId.value =
+                                R.id.profileFragment; finish(); overridePendingTransition(
+                                R.anim.activity_in_y,
+                                R.anim.activity_out_y
+                            )
                         }
                         "搜索" -> {
-                            MainActivity.currentPageId.value = R.id.searchFragment; finish()
+                            val intent = Intent(
+                                this@MenuActivity,
+                                SearchActivity::class.java
+                            ); overridePendingTransition(
+                                R.anim.activity_in_y,
+                                R.anim.activity_out_y
+                            )
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                            finish()
+                            overridePendingTransition(R.anim.activity_in_y, R.anim.activity_out_y)
                         }
                         "关于" -> {
                             val intent = Intent(this@MenuActivity, AboutActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                             startActivity(intent)
                             finish()
+                            overridePendingTransition(R.anim.activity_in_y, R.anim.activity_out_y)
                         }
+                        /*"测试" -> {
+                            val data: Uri = Uri.parse("wearbili://video?bvid=BV1hZ4y197Cz")
+                            val intent = Intent(Intent.ACTION_VIEW, data)
+                            //保证新启动的APP有单独的堆栈，如果希望新启动的APP和原有APP使用同一个堆栈则去掉该项
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            try {
+                                startActivity(intent)
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                                Toast.makeText(
+                                    this@MenuActivity,
+                                    "没有匹配的APP，请下载安装",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }*/
                     }
                 }
 
             }).also {
                 it.submitList(buttonList)
             }
+        findViewById<TextView>(R.id.pageName).setOnClickListener {
+            finish(); overridePendingTransition(
+            R.anim.activity_in_y,
+            R.anim.activity_out_y
+        )
+        }
 
         lifecycleScope.launch {
             while (true) {

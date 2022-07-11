@@ -5,7 +5,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import cn.spacexc.wearbili.fragment.ProfileFragment
 import cn.spacexc.wearbili.fragment.RecommendFragment
-import cn.spacexc.wearbili.fragment.SearchFragment
 
 /**
  * Created by XC-Qan on 2022/6/7.
@@ -19,13 +18,12 @@ class MainViewPagerAdapter(fragmentActivity: FragmentActivity) :
     FragmentStateAdapter(fragmentActivity) {
 
     override fun getItemCount(): Int {
-        return 3
+        return 2
     }
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> RecommendFragment()
-            1 -> SearchFragment()
             2 -> ProfileFragment()
             else -> ProfileFragment()
         }

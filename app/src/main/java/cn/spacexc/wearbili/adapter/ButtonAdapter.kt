@@ -24,14 +24,14 @@ class ButtonsAdapter(isOutlined: Boolean, onItemViewClickListener: OnItemViewCli
     ListAdapter<RoundButtonData, ButtonsAdapter.ButtonViewHolder>(object :
         DiffUtil.ItemCallback<RoundButtonData>() {
         override fun areItemsTheSame(oldItem: RoundButtonData, newItem: RoundButtonData): Boolean {
-            return false
+            return oldItem.displayName == newItem.displayName
         }
 
         override fun areContentsTheSame(
             oldItem: RoundButtonData,
             newItem: RoundButtonData
         ): Boolean {
-            return false
+            return oldItem.displayName == newItem.displayName
         }
     }) {
 
@@ -65,10 +65,12 @@ class ButtonsAdapter(isOutlined: Boolean, onItemViewClickListener: OnItemViewCli
     }
 
     override fun onBindViewHolder(holder: ButtonViewHolder, position: Int) {
-        holder.icon.setImageResource(getItem(position).resId)
-        holder.name.text = getItem(position).buttonName
+        val item = getItem(position)
+        holder.icon.setImageResource(item.resId)
+        holder.name.text = item.displayName
+        println(item.displayName)
         holder.itemView.setOnClickListener {
-            onItemViewClickListener.onClick(getItem(position).buttonName)
+            onItemViewClickListener.onClick(item.buttonName)
         }
     }
 

@@ -6,8 +6,8 @@ import android.os.Parcelable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.NavHostFragment
 import cn.spacexc.wearbili.R
+import cn.spacexc.wearbili.adapter.MainViewPagerAdapter
 import cn.spacexc.wearbili.databinding.ActivityMainBinding
 import cn.spacexc.wearbili.utils.TimeUtils
 import kotlinx.coroutines.delay
@@ -29,21 +29,30 @@ class MainActivity : AppCompatActivity(), Parcelable {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val navHostFragment =
+        /*val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
-        val navController = navHostFragment.navController
-        if (cn.spacexc.wearbili.manager.UserManager.getUserCookie() == null) navController.navigate(
-            R.id.profileFragment
-        )
+        val navController = navHostFragment.navController*/
+        binding.viewpager.adapter = MainViewPagerAdapter(this)
+        if (cn.spacexc.wearbili.manager.UserManager.getUserCookie() == null) binding.viewpager.currentItem =
+            1
         binding.pageName.setOnClickListener {
             val intent = Intent(this, MenuActivity::class.java)
             //intent.putExtra("this", this)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
+            overridePendingTransition(R.anim.activity_in_y, R.anim.activity_out_y)
         }
 
         currentPageId.observe(this) {
-            navController.navigate(it)
+            when (it) {
+                R.id.recommendFragment -> {
+                    binding.viewpager.currentItem = 0
+                }
+                R.id.profileFragment -> {
+                    binding.viewpager.currentItem = 2
+                }
+            }
+
             binding.pageName.text = (when (it) {
                 R.id.recommendFragment -> "推荐"
                 R.id.searchFragment -> "搜索"
