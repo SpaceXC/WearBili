@@ -9,7 +9,10 @@
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
+        <!--<item name="android:windowAnimationStyle">@style/Theme.WearBiliMenuAm</item>-->
         <!-- Status bar color. -->
-        =        <!-- Customize your theme here. -->
+        <!-- Customize your theme here. -->
+
     </style>
+
 </resources>

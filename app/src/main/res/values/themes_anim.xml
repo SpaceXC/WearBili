@@ -1,0 +1,11 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="ThemeAnim">
+        <item name="android:activityOpenEnterAnimation">@anim/activity_in_y</item>
+        <item name="android:activityOpenExitAnimation">@anim/activity_out_y</item>
+        <item name="android:activityCloseEnterAnimation">@anim/activity_in_y</item>
+        <item name="android:activityCloseExitAnimation">@anim/activity_out_y</item>
+    </style>
+
+
+</resources>

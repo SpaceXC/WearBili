@@ -50,6 +50,9 @@ class VideoInfoFragment : Fragment() {
 
     val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
 
+    var bvid = ""
+    var cid = 0L
+
     lateinit var videoPartsAdapter: VideoPartsAdapter
 
     var isFollowed = false
@@ -66,6 +69,7 @@ class VideoInfoFragment : Fragment() {
 
     private val btnListUpperRow = MutableLiveData(
         mutableListOf(
+            RoundButtonData(R.drawable.ic_baseline_play_circle_outline_24, "播放", "播放"),
             RoundButtonData(R.drawable.ic_outline_thumb_up_24, "点赞", isLikedStr.value!!),
             RoundButtonData(R.drawable.ic_outline_monetization_on_24, "投币", isCoinedStr.value!!),
             RoundButtonData(R.drawable.ic_round_star_border_24, "收藏", isStaredStr.value!!),
@@ -97,6 +101,10 @@ class VideoInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d(
+            Application.getTag(),
+            "onViewCreated: Video ID: ${(activity as VideoActivity).getId()}"
+        )
         binding.recyclerViewButtons.layoutManager = GridLayoutManager(requireContext(), 3)
         buttonsAdapter = ButtonsAdapter(true, object : OnItemViewClickListener {
             override fun onClick(buttonName: String) {
@@ -115,6 +123,14 @@ class VideoInfoFragment : Fragment() {
                     }
                     "点赞" -> {
                         likeVideo()
+                    }
+                    "播放" -> {
+                        val intent =
+                            Intent(requireActivity(), VideoPlayerActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        intent.putExtra("videoBvid", bvid)
+                        intent.putExtra("videoCid", cid)
+                        startActivity(intent)
                     }
                 }
             }
@@ -199,11 +215,15 @@ class VideoInfoFragment : Fragment() {
                 updateVideoFansStat(video)
                 mThreadPool.execute {
                     requireActivity().runOnUiThread{
-                        if(response.code == 200 && video.code == 0){
+                        if(response.code == 200 && video.code == 0) {
+                            bvid = video.data.bvid
+                            cid = video.data.cid
+                            binding.relativeLayout.visibility = View.VISIBLE
                             (activity as VideoActivity).currentVideo = video.data
                             (activity as VideoActivity).isInitialized = true
                             binding.cover.setOnLongClickListener {
-                                val intent = Intent(requireActivity(), PhotoViewActivity::class.java)
+                                val intent =
+                                    Intent(requireActivity(), PhotoViewActivity::class.java)
                                 intent.putExtra("imageUrl", video.data.pic)
                                 startActivity(intent)
                                 true

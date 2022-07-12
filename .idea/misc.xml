@@ -69,7 +69,7 @@
         <entry key="app/src/main/res/layout/activity_splash_screen.xml" value="1.2030651340996168" />
         <entry key="app/src/main/res/layout/activity_video.xml" value="0.4251190185546876" />
         <entry key="app/src/main/res/layout/activity_video_cache.xml" value="0.5268648960379045" />
-        <entry key="app/src/main/res/layout/activity_video_long_click.xml" value="1.7640449438202248" />
+        <entry key="app/src/main/res/layout/activity_video_long_click.xml" value="1.8470588235294119" />
         <entry key="app/src/main/res/layout/activity_video_player.xml" value="0.22959771407277962" />
         <entry key="app/src/main/res/layout/activity_view_full_video_parts.xml" value="1.7252747252747254" />
         <entry key="app/src/main/res/layout/activity_view_full_video_parts_actvity.xml" value="0.18247863247863247" />
@@ -78,7 +78,7 @@
         <entry key="app/src/main/res/layout/cell_comment_list.xml" value="0.7772277227722773" />
         <entry key="app/src/main/res/layout/cell_hot_search.xml" value="0.4475079014970752" />
         <entry key="app/src/main/res/layout/cell_round_button.xml" value="0.24121928495519304" />
-        <entry key="app/src/main/res/layout/cell_round_button_otld.xml" value="0.45596789498614443" />
+        <entry key="app/src/main/res/layout/cell_round_button_otld.xml" value="0.1" />
         <entry key="app/src/main/res/layout/cell_video_list.xml" value="1.8470588235294119" />
         <entry key="app/src/main/res/layout/cell_video_part.xml" value="0.5738951332548745" />
         <entry key="app/src/main/res/layout/fragment_comment.xml" value="0.2053775743707094" />

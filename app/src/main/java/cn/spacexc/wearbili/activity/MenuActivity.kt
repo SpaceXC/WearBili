@@ -1,8 +1,10 @@
 package cn.spacexc.wearbili.activity
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -22,6 +24,7 @@ class MenuActivity : AppCompatActivity() {
         RoundButtonData(R.drawable.ic_baseline_person_outline_24, "我的", "我的"),
         //RoundButtonData(R.drawable.mode_fan, "动态"),
         RoundButtonData(R.drawable.ic_baseline_search_24, "搜索", "搜索"),
+        RoundButtonData(R.drawable.ic_baseline_search_24, "测试", "test"),
         //RoundButtonData(R.drawable.ic_outline_local_fire_department_24, "热门"),
         //RoundButtonData(R.drawable.ic_baseline_movie_24, "番剧"),
         //RoundButtonData(R.drawable.ic_outline_tv_24, "影视"),
@@ -74,8 +77,9 @@ class MenuActivity : AppCompatActivity() {
                             finish()
                             overridePendingTransition(R.anim.activity_in_y, R.anim.activity_out_y)
                         }
-                        /*"测试" -> {
-                            val data: Uri = Uri.parse("wearbili://video?bvid=BV1hZ4y197Cz")
+                        "测试" -> {
+                            val data: Uri =
+                                Uri.parse("bilibili://video/428340116?player_height=1080&player_rotate=0&player_width=1920")
                             val intent = Intent(Intent.ACTION_VIEW, data)
                             //保证新启动的APP有单独的堆栈，如果希望新启动的APP和原有APP使用同一个堆栈则去掉该项
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -89,7 +93,7 @@ class MenuActivity : AppCompatActivity() {
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
-                        }*/
+                        }
                     }
                 }
 

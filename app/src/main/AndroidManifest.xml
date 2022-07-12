@@ -65,6 +65,14 @@
                     android:host="video"
                     android:scheme="wearbili" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <!--表示该页面可以被隐式调用，必须加上该项-->
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="video"
+                    android:scheme="bilibili" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activity.LoginActivity"

@@ -2,22 +2,18 @@ package cn.spacexc.wearbili.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
+import androidx.viewpager2.widget.ViewPager2
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.adapter.MainViewPagerAdapter
 import cn.spacexc.wearbili.databinding.ActivityMainBinding
 import cn.spacexc.wearbili.utils.TimeUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.parcelize.IgnoredOnParcel
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
-class MainActivity : AppCompatActivity(), Parcelable {
-    @IgnoredOnParcel
+class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     companion object {
@@ -33,6 +29,16 @@ class MainActivity : AppCompatActivity(), Parcelable {
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         val navController = navHostFragment.navController*/
         binding.viewpager.adapter = MainViewPagerAdapter(this)
+        binding.viewpager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                binding.pageName.text = when (position) {
+                    0 -> "推荐"
+                    1 -> "我的"
+                    else -> ""
+                }
+            }
+        })
         if (cn.spacexc.wearbili.manager.UserManager.getUserCookie() == null) binding.viewpager.currentItem =
             1
         binding.pageName.setOnClickListener {

@@ -3,10 +3,12 @@ package cn.spacexc.wearbili.activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.viewpager2.widget.ViewPager2
 import cn.spacexc.wearbili.adapter.VideoViewPagerAdapter
 import cn.spacexc.wearbili.databinding.ActivityVideoBinding
 import cn.spacexc.wearbili.dataclass.VideoInfoData
 import cn.spacexc.wearbili.utils.TimeUtils
+import cn.spacexc.wearbili.utils.VideoUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -17,15 +19,19 @@ class VideoActivity : AppCompatActivity() {
         binding = ActivityVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.viewPager2.adapter = VideoViewPagerAdapter(this)
-        lifecycleScope.launch {
-
-            while (true) {
-                binding.timeText.text = TimeUtils.getCurrentTime()
-                binding.pageName.text = (when (binding.viewPager2.currentItem) {
+        binding.viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                binding.pageName.text = (when (position) {
                     0 -> "详情"
                     1 -> "评论"
                     else -> ""
                 })
+            }
+        })
+        lifecycleScope.launch {
+            while (true) {
+                binding.timeText.text = TimeUtils.getCurrentTime()
                 delay(500)
             }
         }
@@ -38,11 +44,21 @@ class VideoActivity : AppCompatActivity() {
     var isInitialized = false
 
     fun getId() : String? {
-        return if (intent.data?.getQueryParameter("bvid") == null) {
-            intent.getStringExtra("videoId")
-        } else {
-            intent.data?.getQueryParameter("bvid")
-        }
+        if (!intent.getStringExtra("videoId")
+                .isNullOrBlank()
+        ) return intent.getStringExtra("videoId")
+        if (!intent.data?.path.isNullOrBlank()) return VideoUtils.av2bv(
+            "av${
+                intent.data?.path?.replace(
+                    "/",
+                    ""
+                )!!
+            }"
+        )
+        if (!intent.data?.getQueryParameter("bvid")
+                .isNullOrEmpty()
+        ) return intent.data?.getQueryParameter("bvid")
+        return null
     }
 
     fun setPage(page : Int){
