@@ -2,7 +2,7 @@ package cn.spacexc.wearbili.dataclass.watchlater
 
 data class WatchLaterListObject(
     val add_at: Int,
-    val aid: Int,
+    val aid: Long,
     val bvid: String,
     val cid: Int,
     val copyright: Int,

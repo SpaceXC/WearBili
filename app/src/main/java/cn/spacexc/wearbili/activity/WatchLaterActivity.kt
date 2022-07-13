@@ -6,12 +6,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.adapter.WatchLaterAdapter
 import cn.spacexc.wearbili.dataclass.watchlater.WatchLater
+import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.utils.TimeUtils
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
@@ -46,11 +48,49 @@ class WatchLaterActivity : AppCompatActivity() {
             }
         }
         swipeRefreshLayout.setOnRefreshListener { getWatchLater() }
+        swipeRefreshLayout.isRefreshing = true
+        getWatchLater()
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.START) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val video = adapter.currentList[viewHolder.absoluteAdapterPosition]
+                UserManager.deleteVideoFromWatchLater(video.aid, object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        mThreadPool.execute {
+                            this@WatchLaterActivity.runOnUiThread {
+                                Toast.makeText(this@WatchLaterActivity, "网络异常", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }
+                    }
+
+                    override fun onResponse(call: Call, response: Response) {
+                        mThreadPool.execute {
+                            this@WatchLaterActivity.runOnUiThread {
+                                Toast.makeText(this@WatchLaterActivity, "删除成功", Toast.LENGTH_SHORT)
+                                    .show()
+                                swipeRefreshLayout.isRefreshing = true
+                                getWatchLater()
+                            }
+                        }
+                    }
+
+                })
+            }
+
+        }).attachToRecyclerView(recyclerView)
     }
 
-    fun getWatchLater() {
-        if (cn.spacexc.wearbili.manager.UserManager.isLoggedIn()) {
-            cn.spacexc.wearbili.manager.UserManager.getWatchLater(object : Callback {
+    private fun getWatchLater() {
+        if (UserManager.isLoggedIn()) {
+            UserManager.getWatchLater(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     mThreadPool.execute {
                         this@WatchLaterActivity.runOnUiThread {
@@ -80,11 +120,5 @@ class WatchLaterActivity : AppCompatActivity() {
             startActivity(intent)
             return
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        swipeRefreshLayout.isRefreshing = true
-        getWatchLater()
     }
 }

@@ -55,4 +55,14 @@ object UserManager {
     fun getWatchLater(callback: Callback) {
         NetworkUtils.getUrl("http://api.bilibili.com/x/v2/history/toview", callback)
     }
+
+    fun deleteVideoFromWatchLater(aid: Long, callback: Callback): Boolean {
+        if (!UserManager.isLoggedIn()) return false
+        val body: RequestBody = FormBody.Builder()
+            .add("aid", aid.toString())
+            .add("csrf", CookiesManager.getCsrfToken()!!)
+            .build()
+        NetworkUtils.postUrl("http://api.bilibili.com/x/v2/history/toview/del", body, callback)
+        return true
+    }
 }
