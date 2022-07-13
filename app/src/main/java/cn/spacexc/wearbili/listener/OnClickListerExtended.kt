@@ -1,4 +1,3 @@
-import android.os.Handler
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
@@ -12,7 +11,6 @@ import kotlinx.coroutines.*
 class OnClickListerExtended(private val myClickCallBack: OnClickCallback) :
     OnTouchListener {
     private var clickCount = 0 //记录连续点击次数
-    private val handler: Handler = Handler()
 
     interface OnClickCallback {
         fun onSingleClick() //点击一次的回调

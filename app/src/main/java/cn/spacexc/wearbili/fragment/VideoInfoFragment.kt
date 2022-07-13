@@ -23,6 +23,7 @@ import cn.spacexc.wearbili.adapter.ButtonsAdapter
 import cn.spacexc.wearbili.adapter.VideoPartsAdapter
 import cn.spacexc.wearbili.databinding.FragmentVideoInfoBinding
 import cn.spacexc.wearbili.dataclass.RoundButtonData
+import cn.spacexc.wearbili.dataclass.SimplestUniversalDataClass
 import cn.spacexc.wearbili.dataclass.VideoInfo
 import cn.spacexc.wearbili.dataclass.VideoPages
 import cn.spacexc.wearbili.dataclass.user.User
@@ -50,7 +51,7 @@ class VideoInfoFragment : Fragment() {
 
     val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
 
-    var bvid = ""
+    var bvid: String? = ""
     var cid = 0L
 
     lateinit var videoPartsAdapter: VideoPartsAdapter
@@ -131,6 +132,58 @@ class VideoInfoFragment : Fragment() {
                         intent.putExtra("videoBvid", bvid)
                         intent.putExtra("videoCid", cid)
                         startActivity(intent)
+                    }
+                    "稍后再看" -> {
+                        bvid?.let { it1 ->
+                            VideoManager.addToView(it1, object : Callback {
+                                override fun onFailure(call: Call, e: IOException) {
+                                    mThreadPool.execute {
+                                        requireActivity().runOnUiThread {
+                                            Toast.makeText(
+                                                requireActivity(),
+                                                "网络异常",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    }
+                                }
+
+                                override fun onResponse(call: Call, response: Response) {
+                                    val result = Gson().fromJson(
+                                        response.body?.string(),
+                                        SimplestUniversalDataClass::class.java
+                                    )
+                                    mThreadPool.execute {
+                                        requireActivity().runOnUiThread {
+                                            when (result.code) {
+                                                0 -> {
+                                                    Toast.makeText(
+                                                        requireActivity(),
+                                                        "添加成功",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
+                                                90001 -> {
+                                                    Toast.makeText(
+                                                        requireActivity(),
+                                                        "稍后再看列表已满",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
+                                                90003 -> {
+                                                    Toast.makeText(
+                                                        requireActivity(),
+                                                        "视频不见了",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                            })
+                        }
                     }
                 }
             }

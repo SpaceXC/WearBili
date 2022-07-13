@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 class AboutActivity : AppCompatActivity() {
     private val firstList = listOf(
-        HorizontalButtonData(R.drawable.ic_outline_info_24, "Rel-Al 0.7.3", "版本号"),
+        HorizontalButtonData(R.drawable.ic_outline_info_24, "Rel-Al 0.7.4", "版本号"),
         HorizontalButtonData(R.drawable.ic_github, "Github", "点击扫码查看我们的开源项目"),
     )
     private val secondList = listOf(

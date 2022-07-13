@@ -21,6 +21,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.WatchLaterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.HistoryActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.SearchActivity"
             android:exported="false" />
         <activity
@@ -59,16 +65,18 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-                <!--表示该页面可以被隐式调用，必须加上该项-->
+                <!-- 表示该页面可以被隐式调用，必须加上该项 -->
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data
                     android:host="video"
                     android:scheme="wearbili" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-                <!--表示该页面可以被隐式调用，必须加上该项-->
+                <!-- 表示该页面可以被隐式调用，必须加上该项 -->
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data
                     android:host="video"
                     android:scheme="bilibili" />

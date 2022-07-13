@@ -143,4 +143,14 @@ object VideoManager {
     fun isLiked(bvid: String, callback: Callback) {
         NetworkUtils.getUrl("http://api.bilibili.com/x/web-interface/archive/has/like", callback)
     }
+
+    fun addToView(bvid: String, callback: Callback): Boolean {
+        if (!UserManager.isLoggedIn()) return false
+        val body: RequestBody = FormBody.Builder()
+            .add("bvid", bvid)
+            .add("csrf", CookiesManager.getCsrfToken()!!)
+            .build()
+        NetworkUtils.postUrl("http://api.bilibili.com/x/v2/history/toview/add", body, callback)
+        return true
+    }
 }

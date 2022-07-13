@@ -31,7 +31,7 @@ import com.google.android.material.card.MaterialCardView
  * 给！爷！写！注！释！
  */
 
-class SearchResultAdapter(contextIn: Context) :
+class SearchResultAdapter(val context: Context) :
     ListAdapter<VideoSearch.SearchData.VideoSearchResult, SearchResultAdapter.VideoViewHolder>(
         object :
             DiffUtil.ItemCallback<VideoSearch.SearchData.VideoSearchResult>() {
@@ -51,11 +51,6 @@ class SearchResultAdapter(contextIn: Context) :
 
     }) {
 
-    var context: Context
-
-    init {
-        context = contextIn
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoViewHolder {
         val inflater: LayoutInflater = LayoutInflater.from(parent.context)

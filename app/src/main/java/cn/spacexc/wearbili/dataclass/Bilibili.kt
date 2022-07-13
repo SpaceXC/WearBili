@@ -991,3 +991,8 @@ data class VideoPagesData(
     val weblink: String
 ) : Parcelable
 
+data class SimplestUniversalDataClass(
+    val code: Int,
+    val message: String,
+    val ttl: Int
+)

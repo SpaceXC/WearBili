@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues name="AGP (7.2.1)" by="lint 7.2.1" client="gradle" dependencies="false" format="6"
+    type="baseline" variant="fatal" version="7.2.1">
+
+    <issue
+        errorLine1="                app:layout_constraintBottom_toTopOf=&quot;@+id/settings&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        id="NotSibling" message="`@+id/settings` is not a sibling in the same `ConstraintLayout`">
+        <location column="17" file="src/main/res/layout/activity_video_long_click.xml" line="87" />
+    </issue>
+
+</issues>

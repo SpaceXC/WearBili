@@ -16,12 +16,14 @@ import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.LoginActivity
 import cn.spacexc.wearbili.activity.VideoCacheActivity
+import cn.spacexc.wearbili.activity.WatchLaterActivity
 import cn.spacexc.wearbili.adapter.ButtonsAdapter
 import cn.spacexc.wearbili.databinding.FragmentProfileBinding
 import cn.spacexc.wearbili.dataclass.RoundButtonData
 import cn.spacexc.wearbili.dataclass.SpaceProfileResult
 import cn.spacexc.wearbili.listener.OnItemViewClickListener
 import cn.spacexc.wearbili.manager.UserManager
+import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import okhttp3.Call
@@ -78,6 +80,14 @@ class ProfileFragment : Fragment() {
                                 startActivity(intent)
                             }
                         }
+                        "稍后再看" -> {
+                            if (isAdded) {
+                                val intent =
+                                    Intent(requireContext(), WatchLaterActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                startActivity(intent)
+                            }
+                        }
                     }
                 }
 
@@ -98,10 +108,11 @@ class ProfileFragment : Fragment() {
         binding.usernameText.text = "加载中..."
         binding.avatar.isEnabled = false
         if (UserManager.getUserCookie() == null) {
-            binding.usernameText.text = "轻点登入"
-            binding.survey.text = "你还没有登入哦（*゜ー゜*）"
+            binding.usernameText.text = "访客"
+            binding.textView14.visibility = View.VISIBLE
+            binding.login.visibility = View.VISIBLE
 
-            binding.cardView.setOnClickListener {
+            binding.login.setOnClickListener {
                 startActivity(
                     Intent(
                         requireActivity(),
@@ -130,12 +141,18 @@ class ProfileFragment : Fragment() {
                                 response.body?.string(),
                                 SpaceProfileResult::class.java
                             )
+                            binding.also {
+                                it.accountSurvey.visibility = View.VISIBLE
+                                it.imageView19.visibility = View.VISIBLE
+                                it.relativeLayout5.visibility = View.VISIBLE
+                                it.settings.visibility = View.VISIBLE
+                            }
                             Glide.with(requireActivity()).load(Uri.parse(user.data.face))
                                 .placeholder(R.drawable.default_avatar).circleCrop()
                                 .into(binding.avatar)
                             binding.usernameText.text = user.data.name
-                            binding.survey.text =
-                                "${user.data.coins}硬币 ${user.data.follower}粉丝"
+                            binding.fansText.text = user.data.follower.toShortChinese()
+                            binding.coinsText.text = user.data.coins.toString()
                             //binding.uidText.text = "UID ${user.data.mid}"
                             //binding.signText.text = user.data.sign.ifEmpty { "这个人什么都没写..." }
                             binding.levelText.text = "LV${user.data.level}"

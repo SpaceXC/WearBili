@@ -21,7 +21,7 @@ import cn.spacexc.wearbili.dataclass.VideoPagesData
  * 给！爷！写！注！释！
  */
 
-class VideoPartsAdapter(bvid: String) :
+class VideoPartsAdapter(val bvid: String) :
     ListAdapter<VideoPagesData, VideoPartsAdapter.VideoPartViewHolder>(object :
         DiffUtil.ItemCallback<VideoPagesData>() {
         override fun areItemsTheSame(oldItem: VideoPagesData, newItem: VideoPagesData): Boolean {
@@ -33,12 +33,6 @@ class VideoPartsAdapter(bvid: String) :
         }
 
     }) {
-
-    private var bvid: String
-
-    init {
-        this.bvid = bvid
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoPartViewHolder {
         return VideoPartViewHolder(

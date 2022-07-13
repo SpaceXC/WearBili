@@ -20,7 +20,7 @@ import cn.spacexc.wearbili.listener.OnItemViewClickListener
  * 给！爷！写！注！释！
  */
 
-class HorizontalButtonAdapter(onItemViewClickListener: OnItemViewClickListener) :
+class HorizontalButtonAdapter(val onItemViewClickListener: OnItemViewClickListener) :
     ListAdapter<HorizontalButtonData, HorizontalButtonAdapter.ButtonViewHolder>(object :
         DiffUtil.ItemCallback<HorizontalButtonData>() {
         override fun areItemsTheSame(
@@ -39,13 +39,6 @@ class HorizontalButtonAdapter(onItemViewClickListener: OnItemViewClickListener) 
 
     }) {
 
-
-    private var onItemViewClickListener: OnItemViewClickListener
-
-    init {
-
-        this.onItemViewClickListener = onItemViewClickListener
-    }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ButtonViewHolder {

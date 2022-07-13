@@ -51,4 +51,8 @@ object UserManager {
             .build()
         NetworkUtils.postUrl("https://api.bilibili.com/x/relation/modify", body, callback)
     }
+
+    fun getWatchLater(callback: Callback) {
+        NetworkUtils.getUrl("http://api.bilibili.com/x/v2/history/toview", callback)
+    }
 }

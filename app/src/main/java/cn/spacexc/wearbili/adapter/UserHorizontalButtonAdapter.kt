@@ -30,7 +30,7 @@ import java.util.concurrent.Executors
  * 给！爷！写！注！释！
  */
 
-class UserHorizontalButtonAdapter(context: Activity) :
+class UserHorizontalButtonAdapter(val context: Activity) :
     ListAdapter<HorizontalButtonData, UserHorizontalButtonAdapter.ButtonViewHolder>(object :
         DiffUtil.ItemCallback<HorizontalButtonData>() {
         override fun areItemsTheSame(
@@ -48,11 +48,6 @@ class UserHorizontalButtonAdapter(context: Activity) :
         }
 
     }) {
-    val context: Activity
-
-    init {
-        this.context = context
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ButtonViewHolder {
         val inflater: LayoutInflater = LayoutInflater.from(parent.context)

@@ -78,6 +78,7 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
                 android:fontFamily="@font/puhui"
+                android:lines="1"
                 android:text="点击扫码查看我们的开源项目"
                 android:textColor="#fff"
                 android:textSize="10sp"

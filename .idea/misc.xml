@@ -69,11 +69,12 @@
         <entry key="app/src/main/res/layout/activity_splash_screen.xml" value="1.2030651340996168" />
         <entry key="app/src/main/res/layout/activity_video.xml" value="0.4251190185546876" />
         <entry key="app/src/main/res/layout/activity_video_cache.xml" value="0.5268648960379045" />
-        <entry key="app/src/main/res/layout/activity_video_long_click.xml" value="1.8470588235294119" />
+        <entry key="app/src/main/res/layout/activity_video_long_click.xml" value="1.6219932107364432" />
         <entry key="app/src/main/res/layout/activity_video_player.xml" value="0.22959771407277962" />
-        <entry key="app/src/main/res/layout/activity_view_full_video_parts.xml" value="1.7252747252747254" />
+        <entry key="app/src/main/res/layout/activity_view_full_video_parts.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_view_full_video_parts_actvity.xml" value="0.18247863247863247" />
-        <entry key="app/src/main/res/layout/cell_card_horizontal_button.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_watch_later.xml" value="0.28299643281807374" />
+        <entry key="app/src/main/res/layout/cell_card_horizontal_button.xml" value="0.29692671394799053" />
         <entry key="app/src/main/res/layout/cell_card_horizontal_button_large_avatar.xml" value="0.501201051190623" />
         <entry key="app/src/main/res/layout/cell_comment_list.xml" value="0.7772277227722773" />
         <entry key="app/src/main/res/layout/cell_hot_search.xml" value="0.4475079014970752" />
@@ -82,7 +83,7 @@
         <entry key="app/src/main/res/layout/cell_video_list.xml" value="1.8470588235294119" />
         <entry key="app/src/main/res/layout/cell_video_part.xml" value="0.5738951332548745" />
         <entry key="app/src/main/res/layout/fragment_comment.xml" value="0.2053775743707094" />
-        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.17121046892039257" />
+        <entry key="app/src/main/res/layout/fragment_profile.xml" value="1.3463678130821468" />
         <entry key="app/src/main/res/layout/fragment_recommend.xml" value="0.41192626953125" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.2584748417629714" />
         <entry key="app/src/main/res/layout/fragment_video_info.xml" value="0.3051506316812439" />

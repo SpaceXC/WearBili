@@ -33,7 +33,7 @@ import com.google.android.material.card.MaterialCardView
  * 给！爷！写！注！释！
  */
 
-class VideoRecommendListAdapter(contextFrom: Context) :
+class VideoRecommendListAdapter(val context: Context) :
     ListAdapter<VideoRecommendItem, VideoRecommendListAdapter.VideoViewHolder>(object :
         DiffUtil.ItemCallback<VideoRecommendItem>() {
         override fun areItemsTheSame(
@@ -51,12 +51,6 @@ class VideoRecommendListAdapter(contextFrom: Context) :
         }
 
     }) {
-
-    var context: Context
-
-    init {
-        context = contextFrom
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoViewHolder {
         val inflater: LayoutInflater = LayoutInflater.from(parent.context)

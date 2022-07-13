@@ -37,8 +37,6 @@ class SearchActivity : AppCompatActivity() {
 
     val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
 
-    var currentPage: Int = 1
-
     var defaultContent = ""
     var defaultType: Int? = null
     var defaultVideoAv: String? = null
@@ -105,7 +103,7 @@ class SearchActivity : AppCompatActivity() {
 //        })
     }
 
-    fun getDefaultSearchContent() {
+    private fun getDefaultSearchContent() {
         SearchManager.getDefaultSearchContent(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 mThreadPool.execute {
