@@ -19,6 +19,7 @@ import cn.spacexc.wearbili.dataclass.VideoStreamsFlv
 import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.utils.TimeUtils
+import cn.spacexc.wearbili.utils.ToastUtils
 import cn.spacexc.wearbili.viewmodel.OnSeekCompleteListener
 import cn.spacexc.wearbili.viewmodel.VideoPlayerViewModel
 import com.google.gson.Gson
@@ -241,7 +242,7 @@ class VideoPlayerActivity : AppCompatActivity() {
             override fun onFailure(call: Call, e: IOException) {
                 mThreadPool.execute {
                     this@VideoPlayerActivity.runOnUiThread {
-                        Toast.makeText(
+                        ToastUtils.makeText(
                             this@VideoPlayerActivity,
                             "加载弹幕失败！",
                             Toast.LENGTH_SHORT
@@ -262,7 +263,7 @@ class VideoPlayerActivity : AppCompatActivity() {
                     e.printStackTrace()
                     mThreadPool.execute {
                         this@VideoPlayerActivity.runOnUiThread {
-                            Toast.makeText(
+                            ToastUtils.makeText(
                                 this@VideoPlayerActivity,
                                 "加载弹幕失败！",
                                 Toast.LENGTH_SHORT
@@ -292,7 +293,7 @@ class VideoPlayerActivity : AppCompatActivity() {
                             override fun onFailure(call: Call, e: IOException) {
                                 mThreadPool.execute {
                                     this@VideoPlayerActivity.runOnUiThread {
-                                        Toast.makeText(
+                                        ToastUtils.makeText(
                                             this@VideoPlayerActivity,
                                             "加载视频失败！",
                                             Toast.LENGTH_SHORT

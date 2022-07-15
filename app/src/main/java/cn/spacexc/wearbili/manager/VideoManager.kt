@@ -4,6 +4,7 @@ import android.util.Log
 import android.widget.Toast
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.utils.NetworkUtils
+import cn.spacexc.wearbili.utils.ToastUtils
 import cn.spacexc.wearbili.utils.VideoUtils
 import okhttp3.*
 import java.io.IOException
@@ -56,7 +57,7 @@ object VideoManager {
 
     fun getVideoById(id: String?, callback: Callback) {
         if (id == null) {
-            Toast.makeText(Application.getContext(), "视频不见了", Toast.LENGTH_SHORT).show()
+            ToastUtils.makeText(Application.getContext(), "视频不见了", Toast.LENGTH_SHORT).show()
         } else {
             NetworkUtils.getUrl("https://api.bilibili.com/x/web-interface/view?bvid=$id", callback)
         }

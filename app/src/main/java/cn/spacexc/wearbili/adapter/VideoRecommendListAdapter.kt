@@ -18,6 +18,7 @@ import cn.spacexc.wearbili.activity.VideoActivity
 import cn.spacexc.wearbili.activity.VideoLongClickActivity
 import cn.spacexc.wearbili.dataclass.VideoRecommendItem
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
+import cn.spacexc.wearbili.utils.ToastUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -67,7 +68,7 @@ class VideoRecommendListAdapter(val context: Context) :
         //holder.listVideoDuration.text = TimeUtils.secondToTime(video.duration.toLong())
         holder.cardView.setOnClickListener {
             if (video.bvid == null) {
-                Toast.makeText(Application.getContext(), "视频不见了", Toast.LENGTH_SHORT).show()
+                ToastUtils.makeText(Application.getContext(), "视频不见了", Toast.LENGTH_SHORT).show()
             } else {
                 val intent = Intent(Application.getContext(), VideoActivity::class.java)
                 intent.putExtra("videoId", video.bvid)

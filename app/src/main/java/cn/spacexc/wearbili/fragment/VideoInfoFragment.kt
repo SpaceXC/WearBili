@@ -33,6 +33,7 @@ import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import cn.spacexc.wearbili.utils.TimeUtils
 import cn.spacexc.wearbili.utils.TimeUtils.toDateStr
+import cn.spacexc.wearbili.utils.ToastUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -139,7 +140,7 @@ class VideoInfoFragment : Fragment() {
                                 override fun onFailure(call: Call, e: IOException) {
                                     mThreadPool.execute {
                                         requireActivity().runOnUiThread {
-                                            Toast.makeText(
+                                            ToastUtils.makeText(
                                                 requireActivity(),
                                                 "网络异常",
                                                 Toast.LENGTH_SHORT
@@ -157,21 +158,21 @@ class VideoInfoFragment : Fragment() {
                                         requireActivity().runOnUiThread {
                                             when (result.code) {
                                                 0 -> {
-                                                    Toast.makeText(
+                                                    ToastUtils.makeText(
                                                         requireActivity(),
                                                         "添加成功",
                                                         Toast.LENGTH_SHORT
                                                     ).show()
                                                 }
                                                 90001 -> {
-                                                    Toast.makeText(
+                                                    ToastUtils.makeText(
                                                         requireActivity(),
                                                         "稍后再看列表已满",
                                                         Toast.LENGTH_SHORT
                                                     ).show()
                                                 }
                                                 90003 -> {
-                                                    Toast.makeText(
+                                                    ToastUtils.makeText(
                                                         requireActivity(),
                                                         "视频不见了",
                                                         Toast.LENGTH_SHORT
@@ -209,7 +210,7 @@ class VideoInfoFragment : Fragment() {
             override fun onFailure(call: Call, e: IOException) {
                 mThreadPool.execute {
                     requireActivity().runOnUiThread {
-                        Toast.makeText(
+                        ToastUtils.makeText(
                             Application.getContext(),
                             "加载失败了",
                             Toast.LENGTH_SHORT
@@ -253,7 +254,7 @@ class VideoInfoFragment : Fragment() {
             override fun onFailure(call: Call, e: IOException) {
                 mThreadPool.execute {
                     requireActivity().runOnUiThread {
-                        Toast.makeText(
+                        ToastUtils.makeText(
                             Application.getContext(),
                             "加载失败了",
                             Toast.LENGTH_SHORT
@@ -325,7 +326,7 @@ class VideoInfoFragment : Fragment() {
                                 val clip: ClipData =
                                     ClipData.newPlainText("wearbili bvid", video.data.bvid)
                                 clipboardManager.setPrimaryClip(clip)
-                                Toast.makeText(requireContext(), "已复制BV号", Toast.LENGTH_SHORT)
+                                ToastUtils.makeText(requireContext(), "已复制BV号", Toast.LENGTH_SHORT)
                                     .show()
                                 true
                             }
@@ -338,7 +339,7 @@ class VideoInfoFragment : Fragment() {
                                 val clip: ClipData =
                                     ClipData.newPlainText("wearbili desc", video.data.desc)
                                 clipboardManager.setPrimaryClip(clip)
-                                Toast.makeText(requireContext(), "已复制简介", Toast.LENGTH_SHORT)
+                                ToastUtils.makeText(requireContext(), "已复制简介", Toast.LENGTH_SHORT)
                                     .show()
                                 true
                             }
@@ -352,7 +353,8 @@ class VideoInfoFragment : Fragment() {
                             //TODO
                             //GlideUtils.loadPicsFitWidth(Application.getContext(), video.data.pic, R.drawable.placeholder, R.drawable.placeholder, binding.cover)
                         }else{
-                            Toast.makeText(requireContext(), "加载失败了", Toast.LENGTH_SHORT).show()
+                            ToastUtils.makeText(requireContext(), "加载失败了", Toast.LENGTH_SHORT)
+                                .show()
                         }
 
                     }
@@ -371,7 +373,7 @@ class VideoInfoFragment : Fragment() {
                 override fun onFailure(call: Call, e: IOException) {
                     mThreadPool.execute {
                         requireActivity().runOnUiThread {
-                            Toast.makeText(
+                            ToastUtils.makeText(
                                 Application.getContext(),
                                 "加载失败了",
                                 Toast.LENGTH_SHORT
@@ -430,7 +432,7 @@ class VideoInfoFragment : Fragment() {
 
     fun followUser(mid: Long, video: VideoInfo) {
         if (cn.spacexc.wearbili.manager.UserManager.getUserCookie() == null) {
-            Toast.makeText(requireContext(), "你还没有登录哦", Toast.LENGTH_SHORT).show()
+            ToastUtils.makeText(requireContext(), "你还没有登录哦", Toast.LENGTH_SHORT).show()
             val intent = Intent(requireActivity(), LoginActivity::class.java)
             intent.putExtra("fromHome", false)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -443,7 +445,7 @@ class VideoInfoFragment : Fragment() {
                 override fun onFailure(call: Call, e: IOException) {
                     mThreadPool.execute {
                         requireActivity().runOnUiThread {
-                            Toast.makeText(
+                            ToastUtils.makeText(
                                 Application.getContext(),
                                 "关注失败了",
                                 Toast.LENGTH_SHORT
@@ -456,7 +458,7 @@ class VideoInfoFragment : Fragment() {
 
                     mThreadPool.execute {
                         requireActivity().runOnUiThread {
-                            Toast.makeText(
+                            ToastUtils.makeText(
                                 Application.getContext(),
                                 "关注成功了",
                                 Toast.LENGTH_SHORT
@@ -474,7 +476,7 @@ class VideoInfoFragment : Fragment() {
                 override fun onFailure(call: Call, e: IOException) {
                     mThreadPool.execute {
                         requireActivity().runOnUiThread {
-                            Toast.makeText(
+                            ToastUtils.makeText(
                                 Application.getContext(),
                                 "取关失败了",
                                 Toast.LENGTH_SHORT
@@ -486,7 +488,7 @@ class VideoInfoFragment : Fragment() {
                 override fun onResponse(call: Call, response: Response) {
                     mThreadPool.execute {
                         requireActivity().runOnUiThread {
-                            Toast.makeText(
+                            ToastUtils.makeText(
                                 Application.getContext(),
                                 "取关成功了",
                                 Toast.LENGTH_SHORT
@@ -531,7 +533,7 @@ class VideoInfoFragment : Fragment() {
             override fun onFailure(call: Call, e: IOException) {
                 mThreadPool.execute {
                     requireActivity().runOnUiThread {
-                        Toast.makeText(requireContext(), "点赞失败", Toast.LENGTH_SHORT).show()
+                        ToastUtils.makeText(requireContext(), "点赞失败", Toast.LENGTH_SHORT).show()
                     }
                 }
             }

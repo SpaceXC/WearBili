@@ -14,6 +14,7 @@ import cn.spacexc.wearbili.databinding.FragmentRecommendBinding
 import cn.spacexc.wearbili.dataclass.VideoRecommend
 import cn.spacexc.wearbili.dataclass.VideoRecommendItem
 import cn.spacexc.wearbili.manager.VideoManager
+import cn.spacexc.wearbili.utils.ToastUtils
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
@@ -101,11 +102,19 @@ class RecommendFragment : Fragment() {
                                 if(response.code == 200) {
                                     binding.swipeRefreshLayout.isRefreshing = false
                                     adapter.submitList(videoList.toList())
-                                    if(isRefresh)Toast.makeText(requireContext(), "小电视推荐了一批新内容", Toast.LENGTH_SHORT).show()
+                                    if (isRefresh) ToastUtils.makeText(
+                                        requireContext(),
+                                        "小电视推荐了一批新内容",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
 
                                 }
                                 else{
-                                    Toast.makeText(requireContext(), "加载失败", Toast.LENGTH_SHORT).show()
+                                    ToastUtils.makeText(
+                                        requireContext(),
+                                        "加载失败",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                     binding.swipeRefreshLayout.isRefreshing = false
 
                                 }

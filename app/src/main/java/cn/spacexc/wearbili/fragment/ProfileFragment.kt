@@ -24,6 +24,7 @@ import cn.spacexc.wearbili.dataclass.SpaceProfileResult
 import cn.spacexc.wearbili.listener.OnItemViewClickListener
 import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
+import cn.spacexc.wearbili.utils.ToastUtils
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import okhttp3.Call
@@ -125,7 +126,11 @@ class ProfileFragment : Fragment() {
                 override fun onFailure(call: Call, e: IOException) {
                     mThreadPool.execute {
                         requireActivity().runOnUiThread {
-                            Toast.makeText(requireContext(), "获取用户信息失败，点击头像重试", Toast.LENGTH_SHORT)
+                            ToastUtils.makeText(
+                                requireContext(),
+                                "获取用户信息失败，点击头像重试",
+                                Toast.LENGTH_SHORT
+                            )
                                 .show()
                             binding.usernameText.text = "加载失败"
                             binding.avatar.isEnabled = true
@@ -173,7 +178,7 @@ class ProfileFragment : Fragment() {
                                 val clip: ClipData =
                                     ClipData.newPlainText("wearbili uid", user.data.mid.toString())
                                 clipboardManager.setPrimaryClip(clip)
-                                Toast.makeText(requireContext(), "已复制UID~", Toast.LENGTH_SHORT)
+                                ToastUtils.makeText(requireContext(), "已复制UID~", Toast.LENGTH_SHORT)
                                     .show()
                                 true
                             }*/

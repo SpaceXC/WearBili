@@ -14,6 +14,7 @@ import cn.spacexc.wearbili.adapter.ButtonsAdapter
 import cn.spacexc.wearbili.dataclass.RoundButtonData
 import cn.spacexc.wearbili.listener.OnItemViewClickListener
 import cn.spacexc.wearbili.utils.TimeUtils
+import cn.spacexc.wearbili.utils.ToastUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -87,7 +88,7 @@ class MenuActivity : AppCompatActivity() {
                                 startActivity(intent)
                             } catch (e: Exception) {
                                 e.printStackTrace()
-                                Toast.makeText(
+                                ToastUtils.makeText(
                                     this@MenuActivity,
                                     "没有匹配的APP，请下载安装",
                                     Toast.LENGTH_SHORT

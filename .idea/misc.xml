@@ -19,7 +19,9 @@
         <entry key="app/src/main/res/drawable/background_qrcode.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/background_small_circle.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/background_small_circle_grey.xml" value="0.1575" />
+        <entry key="app/src/main/res/drawable/background_toast.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/btn_round_light_pink.xml" value="0.276" />
+        <entry key="app/src/main/res/drawable/calendar_month.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/cloud_download-48px.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/cloud_download.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/cursor_drawable.xml" value="0.203" />
@@ -52,8 +54,10 @@
         <entry key="app/src/main/res/drawable/mode_fan-48px.xml" value="0.112" />
         <entry key="app/src/main/res/drawable/mode_fan.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/play_count.xml" value="0.2795" />
+        <entry key="app/src/main/res/drawable/reply.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/round_button_background_transparent.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/send_to_mobile.xml" value="0.2795" />
+        <entry key="app/src/main/res/drawable/volunteer_activism.xml" value="0.2795" />
         <entry key="app/src/main/res/font/roboto.xml" value="0.1764957264957265" />
         <entry key="app/src/main/res/font/roboto_bold.xml" value="0.3247863247863248" />
         <entry key="app/src/main/res/font/roboto_medium.xml" value="0.3384615384615385" />
@@ -66,7 +70,7 @@
         <entry key="app/src/main/res/layout/activity_play_on_phone.xml" value="1.0790832519531253" />
         <entry key="app/src/main/res/layout/activity_search.xml" value="0.2845818470075307" />
         <entry key="app/src/main/res/layout/activity_search_result.xml" value="0.5472560975609756" />
-        <entry key="app/src/main/res/layout/activity_splash_screen.xml" value="1.2030651340996168" />
+        <entry key="app/src/main/res/layout/activity_splash_screen.xml" value="0.5623099831973808" />
         <entry key="app/src/main/res/layout/activity_video.xml" value="0.4251190185546876" />
         <entry key="app/src/main/res/layout/activity_video_cache.xml" value="0.5268648960379045" />
         <entry key="app/src/main/res/layout/activity_video_long_click.xml" value="1.6219932107364432" />
@@ -88,6 +92,8 @@
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.2584748417629714" />
         <entry key="app/src/main/res/layout/fragment_video_info.xml" value="0.3051506316812439" />
         <entry key="app/src/main/res/layout/fragment_video_playing.xml" value="0.20554664223881086" />
+        <entry key="app/src/main/res/layout/layout_toast.xml" value="1.6702127659574468" />
+        <entry key="app/src/main/res/layout/layout_toast_test.xml" value="0.1" />
         <entry key="app/src/main/res/layout/layout_video_controller.xml" value="0.3667155589872193" />
         <entry key="app/src/main/res/layout/layout_video_operates_dialog.xml" value="0.5838640434276341" />
         <entry key="app/src/main/res/layout/video_list_cell.xml" value="1.5436353514794592" />
@@ -112,7 +118,7 @@
   <component name="VisualizationToolProject">
     <option name="state">
       <ProjectState>
-        <option name="scale" value="0.8957661458890732" />
+        <option name="scale" value="0.5623099831973808" />
       </ProjectState>
     </option>
   </component>

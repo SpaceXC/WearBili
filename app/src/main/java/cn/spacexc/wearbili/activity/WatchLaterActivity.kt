@@ -15,6 +15,7 @@ import cn.spacexc.wearbili.adapter.WatchLaterAdapter
 import cn.spacexc.wearbili.dataclass.watchlater.WatchLater
 import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.utils.TimeUtils
+import cn.spacexc.wearbili.utils.ToastUtils
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
 import okhttp3.Call
@@ -65,7 +66,11 @@ class WatchLaterActivity : AppCompatActivity() {
                     override fun onFailure(call: Call, e: IOException) {
                         mThreadPool.execute {
                             this@WatchLaterActivity.runOnUiThread {
-                                Toast.makeText(this@WatchLaterActivity, "网络异常", Toast.LENGTH_SHORT)
+                                ToastUtils.makeText(
+                                    this@WatchLaterActivity,
+                                    "网络异常",
+                                    Toast.LENGTH_SHORT
+                                )
                                     .show()
                             }
                         }
@@ -74,7 +79,11 @@ class WatchLaterActivity : AppCompatActivity() {
                     override fun onResponse(call: Call, response: Response) {
                         mThreadPool.execute {
                             this@WatchLaterActivity.runOnUiThread {
-                                Toast.makeText(this@WatchLaterActivity, "删除成功", Toast.LENGTH_SHORT)
+                                ToastUtils.makeText(
+                                    this@WatchLaterActivity,
+                                    "删除成功",
+                                    Toast.LENGTH_SHORT
+                                )
                                     .show()
                                 swipeRefreshLayout.isRefreshing = true
                                 getWatchLater()
@@ -95,7 +104,7 @@ class WatchLaterActivity : AppCompatActivity() {
                     mThreadPool.execute {
                         this@WatchLaterActivity.runOnUiThread {
                             swipeRefreshLayout.isRefreshing = false
-                            Toast.makeText(this@WatchLaterActivity, "网络异常", Toast.LENGTH_SHORT)
+                            ToastUtils.makeText(this@WatchLaterActivity, "网络异常", Toast.LENGTH_SHORT)
                                 .show()
                         }
                     }
@@ -113,7 +122,7 @@ class WatchLaterActivity : AppCompatActivity() {
                 }
             })
         } else {
-            Toast.makeText(this, "你还没有登录哦", Toast.LENGTH_SHORT).show()
+            ToastUtils.makeText(this, "你还没有登录哦", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, LoginActivity::class.java)
             intent.putExtra("fromHome", false)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK

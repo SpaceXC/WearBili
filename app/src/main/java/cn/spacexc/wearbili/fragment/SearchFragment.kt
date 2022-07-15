@@ -19,6 +19,7 @@ import cn.spacexc.wearbili.databinding.ActivitySearchBinding
 import cn.spacexc.wearbili.dataclass.DefaultSearchContent
 import cn.spacexc.wearbili.dataclass.HotSearch
 import cn.spacexc.wearbili.manager.SearchManager
+import cn.spacexc.wearbili.utils.ToastUtils
 import cn.spacexc.wearbili.utils.VideoUtils
 import com.google.gson.Gson
 import okhttp3.Call
@@ -119,7 +120,7 @@ class SearchFragment : Fragment() {
                 if (isAdded) {
                     mThreadPool.execute {
                         requireActivity().runOnUiThread {
-                            Toast.makeText(
+                            ToastUtils.makeText(
                                 requireContext(),
                                 "热搜获取失败",
                                 Toast.LENGTH_SHORT
@@ -156,7 +157,7 @@ class SearchFragment : Fragment() {
                 if (isAdded) {
                     mThreadPool.execute {
                         requireActivity().runOnUiThread {
-                            Toast.makeText(
+                            ToastUtils.makeText(
                                 requireContext(),
                                 "热搜获取失败",
                                 Toast.LENGTH_SHORT
@@ -232,7 +233,7 @@ class SearchFragment : Fragment() {
 //            override fun onFailure(call: Call, e: IOException) {
 //                mThreadPool.execute {
 //                    requireActivity().runOnUiThread {
-//                        Toast.makeText(requireActivity(), "搜索失败了", Toast.LENGTH_SHORT)
+//                        ToastUtils.makeText(requireActivity(), "搜索失败了", Toast.LENGTH_SHORT)
 //                            .show()
 //                    }
 //                }
@@ -260,7 +261,7 @@ class SearchFragment : Fragment() {
 //
 //                            } else {
 //                                binding.swipeRefreshLayout.isRefreshing = false
-//                                Toast.makeText(
+//                                ToastUtils.makeText(
 //                                    requireActivity(),
 //                                    "搜索到底了",
 //                                    Toast.LENGTH_SHORT
@@ -269,7 +270,7 @@ class SearchFragment : Fragment() {
 //                            }
 //                        } else {
 //                            binding.swipeRefreshLayout.isRefreshing = false
-//                            Toast.makeText(requireActivity(), "搜索失败了", Toast.LENGTH_SHORT)
+//                            ToastUtils.makeText(requireActivity(), "搜索失败了", Toast.LENGTH_SHORT)
 //                                .show()
 //                        }
 //                    }

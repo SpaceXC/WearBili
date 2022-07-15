@@ -13,6 +13,7 @@ import cn.spacexc.wearbili.adapter.SearchResultAdapter
 import cn.spacexc.wearbili.databinding.ActivitySearchResultBinding
 import cn.spacexc.wearbili.dataclass.VideoSearch
 import cn.spacexc.wearbili.manager.VideoManager
+import cn.spacexc.wearbili.utils.ToastUtils
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
@@ -84,7 +85,7 @@ class SearchResultActivity : AppCompatActivity() {
             override fun onFailure(call: Call, e: IOException) {
                 mThreadPool.execute {
                     this@SearchResultActivity.runOnUiThread {
-                        Toast.makeText(this@SearchResultActivity, "搜索失败了", Toast.LENGTH_SHORT)
+                        ToastUtils.makeText(this@SearchResultActivity, "搜索失败了", Toast.LENGTH_SHORT)
                             .show()
                     }
                 }
@@ -103,7 +104,7 @@ class SearchResultActivity : AppCompatActivity() {
 
                             } else {
                                 binding.swipeRefreshLayout.isRefreshing = false
-                                Toast.makeText(
+                                ToastUtils.makeText(
                                     this@SearchResultActivity,
                                     "搜索到底了",
                                     Toast.LENGTH_SHORT
@@ -112,7 +113,11 @@ class SearchResultActivity : AppCompatActivity() {
                             }
                         } else {
                             binding.swipeRefreshLayout.isRefreshing = false
-                            Toast.makeText(this@SearchResultActivity, "搜索失败了", Toast.LENGTH_SHORT)
+                            ToastUtils.makeText(
+                                this@SearchResultActivity,
+                                "搜索失败了",
+                                Toast.LENGTH_SHORT
+                            )
                                 .show()
                         }
                     }

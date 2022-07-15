@@ -50,5 +50,5 @@ object NetworkUtils {
         client.newCall(request).enqueue(callback)
     }
 
-}
 
+}

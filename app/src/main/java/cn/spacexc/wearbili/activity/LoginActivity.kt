@@ -16,6 +16,7 @@ import cn.spacexc.wearbili.dataclass.QrCodeLoginStats
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.QRCodeUtil
 import cn.spacexc.wearbili.utils.TimeUtils
+import cn.spacexc.wearbili.utils.ToastUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.gson.Gson
@@ -61,7 +62,8 @@ class LoginActivity : AppCompatActivity() {
             override fun onFailure(call: Call, e: IOException) {
                 mThreadPool.execute {
                     this@LoginActivity.runOnUiThread {
-                        Toast.makeText(this@LoginActivity, "获取登录二维码失败", Toast.LENGTH_SHORT).show()
+                        ToastUtils.makeText(this@LoginActivity, "获取登录二维码失败", Toast.LENGTH_SHORT)
+                            .show()
                         qrImageView.isEnabled = true
                         qrImageView.setImageResource(R.drawable.retry)
                     }
@@ -102,7 +104,11 @@ class LoginActivity : AppCompatActivity() {
                                             override fun onFailure(call: Call, e: IOException) {
                                                 this@LoginActivity.runOnUiThread {
                                                     //next.isEnabled = true
-                                                Toast.makeText(this@LoginActivity, "网络连接错误", Toast.LENGTH_SHORT).show()
+                                                    ToastUtils.makeText(
+                                                        this@LoginActivity,
+                                                        "网络连接错误",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
                                             }
                                         }
 
@@ -110,7 +116,7 @@ class LoginActivity : AppCompatActivity() {
                                             this@LoginActivity.runOnUiThread {
                                                 val codeStat : QrCodeLoginStats = Gson().fromJson(response.body?.string(), QrCodeLoginStats::class.java)
                                                 if(codeStat.status){
-                                                    Toast.makeText(
+                                                    ToastUtils.makeText(
                                                         this@LoginActivity,
                                                         "登录成功",
                                                         Toast.LENGTH_SHORT
@@ -130,7 +136,7 @@ class LoginActivity : AppCompatActivity() {
                                                 }
                                                 else{
                                                     when(codeStat.data as Number){
-                                                        //-1.0 -> Toast.makeText(this@LoginActivity, "密钥错误", Toast.LENGTH_SHORT).show()
+                                                        //-1.0 -> ToastUtils.makeText(this@LoginActivity, "密钥错误", Toast.LENGTH_SHORT).show()
                                                         -2.0 -> {
                                                             scanStat.text = "二维码过期了"
                                                             qrImageView.setImageResource(R.drawable.retry)
@@ -158,7 +164,7 @@ class LoginActivity : AppCompatActivity() {
                                 }
                             }
                         } else {
-                            Toast.makeText(this@LoginActivity, "获取登录二维码失败", Toast.LENGTH_SHORT)
+                            ToastUtils.makeText(this@LoginActivity, "获取登录二维码失败", Toast.LENGTH_SHORT)
                                 .show()
                         }
                     }

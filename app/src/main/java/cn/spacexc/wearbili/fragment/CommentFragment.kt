@@ -16,6 +16,7 @@ import cn.spacexc.wearbili.databinding.FragmentCommentBinding
 import cn.spacexc.wearbili.dataclass.CommentContentData
 import cn.spacexc.wearbili.dataclass.VideoComment
 import cn.spacexc.wearbili.manager.VideoManager
+import cn.spacexc.wearbili.utils.ToastUtils
 import com.google.gson.Gson
 import okhttp3.Call
 import okhttp3.Callback
@@ -94,7 +95,11 @@ class CommentFragment : Fragment() {
                             mThreadPool.execute {
                                 requireActivity().runOnUiThread {
                                     binding.swipeRefreshLayout.isRefreshing = false
-                                    Toast.makeText(requireContext(), "评论加载失败啦", Toast.LENGTH_SHORT)
+                                    ToastUtils.makeText(
+                                        requireContext(),
+                                        "评论加载失败啦",
+                                        Toast.LENGTH_SHORT
+                                    )
                                         .show()
                                 }
                             }
@@ -129,7 +134,7 @@ class CommentFragment : Fragment() {
                                             page++
                                             binding.swipeRefreshLayout.isRefreshing = false
                                         } else {
-                                            //Toast.makeText(requireContext(), "再怎么翻都没有啦", Toast.LENGTH_SHORT).show()
+                                            //ToastUtils.makeText(requireContext(), "再怎么翻都没有啦", Toast.LENGTH_SHORT).show()
                                         }
 
 
@@ -155,7 +160,7 @@ class CommentFragment : Fragment() {
 
                                     } else {
                                         binding.swipeRefreshLayout.isRefreshing = false
-                                        Toast.makeText(
+                                        ToastUtils.makeText(
                                             requireContext(),
                                             "评论加载失败啦",
                                             Toast.LENGTH_SHORT
