@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -103,17 +102,13 @@ class RecommendFragment : Fragment() {
                                     binding.swipeRefreshLayout.isRefreshing = false
                                     adapter.submitList(videoList.toList())
                                     if (isRefresh) ToastUtils.makeText(
-                                        requireContext(),
-                                        "小电视推荐了一批新内容",
-                                        Toast.LENGTH_SHORT
+                                        "小电视推荐了一批新内容"
                                     ).show()
 
                                 }
                                 else{
                                     ToastUtils.makeText(
-                                        requireContext(),
-                                        "加载失败",
-                                        Toast.LENGTH_SHORT
+                                        "加载失败"
                                     ).show()
                                     binding.swipeRefreshLayout.isRefreshing = false
 

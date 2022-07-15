@@ -3,7 +3,6 @@ package cn.spacexc.wearbili.activity
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -85,7 +84,7 @@ class SearchResultActivity : AppCompatActivity() {
             override fun onFailure(call: Call, e: IOException) {
                 mThreadPool.execute {
                     this@SearchResultActivity.runOnUiThread {
-                        ToastUtils.makeText(this@SearchResultActivity, "搜索失败了", Toast.LENGTH_SHORT)
+                        ToastUtils.makeText("搜索失败了")
                             .show()
                     }
                 }
@@ -105,18 +104,14 @@ class SearchResultActivity : AppCompatActivity() {
                             } else {
                                 binding.swipeRefreshLayout.isRefreshing = false
                                 ToastUtils.makeText(
-                                    this@SearchResultActivity,
-                                    "搜索到底了",
-                                    Toast.LENGTH_SHORT
+                                    "搜索到底了"
                                 ).show()
 
                             }
                         } else {
                             binding.swipeRefreshLayout.isRefreshing = false
                             ToastUtils.makeText(
-                                this@SearchResultActivity,
-                                "搜索失败了",
-                                Toast.LENGTH_SHORT
+                                "搜索失败了"
                             )
                                 .show()
                         }

@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import cn.spacexc.wearbili.Application
@@ -127,9 +126,7 @@ class ProfileFragment : Fragment() {
                     mThreadPool.execute {
                         requireActivity().runOnUiThread {
                             ToastUtils.makeText(
-                                requireContext(),
-                                "获取用户信息失败，点击头像重试",
-                                Toast.LENGTH_SHORT
+                                "获取用户信息失败，点击头像重试"
                             )
                                 .show()
                             binding.usernameText.text = "加载失败"

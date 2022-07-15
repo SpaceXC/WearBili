@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -23,13 +22,13 @@ class MenuActivity : AppCompatActivity() {
     private val buttonList = listOf(
         RoundButtonData(R.drawable.ic_outline_home_24, "首页", "首页"),
         RoundButtonData(R.drawable.ic_baseline_person_outline_24, "我的", "我的"),
-        //RoundButtonData(R.drawable.mode_fan, "动态"),
+        RoundButtonData(R.drawable.mode_fan, "动态", "动态"),
         RoundButtonData(R.drawable.ic_baseline_search_24, "搜索", "搜索"),
-        RoundButtonData(R.drawable.ic_baseline_search_24, "测试", "test"),
+        //RoundButtonData(R.drawable.ic_baseline_search_24, "测试", "test"),
         //RoundButtonData(R.drawable.ic_outline_local_fire_department_24, "热门"),
         //RoundButtonData(R.drawable.ic_baseline_movie_24, "番剧"),
         //RoundButtonData(R.drawable.ic_outline_tv_24, "影视"),
-        RoundButtonData(R.drawable.ic_outline_info_24, "关于", "关于")
+        //RoundButtonData(R.drawable.ic_outline_info_24, "关于", "关于")
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +46,13 @@ class MenuActivity : AppCompatActivity() {
                         "首页" -> {
                             MainActivity.currentPageId.value =
                                 R.id.recommendFragment; finish(); overridePendingTransition(
+                                R.anim.activity_in_y,
+                                R.anim.activity_out_y
+                            )
+                        }
+                        "动态" -> {
+                            MainActivity.currentPageId.value =
+                                R.id.dynamicFragment; finish(); overridePendingTransition(
                                 R.anim.activity_in_y,
                                 R.anim.activity_out_y
                             )
@@ -89,9 +95,7 @@ class MenuActivity : AppCompatActivity() {
                             } catch (e: Exception) {
                                 e.printStackTrace()
                                 ToastUtils.makeText(
-                                    this@MenuActivity,
-                                    "没有匹配的APP，请下载安装",
-                                    Toast.LENGTH_SHORT
+                                    "没有匹配的APP，请下载安装"
                                 ).show()
                             }
                         }

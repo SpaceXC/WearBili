@@ -19,4 +19,9 @@
         android:name="cn.spacexc.wearbili.fragment.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/activity_search" />
+    <fragment
+        android:id="@+id/dynamicFragment"
+        android:name="cn.spacexc.wearbili.fragment.DynamicFragment"
+        android:label="fragment_dynamic"
+        tools:layout="@layout/fragment_dynamic" />
 </navigation>

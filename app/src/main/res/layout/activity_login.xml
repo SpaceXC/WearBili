@@ -61,6 +61,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline33"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.2" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline34"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.8" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout"
                 android:layout_width="match_parent"
@@ -105,12 +119,13 @@
 
             <ImageView
                 android:id="@+id/qrImageBg"
-                android:layout_width="128dp"
-                android:layout_height="128dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="10dp"
+                android:adjustViewBounds="true"
+                app:layout_constraintEnd_toStartOf="@+id/guideline34"
+                app:layout_constraintStart_toStartOf="@+id/guideline33"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
                 app:srcCompat="@drawable/background_qrcode" />
 
@@ -133,7 +148,10 @@
                 android:id="@+id/scanStat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="4dp"
+                android:gravity="center"
                 android:text="使用手机客户端扫描二维码登入"
                 android:textColor="#fff"
                 app:autoSizeTextType="uniform"

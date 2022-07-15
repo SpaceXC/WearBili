@@ -1,6 +1,7 @@
 package cn.spacexc.wearbili.manager
 
 import cn.spacexc.wearbili.utils.NetworkUtils
+import cn.spacexc.wearbili.utils.SharedPreferencesUtils
 import okhttp3.Callback
 import okhttp3.FormBody
 import okhttp3.RequestBody
@@ -15,6 +16,8 @@ import okhttp3.RequestBody
 
 object UserManager {
     fun getUserCookie(): String? = CookiesManager.getCookieByName("SESSDATA")
+
+    fun getUid(): String? = SharedPreferencesUtils.getString("uid", null)
 
     fun isLoggedIn(): Boolean =
         CookiesManager.getCookieByName("SESSDATA") != null && CookiesManager.getCookieByName("bili_jct") != null

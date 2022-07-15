@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -96,9 +95,7 @@ class CommentFragment : Fragment() {
                                 requireActivity().runOnUiThread {
                                     binding.swipeRefreshLayout.isRefreshing = false
                                     ToastUtils.makeText(
-                                        requireContext(),
-                                        "评论加载失败啦",
-                                        Toast.LENGTH_SHORT
+                                        "评论加载失败啦"
                                     )
                                         .show()
                                 }
@@ -161,9 +158,7 @@ class CommentFragment : Fragment() {
                                     } else {
                                         binding.swipeRefreshLayout.isRefreshing = false
                                         ToastUtils.makeText(
-                                            requireContext(),
-                                            "评论加载失败啦",
-                                            Toast.LENGTH_SHORT
+                                            "评论加载失败啦"
                                         ).show()
                                     }
                                 }

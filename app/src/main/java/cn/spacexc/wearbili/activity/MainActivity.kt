@@ -9,6 +9,7 @@ import androidx.viewpager2.widget.ViewPager2
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.adapter.MainViewPagerAdapter
 import cn.spacexc.wearbili.databinding.ActivityMainBinding
+import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.utils.TimeUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -34,13 +35,13 @@ class MainActivity : AppCompatActivity() {
                 super.onPageSelected(position)
                 binding.pageName.text = when (position) {
                     0 -> "推荐"
-                    1 -> "我的"
+                    1 -> "动态"
+                    2 -> "我的"
                     else -> ""
                 }
             }
         })
-        if (cn.spacexc.wearbili.manager.UserManager.getUserCookie() == null) binding.viewpager.currentItem =
-            1
+        if (!UserManager.isLoggedIn()) binding.viewpager.currentItem = 2
         binding.pageName.setOnClickListener {
             val intent = Intent(this, MenuActivity::class.java)
             //intent.putExtra("this", this)
@@ -57,12 +58,16 @@ class MainActivity : AppCompatActivity() {
                 R.id.profileFragment -> {
                     binding.viewpager.currentItem = 2
                 }
+                R.id.dynamicFragment -> {
+                    binding.viewpager.currentItem = 1
+                }
             }
 
             binding.pageName.text = (when (it) {
                 R.id.recommendFragment -> "推荐"
                 R.id.searchFragment -> "搜索"
                 R.id.profileFragment -> "我的"
+
                 else -> ""
             })
         }

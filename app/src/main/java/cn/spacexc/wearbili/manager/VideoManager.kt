@@ -1,7 +1,6 @@
 package cn.spacexc.wearbili.manager
 
 import android.util.Log
-import android.widget.Toast
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.ToastUtils
@@ -57,7 +56,7 @@ object VideoManager {
 
     fun getVideoById(id: String?, callback: Callback) {
         if (id == null) {
-            ToastUtils.makeText(Application.getContext(), "视频不见了", Toast.LENGTH_SHORT).show()
+            ToastUtils.makeText("视频不见了").show()
         } else {
             NetworkUtils.getUrl("https://api.bilibili.com/x/web-interface/view?bvid=$id", callback)
         }

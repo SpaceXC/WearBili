@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -68,7 +67,7 @@ class VideoRecommendListAdapter(val context: Context) :
         //holder.listVideoDuration.text = TimeUtils.secondToTime(video.duration.toLong())
         holder.cardView.setOnClickListener {
             if (video.bvid == null) {
-                ToastUtils.makeText(Application.getContext(), "视频不见了", Toast.LENGTH_SHORT).show()
+                ToastUtils.makeText("视频不见了").show()
             } else {
                 val intent = Intent(Application.getContext(), VideoActivity::class.java)
                 intent.putExtra("videoId", video.bvid)

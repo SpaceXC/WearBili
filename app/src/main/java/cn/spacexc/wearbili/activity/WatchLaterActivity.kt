@@ -3,7 +3,6 @@ package cn.spacexc.wearbili.activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -67,9 +66,7 @@ class WatchLaterActivity : AppCompatActivity() {
                         mThreadPool.execute {
                             this@WatchLaterActivity.runOnUiThread {
                                 ToastUtils.makeText(
-                                    this@WatchLaterActivity,
-                                    "网络异常",
-                                    Toast.LENGTH_SHORT
+                                    "网络异常"
                                 )
                                     .show()
                             }
@@ -80,9 +77,7 @@ class WatchLaterActivity : AppCompatActivity() {
                         mThreadPool.execute {
                             this@WatchLaterActivity.runOnUiThread {
                                 ToastUtils.makeText(
-                                    this@WatchLaterActivity,
-                                    "删除成功",
-                                    Toast.LENGTH_SHORT
+                                    "删除成功"
                                 )
                                     .show()
                                 swipeRefreshLayout.isRefreshing = true
@@ -104,7 +99,7 @@ class WatchLaterActivity : AppCompatActivity() {
                     mThreadPool.execute {
                         this@WatchLaterActivity.runOnUiThread {
                             swipeRefreshLayout.isRefreshing = false
-                            ToastUtils.makeText(this@WatchLaterActivity, "网络异常", Toast.LENGTH_SHORT)
+                            ToastUtils.makeText("网络异常")
                                 .show()
                         }
                     }
@@ -122,7 +117,7 @@ class WatchLaterActivity : AppCompatActivity() {
                 }
             })
         } else {
-            ToastUtils.makeText(this, "你还没有登录哦", Toast.LENGTH_SHORT).show()
+            ToastUtils.makeText("你还没有登录哦").show()
             val intent = Intent(this, LoginActivity::class.java)
             intent.putExtra("fromHome", false)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK

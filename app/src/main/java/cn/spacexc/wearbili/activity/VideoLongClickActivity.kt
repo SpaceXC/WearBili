@@ -1,7 +1,6 @@
 package cn.spacexc.wearbili.activity
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import cn.spacexc.wearbili.databinding.ActivityVideoLongClickBinding
 import cn.spacexc.wearbili.dataclass.SimplestUniversalDataClass
@@ -33,9 +32,7 @@ class VideoLongClickActivity : AppCompatActivity() {
                         mThreadPool.execute {
                             this@VideoLongClickActivity.runOnUiThread {
                                 ToastUtils.makeText(
-                                    this@VideoLongClickActivity,
-                                    "网络异常",
-                                    Toast.LENGTH_SHORT
+                                    "网络异常"
                                 ).show()
                                 finish()
                             }
@@ -52,25 +49,19 @@ class VideoLongClickActivity : AppCompatActivity() {
                                 when (result.code) {
                                     0 -> {
                                         ToastUtils.makeText(
-                                            this@VideoLongClickActivity,
-                                            "添加成功",
-                                            Toast.LENGTH_SHORT
+                                            "添加成功"
                                         ).show()
                                         finish()
                                     }
                                     90001 -> {
                                         ToastUtils.makeText(
-                                            this@VideoLongClickActivity,
-                                            "稍后再看列表已满",
-                                            Toast.LENGTH_SHORT
+                                            "稍后再看列表已满"
                                         ).show()
                                         finish()
                                     }
                                     90003 -> {
                                         ToastUtils.makeText(
-                                            this@VideoLongClickActivity,
-                                            "视频不见了",
-                                            Toast.LENGTH_SHORT
+                                            "视频不见了"
                                         ).show()
                                         finish()
                                     }

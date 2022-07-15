@@ -37,14 +37,14 @@ class WatchLaterAdapter(val context: Context) :
             oldItem: WatchLaterListObject,
             newItem: WatchLaterListObject
         ): Boolean {
-            return oldItem.equals(newItem)
+            return oldItem == newItem
         }
 
         override fun areContentsTheSame(
             oldItem: WatchLaterListObject,
             newItem: WatchLaterListObject
         ): Boolean {
-            return oldItem.equals(newItem)
+            return oldItem == newItem
         }
 
     }) {

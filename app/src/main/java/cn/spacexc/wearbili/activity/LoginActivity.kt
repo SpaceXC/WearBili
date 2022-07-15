@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import cn.spacexc.wearbili.Application
@@ -62,7 +61,7 @@ class LoginActivity : AppCompatActivity() {
             override fun onFailure(call: Call, e: IOException) {
                 mThreadPool.execute {
                     this@LoginActivity.runOnUiThread {
-                        ToastUtils.makeText(this@LoginActivity, "获取登录二维码失败", Toast.LENGTH_SHORT)
+                        ToastUtils.makeText("获取登录二维码失败")
                             .show()
                         qrImageView.isEnabled = true
                         qrImageView.setImageResource(R.drawable.retry)
@@ -105,9 +104,7 @@ class LoginActivity : AppCompatActivity() {
                                                 this@LoginActivity.runOnUiThread {
                                                     //next.isEnabled = true
                                                     ToastUtils.makeText(
-                                                        this@LoginActivity,
-                                                        "网络连接错误",
-                                                        Toast.LENGTH_SHORT
+                                                        "网络连接错误"
                                                     ).show()
                                             }
                                         }
@@ -117,9 +114,7 @@ class LoginActivity : AppCompatActivity() {
                                                 val codeStat : QrCodeLoginStats = Gson().fromJson(response.body?.string(), QrCodeLoginStats::class.java)
                                                 if(codeStat.status){
                                                     ToastUtils.makeText(
-                                                        this@LoginActivity,
-                                                        "登录成功",
-                                                        Toast.LENGTH_SHORT
+                                                        "登录成功"
                                                     ).show()
                                                     cancel()
                                                     if (intent.getBooleanExtra("fromHome", true)) {
@@ -164,7 +159,7 @@ class LoginActivity : AppCompatActivity() {
                                 }
                             }
                         } else {
-                            ToastUtils.makeText(this@LoginActivity, "获取登录二维码失败", Toast.LENGTH_SHORT)
+                            ToastUtils.makeText("获取登录二维码失败")
                                 .show()
                         }
                     }

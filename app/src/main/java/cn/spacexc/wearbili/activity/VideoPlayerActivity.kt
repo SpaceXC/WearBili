@@ -8,7 +8,6 @@ import android.view.Gravity
 import android.view.SurfaceHolder
 import android.widget.FrameLayout
 import android.widget.SeekBar
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -243,9 +242,7 @@ class VideoPlayerActivity : AppCompatActivity() {
                 mThreadPool.execute {
                     this@VideoPlayerActivity.runOnUiThread {
                         ToastUtils.makeText(
-                            this@VideoPlayerActivity,
-                            "加载弹幕失败！",
-                            Toast.LENGTH_SHORT
+                            "加载弹幕失败！"
                         ).show()
                     }
                 }
@@ -264,9 +261,7 @@ class VideoPlayerActivity : AppCompatActivity() {
                     mThreadPool.execute {
                         this@VideoPlayerActivity.runOnUiThread {
                             ToastUtils.makeText(
-                                this@VideoPlayerActivity,
-                                "加载弹幕失败！",
-                                Toast.LENGTH_SHORT
+                                "加载弹幕失败！"
                             ).show()
                         }
                     }
@@ -294,9 +289,7 @@ class VideoPlayerActivity : AppCompatActivity() {
                                 mThreadPool.execute {
                                     this@VideoPlayerActivity.runOnUiThread {
                                         ToastUtils.makeText(
-                                            this@VideoPlayerActivity,
-                                            "加载视频失败！",
-                                            Toast.LENGTH_SHORT
+                                            "加载视频失败！"
                                         ).show()
                                     }
                                 }

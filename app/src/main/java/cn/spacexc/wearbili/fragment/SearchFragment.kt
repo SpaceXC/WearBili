@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import cn.spacexc.wearbili.Application
@@ -121,9 +120,7 @@ class SearchFragment : Fragment() {
                     mThreadPool.execute {
                         requireActivity().runOnUiThread {
                             ToastUtils.makeText(
-                                requireContext(),
-                                "热搜获取失败",
-                                Toast.LENGTH_SHORT
+                                "热搜获取失败"
                             ).show()
                         }
                     }
@@ -158,9 +155,7 @@ class SearchFragment : Fragment() {
                     mThreadPool.execute {
                         requireActivity().runOnUiThread {
                             ToastUtils.makeText(
-                                requireContext(),
-                                "热搜获取失败",
-                                Toast.LENGTH_SHORT
+                                "热搜获取失败"
                             ).show()
                         }
                     }
