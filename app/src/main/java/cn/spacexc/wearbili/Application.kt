@@ -25,6 +25,7 @@ class Application : android.app.Application() {
         fun getTag() : String{
             return "WearBiliTag"
         }
+        const val TAG = "WearBiliTag"
     }
 
     override fun onCreate() {

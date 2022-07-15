@@ -25,7 +25,8 @@ object CookiesManager {
 
     fun saveCookies(cookies : List<Cookie>) {
         val tempCookie = Cookies(cookies)
-        val cookieString = Gson().toJson(tempCookie)
+        val cookies = Cookies(getCookies() + tempCookie.cookies)
+        val cookieString = Gson().toJson(cookies)
         SharedPreferencesUtils.saveString("cookies", cookieString)
     }
 
