@@ -5,6 +5,7 @@ import cn.spacexc.wearbili.dataclass.dynamic.dynamicforwardshare.UserProfile
 
 data class Card(
     val card: String,
+    var cardObj: Any?,
     val desc: Desc,
     val display: Display,
     val extend_json: String,
@@ -28,7 +29,7 @@ data class Card(
     val rid_str: String,
     val status: Int,
     val stype: Int,
-    val timestamp: Int,
+    val timestamp: Long,
     val type: Int,
     val uid: Int,
     val uid_type: Int,

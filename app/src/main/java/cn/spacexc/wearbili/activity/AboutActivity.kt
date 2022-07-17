@@ -17,20 +17,24 @@ import kotlinx.coroutines.launch
 
 class AboutActivity : AppCompatActivity() {
     private val firstList = listOf(
-        HorizontalButtonData(R.drawable.ic_outline_info_24, "Rel-Al 0.7.4", "版本号"),
-        HorizontalButtonData(R.drawable.ic_github, "Github", "点击扫码查看我们的开源项目"),
+        HorizontalButtonData(R.drawable.ic_outline_info_24, "Rel-Al 0.8.4", "版本号"),
+        HorizontalButtonData(R.drawable.ic_github, "Github", "查看我们的开源项目"),
     )
     private val secondList = listOf(
-        HorizontalButtonData(0, "480816699", "开发者 项目发起人"),
-        HorizontalButtonData(0, "342729006", "UI/UA设计师"),
-        HorizontalButtonData(0, "426907991", "图标设计师"),
-        HorizontalButtonData(0, "293793435", "API提供")
+        HorizontalButtonData(0, "uid480816699", "开发者 项目发起人"),
+        HorizontalButtonData(0, "uid426907991", "图标设计师"),
+        HorizontalButtonData(0, "uid293793435", "API仓库Owner"),
+        HorizontalButtonData(
+            R.drawable.akari,
+            "虚位以待",
+            "UI/UA设计师"
+        )      //Rechrd你无不无聊啊我还得多加一个逻辑我真的谢谢您嘞
     )
     private val thirdList = listOf(
-        HorizontalButtonData(0, "198338518", "组织")
+        HorizontalButtonData(0, "uid198338518", "组织")
     )
     private val forthList = listOf(
-        HorizontalButtonData(R.drawable.ic_github, "SocialSisterYi/bilibili-API-collect", "API提供仓库")
+        HorizontalButtonData(R.drawable.ic_github, "SocialSisterYi/bilibili-API-collect", "API仓库")
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

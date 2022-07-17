@@ -78,6 +78,7 @@ class CommentAdapter :
         Glide.with(Application.getContext()).load(comment.member!!.avatar.replace("http", "https"))
             .circleCrop()
             .into(holder.avatar)
+
     }
 
     class VideoCommentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -91,11 +92,11 @@ class CommentAdapter :
         var isUp: TextView
 
         init {
-            avatar = itemView.findViewById(R.id.commentAvatar)
-            userName = itemView.findViewById(R.id.commentUserName)
+            avatar = itemView.findViewById(R.id.dynamicAvatar)
+            userName = itemView.findViewById(R.id.dynamicUsername)
             //userLevel = itemView.findViewById(R.id.commentUserLevel)
-            pubDate = itemView.findViewById(R.id.commentPubDate)
-            content = itemView.findViewById(R.id.commentText)
+            pubDate = itemView.findViewById(R.id.dynamicPubDate)
+            content = itemView.findViewById(R.id.dynamicText)
             likes = itemView.findViewById(R.id.likes)
             isUp = itemView.findViewById(R.id.isUp)
         }

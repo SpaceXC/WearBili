@@ -1,7 +1,7 @@
 package cn.spacexc.wearbili.dataclass.dynamic.dynamicforwardshare.card
 
 data class Item(
-    val content: String,
+    val content: String?,
     val ctrl: String,
     val orig_dy_id: Long,
     val orig_type: Int,

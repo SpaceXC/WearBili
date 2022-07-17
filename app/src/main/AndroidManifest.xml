@@ -21,6 +21,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.ImageViewerActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.WatchLaterActivity"
             android:exported="false" />
         <activity
@@ -93,7 +96,7 @@
             android:exported="false" />
         <activity
             android:name=".activity.MainActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
 
         <meta-data
             android:name="preloaded_fonts"

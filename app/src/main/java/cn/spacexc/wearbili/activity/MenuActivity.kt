@@ -28,7 +28,7 @@ class MenuActivity : AppCompatActivity() {
         //RoundButtonData(R.drawable.ic_outline_local_fire_department_24, "热门"),
         //RoundButtonData(R.drawable.ic_baseline_movie_24, "番剧"),
         //RoundButtonData(R.drawable.ic_outline_tv_24, "影视"),
-        //RoundButtonData(R.drawable.ic_outline_info_24, "关于", "关于")
+        RoundButtonData(R.drawable.ic_outline_info_24, "关于", "关于")
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

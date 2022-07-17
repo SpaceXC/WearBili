@@ -3,7 +3,7 @@ package cn.spacexc.wearbili.dataclass.dynamic.dynamicimage.card
 data class Item(
     val at_control: String,
     val category: String,
-    val description: String,
+    val description: String?,
     val id: Int,
     val is_fav: Int,
     val pictures: List<Picture>,

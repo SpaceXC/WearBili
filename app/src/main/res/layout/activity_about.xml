@@ -194,7 +194,7 @@
                     app:layout_constraintBottom_toBottomOf="@+id/textView7"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/textView7"
-                    app:srcCompat="@drawable/ic_outline_supervised_user_circle_24" />
+                    app:srcCompat="@drawable/ic_outline_account_circle_24" />
 
                 <ImageView
                     android:id="@+id/imageView13"
@@ -224,7 +224,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="7.5dp"
                     android:fontFamily="@font/puhui_medium"
-                    android:text="开发者&amp;设计师"
+                    android:text="参与个人"
                     android:textColor="#fff"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"

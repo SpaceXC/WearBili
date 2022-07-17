@@ -64,33 +64,50 @@ class UserHorizontalButtonAdapter(val context: Activity) :
         holder: ButtonViewHolder,
         @SuppressLint("RecyclerView") position: Int
     ) {
-        UserManager.getUserById((getItem(position).mainText).toLong(), object : okhttp3.Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                holder.icon.setImageResource(R.drawable.default_avatar)
-                holder.name.text = getItem(position).mainText
-                holder.description.text = getItem(position).description
-            }
+        if (getItem(position).mainText.contains("uid")) {
+            UserManager.getUserById(
+                (getItem(position).mainText.replace("uid", "")).toLong(),
+                object : okhttp3.Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        holder.icon.setImageResource(R.drawable.default_avatar)
+                        holder.name.text = getItem(position).mainText
+                        holder.description.text = getItem(position).description
+                    }
 
-            override fun onResponse(call: Call, response: Response) {
-                val user = Gson().fromJson(response.body?.string(), User::class.java)
+                    override fun onResponse(call: Call, response: Response) {
+                        val user = Gson().fromJson(response.body?.string(), User::class.java)
 
-                try {
-                    Executors.newCachedThreadPool().execute {
-                        context.runOnUiThread {
-                            holder.name.text = user.data.name
-                            holder.description.text = getItem(position).description
-                            Glide.with(context).load(user.data.face).skipMemoryCache(true)
-                                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                .placeholder(R.drawable.default_avatar).circleCrop()
-                                .into(holder.icon)
+                        try {
+                            Executors.newCachedThreadPool().execute {
+                                context.runOnUiThread {
+                                    holder.name.text = user.data.name
+                                    holder.description.text = getItem(position).description
+                                    Glide.with(context).load(user.data.face).skipMemoryCache(true)
+                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                        .placeholder(R.drawable.default_avatar).circleCrop()
+                                        .into(holder.icon)
+                                }
+                            }
+                        } catch (e: OutOfMemoryError) {
+
                         }
                     }
-                } catch (e: OutOfMemoryError) {
 
-                }
+                })
+        } else {
+            try {
+
+                holder.name.text = getItem(position).mainText
+                holder.description.text = getItem(position).description
+                Glide.with(context).load(R.drawable.akari).skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .placeholder(R.drawable.default_avatar).circleCrop()
+                    .into(holder.icon)
+
+            } catch (e: OutOfMemoryError) {
+
             }
-
-        })
+        }
     }
 
     class ButtonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -20,28 +21,28 @@
         android:textColor="#fff"
         android:textSize="10sp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/commentPubDate"
+        app:layout_constraintBottom_toBottomOf="@+id/dynamicPubDate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/commentPubDate"
-        app:layout_constraintTop_toTopOf="@+id/commentPubDate"
+        app:layout_constraintStart_toEndOf="@+id/dynamicPubDate"
+        app:layout_constraintTop_toTopOf="@+id/dynamicPubDate"
         app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
-        android:id="@+id/commentAvatar"
+        android:id="@+id/dynamicAvatar"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="8dp"
         android:adjustViewBounds="true"
-        app:layout_constraintBottom_toBottomOf="@+id/commentPubDate"
+        app:layout_constraintBottom_toBottomOf="@+id/dynamicPubDate"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/button_bg" />
 
     <TextView
-        android:id="@+id/commentUserName"
+        android:id="@+id/dynamicUsername"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
@@ -53,11 +54,11 @@
         android:text="bishi"
         android:textColor="#fff"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/commentAvatar"
+        app:layout_constraintStart_toEndOf="@+id/dynamicAvatar"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/commentPubDate"
+        android:id="@+id/dynamicPubDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
@@ -68,11 +69,11 @@
         android:text="11-45-14"
         android:textColor="#fff"
         android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@+id/commentAvatar"
-        app:layout_constraintTop_toBottomOf="@+id/commentUserName" />
+        app:layout_constraintStart_toEndOf="@+id/dynamicAvatar"
+        app:layout_constraintTop_toBottomOf="@+id/dynamicUsername" />
 
     <com.wyx.components.widgets.ExpandCollpaseTextView
-        android:id="@+id/commentText"
+        android:id="@+id/dynamicText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -82,10 +83,6 @@
         android:fontFamily="@font/puhui"
         android:text="bishi yyds! bilibili yyds!bishi yyds! bilibili yyds!bishi yyds! bilibili yyds!bishi yyds! bilibili yyds!"
         android:textColor="#fff"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/commentAvatar"
         app:collapse_line_space_percent="30"
         app:collapse_show_line_number="3"
         app:collapse_text="  收起"
@@ -93,7 +90,12 @@
         app:expand_text="  展开"
         app:expand_text_color="#FB7299"
         app:expend_click_event_on="expand_text"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dynamicAvatar"
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="TouchTargetSizeCheck" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline5"
@@ -155,11 +157,11 @@
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView6"
-        app:layout_constraintTop_toBottomOf="@+id/commentText"
+        app:layout_constraintTop_toBottomOf="@+id/dynamicText"
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
-        android:id="@+id/listPlayTimes3"
+        android:id="@+id/replies"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"

@@ -1,7 +1,7 @@
 package cn.spacexc.wearbili.dataclass.dynamic.dynamicvideo.card
 
 data class VideoCard(
-    val aid: Int,
+    val aid: Long,
     val attribute: Int,
     val cid: Int,
     val copyright: Int,
@@ -9,7 +9,7 @@ data class VideoCard(
     val desc: String,
     val dimension: Dimension,
     val duration: Int,
-    val `dynamic`: String,
+    val `dynamic`: String?,
     val first_frame: String,
     val jump_url: String,
     val mission_id: Int,
