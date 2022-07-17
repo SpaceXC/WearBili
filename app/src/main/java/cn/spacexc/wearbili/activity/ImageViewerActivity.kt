@@ -16,7 +16,7 @@ class ImageViewerActivity : AppCompatActivity() {
         val textview = findViewById<TextView>(R.id.textView10)
         val viewPager2 = findViewById<ViewPager2>(R.id.imageViewerPager)
         viewPager2.adapter = ImageViewerAdapter(this).apply { submitList(list) }
-        viewPager2.currentItem = intent.getIntExtra("currentPhotoItem", 0)
+        viewPager2.setCurrentItem(intent.getIntExtra("currentPhotoItem", 0), false)
         textview.text = "${viewPager2.currentItem + 1}/${list?.size}"
         viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {

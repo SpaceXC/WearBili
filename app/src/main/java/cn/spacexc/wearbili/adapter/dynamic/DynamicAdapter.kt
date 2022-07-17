@@ -61,7 +61,7 @@ class DynamicAdapter(val context: Context) :
     override fun onBindViewHolder(holder: NormalDynamicViewHolder, position: Int) {
         val card = getItem(position)
         holder.userName.text = card.desc.user_profile.info.uname
-        holder.pubDate.text = (card.desc.timestamp * 1000).toDateStr()
+        holder.pubDate.text = (card.desc.timestamp * 1000).toDateStr("MM-dd")
         holder.likes.text = card.desc.like.toShortChinese()
         holder.replies.text = "回复(${card.desc.comment ?: 0.toShortChinese()})"
         if (!card.desc.user_profile.vip.nickname_color.isNullOrEmpty()) holder.userName.setTextColor(
@@ -91,7 +91,6 @@ class DynamicAdapter(val context: Context) :
                 }
                 holder.recyclerView.visibility = View.VISIBLE
                 holder.recyclerView.layoutManager = LinearLayoutManager(context)
-                //holder.recyclerView.adapter = Dynami(context).apply { submitList(listOf((card.cardObj as VideoCard))) }
                 holder.recyclerView.adapter = ForwardShareDynamicAdapter(context).apply {
                     submitList(
                         listOf((card.cardObj as ForwardShareCard))
@@ -155,6 +154,28 @@ class NormalDynamicViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
         userName = itemView.findViewById(R.id.dynamicUsername)
         //userLevel = itemView.findViewById(R.id.commentUserLevel)
         pubDate = itemView.findViewById(R.id.dynamicPubDate)
+        content = itemView.findViewById(R.id.dynamicText)
+        likes = itemView.findViewById(R.id.likes)
+        replies = itemView.findViewById(R.id.replies)
+        recyclerView = itemView.findViewById(R.id.recyclerView)
+        relativeLayout = itemView.findViewById(R.id.dynamicImagesRelative)
+    }
+}
+class ForwardShareDynamicViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    var avatar: ImageView
+    var userName: TextView
+
+    //var userLevel : TextView
+    var content: ExpandCollpaseTextView
+    var likes: TextView
+    var replies: TextView
+    var recyclerView: RecyclerView
+    val relativeLayout: RelativeLayout
+
+    init {
+        avatar = itemView.findViewById(R.id.dynamicAvatar)
+        userName = itemView.findViewById(R.id.dynamicUsername)
+        //userLevel = itemView.findViewById(R.id.commentUserLevel)
         content = itemView.findViewById(R.id.dynamicText)
         likes = itemView.findViewById(R.id.likes)
         replies = itemView.findViewById(R.id.replies)
@@ -276,7 +297,7 @@ class DynamicVideoAdapter(val context: Context) :
 }
 
 class ForwardShareDynamicAdapter(val context: Context) :
-    ListAdapter<ForwardShareCard, NormalDynamicViewHolder>(object :
+    ListAdapter<ForwardShareCard, ForwardShareDynamicViewHolder>(object :
         DiffUtil.ItemCallback<ForwardShareCard>() {
         override fun areItemsTheSame(
             oldItem: ForwardShareCard,
@@ -294,14 +315,14 @@ class ForwardShareDynamicAdapter(val context: Context) :
 
 
     }) {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NormalDynamicViewHolder {
-        return NormalDynamicViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ForwardShareDynamicViewHolder {
+        return ForwardShareDynamicViewHolder(
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.cell_forward_share_dynamic, parent, false)
         )
     }
 
-    override fun onBindViewHolder(holder: NormalDynamicViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ForwardShareDynamicViewHolder, position: Int) {
         val card = getItem(position)
         holder.userName.text = card.origin_user.info.uname
         //holder.pubDate.text = card.ori

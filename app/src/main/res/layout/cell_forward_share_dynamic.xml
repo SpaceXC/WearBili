@@ -25,40 +25,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/isUp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/background_level_card"
-                android:fontFamily="@font/puhui"
-                android:paddingStart="6dp"
-                android:paddingTop="1dp"
-                android:paddingEnd="6dp"
-                android:paddingBottom="1dp"
-                android:text="UP"
-                android:textColor="#fff"
-                android:textSize="10sp"
-                android:visibility="invisible"
-                app:layout_constraintBottom_toBottomOf="@+id/dynamicPubDate"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/dynamicPubDate"
-                app:layout_constraintTop_toTopOf="@+id/dynamicPubDate"
-                app:layout_constraintVertical_bias="0.0" />
-
             <ImageView
                 android:id="@+id/dynamicAvatar"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_marginStart="8dp"
                 android:adjustViewBounds="true"
-                app:layout_constraintBottom_toBottomOf="@+id/dynamicPubDate"
-                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintBottom_toBottomOf="@+id/dynamicUsername"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/dynamicUsername"
-                app:layout_constraintVertical_bias="1.0"
                 app:srcCompat="@drawable/button_bg" />
 
             <TextView
@@ -70,6 +45,7 @@
                 android:layout_marginEnd="10dp"
                 android:fontFamily="@font/puhui_bold"
                 android:paddingTop="4dp"
+                android:paddingBottom="4dp"
                 android:singleLine="true"
                 android:text="bishi"
                 android:textColor="#fff"
@@ -77,27 +53,12 @@
                 app:layout_constraintStart_toEndOf="@+id/dynamicAvatar"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/dynamicPubDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="4dp"
-                android:alpha="0.7"
-                android:fontFamily="@font/puhui"
-                android:paddingBottom="8dp"
-                android:text="11-45-14"
-                android:textColor="#fff"
-                android:textSize="10sp"
-                app:layout_constraintStart_toEndOf="@+id/dynamicAvatar"
-                app:layout_constraintTop_toBottomOf="@+id/dynamicUsername" />
-
             <com.wyx.components.widgets.ExpandCollpaseTextView
                 android:id="@+id/dynamicText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="10dp"
                 android:fontFamily="@font/puhui"
                 android:text="bishi yyds! bilibili yyds!bishi yyds! bilibili yyds!bishi yyds! bilibili yyds!bishi yyds! bilibili yyds!"

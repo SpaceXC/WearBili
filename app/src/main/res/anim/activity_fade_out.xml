@@ -4,5 +4,5 @@
         android:duration="@android:integer/config_mediumAnimTime"
         android:fromAlpha="1"
         android:interpolator="@android:anim/accelerate_decelerate_interpolator"
-        android:toAlpha="0" />
+        android:toAlpha="1" />
 </set>

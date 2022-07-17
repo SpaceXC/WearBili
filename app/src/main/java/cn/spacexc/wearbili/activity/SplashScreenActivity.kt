@@ -9,7 +9,6 @@ import cn.spacexc.wearbili.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@SuppressLint("CustomSplashScreen")
 class SplashScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,9 +16,10 @@ class SplashScreenActivity : AppCompatActivity() {
         lifecycleScope.launch {
             delay(1_500)
             val intent = Intent(this@SplashScreenActivity, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out)
+            finish()
         }
     }
 }
