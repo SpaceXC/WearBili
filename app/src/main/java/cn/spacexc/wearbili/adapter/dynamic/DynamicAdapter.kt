@@ -61,7 +61,7 @@ class DynamicAdapter(val context: Context) :
     override fun onBindViewHolder(holder: NormalDynamicViewHolder, position: Int) {
         val card = getItem(position)
         holder.userName.text = card.desc.user_profile.info.uname
-        holder.pubDate.text = (card.desc.timestamp * 1000).toDateStr("MM-dd")
+        holder.pubDate.text = (card.desc.timestamp * 1000).toDateStr("MM-dd HH:mm")
         holder.likes.text = card.desc.like.toShortChinese()
         holder.replies.text = "回复(${card.desc.comment ?: 0.toShortChinese()})"
         if (!card.desc.user_profile.vip.nickname_color.isNullOrEmpty()) holder.userName.setTextColor(

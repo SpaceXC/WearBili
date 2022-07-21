@@ -1,7 +1,7 @@
 package cn.spacexc.wearbili.activity
 
-import OnClickListerExtended
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -10,16 +10,19 @@ import android.widget.FrameLayout
 import android.widget.SeekBar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import cn.spacexc.wearbili.Application
+import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.databinding.ActivityVideoPlayerBinding
 import cn.spacexc.wearbili.dataclass.OnlineInfos
 import cn.spacexc.wearbili.dataclass.VideoStreamsFlv
 import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.manager.VideoManager
-import cn.spacexc.wearbili.utils.TimeUtils
+import cn.spacexc.wearbili.utils.TimeUtils.secondToTime
 import cn.spacexc.wearbili.utils.ToastUtils
 import cn.spacexc.wearbili.viewmodel.OnSeekCompleteListener
+import cn.spacexc.wearbili.viewmodel.PlayerStatus
 import cn.spacexc.wearbili.viewmodel.VideoPlayerViewModel
 import com.google.gson.Gson
 import kotlinx.coroutines.cancel
@@ -48,6 +51,8 @@ import java.util.zip.Inflater
 class VideoPlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityVideoPlayerBinding
 
+    private var isLoadingPanelShowed = false
+
     val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
 
     val viewModel by viewModels<VideoPlayerViewModel>()
@@ -59,6 +64,9 @@ class VideoPlayerActivity : AppCompatActivity() {
         //val video: VideoInfoData? = intent.getParcelableExtra("videoData")
         val videoBvid = intent.getStringExtra("videoBvid")!!
         val videoCid = intent.getLongExtra("videoCid", 0)
+        val videoTitle = intent.getStringExtra("videoTitle")
+
+        binding.videoTitle.text = videoTitle
         Log.d(Application.getTag(), "onCreate: BVID:$videoBvid, CID: $videoCid")
         lifecycleScope.launch {
             VideoManager.getOnlineCount(videoBvid, videoCid, object : Callback {
@@ -82,52 +90,68 @@ class VideoPlayerActivity : AppCompatActivity() {
             })
 
 
-            while (true) {
+            /*while (true) {
                 binding.timeText.text = TimeUtils.getCurrentTime()
                 delay(500)
-            }
+            }*/
         }
 
         viewModel.apply {
             danmakuView = binding.danmakuView       //赋值viewmodel弹幕视图
-            controllerBinding = binding.controllerInclude       //赋值viewmodel控制器视图
-
+            seekBar = binding.progress
+            progressText = binding.progressText
+            statTextView = binding.loadingStatText
             //-----------LiveData监听区域⬇️-----------
-            progressBarVisibility.observe(this@VideoPlayerActivity) {
-                binding.progressBar.visibility = it
-            }     //加载progress显示
-            videoResolution.observe(this@VideoPlayerActivity) {
-                binding.controllerInclude.progress.max = mediaPlayer.duration.toInt()
-                binding.surfaceView.post {
-                    resizeVideo(it.first, it.second)        //调整surfaceview大小
+            //TODO 更复杂的加载动画逻辑（os：到底谁才是真正的甲方啊还有这个垃圾as卡死了真的配不上我尊贵的M1Pro
+            //TODO
+            isLoadingPanelVisible.observe(this@VideoPlayerActivity) {
+                if (isLoadingPanelShowed) {
+                    binding.progressCircle.clearAnimation()
+                    binding.progressCircle.isVisible = it
+                    binding.progressCircle.requestLayout()
+                    binding.progressCircle.invalidate()
+                } else {
+                    binding.progressCircle.isVisible = false
+                    binding.loadingStatText.isVisible = it
+                    binding.tips.isVisible = it
+                    binding.loadingGif.isVisible = it
+                    binding.loadingPanel.setBackgroundColor(Color.TRANSPARENT)
                 }
+
+
+            }     //加载progress显示
+
+            isVideoLoaded.observe(this@VideoPlayerActivity) {
+                isLoadingPanelShowed = it
+            }
+
+            videoResolution.observe(this@VideoPlayerActivity) {
+                binding.progress.max = mediaPlayer.duration.toInt()
             }
             bufferPercent.observe(this@VideoPlayerActivity) {
-                binding.controllerInclude.progress.secondaryProgress =
-                    binding.controllerInclude.progress.max * it / 100     //视频缓冲进度显示
+                binding.progress.secondaryProgress =
+                    binding.progress.max * it / 100     //视频缓冲进度显示
             }
-            //TODO("播放控制器显示/消失")
+            //播放控制器显示/消失"
             controllerVisibility.observe(this@VideoPlayerActivity) {
-                binding.controllerInclude.controllerFrame.visibility = it
+                binding.controller.visibility = it
+                binding.title.visibility = it
             }
-            //FIXME("在viewmodel监听播放状态，更改控制按钮图标")
-            /*playerStat.observe(this@VideoPlayerActivity) {
+            videoResolution.observe(this@VideoPlayerActivity) {
+                resizeVideo(it.first, it.second)
+            }
+            //在viewmodel监听播放状态，更改控制按钮图标
+            playerStat.observe(this@VideoPlayerActivity) {
                 when (it) {
                     PlayerStatus.PLAYING -> {
-                        binding.controllerInclude.control.setImageResource(R.drawable.ic_baseline_pause_24)
+                        binding.control.setImageResource(R.drawable.round_pause_black)
                     }
-                    PlayerStatus.PAUSED -> {
-                        binding.controllerInclude.control.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+                    else -> {
+                        binding.control.setImageResource(R.drawable.play)
+
                     }
-                    PlayerStatus.NOT_READY -> {
-                        binding.controllerInclude.control.setImageResource(R.drawable.ic_baseline_play_arrow_24)
-                    }
-                    PlayerStatus.COMPLETED -> {
-                        binding.controllerInclude.control.setImageResource(R.drawable.ic_baseline_replay_24)
-                    }
-                    else -> {}
                 }
-            }*/
+            }
             //-----------LiveData监听区域⬆️-----------
 
 
@@ -158,63 +182,64 @@ class VideoPlayerActivity : AppCompatActivity() {
 
             override fun surfaceDestroyed(p0: SurfaceHolder) {}
         })
-        //TODO:点击屏幕触发播放控制器显示
-        binding.playerFrame.setOnTouchListener(OnClickListerExtended(object :
-            OnClickListerExtended.OnClickCallback {
-            override fun onSingleClick() {
-                mThreadPool.execute {
-                    this@VideoPlayerActivity.runOnUiThread {
-                        viewModel.toggleControllerVisibility()
-                    }
-                }
 
+        binding.settingsButton.setOnClickListener {
+            if (binding.motionLayout.currentState == R.id.start) {
+                binding.motionLayout.transitionToEnd()
             }
+        }
 
-            override fun onDoubleClick() {
-                mThreadPool.execute {
-                    this@VideoPlayerActivity.runOnUiThread {
-                        viewModel.togglePlayerPlayStat()
-                    }
-                }
-
+        //点击屏幕触发播放控制器显示
+        binding.constraintLayout8.setOnClickListener {
+            if (binding.motionLayout.currentState == R.id.end) {
+                binding.motionLayout.transitionToStart()
             }
-
-        }))/*{
+            if (binding.motionLayout.currentState == R.id.start) {
+                viewModel.toggleControllerVisibility()
+            }
+        }
+        /*{
             viewModel.toggleControllerVisibility()
         }*/
-        //TODO:播放控制按钮修改播放状态
-        /*binding.controllerInclude.control.setOnClickListener {
+        //播放控制按钮修改播放状态
+        binding.control.setOnClickListener {
             viewModel.togglePlayerStatus()
-        }*/
+        }
         //TODO:快进3秒
         //TODO:快退3秒
-        binding.controllerInclude.progress.setOnSeekBarChangeListener(object :
+        binding.progress.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {     //进度条拖动监听
             override fun onProgressChanged(p0: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser) {
-                    viewModel.playerSeekTo(progress)      //mediaplayer进度更改
-                }
+                viewModel.isPlaying = false
+                binding.progressText.text =
+                    "${(progress / 1000).secondToTime()}/${(viewModel.mediaPlayer.duration / 1000).secondToTime()}"
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) {
+                viewModel.isPlaying = false
                 viewModel.canDisappear = false        //拖动进度条时控制器不可消失
+                binding.danmakuView.pause()
                 //playerViewModel.togglePlayerStatus()
                 viewModel.mediaPlayer.pause()     //拖动时暂停视频
             }
 
             override fun onStopTrackingTouch(p0: SeekBar?) {
+                viewModel.isPlaying = true
                 viewModel.canDisappear = true     //松开进度条控制器可以消失
                 //playerViewModel.togglePlayerStatus()
-                viewModel.mediaPlayer.play()     //视频开始
+                //viewModel.mediaPlayer.play()     //视频开始
+                binding.danmakuView.resume()
+                p0?.progress?.let { viewModel.playerSeekTo(it) }      //mediaplayer进度更改
             }
         })
 
-        binding.pageName.setOnClickListener {
+        binding.back.setOnClickListener {
             finish()
         }
         //-----------Layout视图监听区域⬆️-----------
 
         //-----------弹幕相关区域⬇️️️-----------
+        binding.loadingStatText.text = "${binding.loadingStatText.text}\n弹幕正在加载中...稍等哟(≧∀≦)ゞ"
         val danmakuContext: DanmakuContext = DanmakuContext.create()       //弹幕context
 
         val maxLinesPair = HashMap<Int, Int>()     //弹幕最多行数
@@ -244,6 +269,7 @@ class VideoPlayerActivity : AppCompatActivity() {
                         ToastUtils.makeText(
                             "加载弹幕失败！"
                         ).show()
+                        binding.loadingStatText.text = "${binding.loadingStatText.text}\n弹幕加载失败"
                     }
                 }
             }
@@ -263,6 +289,8 @@ class VideoPlayerActivity : AppCompatActivity() {
                             ToastUtils.makeText(
                                 "加载弹幕失败！"
                             ).show()
+                            binding.loadingStatText.text = "${binding.loadingStatText.text}\n弹幕加载失败"
+
                         }
                     }
                 }
@@ -283,6 +311,13 @@ class VideoPlayerActivity : AppCompatActivity() {
                         //-----------弹幕相关区域⬆️️️️-----------
 
                         //-----------视频相关区域⬇️-----------
+                        mThreadPool.execute {
+                            this@VideoPlayerActivity.runOnUiThread {
+                                binding.loadingStatText.text =
+                                    "${binding.loadingStatText.text}\n视频正在加载中...马上就好！"
+
+                            }
+                        }
 
                         VideoManager.getVideoUrl(videoBvid, videoCid, object : Callback {
                             override fun onFailure(call: Call, e: IOException) {
@@ -291,6 +326,9 @@ class VideoPlayerActivity : AppCompatActivity() {
                                         ToastUtils.makeText(
                                             "加载视频失败！"
                                         ).show()
+                                        binding.loadingStatText.text =
+                                            "${binding.loadingStatText.text}\n视频加载失败"
+
                                     }
                                 }
                             }
@@ -304,7 +342,6 @@ class VideoPlayerActivity : AppCompatActivity() {
                                     )        //创建视频数据对象
                                     this@VideoPlayerActivity.runOnUiThread {
                                         viewModel.loadVideo(videoUrls.data.durl[0].url)
-
                                     }
                                 }
                             }
@@ -329,24 +366,27 @@ class VideoPlayerActivity : AppCompatActivity() {
             binding.surfaceView.layoutParams = FrameLayout.LayoutParams(
                 binding.playerFrame.height * width / height,
                 FrameLayout.LayoutParams.MATCH_PARENT,
-                Gravity.CENTER_HORIZONTAL
+                Gravity.CENTER
             )
         }
         if (width == height) {       //宽等于高，随便适配一个
             binding.surfaceView.layoutParams = FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 binding.playerFrame.height * width / height,
-                Gravity.CENTER_HORIZONTAL
+                Gravity.CENTER
             )
         }
         if (width > height) {        //高小于宽，优先适配高度
             binding.surfaceView.layoutParams = FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 binding.playerFrame.width * height / width,
-                Gravity.CENTER_HORIZONTAL
+                Gravity.CENTER
             )
         }
-
+        binding.mainPanel.requestLayout()
+        binding.mainPanel.invalidate()
+        binding.loadingPanel.requestLayout()
+        binding.loadingPanel.invalidate()
     }
 
     /**

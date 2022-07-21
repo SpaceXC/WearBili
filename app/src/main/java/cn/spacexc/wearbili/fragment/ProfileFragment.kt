@@ -39,7 +39,7 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
     val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
 
-    //TODO 个人页按钮
+    //个人页按钮
     private val buttonList = listOf(
         RoundButtonData(R.drawable.ic_outline_person_add_alt_1_24, "我的关注", "我的关注"),
         RoundButtonData(R.drawable.ic_baseline_update_24, "历史记录", "历史记录"),

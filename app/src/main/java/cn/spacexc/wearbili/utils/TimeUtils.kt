@@ -14,9 +14,21 @@ import java.util.*
 
 
 object TimeUtils {
-    fun secondToTime(second: Long?): String {
-        if(second == null) return "00:00"
-        var second = second
+    fun Long.secondToTime(): String {
+        var second = this
+        val hours = second / 3600 //转换小时数
+        second %= 3600 //剩余秒数
+        val minutes = second / 60 //转换分钟
+        second %= 60 //剩余秒数
+        return if (hours > 0) {
+            unitFormat(hours) + ":" + unitFormat(minutes) + ":" + unitFormat(second)
+        } else {
+            unitFormat(minutes) + ":" + unitFormat(second)
+        }
+    }
+
+    fun Int.secondToTime(): String {
+        var second = this
         val hours = second / 3600 //转换小时数
         second %= 3600 //剩余秒数
         val minutes = second / 60 //转换分钟
@@ -29,6 +41,10 @@ object TimeUtils {
     }
 
     private fun unitFormat(i: Long): String {
+        return if (i in 0..9) "0$i" else "" + i
+    }
+
+    private fun unitFormat(i: Int): String {
         return if (i in 0..9) "0$i" else "" + i
     }
 

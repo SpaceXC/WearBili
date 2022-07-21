@@ -80,40 +80,9 @@ class SearchFragment : Fragment() {
         }
         getDefaultSearchContent()
         getHotSearch()
-//        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-//                val lm = recyclerView.layoutManager as LinearLayoutManager?
-//                val totalItemCount = recyclerView.adapter!!.itemCount
-//                val lastVisibleItemPosition = lm!!.findLastVisibleItemPosition()
-//                val visibleItemCount = recyclerView.childCount
-//                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItemPosition == totalItemCount - 1 && visibleItemCount > 0) {
-//                    searchKeyword(binding.keywordInput.text.toString(), false)
-//                }
-//            }
-//        })
-//        binding.keywordInput.addTextChangedListener(object : TextWatcher{
-//            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-//
-//            }
-//
-//            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) =
-//                if(p0?.isNotEmpty() == true) {
-//                    binding.recyclerView.smoothScrollToPosition(0)
-//                    currentPage = 1
-//                    searchKeyword(p0.toString(), true)
-//                }
-//                else{
-//                    adapter.submitList(emptyList())
-//                }
-//
-//            override fun afterTextChanged(p0: Editable?) {
-//
-//            }
-//
-//        })
     }
 
-    fun getDefaultSearchContent() {
+    private fun getDefaultSearchContent() {
         SearchManager.getDefaultSearchContent(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 if (isAdded) {
@@ -222,60 +191,6 @@ class SearchFragment : Fragment() {
             startActivity(intent)
         }
     }
-
-//    fun searchKeyword(keyword : String, isNew: Boolean) {
-//        VideoManager.searchVideo(keyword, currentPage, object : Callback {
-//            override fun onFailure(call: Call, e: IOException) {
-//                mThreadPool.execute {
-//                    requireActivity().runOnUiThread {
-//                        ToastUtils.makeText(requireActivity(), "搜索失败了", Toast.LENGTH_SHORT)
-//                            .show()
-//                    }
-//                }
-//            }
-//
-//            override fun onResponse(call: Call, response: Response) {
-//                val result = Gson().fromJson(response.body?.string(), VideoSearch::class.java)
-//                mThreadPool.execute {
-//                    requireActivity().runOnUiThread {
-//                        //binding.pageName.text = "搜索结果 (${result.data.numResults})"
-//                        if (result.code == 0) {
-//                            if (currentPage <= 50) {
-//                                if(isNew) {
-//                                    adapter.submitList(result.data.result)
-//                                }
-//                                else{
-//                                    if(result.data.result != null){
-//                                        adapter.submitList(adapter.currentList + result.data.result!!)
-//                                    }
-//
-//                                }
-//
-//                                binding.swipeRefreshLayout.isRefreshing = false
-//                                currentPage++
-//
-//                            } else {
-//                                binding.swipeRefreshLayout.isRefreshing = false
-//                                ToastUtils.makeText(
-//                                    requireActivity(),
-//                                    "搜索到底了",
-//                                    Toast.LENGTH_SHORT
-//                                ).show()
-//
-//                            }
-//                        } else {
-//                            binding.swipeRefreshLayout.isRefreshing = false
-//                            ToastUtils.makeText(requireActivity(), "搜索失败了", Toast.LENGTH_SHORT)
-//                                .show()
-//                        }
-//                    }
-//                }
-//
-//            }
-//
-//
-//        })
-//    }
 
     private fun isAV(av: String): Boolean {
         if (!av.startsWith("av")) return false

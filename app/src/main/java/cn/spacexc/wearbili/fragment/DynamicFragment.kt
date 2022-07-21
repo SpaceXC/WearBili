@@ -63,6 +63,7 @@ class DynamicFragment : Fragment() {
                 val visibleItemCount = recyclerView.childCount
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItemPosition == totalItemCount - 1 && visibleItemCount > 0) {
                     getMoreDynamic()
+                    binding.recyclerView.smoothScrollToPosition(0)
                 }
             }
         })
@@ -92,7 +93,6 @@ class DynamicFragment : Fragment() {
                         binding.swipeRefreshLayout.isRefreshing = false
                         //ToastUtils.makeText("动态获取成功$dynamicCards").show()
                         adapter.submitList(dynamicCards.toMutableList())
-
                     }
                 }
             }
@@ -122,7 +122,6 @@ class DynamicFragment : Fragment() {
                         //binding.swipeRefreshLayout.isRefreshing = false
                         //ToastUtils.makeText("动态获取成功$dynamicCards").show()
                         adapter.submitList(adapter.currentList + dynamicCards.toMutableList())
-
                     }
                 }
             }

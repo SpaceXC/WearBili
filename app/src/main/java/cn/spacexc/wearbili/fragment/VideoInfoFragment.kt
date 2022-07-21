@@ -30,7 +30,7 @@ import cn.spacexc.wearbili.dataclass.user.UserFans
 import cn.spacexc.wearbili.listener.OnItemViewClickListener
 import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
-import cn.spacexc.wearbili.utils.TimeUtils
+import cn.spacexc.wearbili.utils.TimeUtils.secondToTime
 import cn.spacexc.wearbili.utils.TimeUtils.toDateStr
 import cn.spacexc.wearbili.utils.ToastUtils
 import com.bumptech.glide.Glide
@@ -53,6 +53,7 @@ class VideoInfoFragment : Fragment() {
 
     var bvid: String? = ""
     var cid = 0L
+    var videoTitle = ""
 
     lateinit var videoPartsAdapter: VideoPartsAdapter
 
@@ -131,6 +132,7 @@ class VideoInfoFragment : Fragment() {
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                         intent.putExtra("videoBvid", bvid)
                         intent.putExtra("videoCid", cid)
+                        intent.putExtra("videoTitle", videoTitle)
                         startActivity(intent)
                     }
                     "稍后再看" -> {
@@ -259,6 +261,7 @@ class VideoInfoFragment : Fragment() {
                         if(response.code == 200 && video.code == 0) {
                             bvid = video.data.bvid
                             cid = video.data.cid
+                            videoTitle = video.data.title
                             binding.relativeLayout.visibility = View.VISIBLE
                             (activity as VideoActivity).currentVideo = video.data
                             (activity as VideoActivity).isInitialized = true
@@ -276,11 +279,12 @@ class VideoInfoFragment : Fragment() {
                                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                 intent.putExtra("videoBvid", video.data.bvid)
                                 intent.putExtra("videoCid", video.data.cid)
+                                intent.putExtra("videoTitle", videoTitle)
                                 startActivity(intent)
                             }
                             binding.videoTitle.text = video.data.title
                             binding.bvidText.text = video.data.bvid
-                            binding.duration.text = TimeUtils.secondToTime(video.data.duration)
+                            binding.duration.text = video.data.duration.secondToTime()
                             binding.uploaderName.text = video.data.owner.name
                             binding.danmakusCount.text = video.data.stat.danmaku.toShortChinese()
                             binding.viewsCount.text = video.data.stat.view.toShortChinese()
@@ -337,7 +341,7 @@ class VideoInfoFragment : Fragment() {
                                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                                 .apply(options)
                                 .into(binding.cover)
-                            //TODO
+
                             //GlideUtils.loadPicsFitWidth(Application.getContext(), video.data.pic, R.drawable.placeholder, R.drawable.placeholder, binding.cover)
                         }else{
                             ToastUtils.makeText("加载失败了")
