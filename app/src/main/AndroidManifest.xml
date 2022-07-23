@@ -21,6 +21,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.QRCodeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.SpecialSearchActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.ImageViewerActivity"
             android:exported="false" />
         <activity

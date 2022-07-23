@@ -296,7 +296,7 @@ data class CommentContentData(
     var state: Int,
     var fansgrade: Int,
     var attr: Int,
-    var ctime: Int,
+    var ctime: Long,
     var rpid_str: String,
     var root_str: String,
     var parent_str: String,
@@ -407,8 +407,10 @@ data class CommentContentData(
         var message: String,
         var plat: Int,
         var device: String,
-        var max_line: Int
+        var max_line: Int,
+        var emote: Map<String, EmoteObject>
     )
+
 
     data class Folder(var has_folded: Boolean, var is_folded: Boolean, var rule: String)
     data class UpAction(var like: Boolean, var reply: Boolean)
@@ -596,7 +598,7 @@ data class CommentContentData(
         result = 31 * result + state
         result = 31 * result + fansgrade
         result = 31 * result + attr
-        result = 31 * result + ctime
+        result = (31 * result + ctime).toInt()
         result = 31 * result + rpid_str.hashCode()
         result = 31 * result + root_str.hashCode()
         result = 31 * result + parent_str.hashCode()

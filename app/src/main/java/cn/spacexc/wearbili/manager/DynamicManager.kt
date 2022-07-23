@@ -30,6 +30,13 @@ import java.io.IOException
  * 猴年马月才能做完啊        ｜
  *   ————XC 2022.07.15    ｜
  * -----------------------
+ *
+ * 嘶。。。貌似也没那么麻烦
+ * Kotlin宝贝我爱你QwQ～～～
+ * kotlin是真的方便耶
+ *
+ * api来源（省的我找不到了）：https://github.com/SocialSisterYi/bilibili-API-collect/issues/109
+ * 大爱易姐！
  */
 
 object DynamicManager {

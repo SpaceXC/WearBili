@@ -19,13 +19,18 @@ import com.microsoft.appcenter.crashes.Crashes
 class Application : android.app.Application() {
     companion object {
         var context: Application? = null
-        fun getContext():Context{
+        fun getContext(): Context {
             return context!!
         }
-        fun getTag() : String{
+
+        fun getTag(): String {
             return "WearBiliTag"
         }
+
         const val TAG = "WearBiliTag"
+        private const val versionCode = "0.8.7"
+        private const val releaseType = "Rel-AL"
+        const val versionString = "$releaseType $versionCode"
     }
 
     override fun onCreate() {

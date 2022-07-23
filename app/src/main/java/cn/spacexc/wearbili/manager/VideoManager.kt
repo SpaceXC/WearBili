@@ -71,7 +71,7 @@ object VideoManager {
     }
 
     fun getDanmaku(cid: Long, callback: Callback) {
-        NetworkUtils.getUrlComp("https://api.bilibili.com/x/v1/dm/list.so?oid=$cid", callback)
+        NetworkUtils.getUrl("https://api.bilibili.com/x/v1/dm/list.so?oid=$cid", callback)
     }
 
     fun searchVideo(keyword: String, page: Int, callback: Callback) {

@@ -167,6 +167,12 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun searchKeyword() {
+        val text = binding.keywordInput.text
+        if (text.contains("自杀")) {
+            val intent = Intent(this, SpecialSearchActivity::class.java)
+            startActivity(intent)
+            return
+        }
         if (binding.keywordInput.text.contains("&") || binding.keywordInput.text.contains(
                 "/"
             ) || binding.keywordInput.text.contains("?")

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -14,8 +15,9 @@ import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.dataclass.CommentContentData
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
+import cn.spacexc.wearbili.utils.TimeUtils.toDateStr
 import com.bumptech.glide.Glide
-import com.wyx.components.widgets.ExpandCollpaseTextView
+
 
 /**
  * Created by XC-Qan on 2022/6/16.
@@ -25,7 +27,7 @@ import com.wyx.components.widgets.ExpandCollpaseTextView
  * 给！爷！写！注！释！
  */
 
-class CommentAdapter :
+class CommentAdapter(val lifeCycleScope: LifecycleCoroutineScope) :
     ListAdapter<CommentContentData, CommentAdapter.VideoCommentViewHolder>(object :
         DiffUtil.ItemCallback<CommentContentData>() {
         override fun areItemsTheSame(
@@ -69,8 +71,36 @@ class CommentAdapter :
             )
         )
         //holder.userLevel.text = "LV${comment.member!!.level_info.current_level}"
-        holder.pubDate.text = comment.reply_control.time_desc
-        holder.content.setText(comment.content!!.message)
+        holder.pubDate.text = (comment.ctime * 1000).toDateStr("yyyy-MM-dd")
+        //TODO 表情包解析 WIP
+        //var commentStr: String?
+
+        comment.content?.emote?.forEach {
+            comment.content?.message = comment.content?.message?.replace(
+                it.key,
+                "<img src=\"${it.value.url.replace("http", "https")}\"/>"
+            )!!
+        }
+/*        for((key, value) in comment.content?.emote!!){
+            val imgTag = "<img src=\"${value.url}\"/>"
+            comment.content?.message?.replace(key, imgTag)
+        }*/
+        holder.content.text = comment.content?.message
+/*        lifeCycleScope.launch {
+            kotlin.runCatching {
+                *//*val formattedText = Html.fromHtml(commentStr, Html.FROM_HTML_MODE_COMPACT,{ p0 ->
+                    val byteArray = NetworkUtils.getUrlWithoutCallback(p0!!).body?.bytes()
+                    val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray?.size!!)
+                    BitmapDrawable(bitmap)
+                }) { _, _, _, _ -> }
+                holder.content.text = formattedText*//*
+            }
+
+
+        }*/
+
+        //holder.content.text = Html.fromHtml(commentStr)
+
         holder.likes.text = comment.like.toShortChinese()
         if (comment.member!!.mid == uploaderMid) {
             holder.isUp.visibility = View.VISIBLE
@@ -87,7 +117,7 @@ class CommentAdapter :
 
         //var userLevel : TextView
         var pubDate: TextView
-        var content: ExpandCollpaseTextView
+        var content: TextView
         var likes: TextView
         var isUp: TextView
 

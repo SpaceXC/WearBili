@@ -34,12 +34,13 @@ object NetworkUtils {
             .build()
         client.newCall(request).enqueue(callback)
     }
-    fun getUrlComp(url: String, callback: Callback) {
+
+    fun getUrlWithoutCallback(url: String): Response {
         val request = Request.Builder()
             .url(url)
             .get()
             .build()
-        client.newCall(request).enqueue(callback)
+        return client.newCall(request).execute()
     }
 
     fun postUrl(url : String, body: RequestBody,callback: Callback){

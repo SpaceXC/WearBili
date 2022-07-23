@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
@@ -34,7 +35,7 @@ class CommentFragment : Fragment() {
 
     var page : Int = 1
 
-    val adapter = CommentAdapter()
+    val adapter = CommentAdapter(lifecycleScope)
     private val layoutManager = LinearLayoutManager(Application.getContext())
 
     var prevList : MutableList<CommentContentData>? = null
