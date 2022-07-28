@@ -48,7 +48,11 @@ class DynamicFragment : Fragment() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         adapter = DynamicAdapter(requireContext())
         binding.recyclerView.adapter = adapter
-        binding.swipeRefreshLayout.setOnRefreshListener { getDynamic() }
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            getDynamic()
+            binding.recyclerView.smoothScrollToPosition(0)
+
+        }
         binding.swipeRefreshLayout.isRefreshing = true
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -63,7 +67,6 @@ class DynamicFragment : Fragment() {
                 val visibleItemCount = recyclerView.childCount
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItemPosition == totalItemCount - 1 && visibleItemCount > 0) {
                     getMoreDynamic()
-                    binding.recyclerView.smoothScrollToPosition(0)
                 }
             }
         })
@@ -78,6 +81,7 @@ class DynamicFragment : Fragment() {
         }
         DynamicManager.getRecommendDynamics(object : DynamicManager.DynamicResponseCallback {
             override fun onFailed(call: Call, e: IOException) {
+                if (!isAdded) return
                 mThreadPool.execute {
                     requireActivity().runOnUiThread {
                         binding.swipeRefreshLayout.isRefreshing = false
@@ -88,6 +92,8 @@ class DynamicFragment : Fragment() {
             }
 
             override fun onSuccess(dynamicCards: List<Card>) {
+                if (!isAdded) return
+
                 mThreadPool.execute {
                     requireActivity().runOnUiThread {
                         binding.swipeRefreshLayout.isRefreshing = false
@@ -108,6 +114,8 @@ class DynamicFragment : Fragment() {
         }
         DynamicManager.getMoreDynamic(object : DynamicManager.DynamicResponseCallback {
             override fun onFailed(call: Call, e: IOException) {
+                if (!isAdded) return
+
                 mThreadPool.execute {
                     requireActivity().runOnUiThread {
                         //binding.swipeRefreshLayout.isRefreshing = false
@@ -117,6 +125,8 @@ class DynamicFragment : Fragment() {
             }
 
             override fun onSuccess(dynamicCards: List<Card>) {
+                if (!isAdded) return
+
                 mThreadPool.execute {
                     requireActivity().runOnUiThread {
                         //binding.swipeRefreshLayout.isRefreshing = false

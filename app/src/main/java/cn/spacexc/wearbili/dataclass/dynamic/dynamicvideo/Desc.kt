@@ -10,7 +10,7 @@ data class Desc(
     val orig_type: Int,
     val pre_dy_id_str: String,
     val repost: Int,
-    val rid: Int,
+    val rid: Long,
     val rid_str: String,
     val status: Int,
     val timestamp: Int,

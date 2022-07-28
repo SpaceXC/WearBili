@@ -24,7 +24,7 @@ class MenuActivity : AppCompatActivity() {
         RoundButtonData(R.drawable.ic_baseline_person_outline_24, "我的", "我的"),
         RoundButtonData(R.drawable.mode_fan, "动态", "动态"),
         RoundButtonData(R.drawable.ic_baseline_search_24, "搜索", "搜索"),
-        //RoundButtonData(R.drawable.ic_baseline_search_24, "测试", "test"),
+        RoundButtonData(R.drawable.ic_baseline_search_24, "测试", "test"),
         //RoundButtonData(R.drawable.ic_outline_local_fire_department_24, "热门"),
         //RoundButtonData(R.drawable.ic_baseline_movie_24, "番剧"),
         //RoundButtonData(R.drawable.ic_outline_tv_24, "影视"),

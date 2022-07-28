@@ -144,40 +144,42 @@
                 app:layout_constraintStart_toStartOf="@+id/keywordInput"
                 app:layout_constraintTop_toTopOf="@+id/keywordInput" />
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:drawableStart="@drawable/ic_outline_local_fire_department_24"
-                android:fontFamily="@font/puhui_bold"
-                android:gravity="center_vertical"
-                android:text="热门搜索"
-                android:textColor="#fff"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="@+id/keywordInput"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/keywordInput"
-                app:layout_constraintTop_toBottomOf="@+id/keywordInput" />
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginStart="-2dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="-2dp"
+                android:background="@drawable/background_card_view"
                 android:isScrollContainer="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView">
+                app:layout_constraintTop_toBottomOf="@+id/keywordInput">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:drawableStart="@drawable/ic_outline_local_fire_department_24"
+                    android:fontFamily="@font/puhui_bold"
+                    android:gravity="center_vertical"
+                    android:text="热门搜索"
+                    android:textColor="#fff"
+                    android:textSize="16sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/hotSearchRecyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="6dp"
-                    android:nestedScrollingEnabled="false">
-
-                </androidx.recyclerview.widget.RecyclerView>
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/textView"
+                    android:layout_marginStart="11dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="11dp"
+                    android:layout_marginBottom="6dp" />
             </RelativeLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

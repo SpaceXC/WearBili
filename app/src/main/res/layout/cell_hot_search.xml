@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <com.google.android.material.card.MaterialCardView
+    <!--    <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,35 +30,34 @@
             android:paddingStart="10dp"
             android:paddingEnd="15dp">
 
-            <ImageView
-                android:id="@+id/hotType"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginEnd="6dp"
-                android:adjustViewBounds="true"
-                android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="@+id/usernameText"
-                app:layout_constraintDimensionRatio=""
-                app:layout_constraintEnd_toStartOf="@+id/usernameText"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/usernameText"
-                app:srcCompat="@drawable/hot" />
 
-            <TextView
-                android:id="@+id/usernameText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:fontFamily="@font/puhui"
-                android:lines="1"
-                android:text="全省前50成绩被屏蔽4天111111111111"
-                android:textColor="#fff"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </com.google.android.material.card.MaterialCardView>
+    </com.google.android.material.card.MaterialCardView>-->
+    <ImageView
+        android:id="@+id/hotType"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="4dp"
+        android:adjustViewBounds="true"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/usernameText"
+        app:layout_constraintDimensionRatio=""
+        app:layout_constraintStart_toEndOf="@+id/usernameText"
+        app:layout_constraintTop_toTopOf="@+id/usernameText"
+        app:srcCompat="@drawable/hot" />
+
+    <TextView
+        android:id="@+id/usernameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/puhui"
+        android:lines="1"
+        android:text="全省前50成绩被屏蔽4天111111111111"
+        android:textColor="#fff"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

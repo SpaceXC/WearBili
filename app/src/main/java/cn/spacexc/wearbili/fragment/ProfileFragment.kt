@@ -41,12 +41,12 @@ class ProfileFragment : Fragment() {
 
     //个人页按钮
     private val buttonList = listOf(
-        RoundButtonData(R.drawable.ic_outline_person_add_alt_1_24, "我的关注", "我的关注"),
+        //RoundButtonData(R.drawable.ic_outline_person_add_alt_1_24, "我的关注", "我的关注"),
         RoundButtonData(R.drawable.ic_baseline_update_24, "历史记录", "历史记录"),
         RoundButtonData(R.drawable.ic_baseline_play_circle_outline_24, "稍后再看", "稍后再看"),
         RoundButtonData(R.drawable.ic_round_star_border_24, "个人收藏", "个人收藏"),
         RoundButtonData(R.drawable.cloud_download, "离线缓存", "离线缓存"),
-        RoundButtonData(R.drawable.ic_outline_settings_24, "应用设置", "应用设置")
+        //RoundButtonData(R.drawable.ic_outline_settings_24, "应用设置", "应用设置")
     )
 
     override fun onCreateView(
@@ -143,6 +143,23 @@ class ProfileFragment : Fragment() {
                                 response.body?.string(),
                                 SpaceProfileResult::class.java
                             )
+                            if (user.code == -101) {
+                                binding.usernameText.text = "访客"
+                                binding.textView14.visibility = View.VISIBLE
+                                binding.login.visibility = View.VISIBLE
+
+                                binding.login.setOnClickListener {
+                                    startActivity(
+                                        Intent(
+                                            requireActivity(),
+                                            LoginActivity::class.java
+                                        )
+                                    )
+                                }
+                                ToastUtils.makeText("账号未登录").show()
+                                startActivity(Intent(requireActivity(), LoginActivity::class.java))
+                                return@runOnUiThread
+                            }
                             binding.also {
                                 it.accountSurvey.visibility = View.VISIBLE
                                 it.imageView19.visibility = View.VISIBLE

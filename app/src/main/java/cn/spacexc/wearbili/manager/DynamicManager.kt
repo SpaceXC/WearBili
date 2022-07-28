@@ -51,9 +51,9 @@ object DynamicManager {
     const val type = "268435455,1,2,4,8"    //前面那个268435455我也不知道为什么要加，反正不加就报错
 
     fun getRecommendDynamics(callback: DynamicResponseCallback) {
-
+        if (!UserManager.isLoggedIn()) return
         NetworkUtils.getUrl("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/dynamic_new?" +
-                "uid=${UserManager.getUid()}" +
+                //"uid=${CookiesManager.getCookieByName("DedeUserID")}" +
                 "&type=$type",
             object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
@@ -120,6 +120,7 @@ object DynamicManager {
                         callback.onSuccess(tempList)
                     } catch (e: Exception) {
                         //TODO Ignored
+                        e.printStackTrace()
                     }
 
                 }
@@ -195,6 +196,7 @@ object DynamicManager {
                         callback.onSuccess(tempList)
                     } catch (e: Exception) {
                         Log.e(TAG, "onResponse: ${e.cause}", e)
+                        e.printStackTrace()
                     }
 
                 }
@@ -204,6 +206,9 @@ object DynamicManager {
 
     fun processWithDynamic(response: String?): List<Card> {
         val result = Gson().fromJson(response, Dynamic::class.java)
+        if (result.code != 0) {
+            return emptyList()
+        }
         val tempList = mutableListOf<Card>()
         for (dynamic in result.data.cards) {
             when (dynamic.desc.type) {

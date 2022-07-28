@@ -5,6 +5,8 @@
 
     <uses-feature android:name="android.hardware.type.watch" />
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -16,6 +18,7 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:largeHeap="true"
         android:theme="@style/Theme.WearBili"
         android:usesCleartextTraffic="true"

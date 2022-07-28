@@ -54,11 +54,6 @@ data class QrCodeData(
     val oauthKey : String
 )
 
-data class QrCodeLoginStats(
-    val code : Int,
-    val status : Boolean,
-    @SerializedName("data") val data : Any
-)
 
 /*
 data class VideoRecommend(
@@ -997,4 +992,10 @@ data class SimplestUniversalDataClass(
     val code: Int,
     val message: String,
     val ttl: Int
+)
+
+data class QrCodeLoginStat(
+    val code: Int,
+    val status: Boolean,
+    @SerializedName("data") val data: Any
 )

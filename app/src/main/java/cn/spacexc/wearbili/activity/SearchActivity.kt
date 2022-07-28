@@ -7,7 +7,7 @@ import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.adapter.HotSearchAdapter
@@ -54,7 +54,7 @@ class SearchActivity : AppCompatActivity() {
         }
         binding.pageName.setOnClickListener { finish() }
         binding.hotSearchRecyclerView.adapter = adapter
-        val layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL)
+        val layoutManager = LinearLayoutManager(this)
         binding.hotSearchRecyclerView.layoutManager = layoutManager
         binding.search.setOnClickListener {
             searchKeyword()

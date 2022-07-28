@@ -131,9 +131,13 @@ object VideoManager {
 
     fun likeVideo(bvid: String, isLike: Boolean, callback: Callback): Boolean {
         if (!UserManager.isLoggedIn()) return false
+        val operation = when (isLike) {
+            true -> 2       //取消赞
+            false -> 1      //点赞
+        }
         val body: RequestBody = FormBody.Builder()
             .add("bvid", bvid)
-            .add("like", "1")
+            .add("like", operation.toString())
             .add("csrf", CookiesManager.getCsrfToken()!!)
             .build()
         NetworkUtils.postUrl("http://api.bilibili.com/x/web-interface/archive/like", body, callback)
@@ -141,7 +145,10 @@ object VideoManager {
     }
 
     fun isLiked(bvid: String, callback: Callback) {
-        NetworkUtils.getUrl("http://api.bilibili.com/x/web-interface/archive/has/like", callback)
+        NetworkUtils.getUrl(
+            "http://api.bilibili.com/x/web-interface/archive/has/like?bvid=$bvid",
+            callback
+        )
     }
 
     fun addToView(bvid: String, callback: Callback): Boolean {

@@ -37,7 +37,8 @@ enum class PlayerStatus {
     PLAYING,
     PAUSED,
     COMPLETED,
-    NOT_READY
+    NOT_READY,
+    Seeking
 }
 
 @SuppressLint("StaticFieldLeak")
@@ -121,6 +122,7 @@ class VideoPlayerViewModel : ViewModel() {
                             _isLoadingPanelVisible.value = true
                             danmakuView.pause()
                             statTextView.text = "${statTextView.text}\n缓冲中"
+                            this@VideoPlayerViewModel.isPlaying = false
 
                         }
                         ExoPlayer.STATE_READY -> {
@@ -132,6 +134,7 @@ class VideoPlayerViewModel : ViewModel() {
                             _playerStatus.value = PlayerStatus.PLAYING
                             statTextView.text = "${statTextView.text}\n加载完成"
                             _isVideoLoaded.value = true
+                            this@VideoPlayerViewModel.isPlaying = true
                             Log.d(
                                 Application.getTag(),
                                 "onPlaybackStateChanged: MediaPlayerCurrent : ${mediaPlayer.currentPosition}"
@@ -158,15 +161,16 @@ class VideoPlayerViewModel : ViewModel() {
         }
     }
 
-    fun togglePlayerPlayStat() {
-        if (mediaPlayer.isPlaying) {
+    fun togglePlayerPlayStat(status: PlayerStatus) {
+        /*if (mediaPlayer.isPlaying) {
             mediaPlayer.pause()
             danmakuView.pause()
             _controllerVisibility.value = View.VISIBLE
         } else {
             mediaPlayer.play()
             danmakuView.resume()
-        }
+        }*/
+        _playerStatus.value = status
     }
 
     fun toggleControllerVisibility() {
@@ -186,7 +190,7 @@ class VideoPlayerViewModel : ViewModel() {
     @SuppressLint("SetTextI18n")
     private fun updatePlayerProgress() {
         viewModelScope.launch {
-            while (isPlaying) {
+            while (_playerStatus.value == PlayerStatus.PLAYING) {
                 delay(500)
                 seekBar.progress =
                     mediaPlayer.currentPosition.toInt()       //seekbar进度显示

@@ -30,7 +30,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.material.card.MaterialCardView
 import com.wyx.components.widgets.ExpandCollpaseTextView
 
 /**
@@ -87,7 +86,7 @@ class DynamicAdapter(val context: Context) :
                     holder.content.setText("分享动态")
                 } else {
                     holder.content.setText((card.cardObj as ForwardShareCard).item.content)
-
+                    card.display.comment_info.comments
                 }
                 holder.recyclerView.visibility = View.VISIBLE
                 holder.recyclerView.layoutManager = LinearLayoutManager(context)
@@ -167,8 +166,6 @@ class ForwardShareDynamicViewHolder(itemView: View) : RecyclerView.ViewHolder(it
 
     //var userLevel : TextView
     var content: ExpandCollpaseTextView
-    var likes: TextView
-    var replies: TextView
     var recyclerView: RecyclerView
     val relativeLayout: RelativeLayout
 
@@ -177,8 +174,6 @@ class ForwardShareDynamicViewHolder(itemView: View) : RecyclerView.ViewHolder(it
         userName = itemView.findViewById(R.id.dynamicUsername)
         //userLevel = itemView.findViewById(R.id.commentUserLevel)
         content = itemView.findViewById(R.id.dynamicText)
-        likes = itemView.findViewById(R.id.likes)
-        replies = itemView.findViewById(R.id.replies)
         recyclerView = itemView.findViewById(R.id.recyclerView)
         relativeLayout = itemView.findViewById(R.id.dynamicImagesRelative)
     }
@@ -250,17 +245,17 @@ class DynamicVideoAdapter(val context: Context) :
 
     override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
         val video: VideoCard = getItem(position)
-        holder.listVideoTitle.text = video.title
-        holder.listUpName.text = video.owner.name
+        holder.videoTitle.text = video.title
+        holder.videoViews.text = video.stat.view.toShortChinese()
 
         //holder.listVideoDuration.text = TimeUtils.secondToTime(video.duration.toLong())
-        holder.cardView.setOnClickListener {
+        holder.videoCover.setOnClickListener {
             val intent = Intent(Application.getContext(), VideoActivity::class.java)
             intent.putExtra("videoId", VideoUtils.av2bv("av${video.aid}"))
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             Application.getContext().startActivity(intent)
         }
-        holder.cardView.setOnLongClickListener {
+        holder.videoCover.setOnLongClickListener {
             val intent = Intent(context, VideoLongClickActivity::class.java)
             intent.putExtra("bvid", VideoUtils.av2bv("av${video.aid}"))
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -275,23 +270,21 @@ class DynamicVideoAdapter(val context: Context) :
         try {
             Glide.with(context).load(video.pic).skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .placeholder(R.drawable.placeholder).apply(options).into(holder.listCover)
+                .placeholder(R.drawable.placeholder).apply(options).into(holder.videoCover)
         } catch (e: OutOfMemoryError) {
 
         }
     }
 
     class VideoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var listCover: ImageView
-        var listVideoTitle: TextView
-        var listUpName: TextView
-        var cardView: MaterialCardView
+        val videoCover: ImageView
+        val videoTitle: TextView
+        val videoViews: TextView
 
         init {
-            listCover = itemView.findViewById(R.id.listCover)
-            listVideoTitle = itemView.findViewById(R.id.listVideoTitle)
-            listUpName = itemView.findViewById(R.id.listUpName)
-            cardView = itemView.findViewById(R.id.cardView)
+            videoCover = itemView.findViewById(R.id.videoCover)
+            videoTitle = itemView.findViewById(R.id.videoTitle)
+            videoViews = itemView.findViewById(R.id.videoViews)
         }
     }
 }
@@ -356,6 +349,11 @@ class ForwardShareDynamicAdapter(val context: Context) :
                 }
                 holder.recyclerView.visibility = View.VISIBLE
                 holder.recyclerView.layoutManager = LinearLayoutManager(context)
+                holder.recyclerView.adapter = ForwardShareDynamicAdapter(context).also {
+                    it.submitList(
+                        listOf((card.originObj as ForwardShareCard))
+                    )
+                }
             }
             is VideoCard -> {
                 if ((card.originObj as VideoCard).dynamic.isNullOrEmpty()) {

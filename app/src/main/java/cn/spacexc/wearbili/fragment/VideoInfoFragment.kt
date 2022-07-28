@@ -4,27 +4,29 @@ import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.spacexc.wearbili.Application
+import cn.spacexc.wearbili.Application.Companion.TAG
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.*
 import cn.spacexc.wearbili.adapter.ButtonsAdapter
 import cn.spacexc.wearbili.adapter.VideoPartsAdapter
 import cn.spacexc.wearbili.databinding.FragmentVideoInfoBinding
-import cn.spacexc.wearbili.dataclass.RoundButtonData
-import cn.spacexc.wearbili.dataclass.SimplestUniversalDataClass
-import cn.spacexc.wearbili.dataclass.VideoInfo
-import cn.spacexc.wearbili.dataclass.VideoPages
+import cn.spacexc.wearbili.dataclass.*
 import cn.spacexc.wearbili.dataclass.user.User
 import cn.spacexc.wearbili.dataclass.user.UserFans
 import cn.spacexc.wearbili.listener.OnItemViewClickListener
@@ -38,9 +40,12 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.google.gson.Gson
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
+import java.io.File
 import java.io.IOException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -65,16 +70,21 @@ class VideoInfoFragment : Fragment() {
     var isCoined: Boolean = false
     var isStared: Boolean = false
 
-    private var isLikedStr: MutableLiveData<String> = MutableLiveData("点赞")
-    private var isCoinedStr: MutableLiveData<String> = MutableLiveData("投币")
-    private var isStaredStr: MutableLiveData<String> = MutableLiveData("收藏")
+    var likes = 0L
+
 
     private val btnListUpperRow = MutableLiveData(
         mutableListOf(
-            RoundButtonData(R.drawable.ic_baseline_play_circle_outline_24, "播放", "播放"),
-            RoundButtonData(R.drawable.ic_outline_thumb_up_24, "点赞", isLikedStr.value!!),
-            RoundButtonData(R.drawable.ic_outline_monetization_on_24, "投币", isCoinedStr.value!!),
-            RoundButtonData(R.drawable.ic_round_star_border_24, "收藏", isStaredStr.value!!),
+            RoundButtonData(R.drawable.ic_baseline_play_circle_outline_24, "使用内建播放器播放", "内建播放"),
+            RoundButtonData(R.drawable.ic_outline_thumb_up_24, "点赞", "点赞"),
+            RoundButtonData(R.drawable.ic_baseline_play_circle_outline_24, "使用抬腕视频播放", "使用抬腕视频播放"),
+            RoundButtonData(
+                R.drawable.ic_baseline_play_circle_outline_24,
+                "使用小电视播放器播放",
+                "使用小电视播放器播放"
+            ),
+            RoundButtonData(R.drawable.ic_outline_monetization_on_24, "投币", "投币"),
+            RoundButtonData(R.drawable.ic_round_star_border_24, "收藏", "收藏"),
             RoundButtonData(R.drawable.ic_outline_thumb_down_24, "点踩", "点踩"),
             RoundButtonData(R.drawable.ic_baseline_history_24, "稍后再看", "稍后再看"),
             RoundButtonData(R.drawable.send_to_mobile, "手机观看", "手机观看"),
@@ -85,6 +95,41 @@ class VideoInfoFragment : Fragment() {
 
     init {
         Log.d(Application.getTag(), "VideoInfoFragmentLoaded")
+    }
+
+    fun requestPermission() {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                0
+            )
+        } else {
+            playWithTaiWan()
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            0 -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        playWithTaiWan()
+                    }
+                } else {
+                    ToastUtils.makeText("请授予权限以写入H码").show()
+                }
+            }
+        }
     }
 
     override fun onCreateView(
@@ -100,6 +145,49 @@ class VideoInfoFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }*/
+
+    private fun playWithTaiWan() {
+        lifecycleScope.launch {
+            try {
+                bvid?.let {
+                    VideoManager.getVideoUrl(it, cid, object : Callback {
+                        override fun onFailure(call: Call, e: IOException) {
+                            mThreadPool.execute {
+                                requireActivity().runOnUiThread {
+                                    ToastUtils.makeText(
+                                        "网络异常"
+                                    ).show()
+                                }
+                            }
+                        }
+
+                        override fun onResponse(call: Call, response: Response) {
+                            val responseString = response.body?.string()
+                            mThreadPool.execute {
+                                val videoUrls: VideoStreamsFlv = Gson().fromJson(
+                                    responseString,
+                                    VideoStreamsFlv::class.java
+                                )        //创建视频数据对象
+                                requireActivity().runOnUiThread {
+                                    val file =
+                                        File(Environment.getExternalStorageDirectory().absolutePath + "/HankMi/cache/media")
+                                    if (!file.exists()) {
+                                        file.mkdir()
+                                    }
+                                    //file.writeText("hmmedia=${videoUrls.data.durl[0].url}")
+                                }
+                            }
+                        }
+
+                    })
+                }
+            } catch (e: Exception) {
+                MainScope().launch {
+                    ToastUtils.makeText("视频加载失败")
+                }
+            }
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -179,6 +267,9 @@ class VideoInfoFragment : Fragment() {
                             })
                         }
                     }
+                    "使用抬腕视频播放" -> {
+                        requestPermission()
+                    }
                 }
             }
 
@@ -192,12 +283,14 @@ class VideoInfoFragment : Fragment() {
         videoPartsAdapter = VideoPartsAdapter((activity as VideoActivity).getId()!!)
         binding.recyclerViewParts.adapter = videoPartsAdapter
         //binding.recyclerViewLower.adapter = ButtonsAdapter(true).also { it.submitList(btnListLowerRow) }
-        getVideoIsLiked()
+        //getVideoIsLiked()
+        isVideoLiked()
         getVideo()
         getVideoParts()
     }
 
     private fun getVideoParts() {
+
         val id = (activity as VideoActivity).getId()
         VideoManager.getVideoParts(id, object : Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -262,6 +355,7 @@ class VideoInfoFragment : Fragment() {
                             bvid = video.data.bvid
                             cid = video.data.cid
                             videoTitle = video.data.title
+                            likes = video.data.stat.like
                             binding.relativeLayout.visibility = View.VISIBLE
                             (activity as VideoActivity).currentVideo = video.data
                             (activity as VideoActivity).isInitialized = true
@@ -298,7 +392,9 @@ class VideoInfoFragment : Fragment() {
                                 video.data.cid,
                                 0
                             )
-                            isLikedStr.value = video.data.stat.like.toString()
+                            //isLikedStr.value = video.data.stat.like.toString()
+                            (binding.recyclerViewButtons.findViewHolderForAdapterPosition(1) as ButtonsAdapter.ButtonViewHolder).name.text =
+                                video.data.stat.like.toShortChinese()
                             btnListUpperRow.value?.get(0)?.displayName =
                                 video.data.stat.like.toShortChinese()
                             Glide.with(this@VideoInfoFragment).load(video.data.owner.face)
@@ -482,6 +578,7 @@ class VideoInfoFragment : Fragment() {
             })
         }
     }
+/*
 
     private fun getVideoIsLiked() {
         if (!isAdded) return
@@ -498,7 +595,9 @@ class VideoInfoFragment : Fragment() {
                         requireActivity().runOnUiThread {
                             if (result.data == 1) {
                                 isLiked = true
-                                isLikedStr.value = "已点赞"
+                                //isLikedStr.value = "已点赞"
+                                (binding.recyclerViewButtons.findViewHolderForAdapterPosition(1) as ButtonsAdapter.ButtonViewHolder).name.text = "已点赞"
+
                             }
                         }
                     }
@@ -507,25 +606,82 @@ class VideoInfoFragment : Fragment() {
             })
         }
     }
+*/
 
     fun likeVideo() {
         if (!isAdded) return
-        VideoManager.likeVideo((activity as VideoActivity).getId()!!, !isLiked, object : Callback {
+        Log.d(TAG, "likeVideo: ")
+        if (!cn.spacexc.wearbili.manager.UserManager.isLoggedIn()) {
+            ToastUtils.makeText("你还没有登录哦").show()
+            val intent = Intent(requireActivity(), LoginActivity::class.java)
+            intent.putExtra("fromHome", false)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+            return
+        }
+        VideoManager.likeVideo((activity as VideoActivity).getId()!!, isLiked, object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 mThreadPool.execute {
                     requireActivity().runOnUiThread {
-                        ToastUtils.makeText("点赞失败").show()
+                        ToastUtils.makeText("网络异常").show()
                     }
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 val result = Gson().fromJson(response.body?.string(), Like::class.java)
-                mThreadPool.execute {
-                    requireActivity().runOnUiThread {
-                        if (result.code == 0) {
-                            isLiked = true
-                            isLikedStr.value = "已点赞"
+                when (result.code) {
+                    0 -> {
+                        mThreadPool.execute {
+                            requireActivity().runOnUiThread {
+
+                            }
+                        }
+                        (binding.recyclerViewButtons.findViewHolderForAdapterPosition(1) as ButtonsAdapter.ButtonViewHolder).apply {
+                            if (isLiked) {
+                                name.text = likes++.toShortChinese()
+
+                            } else {
+                                name.text = likes--.toShortChinese()
+
+                            }
+                        }
+                        isVideoLiked()
+                    }
+                    -101 -> {
+                        mThreadPool.execute {
+                            requireActivity().runOnUiThread {
+                                ToastUtils.makeText("你还没有登录哦").show()
+                                val intent = Intent(requireActivity(), LoginActivity::class.java)
+                                intent.putExtra("fromHome", false)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                startActivity(intent)
+                            }
+                        }
+                    }
+                    -111 -> {
+                        mThreadPool.execute {
+                            requireActivity().runOnUiThread {
+                                ToastUtils.makeText("验证错误，请请重新登录哦").show()
+                                val intent = Intent(requireActivity(), LoginActivity::class.java)
+                                intent.putExtra("fromHome", false)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                startActivity(intent)
+                            }
+                        }
+                        MainScope().launch {
+
+                        }
+                    }
+                    -10003 -> {
+
+                        MainScope().launch {
+                            ToastUtils.makeText("视频不见了").show()
+                        }
+                    }
+                    else -> {
+                        MainScope().launch {
+                            ToastUtils.makeText("点赞失败 错误码${result.code}").show()
                         }
                     }
                 }
@@ -534,9 +690,44 @@ class VideoInfoFragment : Fragment() {
         })
     }
 
-    fun refreshVideoStat(list: List<RoundButtonData>) {
-        println(btnListUpperRow)
-        buttonsAdapter.submitList(list)
+    fun isVideoLiked() {
+        VideoManager.isLiked((activity as VideoActivity).getId()!!, object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                MainScope().launch {
+                    ToastUtils.makeText("网络异常").show()
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val result = Gson().fromJson(response.body?.string(), Like::class.java)
+                when (result.data) {
+                    1 -> {
+                        isLiked = true
+                        MainScope().launch {
+                            (binding.recyclerViewButtons.findViewHolderForAdapterPosition(1) as ButtonsAdapter.ButtonViewHolder).apply {
+                                icon.setImageResource(R.drawable.ic_baseline_thumb_up_24)
+                                icon.setColorFilter(Color.parseColor("#FE679A"))
+                            }
+                        }
+                    }
+                    0 -> {
+                        isLiked = false
+                        MainScope().launch {
+                            (binding.recyclerViewButtons.findViewHolderForAdapterPosition(1) as ButtonsAdapter.ButtonViewHolder).apply {
+                                icon.setImageResource(R.drawable.ic_outline_thumb_up_24)
+                                icon.setColorFilter(Color.parseColor("#FFFFFF"))
+                            }
+                        }
+                    }
+                    else -> {
+                        MainScope().launch {
+                            ToastUtils.makeText("网络异常 错误码${result.code}").show()
+                        }
+                    }
+                }
+            }
+
+        })
     }
 
     data class Like(

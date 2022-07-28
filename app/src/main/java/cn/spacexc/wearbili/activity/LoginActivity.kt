@@ -11,7 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.dataclass.LoginQrCode
-import cn.spacexc.wearbili.dataclass.QrCodeLoginStats
+import cn.spacexc.wearbili.dataclass.QrCodeLoginStat
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.QRCodeUtil
 import cn.spacexc.wearbili.utils.TimeUtils
@@ -29,6 +29,7 @@ import okhttp3.Response
 import java.io.IOException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+
 
 class LoginActivity : AppCompatActivity() {
     val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
@@ -106,54 +107,63 @@ class LoginActivity : AppCompatActivity() {
                                                     ToastUtils.makeText(
                                                         "网络连接错误"
                                                     ).show()
+                                                }
                                             }
-                                        }
 
-                                        override fun onResponse(call: Call, response: Response) {
-                                            this@LoginActivity.runOnUiThread {
-                                                val codeStat : QrCodeLoginStats = Gson().fromJson(response.body?.string(), QrCodeLoginStats::class.java)
-                                                if(codeStat.status){
-                                                    ToastUtils.makeText(
-                                                        "登录成功"
-                                                    ).show()
-                                                    cancel()
-                                                    if (intent.getBooleanExtra("fromHome", true)) {
-                                                        val intent = Intent(
-                                                            this@LoginActivity,
-                                                            MainActivity::class.java
-                                                        )
-                                                        intent.flags =
-                                                            Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                                                        startActivity(intent)
+                                            override fun onResponse(
+                                                call: Call,
+                                                response: Response
+                                            ) {
+                                                this@LoginActivity.runOnUiThread {
+                                                    val codeStat: QrCodeLoginStat = Gson().fromJson(
+                                                        response.body?.string(),
+                                                        QrCodeLoginStat::class.java
+                                                    )
+                                                    if (codeStat.status) {
+                                                        ToastUtils.makeText(
+                                                            "登录成功"
+                                                        ).show()
+                                                        cancel()
+                                                        if (intent.getBooleanExtra(
+                                                                "fromHome",
+                                                                true
+                                                            )
+                                                        ) {
+                                                            val intent = Intent(
+                                                                this@LoginActivity,
+                                                                MainActivity::class.java
+                                                            )
+                                                            intent.flags =
+                                                                Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                                            startActivity(intent)
+                                                        } else {
+                                                            finish()
+                                                        }
                                                     } else {
-                                                        finish()
-                                                    }
-                                                }
-                                                else{
-                                                    when(codeStat.data as Number){
-                                                        //-1.0 -> ToastUtils.makeText(this@LoginActivity, "密钥错误", Toast.LENGTH_SHORT).show()
-                                                        -2.0 -> {
-                                                            scanStat.text = "二维码过期了"
-                                                            qrImageView.setImageResource(R.drawable.retry)
-                                                            cancel()
-                                                        }
-                                                        -4.0 -> {
-                                                            scanStat.text = "使用手机客户端扫描二维码登入"
-                                                        }
-                                                        -5.0 -> {
-                                                            scanStat.text = "请在手机上轻触确认"
-                                                        }
-                                                        else -> {
-                                                            scanStat.text = "未知错误，请重试"
-                                                            qrImageView.setImageResource(R.drawable.retry)
-                                                            cancel()
+                                                        when (codeStat.data as Number) {
+                                                            //-1.0 -> ToastUtils.makeText(this@LoginActivity, "密钥错误", Toast.LENGTH_SHORT).show()
+                                                            -2.0 -> {
+                                                                scanStat.text = "二维码过期了"
+                                                                qrImageView.setImageResource(R.drawable.retry)
+                                                                cancel()
+                                                            }
+                                                            -4.0 -> {
+                                                                scanStat.text = "使用手机客户端扫描二维码登入"
+                                                            }
+                                                            -5.0 -> {
+                                                                scanStat.text = "请在手机上轻触确认"
+                                                            }
+                                                            else -> {
+                                                                scanStat.text = "未知错误，请重试"
+                                                                qrImageView.setImageResource(R.drawable.retry)
+                                                                cancel()
+                                                            }
                                                         }
                                                     }
                                                 }
                                             }
-                                        }
 
-                                    })
+                                        })
                                     Log.d(Application.getTag(), "onResponse: 轮询中...")
                                     delay(1500)
                                 }

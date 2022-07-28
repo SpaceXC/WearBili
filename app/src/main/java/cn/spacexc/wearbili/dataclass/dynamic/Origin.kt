@@ -12,7 +12,7 @@ data class Origin(
     val pre_dy_id_str: String,
     val r_type: Int?,
     val repost: Int,
-    val rid: Int,
+    val rid: Long,
     val rid_str: String,
     val status: Int,
     val stype: Int?,

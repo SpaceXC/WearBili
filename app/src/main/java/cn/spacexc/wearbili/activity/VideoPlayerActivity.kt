@@ -211,6 +211,7 @@ class VideoPlayerActivity : AppCompatActivity() {
             SeekBar.OnSeekBarChangeListener {     //进度条拖动监听
             override fun onProgressChanged(p0: SeekBar?, progress: Int, fromUser: Boolean) {
                 viewModel.isPlaying = false
+                //viewModel.togglePlayerPlayStat(PlayerStatus.Seeking)
                 binding.progressText.text =
                     "${(progress / 1000).secondToTime()}/${(viewModel.mediaPlayer.duration / 1000).secondToTime()}"
             }
@@ -228,7 +229,7 @@ class VideoPlayerActivity : AppCompatActivity() {
                 viewModel.canDisappear = true     //松开进度条控制器可以消失
                 //playerViewModel.togglePlayerStatus()
                 //viewModel.mediaPlayer.play()     //视频开始
-                binding.danmakuView.resume()
+                //binding.danmakuView.resume()
                 p0?.progress?.let { viewModel.playerSeekTo(it) }      //mediaplayer进度更改
             }
         })

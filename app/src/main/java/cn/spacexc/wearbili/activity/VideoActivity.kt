@@ -12,6 +12,7 @@ import cn.spacexc.wearbili.utils.VideoUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+
 class VideoActivity : AppCompatActivity() {
     private lateinit var binding : ActivityVideoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,8 +62,23 @@ class VideoActivity : AppCompatActivity() {
         return null
     }
 
-    fun setPage(page : Int){
+    fun setPage(page: Int) {
         binding.viewPager2.currentItem = page - 1
+    }
+
+    // Activity中
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String?>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        // 获取到Activity下的Fragment
+        val fragments = supportFragmentManager.fragments ?: return
+        // 查找在Fragment中onRequestPermissionsResult方法并调用
+        for (fragment in fragments) {
+            fragment?.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        }
     }
 
     /*private var startY = 0f //手指按下时的Y坐标
