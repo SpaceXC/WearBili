@@ -1,19 +1,27 @@
 package cn.spacexc.wearbili.adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
+import android.text.Html
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.text.toSpannable
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.dataclass.CommentContentData
+import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import cn.spacexc.wearbili.utils.TimeUtils.toDateStr
 import com.bumptech.glide.Glide
@@ -27,7 +35,7 @@ import com.bumptech.glide.Glide
  * 给！爷！写！注！释！
  */
 
-class CommentAdapter(val lifeCycleScope: LifecycleCoroutineScope) :
+class CommentAdapter(val lifeCycleScope: LifecycleCoroutineScope, val context: Context) :
     ListAdapter<CommentContentData, CommentAdapter.VideoCommentViewHolder>(object :
         DiffUtil.ItemCallback<CommentContentData>() {
         override fun areItemsTheSame(
@@ -63,17 +71,25 @@ class CommentAdapter(val lifeCycleScope: LifecycleCoroutineScope) :
     override fun onBindViewHolder(holder: VideoCommentViewHolder, position: Int) {
         //println(itemCount)
         val comment = getItem(position)
-        println(position)
         holder.userName.text = comment.member!!.uname
+        if (comment.replies != null) {
+            val hotRepliesAdapter = CommentHotRepliesAdapter(lifeCycleScope)
+            holder.replies.layoutManager = LinearLayoutManager(this@CommentAdapter.context)
+            holder.replies.adapter = hotRepliesAdapter
+            hotRepliesAdapter.submitList(comment.replies!!.toList())
+
+            holder.repliesControl.text = comment.reply_control.sub_reply_entry_text
+        } else {
+            holder.repliesCard.visibility = View.GONE
+        }
         if (comment.member!!.vip.nickname_color.isNotEmpty()) holder.userName.setTextColor(
             Color.parseColor(
                 comment.member!!.vip.nickname_color
             )
         )
-        //holder.userLevel.text = "LV${comment.member!!.level_info.current_level}"
+
         holder.pubDate.text = (comment.ctime * 1000).toDateStr("yyyy-MM-dd")
-        //TODO 表情包解析 WIP
-        //var commentStr: String?
+
 
         comment.content?.emote?.forEach {
             comment.content?.message = comment.content?.message?.replace(
@@ -81,25 +97,18 @@ class CommentAdapter(val lifeCycleScope: LifecycleCoroutineScope) :
                 "<img src=\"${it.value.url.replace("http", "https")}\"/>"
             )!!
         }
-/*        for((key, value) in comment.content?.emote!!){
-            val imgTag = "<img src=\"${value.url}\"/>"
-            comment.content?.message?.replace(key, imgTag)
-        }*/
-        holder.content.text = comment.content?.message
-/*        lifeCycleScope.launch {
-            kotlin.runCatching {
-                *//*val formattedText = Html.fromHtml(commentStr, Html.FROM_HTML_MODE_COMPACT,{ p0 ->
-                    val byteArray = NetworkUtils.getUrlWithoutCallback(p0!!).body?.bytes()
-                    val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray?.size!!)
-                    BitmapDrawable(bitmap)
-                }) { _, _, _, _ -> }
-                holder.content.text = formattedText*//*
+
+        Thread {
+            val sp = Html.fromHtml(
+                comment.content?.message,
+                NetworkUtils.imageGetter(holder.content.lineHeight + 5),
+                null
+            )
+            holder.content.post {
+                holder.content.text = sp
             }
+        }.start()
 
-
-        }*/
-
-        //holder.content.text = Html.fromHtml(commentStr)
 
         holder.likes.text = comment.like.toShortChinese()
         if (comment.member!!.mid == uploaderMid) {
@@ -120,6 +129,9 @@ class CommentAdapter(val lifeCycleScope: LifecycleCoroutineScope) :
         var content: TextView
         var likes: TextView
         var isUp: TextView
+        var replies: RecyclerView
+        var repliesControl: TextView
+        var repliesCard: LinearLayout
 
         init {
             avatar = itemView.findViewById(R.id.dynamicAvatar)
@@ -129,6 +141,71 @@ class CommentAdapter(val lifeCycleScope: LifecycleCoroutineScope) :
             content = itemView.findViewById(R.id.dynamicText)
             likes = itemView.findViewById(R.id.likes)
             isUp = itemView.findViewById(R.id.isUp)
+            replies = itemView.findViewById(R.id.repliesList)
+            repliesControl = itemView.findViewById(R.id.repliesControl)
+            repliesCard = itemView.findViewById(R.id.repliesCard)
         }
+    }
+}
+
+class CommentHotRepliesAdapter(val lifeCycleScope: LifecycleCoroutineScope) :
+    ListAdapter<CommentContentData.Replies, CommentHotRepliesViewHolder>(object :
+        DiffUtil.ItemCallback<CommentContentData.Replies>() {
+        override fun areItemsTheSame(
+            oldItem: CommentContentData.Replies,
+            newItem: CommentContentData.Replies
+        ): Boolean {
+            return oldItem.rpid == newItem.rpid
+        }
+
+        override fun areContentsTheSame(
+            oldItem: CommentContentData.Replies,
+            newItem: CommentContentData.Replies
+        ): Boolean {
+            return oldItem.content?.message == newItem.content?.message
+        }
+
+    }) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentHotRepliesViewHolder {
+        return CommentHotRepliesViewHolder(
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.cell_comment_hot_reply, parent, false)
+        )
+    }
+
+    override fun onBindViewHolder(holder: CommentHotRepliesViewHolder, position: Int) {
+        val reply = getItem(position)
+        reply.content?.emote?.forEach {
+            reply.content?.message = reply.content?.message?.replace(
+                it.key,
+                "<img src=\"${it.value.url.replace("http", "https")}\"/>"
+            )!!
+        }
+
+        Thread {
+            val sp = Html.fromHtml(
+                "${reply.member.uname}:${reply.content?.message}",
+                NetworkUtils.imageGetter(holder.textview.lineHeight + 5),
+                null
+            ).toSpannable()
+            sp.setSpan(
+                ForegroundColorSpan(Color.WHITE),
+                0,
+                reply.member.uname.length,
+                Spanned.SPAN_INCLUSIVE_EXCLUSIVE
+            )
+            holder.textview.post {
+                holder.textview.text = sp
+            }
+        }.start()
+    }
+
+}
+
+class CommentHotRepliesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    val textview: TextView
+
+    init {
+        textview = itemView.findViewById(R.id.replyText)
     }
 }

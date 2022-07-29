@@ -1,7 +1,11 @@
 package cn.spacexc.wearbili.utils
 
+import android.graphics.drawable.Drawable
+import android.text.Html.ImageGetter
 import cn.spacexc.wearbili.manager.CookiesManager
 import okhttp3.*
+import java.io.InputStream
+import java.net.URL
 
 
 /**
@@ -43,7 +47,7 @@ object NetworkUtils {
         return client.newCall(request).execute()
     }
 
-    fun postUrl(url : String, body: RequestBody,callback: Callback){
+    fun postUrl(url: String, body: RequestBody, callback: Callback) {
         val request: Request = Request.Builder()
             .url(url)
             .post(body)
@@ -51,5 +55,25 @@ object NetworkUtils {
         client.newCall(request).enqueue(callback)
     }
 
+    /**
+     * From CSDN https://blog.csdn.net/qq_33593432/article/details/118638944
+     */
+    fun imageGetter(size: Int): ImageGetter {
+        return ImageGetter { source ->
+            val `is`: InputStream?
+            try {
+                `is` = URL(source).content as InputStream
+                val d = Drawable.createFromStream(`is`, "src")
+                d.setBounds(
+                    0, 0, size,
+                    size
+                )
+                `is`.close()
+                return@ImageGetter d
+            } catch (e: Exception) {
+                return@ImageGetter null
+            }
+        }
+    }
 
 }

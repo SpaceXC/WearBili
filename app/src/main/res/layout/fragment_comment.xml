@@ -7,6 +7,48 @@
     tools:context=".fragment.CommentFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout6"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_card_view">
+
+        <TextView
+            android:id="@+id/pageName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="10dp"
+            android:alpha="0.7"
+            android:drawableEnd="@drawable/ic_baseline_sort_24"
+            android:fontFamily="@font/puhui"
+            android:text="按热度"
+            android:textColor="#fff"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pageName">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone">
@@ -50,71 +92,6 @@
             app:layout_constraintGuide_percent="0.75" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="-10dp"
-        android:minHeight="80dp"
-
-        android:paddingBottom="10dp"
-        app:cardBackgroundColor="#78242424"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="0dp"
-        app:cardMaxElevation="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:strokeColor="#70707070"
-        app:strokeWidth="0.1dp">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                android:id="@+id/swipeRefreshLayout"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingBottom="10dp" />
-            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-            <FrameLayout
-                android:id="@+id/constraintLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:id="@+id/pageName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="6dp"
-                    android:alpha="0.7"
-                    android:drawableEnd="@drawable/ic_baseline_sort_24"
-                    android:fontFamily="@font/puhui"
-                    android:text="按热度"
-                    android:textColor="#fff"
-                    android:textSize="16sp" />
-
-            </FrameLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </com.google.android.material.card.MaterialCardView>
 
 
 </androidx.wear.widget.BoxInsetLayout>

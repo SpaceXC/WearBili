@@ -305,7 +305,7 @@ data class CommentContentData(
     var show_follow: Boolean,
     var invisible: Boolean,
     var reply_control: ReplyControl,
-    var replies: Array<Replies>,
+    var replies: Array<Replies>?,
     var card_label: Array<CardLabel>,
     var is_top: Boolean = false
 ) {
@@ -436,7 +436,7 @@ data class CommentContentData(
         var like: Int,
         var action: Int,
         var member: Member,
-        var content: Content,
+        var content: CommentContentData.Content?,
         var replies: Any,
         var assist: Int,
         var folder: Folder,
@@ -998,4 +998,21 @@ data class QrCodeLoginStat(
     val code: Int,
     val status: Boolean,
     @SerializedName("data") val data: Any
+)
+
+data class EmoteObject(
+    val attr: Int,
+    val id: Int,
+    val jump_title: String,
+    val meta: Meta,
+    val mtime: Int,
+    val package_id: Int,
+    val state: Int,
+    val text: String,
+    val type: Int,
+    val url: String
+)
+
+data class Meta(
+    val size: Int
 )

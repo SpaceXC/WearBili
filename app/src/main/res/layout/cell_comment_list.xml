@@ -77,16 +77,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginBottom="4dp"
         android:fontFamily="@font/puhui"
         android:textColor="#fff"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dynamicAvatar"
-        app:layout_constraintVertical_bias="0.0"
         tools:ignore="TouchTargetSizeCheck" />
 
 
@@ -136,22 +133,55 @@
         app:layout_constraintVertical_bias="0.5"
         app:srcCompat="@drawable/ic_outline_thumb_down_24" />
 
+    <LinearLayout
+        android:id="@+id/repliesCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/background_grey_cardview"
+        android:orientation="vertical"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/dynamicText"
+        app:layout_constraintStart_toStartOf="@+id/dynamicText"
+        app:layout_constraintTop_toBottomOf="@+id/dynamicText">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/repliesList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/repliesControl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:drawableEnd="@drawable/ic_baseline_arrow_forward_ios_24"
+            android:drawableTint="#FE679A"
+            android:fontFamily="@font/puhui_medium"
+            android:text="共349条回复"
+            android:textColor="#FE679A" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/likes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="14dp"
-        android:layout_marginBottom="14dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="6dp"
         android:alpha="0.7"
         android:fontFamily="@font/puhui"
         android:text="1.2w"
         android:textColor="#fff"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/divider"
         app:layout_constraintStart_toEndOf="@+id/imageView6"
-        app:layout_constraintTop_toBottomOf="@+id/dynamicText"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/repliesCard" />
 
     <TextView
         android:id="@+id/replies"

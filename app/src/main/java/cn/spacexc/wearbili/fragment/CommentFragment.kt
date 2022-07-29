@@ -35,7 +35,7 @@ class CommentFragment : Fragment() {
 
     var page : Int = 1
 
-    val adapter = CommentAdapter(lifecycleScope)
+    val adapter = CommentAdapter(lifecycleScope, Application.context!!)
     private val layoutManager = LinearLayoutManager(Application.getContext())
 
     var prevList : MutableList<CommentContentData>? = null
