@@ -101,7 +101,7 @@ class CommentAdapter(val lifeCycleScope: LifecycleCoroutineScope, val context: C
         Thread {
             val sp = Html.fromHtml(
                 comment.content?.message,
-                NetworkUtils.imageGetter(holder.content.lineHeight + 5),
+                NetworkUtils.imageGetter(holder.content.lineHeight),
                 null
             )
             holder.content.post {
@@ -185,7 +185,7 @@ class CommentHotRepliesAdapter(val lifeCycleScope: LifecycleCoroutineScope) :
         Thread {
             val sp = Html.fromHtml(
                 "${reply.member.uname}:${reply.content?.message}",
-                NetworkUtils.imageGetter(holder.textview.lineHeight + 5),
+                NetworkUtils.imageGetter(holder.textview.lineHeight),
                 null
             ).toSpannable()
             sp.setSpan(

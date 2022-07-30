@@ -48,7 +48,7 @@ object EncryptUtils {
         }
     }
 
-    private fun md5(plainText: String): String {
+    fun md5(plainText: String): String {
         val secretBytes: ByteArray? = try {
             val md = MessageDigest.getInstance("MD5")
             md.update(plainText.toByteArray())

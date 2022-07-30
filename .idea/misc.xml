@@ -74,6 +74,7 @@
         <entry key="app/src/main/res/font/roboto_medium.xml" value="0.3384615384615385" />
         <entry key="app/src/main/res/layout-land/fragment_video_playing.xml" value="0.32708333333333334" />
         <entry key="app/src/main/res/layout/activity_about.xml" value="0.1004403716152154" />
+        <entry key="app/src/main/res/layout/activity_activate.xml" value="0.3056861906797777" />
         <entry key="app/src/main/res/layout/activity_dynamic.xml" value="0.18854166666666666" />
         <entry key="app/src/main/res/layout/activity_image_viewer.xml" value="1.6702127659574468" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="1.9408584594726566" />

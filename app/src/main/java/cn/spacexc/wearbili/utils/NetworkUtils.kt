@@ -39,6 +39,21 @@ object NetworkUtils {
         client.newCall(request).enqueue(callback)
     }
 
+    fun getUrlWithLC(url: String, callback: Callback) {
+        val currentTime = System.currentTimeMillis().toString()
+        val request = Request.Builder()
+            .url(url)
+            .get()
+            .header("X-LC-Id", "MAE7LopsPz1kgP3deSjzQ67g-gzGzoHsz")
+            .header(
+                "X-LC-Sign",
+                "${EncryptUtils.md5("${currentTime}VuirpQYiGiekok2L03M9NX4o")},$currentTime"
+            )
+            .build()
+        client.newCall(request).enqueue(callback)
+    }
+
+
     fun getUrlWithoutCallback(url: String): Response {
         val request = Request.Builder()
             .url(url)
@@ -56,7 +71,8 @@ object NetworkUtils {
     }
 
     /**
-     * From CSDN https://blog.csdn.net/qq_33593432/article/details/118638944
+     * From CSDN https://blog.csdn.net/qq_16131393/article/details/51565278
+     * MODIFIED BY XC-QAN
      */
     fun imageGetter(size: Int): ImageGetter {
         return ImageGetter { source ->
