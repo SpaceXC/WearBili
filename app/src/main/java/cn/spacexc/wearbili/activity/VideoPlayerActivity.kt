@@ -1,6 +1,8 @@
 package cn.spacexc.wearbili.activity
 
 import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -153,8 +155,6 @@ class VideoPlayerActivity : AppCompatActivity() {
                 }
             }
             //-----------LiveData监听区域⬆️-----------
-
-
         }
         viewModel.onSeekCompleteListener = object : OnSeekCompleteListener {
             override fun onSeek(progress: Long) {
@@ -204,6 +204,36 @@ class VideoPlayerActivity : AppCompatActivity() {
         //播放控制按钮修改播放状态
         binding.control.setOnClickListener {
             viewModel.togglePlayerStatus()
+        }
+
+        //旋转屏幕
+        binding.rotate.setOnClickListener {
+            when (requestedOrientation) {
+                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT -> {
+                    requestedOrientation =
+                        ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                    /*viewModel.videoResolution.value?.let {
+                        resizeVideo(it.first, it.second)
+                    }*/
+                }
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE -> {
+                    requestedOrientation =
+                        ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                    /*viewModel.videoResolution.value?.let {
+                        resizeVideo(it.second, it.first)
+                    }*/
+                }
+                ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED -> {
+                    requestedOrientation =
+                        ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                    /*viewModel.videoResolution.value?.let {
+                        resizeVideo(it.first, it.second)
+                    }*/
+
+                }
+                else -> Log.d(Application.TAG, "onCreate: $requestedOrientation")
+            }
+
         }
         //TODO:快进3秒
         //TODO:快退3秒
@@ -355,14 +385,20 @@ class VideoPlayerActivity : AppCompatActivity() {
                 binding.danmakuView.prepare(danmukuParser, danmakuContext)      //准备弹幕
                 binding.danmakuView.enableDanmakuDrawingCache(true)
             }
-
         })
+
+
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putLong("currentPosition", viewModel.mediaPlayer.currentPosition)
     }
 
 
     //surfaceview适配视频大小
     private fun resizeVideo(width: Int, height: Int) {
-        if (width == 0 || height == 0) return
+        if (width == 0 || height == 0) return       //啥都没有适配个__?
         if (width < height) {     //宽小于高，优先适配高度
             binding.surfaceView.layoutParams = FrameLayout.LayoutParams(
                 binding.playerFrame.height * width / height,
@@ -388,6 +424,12 @@ class VideoPlayerActivity : AppCompatActivity() {
         binding.mainPanel.invalidate()
         binding.loadingPanel.requestLayout()
         binding.loadingPanel.invalidate()
+    }
+
+    //监听屏幕旋转
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        viewModel.refreshResolution()
     }
 
     /**
@@ -434,6 +476,18 @@ class VideoPlayerActivity : AppCompatActivity() {
                 }
             }
         } else return
+    }
+
+    private fun updateVideoResolution() {
+        lifecycleScope.launch {
+            if (viewModel.mediaPlayer.videoSize.height / viewModel.mediaPlayer.videoSize.width != binding.playerFrame.height / binding.playerFrame.width) {
+                resizeVideo(
+                    viewModel.mediaPlayer.videoSize.width,
+                    viewModel.mediaPlayer.videoSize.height
+                )
+                delay(1000)
+            }
+        }
     }
 
     override fun onDestroy() {

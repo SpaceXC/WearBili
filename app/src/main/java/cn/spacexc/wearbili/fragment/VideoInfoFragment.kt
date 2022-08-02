@@ -1,11 +1,13 @@
 package cn.spacexc.wearbili.fragment
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
@@ -100,12 +102,24 @@ class VideoInfoFragment : Fragment() {
     fun requestPermission() {
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.MANAGE_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
                 requireActivity(),
-                arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                arrayOf(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.MANAGE_EXTERNAL_STORAGE
+                ),
                 0
             )
         } else {
@@ -121,7 +135,7 @@ class VideoInfoFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             0 -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED || grantResults.isNotEmpty() && grantResults[1] == PackageManager.PERMISSION_GRANTED || grantResults.isNotEmpty() && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
                     viewLifecycleOwner.lifecycleScope.launch {
                         playWithTaiWan()
                     }
@@ -169,12 +183,19 @@ class VideoInfoFragment : Fragment() {
                                     VideoStreamsFlv::class.java
                                 )        //创建视频数据对象
                                 requireActivity().runOnUiThread {
+                                    val path =
+                                        File(Environment.getExternalStorageDirectory().absolutePath + "/HankMi/").absoluteFile
                                     val file =
-                                        File(Environment.getExternalStorageDirectory().absolutePath + "/HankMi/cache/media")
-                                    if (!file.exists()) {
-                                        file.mkdir()
+                                        File(Environment.getExternalStorageDirectory().absolutePath + "/HankMi/keydata.hmd").absoluteFile
+                                    Log.d(
+                                        TAG,
+                                        "onResponse: " + Environment.getExternalStorageDirectory().absolutePath + "/HankMi/cache/media"
+                                    )
+                                    if (!path.exists()) {
+                                        path.mkdir()
+                                        file.createNewFile()
                                     }
-                                    //file.writeText("hmmedia=${videoUrls.data.durl[0].url}")
+                                    file.writeText("hmmedia=${videoUrls.data.durl[0].url}")
                                 }
                             }
                         }
@@ -270,6 +291,13 @@ class VideoInfoFragment : Fragment() {
                     "使用抬腕视频播放" -> {
                         requestPermission()
                     }
+                    "使用小电视播放器播放" -> {
+                        val intent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("wearbiliplayer://receive:8080/play?&bvid=$bvid&cid=$cid&aid=0")
+                        )
+                        startActivity(intent)
+                    }
                 }
             }
 
@@ -350,8 +378,8 @@ class VideoInfoFragment : Fragment() {
                 val video = Gson().fromJson(response.body?.string(), VideoInfo::class.java)
                 updateVideoFansStat(video)
                 mThreadPool.execute {
-                    requireActivity().runOnUiThread{
-                        if(response.code == 200 && video.code == 0) {
+                    requireActivity().runOnUiThread {
+                        if (response.code == 200 && video.code == 0) {
                             bvid = video.data.bvid
                             cid = video.data.cid
                             videoTitle = video.data.title
@@ -419,10 +447,11 @@ class VideoInfoFragment : Fragment() {
                             }
 
                             binding.videoDesc.setOnLongClickListener {
-                                val clipboardManager: ClipboardManager = ContextCompat.getSystemService(
-                                    requireContext(),
-                                    ClipboardManager::class.java
-                                ) as ClipboardManager
+                                val clipboardManager: ClipboardManager =
+                                    ContextCompat.getSystemService(
+                                        requireContext(),
+                                        ClipboardManager::class.java
+                                    ) as ClipboardManager
                                 val clip: ClipData =
                                     ClipData.newPlainText("wearbili desc", video.data.desc)
                                 clipboardManager.setPrimaryClip(clip)
@@ -439,7 +468,7 @@ class VideoInfoFragment : Fragment() {
                                 .into(binding.cover)
 
                             //GlideUtils.loadPicsFitWidth(Application.getContext(), video.data.pic, R.drawable.placeholder, R.drawable.placeholder, binding.cover)
-                        }else{
+                        } else {
                             ToastUtils.makeText("加载失败了")
                                 .show()
                         }

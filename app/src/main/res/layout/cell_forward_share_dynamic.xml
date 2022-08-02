@@ -53,7 +53,7 @@
                 app:layout_constraintStart_toEndOf="@+id/dynamicAvatar"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.wyx.components.widgets.ExpandCollpaseTextView
+            <TextView
                 android:id="@+id/dynamicText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

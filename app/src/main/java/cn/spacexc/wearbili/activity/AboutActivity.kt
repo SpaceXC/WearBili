@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.adapter.HorizontalButtonAdapter
 import cn.spacexc.wearbili.adapter.UserHorizontalButtonAdapter
@@ -18,7 +17,7 @@ import kotlinx.coroutines.launch
 
 class AboutActivity : AppCompatActivity() {
     private val firstList = listOf(
-        HorizontalButtonData(R.drawable.ic_outline_info_24, Application.versionString, "版本号"),
+        HorizontalButtonData(R.drawable.ic_outline_info_24, "Rel-AL 0.9.3", "版本号"),
         HorizontalButtonData(R.drawable.ic_github, "Github", "查看我们的开源项目"),
     )
     private val secondList = listOf(

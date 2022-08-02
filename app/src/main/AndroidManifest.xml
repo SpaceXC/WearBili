@@ -7,6 +7,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -23,9 +24,16 @@
         android:theme="@style/Theme.WearBili"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <activity
-            android:name=".activity.ActivateActivity"
-            android:exported="false" />
+        <service
+            android:name=".service.DownloadService"
+            android:exported="false">
+            <!-- This is needed for Scheduler -->
+            <intent-filter>
+                <action android:name="com.google.android.exoplayer.downloadService.action.RESTART" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".activity.QRCodeActivity"
             android:exported="false" />
@@ -74,6 +82,7 @@
             android:theme="@style/Theme.WearBiliMenu" />
         <activity
             android:name=".activity.VideoPlayerActivity"
+            android:configChanges="orientation|screenSize"
             android:exported="true" />
         <activity
             android:name=".activity.SearchResultActivity"
@@ -108,7 +117,7 @@
             android:exported="false" />
         <activity
             android:name=".activity.MainActivity"
-            android:exported="true" />
+            android:exported="false" />
 
         <meta-data
             android:name="preloaded_fonts"

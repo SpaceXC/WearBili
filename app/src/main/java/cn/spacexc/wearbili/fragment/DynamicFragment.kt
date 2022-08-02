@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.activity.MainActivity
-import cn.spacexc.wearbili.adapter.dynamic.DynamicAdapter
+import cn.spacexc.wearbili.adapter.DynamicAdapter
 import cn.spacexc.wearbili.databinding.FragmentDynamicBinding
 import cn.spacexc.wearbili.dataclass.dynamic.Card
 import cn.spacexc.wearbili.manager.DynamicManager

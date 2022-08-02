@@ -161,18 +161,6 @@ class VideoPlayerViewModel : ViewModel() {
         }
     }
 
-    fun togglePlayerPlayStat(status: PlayerStatus) {
-        /*if (mediaPlayer.isPlaying) {
-            mediaPlayer.pause()
-            danmakuView.pause()
-            _controllerVisibility.value = View.VISIBLE
-        } else {
-            mediaPlayer.play()
-            danmakuView.resume()
-        }*/
-        _playerStatus.value = status
-    }
-
     fun toggleControllerVisibility() {
         if (_controllerVisibility.value == View.INVISIBLE) {
             _controllerVisibility.postValue(View.VISIBLE)
@@ -226,9 +214,19 @@ class VideoPlayerViewModel : ViewModel() {
 
     }
 
-    fun playerSeekTo(position : Int) {
+    fun refreshResolution() {
+        _videoResolution.value = Pair(mediaPlayer.videoSize.width, mediaPlayer.videoSize.height)
+    }
+
+    fun playerSeekTo(position: Int) {
         danmakuView.pause()
         mediaPlayer.seekTo(position.toLong())
+        isPlaying = false
+    }
+
+    fun playerSeekTo(position: Long) {
+        danmakuView.pause()
+        mediaPlayer.seekTo(position)
         isPlaying = false
     }
 

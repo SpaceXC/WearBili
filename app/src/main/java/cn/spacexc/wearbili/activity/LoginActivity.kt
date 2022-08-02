@@ -79,7 +79,12 @@ class LoginActivity : AppCompatActivity() {
                                 Gson().fromJson(response.body?.string(), LoginQrCode::class.java)
                             Log.d(Application.getTag(), "onResponse: ${qrCode.data.url}")
                             val bitmap: Bitmap? =
-                                QRCodeUtil.createQRCodeBitmap(qrCode.data.url, 128, 128)
+                                QRCodeUtil.createQRCodeBitmap(
+                                    qrCode.data.url,
+                                    128,
+                                    128,
+                                    QRCodeUtil.ERROR_CORRECTION_M
+                                )
                             //qrImageView.setImageBitmap(bitmap)
                             try {
                                 Glide.with(this@LoginActivity)

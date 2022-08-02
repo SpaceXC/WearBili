@@ -23,27 +23,47 @@ class SplashScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
         if (UserManager.isLoggedIn()) {
-            /*val intent = Intent(this@SplashScreenActivity, MainActivity::class.java)
-            //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out)
-            finish()*/
             lifecycleScope.launch {
-                if (!UserManager.isLoggedIn()) {
-                    val intent = Intent(this@SplashScreenActivity, LoginActivity::class.java)
-                    //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)
-                    overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out)
-                    finish()
-                } else {
-                    UserManager.getUid()?.let {
-                        LCManager.isUserActivated(it, object : Callback {
-                            override fun onFailure(call: Call, e: IOException) {
+                UserManager.getUid()?.let {
+                    LCManager.isUserActivated(it, object : Callback {
+                        override fun onFailure(call: Call, e: IOException) {
+                            MainScope().launch {
+                                ToastUtils.makeText("网络异常").show()
+                                val intent = Intent(
+                                    this@SplashScreenActivity,
+                                    SplashScreenActivity::class.java
+                                )
+                                //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                startActivity(intent)
+                                overridePendingTransition(
+                                    R.anim.activity_fade_in,
+                                    R.anim.activity_fade_out
+                                )
+                                finish()
+                            }
+                        }
+
+                        override fun onResponse(call: Call, response: Response) {
+                            val result = Gson().fromJson(
+                                response.body?.string(),
+                                LeanCloudUserSearch::class.java
+                            )
+                            if (result.results.isNotEmpty()) {
+                                val intent =
+                                    Intent(this@SplashScreenActivity, MainActivity::class.java)
+                                //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                startActivity(intent)
+                                overridePendingTransition(
+                                    R.anim.activity_fade_in,
+                                    R.anim.activity_fade_out
+                                )
+                                finish()
+                            } else {
                                 MainScope().launch {
-                                    ToastUtils.makeText("网络异常").show()
+                                    ToastUtils.makeText("您没有使用权限,请重新登录").show()
                                     val intent = Intent(
                                         this@SplashScreenActivity,
-                                        SplashScreenActivity::class.java
+                                        LoginActivity::class.java
                                     )
                                     //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                     startActivity(intent)
@@ -52,48 +72,14 @@ class SplashScreenActivity : AppCompatActivity() {
                                         R.anim.activity_fade_out
                                     )
                                     finish()
+                                    //TODO 到引导激活页面
                                 }
                             }
+                        }
 
-                            override fun onResponse(call: Call, response: Response) {
-                                val result = Gson().fromJson(
-                                    response.body?.string(),
-                                    LeanCloudUserSearch::class.java
-                                )
-                                if (result.results.isNotEmpty()) {
-                                    val intent =
-                                        Intent(this@SplashScreenActivity, MainActivity::class.java)
-                                    //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                    startActivity(intent)
-                                    overridePendingTransition(
-                                        R.anim.activity_fade_in,
-                                        R.anim.activity_fade_out
-                                    )
-                                    finish()
-                                } else {
-                                    MainScope().launch {
-                                        ToastUtils.makeText("您没有使用权限,请重新登录").show()
-                                        val intent = Intent(
-                                            this@SplashScreenActivity,
-                                            LoginActivity::class.java
-                                        )
-                                        //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                        startActivity(intent)
-                                        overridePendingTransition(
-                                            R.anim.activity_fade_in,
-                                            R.anim.activity_fade_out
-                                        )
-                                        finish()
-                                        //TODO 到引导激活页面
-                                    }
-                                }
-                            }
-
-                        })
-                    }
+                    })
                 }
             }
-
         } else {
             val intent = Intent(this@SplashScreenActivity, LoginActivity::class.java)
             //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
