@@ -17,9 +17,9 @@ object UserManager {
     fun getUserCookie(): String? = CookiesManager.getCookieByName("SESSDATA")
 
     fun isLoggedIn(): Boolean =
-        CookiesManager.getCookieByName("SESSDATA") != null && CookiesManager.getCookieByName("bili_jct") != null && CookiesManager.getCookieByName(
-            "DedeUserID"
-        ) != null
+        !CookiesManager.getCookieByName("SESSDATA").isNullOrEmpty() &&
+                !CookiesManager.getCookieByName("bili_jct").isNullOrEmpty() &&
+                !CookiesManager.getCookieByName("DedeUserID").isNullOrEmpty()
 
     fun getUid(): String? = CookiesManager.getCookieByName("DedeUserID")
 

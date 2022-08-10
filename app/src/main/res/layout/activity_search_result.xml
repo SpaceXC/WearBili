@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000"
-    tools:context=".activity.SearchResultActivity">
+    tools:context=".activity.search.SearchResultActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -56,7 +56,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:boxedEdges="all"
-        tools:context=".activity.SearchResultActivity">
+        tools:context=".activity.search.SearchResultActivity">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout

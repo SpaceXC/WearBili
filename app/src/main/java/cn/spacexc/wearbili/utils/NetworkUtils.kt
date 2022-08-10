@@ -1,7 +1,7 @@
 package cn.spacexc.wearbili.utils
 
 import android.graphics.drawable.Drawable
-import android.text.Html.ImageGetter
+import android.text.Html
 import cn.spacexc.wearbili.manager.CookiesManager
 import okhttp3.*
 import java.io.InputStream
@@ -20,10 +20,11 @@ class Cookies(var cookies: List<Cookie>)
 
 object NetworkUtils {
     private val client = OkHttpClient.Builder()
-        .cookieJar(object : CookieJar{
+        .cookieJar(object : CookieJar {
             override fun loadForRequest(url: HttpUrl): List<Cookie> {
                 return CookiesManager.getCookies()
             }
+
             override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
                 CookiesManager.saveCookies(cookies)
             }
@@ -68,14 +69,23 @@ object NetworkUtils {
             .post(body)
             .build()
         client.newCall(request).enqueue(callback)
+
+    }
+
+    fun postUrlWithoutBody(url: String, callback: Callback) {
+        val request: Request = Request.Builder()
+            .url(url)
+            .post(FormBody.Builder().build())
+            .build()
+        client.newCall(request).enqueue(callback)
     }
 
     /**
      * From CSDN https://blog.csdn.net/qq_16131393/article/details/51565278
      * MODIFIED BY XC-QAN
      */
-    fun imageGetter(size: Int): ImageGetter {
-        return ImageGetter { source ->
+    fun imageGetter(size: Int): Html.ImageGetter {
+        return Html.ImageGetter { source ->
             val `is`: InputStream?
             try {
                 `is` = URL(source).content as InputStream
@@ -91,5 +101,7 @@ object NetworkUtils {
             }
         }
     }
-
 }
+
+
+

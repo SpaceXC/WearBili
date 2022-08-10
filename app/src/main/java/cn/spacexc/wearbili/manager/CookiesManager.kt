@@ -23,11 +23,15 @@ object CookiesManager {
         return tempCookies.cookies
     }
 
-    fun saveCookies(cookies : List<Cookie>) {
+    fun saveCookies(cookies: List<Cookie>) {
         val tempCookie = Cookies(cookies)
-        val cookiesObj = Cookies(getCookies().union(tempCookie.cookies.toSet()).toList())
+        val cookiesObj = Cookies(getCookies().unionCookies(tempCookie.cookies))
         val cookieString = Gson().toJson(cookiesObj)
         SharedPreferencesUtils.saveString("cookies", cookieString)
+    }
+
+    fun deleteAllCookies() {
+        SharedPreferencesUtils.delete("cookies")
     }
 
     fun getCookieByName(name: String): String? {
@@ -53,5 +57,20 @@ object CookiesManager {
 
     fun getCsrfToken(): String? {
         return getCookieByName("bili_jct")
+    }
+
+    private fun List<Cookie>.unionCookies(cookies: List<Cookie>): List<Cookie> {
+        /*val temp = this.toMutableList()
+        for (cookie in this.indices){
+            for(cookiesAdd in cookies){
+                if(this[cookie].name == cookiesAdd.name && this[cookie].domain == cookiesAdd.domain){
+                    temp[cookie] = cookiesAdd
+                }
+                else{
+                    temp.add(cookiesAdd)
+                }
+            }
+        }*/
+        return cookies + this
     }
 }

@@ -1,7 +1,7 @@
 package cn.spacexc.wearbili.adapter
 
 import android.annotation.SuppressLint
-import android.app.Activity
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,10 +17,11 @@ import cn.spacexc.wearbili.manager.UserManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.gson.Gson
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Response
 import java.io.IOException
-import java.util.concurrent.Executors
 
 /**
  * Created by XC-Qan on 2022/6/30.
@@ -30,7 +31,7 @@ import java.util.concurrent.Executors
  * 给！爷！写！注！释！
  */
 
-class UserHorizontalButtonAdapter(val context: Activity) :
+class UserHorizontalButtonAdapter(val context: Context) :
     ListAdapter<HorizontalButtonData, UserHorizontalButtonAdapter.ButtonViewHolder>(object :
         DiffUtil.ItemCallback<HorizontalButtonData>() {
         override fun areItemsTheSame(
@@ -78,16 +79,15 @@ class UserHorizontalButtonAdapter(val context: Activity) :
                         val user = Gson().fromJson(response.body?.string(), User::class.java)
 
                         try {
-                            Executors.newCachedThreadPool().execute {
-                                context.runOnUiThread {
-                                    holder.name.text = user.data.name
-                                    holder.description.text = getItem(position).description
-                                    Glide.with(context).load(user.data.face).skipMemoryCache(true)
-                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                        .placeholder(R.drawable.default_avatar).circleCrop()
-                                        .into(holder.icon)
-                                }
+                            MainScope().launch {
+                                holder.name.text = user.data.name
+                                holder.description.text = getItem(position).description
+                                Glide.with(context).load(user.data.face).skipMemoryCache(true)
+                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                    .placeholder(R.drawable.default_avatar).circleCrop()
+                                    .into(holder.icon)
                             }
+
                         } catch (e: OutOfMemoryError) {
 
                         }

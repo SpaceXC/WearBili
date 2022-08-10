@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
-import cn.spacexc.wearbili.activity.VideoActivity
-import cn.spacexc.wearbili.activity.VideoLongClickActivity
+import cn.spacexc.wearbili.activity.video.VideoActivity
+import cn.spacexc.wearbili.activity.video.VideoLongClickActivity
 import cn.spacexc.wearbili.dataclass.VideoRecommendItem
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import cn.spacexc.wearbili.utils.ToastUtils

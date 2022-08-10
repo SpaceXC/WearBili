@@ -16,6 +16,8 @@ import cn.spacexc.wearbili.dataclass.dynamic.Card
 import cn.spacexc.wearbili.manager.DynamicManager
 import cn.spacexc.wearbili.utils.ToastUtils
 import com.bumptech.glide.Glide
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import okhttp3.Call
 import java.io.IOException
 import java.util.concurrent.ExecutorService
@@ -82,25 +84,23 @@ class DynamicFragment : Fragment() {
         DynamicManager.getRecommendDynamics(object : DynamicManager.DynamicResponseCallback {
             override fun onFailed(call: Call, e: IOException) {
                 if (!isAdded) return
-                mThreadPool.execute {
-                    requireActivity().runOnUiThread {
-                        binding.swipeRefreshLayout.isRefreshing = false
+                MainScope().launch {
+                    binding.swipeRefreshLayout.isRefreshing = false
 
-                        ToastUtils.makeText("动态获取失败").show()
-                    }
+                    ToastUtils.makeText("动态获取失败").show()
                 }
+
             }
 
             override fun onSuccess(dynamicCards: List<Card>) {
                 if (!isAdded) return
 
-                mThreadPool.execute {
-                    requireActivity().runOnUiThread {
-                        binding.swipeRefreshLayout.isRefreshing = false
-                        //ToastUtils.makeText("动态获取成功$dynamicCards").show()
-                        adapter.submitList(dynamicCards.toMutableList())
-                    }
+                MainScope().launch {
+                    binding.swipeRefreshLayout.isRefreshing = false
+                    //ToastUtils.makeText("动态获取成功$dynamicCards").show()
+                    adapter.submitList(dynamicCards.toMutableList())
                 }
+
             }
 
         })
@@ -114,26 +114,22 @@ class DynamicFragment : Fragment() {
         }
         DynamicManager.getMoreDynamic(object : DynamicManager.DynamicResponseCallback {
             override fun onFailed(call: Call, e: IOException) {
-                if (!isAdded) return
 
-                mThreadPool.execute {
-                    requireActivity().runOnUiThread {
-                        //binding.swipeRefreshLayout.isRefreshing = false
-                        ToastUtils.makeText("动态获取失败").show()
-                    }
+                MainScope().launch {
+                    //binding.swipeRefreshLayout.isRefreshing = false
+                    ToastUtils.makeText("动态获取失败").show()
                 }
+
             }
 
             override fun onSuccess(dynamicCards: List<Card>) {
-                if (!isAdded) return
 
-                mThreadPool.execute {
-                    requireActivity().runOnUiThread {
-                        //binding.swipeRefreshLayout.isRefreshing = false
-                        //ToastUtils.makeText("动态获取成功$dynamicCards").show()
-                        adapter.submitList(adapter.currentList + dynamicCards.toMutableList())
-                    }
+                MainScope().launch {
+                    //binding.swipeRefreshLayout.isRefreshing = false
+                    //ToastUtils.makeText("动态获取成功$dynamicCards").show()
+                    adapter.submitList(adapter.currentList + dynamicCards.toMutableList())
                 }
+
             }
 
         })

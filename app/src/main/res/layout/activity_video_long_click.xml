@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:background="#000"
-    tools:context=".activity.VideoLongClickActivity">
+    tools:context=".activity.video.VideoLongClickActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

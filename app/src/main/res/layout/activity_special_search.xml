@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipChildren="false"
-    tools:context=".activity.SpecialSearchActivity">
+    tools:context=".activity.search.SpecialSearchActivity">
 
     <ImageView
         android:id="@+id/imageView17"

@@ -63,6 +63,7 @@
                 android:fontFamily="@font/puhui"
                 android:text="bishi yyds! bilibili yyds!bishi yyds! bilibili yyds!bishi yyds! bilibili yyds!bishi yyds! bilibili yyds!"
                 android:textColor="#fff"
+                android:textColorLink="#178bcf"
                 app:collapse_line_space_percent="30"
                 app:collapse_show_line_number="3"
                 app:collapse_text="  收起"

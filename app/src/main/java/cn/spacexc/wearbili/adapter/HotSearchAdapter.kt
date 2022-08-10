@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
-import cn.spacexc.wearbili.activity.SearchResultActivity
+import cn.spacexc.wearbili.activity.search.SearchResultActivity
 import cn.spacexc.wearbili.dataclass.HotSearchData
 import com.bumptech.glide.Glide
 

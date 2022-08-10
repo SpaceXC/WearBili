@@ -24,36 +24,45 @@
         android:theme="@style/Theme.WearBili"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".activity.welcome.StartActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.dynamic.DynamicDetailActivity"
+            android:exported="false" />
+
         <service
             android:name=".service.DownloadService"
             android:exported="false">
+
             <!-- This is needed for Scheduler -->
             <intent-filter>
                 <action android:name="com.google.android.exoplayer.downloadService.action.RESTART" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </service>
 
         <activity
-            android:name=".activity.QRCodeActivity"
+            android:name=".activity.other.QRCodeActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.SpecialSearchActivity"
+            android:name=".activity.search.SpecialSearchActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.ImageViewerActivity"
+            android:name=".activity.image.ImageViewerActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.WatchLaterActivity"
+            android:name=".activity.video.WatchLaterActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.HistoryActivity"
+            android:name=".activity.user.HistoryActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.SearchActivity"
+            android:name=".activity.search.SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.SplashScreenActivity"
+            android:name=".activity.other.SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -62,36 +71,47 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.VideoLongClickActivity"
+            android:name=".activity.video.VideoLongClickActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.AboutActivity"
+            android:name=".activity.other.AboutActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.VideoCacheActivity"
+            android:name=".activity.video.VideoCacheActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.ViewFullVideoPartsActivity"
+            android:name=".activity.video.ViewFullVideoPartsActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.PlayOnPhoneActivity"
+            android:name=".activity.video.PlayOnPhoneActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.MenuActivity"
+            android:name=".activity.other.MenuActivity"
             android:exported="false"
             android:theme="@style/Theme.WearBiliMenu" />
         <activity
-            android:name=".activity.VideoPlayerActivity"
+            android:name=".activity.video.VideoPlayerActivity"
             android:configChanges="orientation|screenSize"
             android:exported="true" />
         <activity
-            android:name=".activity.SearchResultActivity"
+            android:name=".activity.search.SearchResultActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <!-- 表示该页面可以被隐式调用，必须加上该项 -->
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="search"
+                    android:path="/result"
+                    android:scheme="wearbili" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.image.PhotoViewActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.PhotoViewActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.VideoActivity"
+            android:name=".activity.video.VideoActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -113,7 +133,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activity.user.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".activity.MainActivity"

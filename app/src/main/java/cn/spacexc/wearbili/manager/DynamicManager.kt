@@ -23,7 +23,7 @@ import java.io.IOException
  * 给！爷！写！注！释！
  *
  * -------有感而发：--------｜
- * 哇是谁发明了动态这种登si啊 ｜
+ * 哇是谁发明了动态这种登c啊 ｜
  * 十几种类型解析个*啊       ｜
  * 啊B还是不用整那么丰富啊喂  ｜
  * 现在data class才生成了4组｜
@@ -37,6 +37,7 @@ import java.io.IOException
  *
  * api来源（省的我找不到了）：https://github.com/SocialSisterYi/bilibili-API-collect/issues/109
  * 大爱易姐！
+ * 以及其他开源仓库的贡献者们！
  */
 
 object DynamicManager {
@@ -114,7 +115,7 @@ object DynamicManager {
                                 }
                             }
                         }*/
-                        val tempList = processWithDynamic(response.body?.string())
+                        val tempList = dynamicListProcessor(response.body?.string())
                         //Log.d(TAG, "onResponse: $tempList")
                         lastDynamicId = tempList[tempList.size - 1].desc.dynamic_id
                         callback.onSuccess(tempList)
@@ -190,7 +191,7 @@ object DynamicManager {
                                 }
                             }
                         }*/
-                        val tempList = processWithDynamic(response.body?.string())
+                        val tempList = dynamicListProcessor(response.body?.string())
                         //Log.d(TAG, "onResponse: $tempList")
                         lastDynamicId = tempList[tempList.size - 1].desc.dynamic_id
                         callback.onSuccess(tempList)
@@ -204,7 +205,14 @@ object DynamicManager {
             })
     }
 
-    fun processWithDynamic(response: String?): List<Card> {
+    fun getDynamicDetails(dynamicId: String, callback: Callback) {
+        NetworkUtils.getUrl(
+            "http://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail?dynamic_id=$dynamicId",
+            callback
+        )
+    }
+
+    fun dynamicListProcessor(response: String?): List<Card> {
         val result = Gson().fromJson(response, Dynamic::class.java)
         if (result.code != 0) {
             return emptyList()
@@ -260,6 +268,64 @@ object DynamicManager {
             }
         }
         return tempList
+    }
+
+    fun dynamicProcessor(dynamic: Card): Card? {
+        when (dynamic.desc.type) {
+            1 -> {
+                val card =
+                    Gson().fromJson(dynamic.card, ForwardShareCard::class.java)
+                when (dynamic.desc.orig_type) {
+                    1 -> {
+                        val orig = Gson().fromJson(
+                            card.origin,
+                            ForwardShareCard::class.java
+                        )
+                        card.originObj = orig
+                    }
+                    2 -> {
+                        val orig =
+                            Gson().fromJson(card.origin, ImageCard::class.java)
+                        card.originObj = orig
+                    }
+                    4 -> {
+                        val orig =
+                            Gson().fromJson(card.origin, TextCard::class.java)
+                        card.originObj = orig
+                    }
+                    8 -> {
+                        val orig =
+                            Gson().fromJson(card.origin, VideoCard::class.java)
+                        card.originObj = orig
+                    }
+                }
+                dynamic.cardObj = card
+                return dynamic
+            }
+            2 -> {
+                val card = Gson().fromJson(dynamic.card, ImageCard::class.java)
+                dynamic.cardObj = card
+                return dynamic
+            }
+            4 -> {
+                val card = Gson().fromJson(dynamic.card, TextCard::class.java)
+                dynamic.cardObj = card
+                return dynamic
+            }
+            8 -> {
+                val card = Gson().fromJson(dynamic.card, VideoCard::class.java)
+                dynamic.cardObj = card
+                return dynamic
+            }
+        }
+        return null
+    }
+
+    fun getCommentsByLikes(type: Int, dynamicId: Long, page: Int, callback: Callback) {
+        NetworkUtils.getUrl(
+            "https://api.bilibili.com/x/v2/reply/main?type=$type&oid=$dynamicId&sort=1&next=$page",
+            callback
+        )
     }
 
     interface DynamicResponseCallback {

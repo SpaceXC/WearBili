@@ -27,16 +27,26 @@ data class SelfUser(
     val silence: Int,
     val coins: Float,
     val vip: VIP,
-    val follower: Int
+    val follower: Int,
+    val pendant: Pendant
+)
+
+data class Pendant(
+    val expire: Int,
+    val image: String,
+    val image_enhance: String,
+    val image_enhance_frame: String,
+    val name: String,
+    val pid: Int
 )
 
 data class VIP(
-    val type : Int,
-    val status : Int,
-    val due_date : Long,
-    val label : VIPLabel,
-    val avatar_subscript : Int,
-    val nickname_color : String
+    val type: Int,
+    val status: Int,
+    val due_date: Long,
+    val label: VIPLabel,
+    val avatar_subscript: Int,
+    val nickname_color: String
 )
 
 data class VIPLabel(
@@ -280,7 +290,7 @@ data class CommentNotice(
 )
 data class CommentContentData(
     var rpid: Long,
-    var oid: Int,
+    var oid: Long,
     var type: Int,
     var mid: Long,
     var root: Int,
@@ -418,7 +428,7 @@ data class CommentContentData(
 
     data class Replies(
         var rpid: Long,
-        var oid: Int,
+        var oid: Long,
         var type: Int,
         var mid: Long,
         var root: Long,
@@ -582,9 +592,9 @@ data class CommentContentData(
 
     override fun hashCode(): Int {
         var result = rpid.hashCode()
-        result = 31 * result + oid
+        result = 31 * result + oid.hashCode()
         result = 31 * result + type
-        result = (31 * result + mid).toInt()
+        result = 31 * result + mid.hashCode()
         result = 31 * result + root
         result = 31 * result + parent
         result = 31 * result + dialog
@@ -593,24 +603,26 @@ data class CommentContentData(
         result = 31 * result + state
         result = 31 * result + fansgrade
         result = 31 * result + attr
-        result = (31 * result + ctime).toInt()
+        result = 31 * result + ctime.hashCode()
         result = 31 * result + rpid_str.hashCode()
         result = 31 * result + root_str.hashCode()
         result = 31 * result + parent_str.hashCode()
         result = 31 * result + like
         result = 31 * result + action
-        result = 31 * result + member.hashCode()
-        result = 31 * result + content.hashCode()
+        result = 31 * result + (member?.hashCode() ?: 0)
+        result = 31 * result + (content?.hashCode() ?: 0)
         result = 31 * result + assist
         result = 31 * result + folder.hashCode()
         result = 31 * result + up_action.hashCode()
         result = 31 * result + show_follow.hashCode()
         result = 31 * result + invisible.hashCode()
         result = 31 * result + reply_control.hashCode()
-        result = 31 * result + replies.contentHashCode()
+        result = 31 * result + (replies?.contentHashCode() ?: 0)
         result = 31 * result + card_label.contentHashCode()
+        result = 31 * result + is_top.hashCode()
         return result
     }
+
 }
 
 

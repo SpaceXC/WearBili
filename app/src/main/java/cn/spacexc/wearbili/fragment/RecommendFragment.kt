@@ -16,6 +16,7 @@ import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.utils.ToastUtils
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
@@ -33,7 +34,7 @@ class RecommendFragment : Fragment() {
 
     val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
 
-    var videoList : Array<VideoRecommendItem> = emptyArray()
+    var videoList: Array<VideoRecommendItem> = emptyArray()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,16 +80,15 @@ class RecommendFragment : Fragment() {
         getRecommendVideo(false)
     }
 
-    private fun getRecommendVideo(isRefresh : Boolean){
-        lifecycleScope.launch{
+    private fun getRecommendVideo(isRefresh: Boolean) {
+        lifecycleScope.launch {
             kotlin.runCatching {
-                VideoManager.getRecommendVideo(object : Callback{
+                VideoManager.getRecommendVideo(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
-                        mThreadPool.execute{
-                            requireActivity().runOnUiThread{
-                                binding.swipeRefreshLayout.isRefreshing = false
+                        MainScope().launch {
+                            binding.swipeRefreshLayout.isRefreshing = false
 
-                            }
+
                         }
                     }
 
@@ -96,24 +96,21 @@ class RecommendFragment : Fragment() {
                         val str = response.body?.string()
                         val videos = Gson().fromJson(str, VideoRecommend::class.java)
                         videoList += videos.data.item
-                        mThreadPool.execute{
-                            requireActivity().runOnUiThread{
-                                if(response.code == 200) {
-                                    binding.swipeRefreshLayout.isRefreshing = false
-                                    adapter.submitList(videoList.toList())
-                                    if (isRefresh) ToastUtils.makeText(
-                                        "小电视推荐了一批新内容"
-                                    ).show()
+                        MainScope().launch {
+                            if (response.code == 200) {
+                                binding.swipeRefreshLayout.isRefreshing = false
+                                adapter.submitList(videoList.toList())
+                                if (isRefresh) ToastUtils.makeText(
+                                    "小电视推荐了一批新内容"
+                                ).show()
+                            } else {
+                                ToastUtils.makeText(
+                                    "加载失败"
+                                ).show()
+                                binding.swipeRefreshLayout.isRefreshing = false
 
-                                }
-                                else{
-                                    ToastUtils.makeText(
-                                        "加载失败"
-                                    ).show()
-                                    binding.swipeRefreshLayout.isRefreshing = false
-
-                                }
                             }
+
                         }
 
 

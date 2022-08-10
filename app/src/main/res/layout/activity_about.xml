@@ -56,7 +56,7 @@
         android:layout_height="match_parent"
         android:fadingEdge="none"
         app:boxedEdges="all"
-        tools:context=".activity.AboutActivity">
+        tools:context=".activity.other.AboutActivity">
 
 
         <FrameLayout
@@ -120,7 +120,8 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerView4"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:nestedScrollingEnabled="false" />
 
                 </RelativeLayout>
 
@@ -182,7 +183,8 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerView1"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:nestedScrollingEnabled="false" />
 
                 </RelativeLayout>
 
@@ -295,7 +297,8 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerView2"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:nestedScrollingEnabled="false" />
 
                 </RelativeLayout>
 
@@ -313,7 +316,8 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerView3"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:nestedScrollingEnabled="false" />
 
                 </RelativeLayout>
 

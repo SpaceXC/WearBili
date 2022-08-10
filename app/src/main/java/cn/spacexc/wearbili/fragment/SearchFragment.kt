@@ -11,8 +11,8 @@ import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import cn.spacexc.wearbili.Application
-import cn.spacexc.wearbili.activity.SearchResultActivity
-import cn.spacexc.wearbili.activity.VideoActivity
+import cn.spacexc.wearbili.activity.search.SearchResultActivity
+import cn.spacexc.wearbili.activity.video.VideoActivity
 import cn.spacexc.wearbili.adapter.HotSearchAdapter
 import cn.spacexc.wearbili.databinding.ActivitySearchBinding
 import cn.spacexc.wearbili.dataclass.DefaultSearchContent
@@ -21,6 +21,8 @@ import cn.spacexc.wearbili.manager.SearchManager
 import cn.spacexc.wearbili.utils.ToastUtils
 import cn.spacexc.wearbili.utils.VideoUtils
 import com.google.gson.Gson
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
@@ -85,32 +87,29 @@ class SearchFragment : Fragment() {
     private fun getDefaultSearchContent() {
         SearchManager.getDefaultSearchContent(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                if (isAdded) {
-                    mThreadPool.execute {
-                        requireActivity().runOnUiThread {
-                            ToastUtils.makeText(
-                                "热搜获取失败"
-                            ).show()
-                        }
-                    }
+                MainScope().launch {
+                    ToastUtils.makeText(
+                        "网络异常   "
+                    ).show()
                 }
+
+
             }
 
             override fun onResponse(call: Call, response: Response) {
-                if (isAdded) {
-                    mThreadPool.execute {
-                        requireActivity().runOnUiThread {
-                            val result =
-                                Gson().fromJson(
-                                    response.body?.string(),
-                                    DefaultSearchContent::class.java
-                                )
-                            binding.keywordInput.hint = result.data.show_name
-                            defaultContent = result.data.show_name
-                            defaultType = result.data.goto_type
-                            defaultVideoAv = result.data.goto_value
-                        }
+                MainScope().launch {
+                    kotlin.runCatching {
+                        val result =
+                            Gson().fromJson(
+                                response.body?.string(),
+                                DefaultSearchContent::class.java
+                            )
+                        binding.keywordInput.hint = result.data.show_name
+                        defaultContent = result.data.show_name
+                        defaultType = result.data.goto_type
+                        defaultVideoAv = result.data.goto_value
                     }
+
                 }
             }
 
@@ -120,30 +119,25 @@ class SearchFragment : Fragment() {
     private fun getHotSearch() {
         SearchManager.getHotSearch(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                if (isAdded) {
-                    mThreadPool.execute {
-                        requireActivity().runOnUiThread {
-                            ToastUtils.makeText(
-                                "热搜获取失败"
-                            ).show()
-                        }
-                    }
+                MainScope().launch {
+                    ToastUtils.makeText(
+                        "热搜获取失败"
+                    ).show()
                 }
+
 
             }
 
             override fun onResponse(call: Call, response: Response) {
-                if (isAdded) {
-                    mThreadPool.execute {
-                        requireActivity().runOnUiThread {
-                            val result =
-                                Gson().fromJson(response.body?.string(), HotSearch::class.java)
-                            adapter.submitList(result.list)
-                        }
+                MainScope().launch {
+                    kotlin.runCatching {
+                        val result =
+                            Gson().fromJson(response.body?.string(), HotSearch::class.java)
+                        adapter.submitList(result.list)
                     }
+
                 }
             }
-
         })
     }
 

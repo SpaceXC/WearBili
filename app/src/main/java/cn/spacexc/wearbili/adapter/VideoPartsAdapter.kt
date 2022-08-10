@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
-import cn.spacexc.wearbili.activity.VideoPlayerActivity
+import cn.spacexc.wearbili.activity.video.VideoPlayerActivity
 import cn.spacexc.wearbili.dataclass.VideoPagesData
 
 /**
@@ -48,6 +48,7 @@ class VideoPartsAdapter(val bvid: String) :
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             intent.putExtra("videoCid", getItem(position).cid)
             intent.putExtra("videoBvid", bvid)
+            intent.putExtra("videoTitle", "P${position + 1} - ${getItem(position).part}")
             Application.getContext().startActivity(intent)
         }
     }

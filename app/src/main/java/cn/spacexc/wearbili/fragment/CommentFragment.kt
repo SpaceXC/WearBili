@@ -10,7 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
-import cn.spacexc.wearbili.activity.VideoActivity
+import cn.spacexc.wearbili.activity.video.VideoActivity
 import cn.spacexc.wearbili.adapter.CommentAdapter
 import cn.spacexc.wearbili.databinding.FragmentCommentBinding
 import cn.spacexc.wearbili.dataclass.CommentContentData
@@ -18,6 +18,8 @@ import cn.spacexc.wearbili.dataclass.VideoComment
 import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.utils.ToastUtils
 import com.google.gson.Gson
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
@@ -33,12 +35,12 @@ class CommentFragment : Fragment() {
 
     val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
 
-    var page : Int = 1
+    var page: Int = 1
 
     val adapter = CommentAdapter(lifecycleScope, Application.context!!)
     private val layoutManager = LinearLayoutManager(Application.getContext())
 
-    var prevList : MutableList<CommentContentData>? = null
+    var prevList: MutableList<CommentContentData>? = null
 
 
     init {
@@ -92,15 +94,14 @@ class CommentFragment : Fragment() {
                 object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
                         if (isAdded) {
-                            mThreadPool.execute {
-                                requireActivity().runOnUiThread {
-                                    binding.swipeRefreshLayout.isRefreshing = false
-                                    ToastUtils.makeText(
-                                        "评论加载失败啦"
-                                    )
-                                        .show()
-                                }
+                            MainScope().launch {
+                                binding.swipeRefreshLayout.isRefreshing = false
+                                ToastUtils.makeText(
+                                    "评论加载失败啦"
+                                )
+                                    .show()
                             }
+
                         }
                     }
 

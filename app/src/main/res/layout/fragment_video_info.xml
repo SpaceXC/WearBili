@@ -258,6 +258,7 @@
                 android:id="@+id/recyclerViewParts"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:nestedScrollingEnabled="false"
                 android:visibility="gone"
                 app:layout_constraintHeight_max="160dp"
                 app:layout_constraintStart_toStartOf="@+id/videoDesc"
@@ -453,7 +454,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp">
+                    android:layout_marginEnd="10dp"
+                    android:nestedScrollingEnabled="false">
 
                 </androidx.recyclerview.widget.RecyclerView>
             </RelativeLayout>

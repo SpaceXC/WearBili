@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
-import cn.spacexc.wearbili.activity.VideoActivity
+import cn.spacexc.wearbili.activity.video.VideoActivity
 import cn.spacexc.wearbili.dataclass.VideoSearch
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import com.bumptech.glide.Glide
