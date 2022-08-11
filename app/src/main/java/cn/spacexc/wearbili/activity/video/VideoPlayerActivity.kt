@@ -27,6 +27,7 @@ import cn.spacexc.wearbili.viewmodel.OnSeekCompleteListener
 import cn.spacexc.wearbili.viewmodel.PlayerStatus
 import cn.spacexc.wearbili.viewmodel.VideoPlayerViewModel
 import com.google.gson.Gson
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -46,8 +47,6 @@ import okhttp3.Callback
 import okhttp3.Response
 import java.io.ByteArrayOutputStream
 import java.io.IOException
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 import java.util.zip.Inflater
 
 class VideoPlayerActivity : AppCompatActivity() {
@@ -55,7 +54,6 @@ class VideoPlayerActivity : AppCompatActivity() {
 
     private var isLoadingPanelShowed = false
 
-    val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
 
     val viewModel by viewModels<VideoPlayerViewModel>()
 
@@ -78,14 +76,13 @@ class VideoPlayerActivity : AppCompatActivity() {
 
                 @SuppressLint("SetTextI18n")
                 override fun onResponse(call: Call, response: Response) {
-                    mThreadPool.execute {
-                        this@VideoPlayerActivity.runOnUiThread {
-                            val info = Gson().fromJson(
-                                response.body?.string(),
-                                OnlineInfos::class.java
-                            )
-                            binding.onlineCount.text = "${info.data.total}人在看"
-                        }
+                    MainScope().launch {
+                        val info = Gson().fromJson(
+                            response.body?.string(),
+                            OnlineInfos::class.java
+                        )
+                        binding.onlineCount.text = "${info.data.total}人在看"
+
                     }
                 }
 
@@ -295,13 +292,12 @@ class VideoPlayerActivity : AppCompatActivity() {
 
         VideoManager.getDanmaku(videoCid, object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                mThreadPool.execute {
-                    this@VideoPlayerActivity.runOnUiThread {
-                        ToastUtils.makeText(
-                            "加载弹幕失败！"
-                        ).show()
-                        binding.loadingStatText.text = "${binding.loadingStatText.text}\n弹幕加载失败"
-                    }
+                MainScope().launch {
+                    ToastUtils.makeText(
+                        "加载弹幕失败！"
+                    ).show()
+                    binding.loadingStatText.text = "${binding.loadingStatText.text}\n弹幕加载失败"
+
                 }
             }
 
@@ -315,14 +311,13 @@ class VideoPlayerActivity : AppCompatActivity() {
                     Log.d(Application.getTag(), "onResponse: ${String(danmakuIs)}")
                 } catch (e: IllegalDataException) {
                     e.printStackTrace()
-                    mThreadPool.execute {
-                        this@VideoPlayerActivity.runOnUiThread {
-                            ToastUtils.makeText(
-                                "加载弹幕失败！"
-                            ).show()
-                            binding.loadingStatText.text = "${binding.loadingStatText.text}\n弹幕加载失败"
+                    MainScope().launch {
+                        ToastUtils.makeText(
+                            "加载弹幕失败！"
+                        ).show()
+                        binding.loadingStatText.text = "${binding.loadingStatText.text}\n弹幕加载失败"
 
-                        }
+
                     }
                 }
                 val danmukuParser = BiliDanmukuParser()
@@ -342,31 +337,29 @@ class VideoPlayerActivity : AppCompatActivity() {
                         //-----------弹幕相关区域⬆️️️️-----------
 
                         //-----------视频相关区域⬇️-----------
-                        mThreadPool.execute {
-                            this@VideoPlayerActivity.runOnUiThread {
-                                binding.loadingStatText.text =
-                                    "${binding.loadingStatText.text}\n视频正在加载中...马上就好！"
+                        MainScope().launch {
+                            binding.loadingStatText.text =
+                                "${binding.loadingStatText.text}\n视频正在加载中...马上就好！"
 
-                            }
+
                         }
 
                         VideoManager.getVideoUrl(videoBvid, videoCid, object : Callback {
                             override fun onFailure(call: Call, e: IOException) {
-                                mThreadPool.execute {
-                                    this@VideoPlayerActivity.runOnUiThread {
-                                        ToastUtils.makeText(
-                                            "加载视频失败！"
-                                        ).show()
-                                        binding.loadingStatText.text =
-                                            "${binding.loadingStatText.text}\n视频加载失败"
+                                MainScope().launch {
+                                    ToastUtils.makeText(
+                                        "加载视频失败！"
+                                    ).show()
+                                    binding.loadingStatText.text =
+                                        "${binding.loadingStatText.text}\n视频加载失败"
 
-                                    }
+
                                 }
                             }
 
                             override fun onResponse(call: Call, response: Response) {
                                 val responseString = response.body?.string()
-                                mThreadPool.execute {
+                                MainScope().launch {
                                     val videoUrls: VideoStreamsFlv = Gson().fromJson(
                                         responseString,
                                         VideoStreamsFlv::class.java

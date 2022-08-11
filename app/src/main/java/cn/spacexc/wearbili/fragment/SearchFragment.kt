@@ -27,8 +27,6 @@ import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 import kotlin.math.pow
 
 
@@ -38,8 +36,6 @@ class SearchFragment : Fragment() {
 
     val adapter: HotSearchAdapter = HotSearchAdapter()
 
-
-    val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
 
     var currentPage: Int = 1
 

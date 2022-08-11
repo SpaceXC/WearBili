@@ -22,8 +22,6 @@ import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
 
 class RecommendFragment : Fragment() {
@@ -32,7 +30,6 @@ class RecommendFragment : Fragment() {
 
     lateinit var adapter: VideoRecommendListAdapter
 
-    val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
 
     var videoList: Array<VideoRecommendItem> = emptyArray()
 

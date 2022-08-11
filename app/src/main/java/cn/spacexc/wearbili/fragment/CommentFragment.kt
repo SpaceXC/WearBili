@@ -24,16 +24,12 @@ import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
 class CommentFragment : Fragment() {
 
     private var _binding: FragmentCommentBinding? = null
     private val binding get() = _binding!!
 
-
-    val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
 
     var page: Int = 1
 
@@ -109,60 +105,58 @@ class CommentFragment : Fragment() {
                         val comments =
                             Gson().fromJson(response.body?.string(), VideoComment::class.java)
                         if (isAdded) {
-                            mThreadPool.execute {
-                                (activity as VideoActivity).runOnUiThread {
-                                    if (comments.code == 0) {
+                            MainScope().launch {
+                                if (comments.code == 0) {
 
-                                        val replies: MutableList<CommentContentData> =
-                                            comments.data.replies?.toMutableList()
-                                                ?: mutableListOf()
-                                        if (replies != prevList) {
-                                            prevList = replies
-                                            if (comments.data.top.member != null && comments.data.top.content != null) {
-                                                val top = comments.data.top
-                                                top.is_top = true
-                                                replies.remove(comments.data.top)
-                                                val topList = mutableListOf(top)
+                                    val replies: MutableList<CommentContentData> =
+                                        comments.data.replies?.toMutableList()
+                                            ?: mutableListOf()
+                                    if (replies != prevList) {
+                                        prevList = replies
+                                        if (comments.data.top.member != null && comments.data.top.content != null) {
+                                            val top = comments.data.top
+                                            top.is_top = true
+                                            replies.remove(comments.data.top)
+                                            val topList = mutableListOf(top)
 
-                                                val finalList = topList + replies
-                                                adapter.submitList(finalList)
-                                            } else {
-                                                adapter.submitList(adapter.currentList + replies)
-
-                                            }
-                                            page++
-                                            binding.swipeRefreshLayout.isRefreshing = false
+                                            val finalList = topList + replies
+                                            adapter.submitList(finalList)
                                         } else {
-                                            //ToastUtils.makeText(requireContext(), "再怎么翻都没有啦", Toast.LENGTH_SHORT).show()
+                                            adapter.submitList(adapter.currentList + replies)
+
                                         }
+                                        page++
+                                        binding.swipeRefreshLayout.isRefreshing = false
+                                    } else {
+                                        //ToastUtils.makeText(requireContext(), "再怎么翻都没有啦", Toast.LENGTH_SHORT).show()
+                                    }
 
 
-                                        /*if(comments.data.cursor.is_begin){
-                                            val replies : MutableList<CommentContentData> = comments.data.replies.toMutableList()
+                                    /*if(comments.data.cursor.is_begin){
+                                        val replies : MutableList<CommentContentData> = comments.data.replies.toMutableList()
 
-                                            if(comments.data.top_replies != null){
-                                                val top = mutableListOf(comments.data.top_replies)
-                                                replies.remove(comments.data.top_replies)
-                                                adapter.submitList(top + replies)
-                                            }
-                                            else{
-                                                adapter.submitList(replies)
-
-                                            }
-
-            //                                println(adapter.currentList)
+                                        if(comments.data.top_replies != null){
+                                            val top = mutableListOf(comments.data.top_replies)
+                                            replies.remove(comments.data.top_replies)
+                                            adapter.submitList(top + replies)
                                         }
                                         else{
-                                            if(comments.data.cursor.is_end) isEnd = true
-                                            adapter.submitList(adapter.currentList + comments.data.replies)
-                                        }*/
+                                            adapter.submitList(replies)
 
-                                    } else {
-                                        binding.swipeRefreshLayout.isRefreshing = false
-                                        ToastUtils.makeText(
-                                            "评论加载失败啦"
-                                        ).show()
+                                        }
+
+        //                                println(adapter.currentList)
                                     }
+                                    else{
+                                        if(comments.data.cursor.is_end) isEnd = true
+                                        adapter.submitList(adapter.currentList + comments.data.replies)
+                                    }*/
+
+                                } else {
+                                    binding.swipeRefreshLayout.isRefreshing = false
+                                    ToastUtils.makeText(
+                                        "评论加载失败啦"
+                                    ).show()
                                 }
                             }
                         }

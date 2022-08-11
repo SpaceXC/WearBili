@@ -20,14 +20,13 @@ import cn.spacexc.wearbili.utils.TimeUtils
 import cn.spacexc.wearbili.utils.ToastUtils
 import cn.spacexc.wearbili.utils.VideoUtils
 import com.google.gson.Gson
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 import kotlin.math.pow
 
 class SearchActivity : AppCompatActivity() {
@@ -35,8 +34,6 @@ class SearchActivity : AppCompatActivity() {
 
     val adapter: HotSearchAdapter = HotSearchAdapter()
 
-
-    val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
 
     var defaultContent = ""
     var defaultType: Int? = null
@@ -107,31 +104,28 @@ class SearchActivity : AppCompatActivity() {
     private fun getDefaultSearchContent() {
         SearchManager.getDefaultSearchContent(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                mThreadPool.execute {
-                    this@SearchActivity.runOnUiThread {
-                        ToastUtils.makeText(
-                            "热搜获取失败"
-                        ).show()
-                    }
+                MainScope().launch {
+                    ToastUtils.makeText(
+                        "热搜获取失败"
+                    ).show()
 
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
-                mThreadPool.execute {
-                    this@SearchActivity.runOnUiThread {
-                        try {
-                            val result =
-                                Gson().fromJson(
-                                    response.body?.string(),
-                                    DefaultSearchContent::class.java
-                                )
-                            binding.keywordInput.hint = result.data.show_name
-                            defaultContent = result.data.show_name
-                            defaultType = result.data.goto_type
-                            defaultVideoAv = result.data.goto_value
-                        } catch (e: Exception) {
-                        }
+                MainScope().launch {
+                    try {
+                        val result =
+                            Gson().fromJson(
+                                response.body?.string(),
+                                DefaultSearchContent::class.java
+                            )
+                        binding.keywordInput.hint = result.data.show_name
+                        defaultContent = result.data.show_name
+                        defaultType = result.data.goto_type
+                        defaultVideoAv = result.data.goto_value
+                    } catch (e: Exception) {
+
                     }
                 }
 
@@ -143,12 +137,11 @@ class SearchActivity : AppCompatActivity() {
     private fun getHotSearch() {
         SearchManager.getHotSearch(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                mThreadPool.execute {
-                    this@SearchActivity.runOnUiThread {
-                        ToastUtils.makeText(
-                            "热搜获取失败"
-                        ).show()
-                    }
+                MainScope().launch {
+                    ToastUtils.makeText(
+                        "热搜获取失败"
+                    ).show()
+
                 }
 
 
@@ -156,12 +149,11 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call, response: Response) {
 
-                mThreadPool.execute {
-                    this@SearchActivity.runOnUiThread {
-                        val result =
-                            Gson().fromJson(response.body?.string(), HotSearch::class.java)
-                        adapter.submitList(result.list)
-                    }
+                MainScope().launch {
+                    val result =
+                        Gson().fromJson(response.body?.string(), HotSearch::class.java)
+                    adapter.submitList(result.list)
+
                 }
 
             }

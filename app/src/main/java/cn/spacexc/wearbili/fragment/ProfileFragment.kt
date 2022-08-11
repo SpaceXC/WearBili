@@ -31,21 +31,20 @@ import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
 
 class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
-    val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
+
 
     //个人页按钮
     private val buttonList = listOf(
-        //RoundButtonData(R.drawable.ic_outline_person_add_alt_1_24, "我的关注", "我的关注"),
+        RoundButtonData(R.drawable.ic_outline_person_add_alt_1_24, "我的关注", "我的关注"),
         RoundButtonData(R.drawable.ic_baseline_update_24, "历史记录", "历史记录"),
         RoundButtonData(R.drawable.ic_baseline_play_circle_outline_24, "稍后再看", "稍后再看"),
         RoundButtonData(R.drawable.ic_round_star_border_24, "个人收藏", "个人收藏"),
+        RoundButtonData(R.drawable.chat_bubble, "我的消息", "我的消息"),
         RoundButtonData(R.drawable.cloud_download, "离线缓存", "离线缓存"),
         //RoundButtonData(R.drawable.ic_outline_settings_24, "应用设置", "应用设置")
     )

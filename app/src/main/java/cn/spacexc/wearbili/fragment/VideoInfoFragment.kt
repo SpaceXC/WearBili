@@ -55,14 +55,11 @@ import okhttp3.Callback
 import okhttp3.Response
 import java.io.File
 import java.io.IOException
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
 class VideoInfoFragment : Fragment() {
     private var _binding: FragmentVideoInfoBinding? = null
     private val binding get() = _binding!!
 
-    val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
 
     var bvid: String? = ""
     var cid = 0L

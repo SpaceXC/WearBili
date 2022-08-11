@@ -15,6 +15,7 @@ import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.utils.ToastUtils
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.Call
@@ -23,17 +24,15 @@ import okhttp3.Response
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
 class SearchResultActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchResultBinding
-    val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
+
 
     lateinit var adapter: SearchResultAdapter
     private val layoutManager = LinearLayoutManager(this)
 
-    var currentPage : Int = 1
+    var currentPage: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,49 +73,47 @@ class SearchResultActivity : AppCompatActivity() {
         searchVideo()
     }
 
-    private fun searchVideo(){
+    private fun searchVideo() {
         Log.d(Application.getTag(), "searchVideo: $currentPage")
         val keyword = getKeyword()
 
-        VideoManager.searchVideo(keyword!!, currentPage, object : Callback{
+        VideoManager.searchVideo(keyword!!, currentPage, object : Callback {
 
 
             override fun onFailure(call: Call, e: IOException) {
-                mThreadPool.execute {
-                    this@SearchResultActivity.runOnUiThread {
-                        ToastUtils.makeText("搜索失败了")
-                            .show()
-                    }
+                MainScope().launch {
+                    ToastUtils.makeText("搜索失败了")
+                        .show()
+
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 val result = Gson().fromJson(response.body?.string(), VideoSearch::class.java)
-                mThreadPool.execute {
-                    this@SearchResultActivity.runOnUiThread {
-                        binding.pageName.text = "搜索结果 (${result.data.numResults})"
-                        if (result.code == 0) {
-                            if (currentPage <= 50) {
-                                adapter.submitList(adapter.currentList + result.data.result!!)
-                                binding.swipeRefreshLayout.isRefreshing = false
-                                currentPage++
+                MainScope().launch {
+                    binding.pageName.text = "搜索结果 (${result.data.numResults})"
+                    if (result.code == 0) {
+                        if (currentPage <= 50) {
+                            adapter.submitList(adapter.currentList + result.data.result!!)
+                            binding.swipeRefreshLayout.isRefreshing = false
+                            currentPage++
 
-                            } else {
-                                binding.swipeRefreshLayout.isRefreshing = false
-                                ToastUtils.makeText(
-                                    "搜索到底了"
-                                ).show()
-
-                            }
                         } else {
                             binding.swipeRefreshLayout.isRefreshing = false
                             ToastUtils.makeText(
-                                "搜索失败了"
-                            )
-                                .show()
+                                "搜索到底了"
+                            ).show()
+
                         }
+                    } else {
+                        binding.swipeRefreshLayout.isRefreshing = false
+                        ToastUtils.makeText(
+                            "搜索失败了"
+                        )
+                            .show()
                     }
                 }
+
 
             }
 

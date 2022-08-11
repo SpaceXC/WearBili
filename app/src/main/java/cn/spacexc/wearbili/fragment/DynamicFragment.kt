@@ -20,8 +20,6 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import okhttp3.Call
 import java.io.IOException
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
 
 class DynamicFragment : Fragment() {
@@ -29,7 +27,6 @@ class DynamicFragment : Fragment() {
     private val binding get() = _binding!!
 
 
-    val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
     lateinit var adapter: DynamicAdapter
 
     init {

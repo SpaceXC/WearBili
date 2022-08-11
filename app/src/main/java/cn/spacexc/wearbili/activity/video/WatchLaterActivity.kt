@@ -17,16 +17,16 @@ import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.utils.TimeUtils
 import cn.spacexc.wearbili.utils.ToastUtils
 import com.google.gson.Gson
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
 class WatchLaterActivity : AppCompatActivity() {
-    val mThreadPool: ExecutorService = Executors.newCachedThreadPool()
+
     val adapter = WatchLaterAdapter(this)
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var pageName: TextView
@@ -64,26 +64,24 @@ class WatchLaterActivity : AppCompatActivity() {
                 val video = adapter.currentList[viewHolder.absoluteAdapterPosition]
                 UserManager.deleteVideoFromWatchLater(video.aid, object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
-                        mThreadPool.execute {
-                            this@WatchLaterActivity.runOnUiThread {
-                                ToastUtils.makeText(
-                                    "网络异常"
-                                )
-                                    .show()
-                            }
+                        MainScope().launch {
+                            ToastUtils.makeText(
+                                "网络异常"
+                            )
+                                .show()
+
                         }
                     }
 
                     override fun onResponse(call: Call, response: Response) {
-                        mThreadPool.execute {
-                            this@WatchLaterActivity.runOnUiThread {
-                                ToastUtils.makeText(
-                                    "删除成功"
-                                )
-                                    .show()
-                                swipeRefreshLayout.isRefreshing = true
-                                getWatchLater()
-                            }
+                        MainScope().launch {
+                            ToastUtils.makeText(
+                                "删除成功"
+                            )
+                                .show()
+                            swipeRefreshLayout.isRefreshing = true
+                            getWatchLater()
+
                         }
                     }
 
@@ -97,23 +95,21 @@ class WatchLaterActivity : AppCompatActivity() {
         if (UserManager.isLoggedIn()) {
             UserManager.getWatchLater(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
-                    mThreadPool.execute {
-                        this@WatchLaterActivity.runOnUiThread {
-                            swipeRefreshLayout.isRefreshing = false
-                            ToastUtils.makeText("网络异常")
-                                .show()
-                        }
+                    MainScope().launch {
+                        swipeRefreshLayout.isRefreshing = false
+                        ToastUtils.makeText("网络异常")
+                            .show()
+
                     }
                 }
 
                 override fun onResponse(call: Call, response: Response) {
                     val result = Gson().fromJson(response.body?.string(), WatchLater::class.java)
-                    mThreadPool.execute {
-                        this@WatchLaterActivity.runOnUiThread {
-                            swipeRefreshLayout.isRefreshing = false
-                            adapter.submitList(result.data.list)
-                            pageName.text = "稍后再看(${result.data.count})"
-                        }
+                    MainScope().launch {
+                        swipeRefreshLayout.isRefreshing = false
+                        adapter.submitList(result.data.list)
+                        pageName.text = "稍后再看(${result.data.count})"
+
                     }
                 }
             })

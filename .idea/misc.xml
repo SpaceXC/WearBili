@@ -13,6 +13,7 @@
         <entry key="app/src/main/res/drawable-v24/reply.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable-v24/volunteer_activism.xml" value="0.201" />
         <entry key="app/src/main/res/drawable-v24/warning.xml" value="0.2795" />
+        <entry key="app/src/main/res/drawable-xhdpi/chat_bubble.xml" value="0.255" />
         <entry key="app/src/main/res/drawable/background_button.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/background_card_view.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/background_card_view_no_corner.xml" value="0.2795" />
