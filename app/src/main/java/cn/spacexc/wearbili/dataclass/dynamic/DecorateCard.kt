@@ -12,7 +12,7 @@ data class DecorateCard(
     val item_id: Int,
     val item_type: Int,
     val jump_url: String,
-    val mid: Int,
+    val mid: Long,
     val name: String,
     val uid: Int
 )

@@ -14,6 +14,6 @@ data class ReserveAttachCard(
     val stype: Int,
     val title: String,
     val type: String,
-    val up_mid: Int,
+    val up_mid: Long,
     val user_info: UserInfo
 )

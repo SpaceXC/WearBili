@@ -12,7 +12,7 @@ data class Info(
     val intro: String,
     val like_state: Int,
     val media_count: Int,
-    val mid: Int,
+    val mid: Long,
     val mtime: Int,
     val state: Int,
     val title: String,

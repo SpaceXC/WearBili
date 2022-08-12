@@ -5,7 +5,7 @@ data class UserLiveRoom(
     val cover: String,
     val liveStatus: Int,
     val roomStatus: Int,
-    val roomid: Int,
+    val roomid: Long,
     val roundStatus: Int,
     val title: String,
     val url: String,
