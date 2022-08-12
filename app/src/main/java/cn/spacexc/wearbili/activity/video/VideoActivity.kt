@@ -74,7 +74,7 @@ class VideoActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         // 获取到Activity下的Fragment
-        val fragments = supportFragmentManager.fragments ?: return
+        val fragments = supportFragmentManager.fragments
         // 查找在Fragment中onRequestPermissionsResult方法并调用
         for (fragment in fragments) {
             fragment?.onRequestPermissionsResult(requestCode, permissions, grantResults)

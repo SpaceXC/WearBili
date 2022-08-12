@@ -69,6 +69,35 @@ object UserManager {
         return true
     }
 
+    fun getStarFolderData(id: Long, callback: Callback) {
+        NetworkUtils.getUrl("http://api.bilibili.com/x/v3/fav/folder/info?media_id=$id", callback)
+    }
+
+    fun getStarFolderList(callback: Callback) {
+        NetworkUtils.getUrl(
+            "https://api.bilibili.com/x/v3/fav/folder/created/list-all?up_mid=${getUid()}&jsonp=jsonp",
+            callback
+        )
+    }
+
+    fun getStarFolderItemList(folderId: Long, page: Int, callback: Callback) {
+        NetworkUtils.getUrl(
+            "https://api.bilibili.com/x/v3/fav/resource/list?media_id=$folderId&pn=$page&ps=20&order=mtime&type=2&platform=web",
+            callback
+        )
+    }
+
+    fun getFollowGroups(callback: Callback) {
+        NetworkUtils.getUrl("https://api.bilibili.com/x/relation/tags", callback)
+    }
+
+    fun getFollowedUserByGroup(groupId: Int, page: Int, callback: Callback) {
+        NetworkUtils.getUrl(
+            "https://api.bilibili.com/x/relation/tag?tagid=$groupId&pn=$page",
+            callback
+        )
+    }
+
     //@Throws(IOException::class)
     /*fun saveAccessKey(cookie: String?): String? {
         try {

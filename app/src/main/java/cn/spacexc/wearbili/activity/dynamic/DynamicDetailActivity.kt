@@ -190,6 +190,8 @@ class DynamicDetailActivity : AppCompatActivity() {
                                     }
                                 }.start()
                             }
+                            binding.replies.text =
+                                "回复(${(card.cardObj as VideoCard).stat.reply.toShortChinese()})"
                             binding.recyclerView.visibility = View.VISIBLE
                             binding.recyclerView.layoutManager =
                                 LinearLayoutManager(this@DynamicDetailActivity)

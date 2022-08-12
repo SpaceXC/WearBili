@@ -34,17 +34,15 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="-10dp"
-                android:layout_marginEnd="6dp"
-                android:layout_marginBottom="-10dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="4dp"
                 android:adjustViewBounds="true"
                 android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="@+id/listVideoTitle"
                 app:layout_constraintDimensionRatio="16:10"
                 app:layout_constraintEnd_toStartOf="@+id/guideline2"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/listVideoTitle"
+                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/placeholder" />
 
             <androidx.constraintlayout.widget.Guideline
@@ -118,7 +116,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:layout_marginTop="6dp"
                 android:layout_marginEnd="10dp"
                 android:ellipsize="end"
                 android:fontFamily="@font/puhui_medium"
@@ -126,9 +123,10 @@
                 android:lines="3"
                 android:textColor="#fff"
                 android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/listCover"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/listCover"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="@+id/guideline2"
+                app:layout_constraintTop_toTopOf="@+id/listCover" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

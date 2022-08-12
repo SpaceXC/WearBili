@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.dataclass.dynamic.dynamicimage.card.Picture
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.chrisbanes.photoview.PhotoView
 
 /**
@@ -41,8 +40,11 @@ class ImageViewerAdapter(val context: Context) :
 
     override fun onBindViewHolder(holder: ImageViewerViewHolder, position: Int) {
         try {
-            Glide.with(context).load(getItem(position).img_src).skipMemoryCache(true)
-                .diskCacheStrategy(DiskCacheStrategy.NONE).into(holder.photoView)
+            Glide.with(context).load(getItem(position).img_src)
+                /*.listener(object : RequestListener<Drawable> {
+
+                })*/
+                .into(holder.photoView)
         } catch (e: OutOfMemoryError) {
 
         }

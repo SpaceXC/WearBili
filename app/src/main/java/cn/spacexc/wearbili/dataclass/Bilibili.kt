@@ -186,7 +186,7 @@ data class VideoSearch(
     var code: Int,
     var message: String,
     var ttl: Int,
-    var data: SearchData
+    var data: SearchData?
 ) {
     data class SearchData(
         var seid: String,

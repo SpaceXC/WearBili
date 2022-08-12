@@ -10,8 +10,12 @@ class PhotoViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_photo_view)
-        val photoView : PhotoView = findViewById(R.id.photoView)
+        val photoView: PhotoView = findViewById(R.id.photoView)
         val url = intent.getStringExtra("imageUrl")
         Glide.with(this).load(url).into(photoView)
+        photoView.setOnLongClickListener {
+            finish()
+            false
+        }
     }
 }

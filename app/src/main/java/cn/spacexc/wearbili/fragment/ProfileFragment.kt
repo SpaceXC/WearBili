@@ -12,7 +12,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
+import cn.spacexc.wearbili.activity.user.FollowListActivity
 import cn.spacexc.wearbili.activity.user.LoginActivity
+import cn.spacexc.wearbili.activity.user.StaredActivity
 import cn.spacexc.wearbili.activity.video.VideoCacheActivity
 import cn.spacexc.wearbili.activity.video.WatchLaterActivity
 import cn.spacexc.wearbili.adapter.ButtonsAdapter
@@ -72,11 +74,17 @@ class ProfileFragment : Fragment() {
             ButtonsAdapter(false, object : OnItemViewClickListener {
                 override fun onClick(buttonName: String) {
                     when (buttonName) {
+                        "我的关注" -> {
+                            if (isAdded) {
+                                val intent =
+                                    Intent(requireContext(), FollowListActivity::class.java)
+                                startActivity(intent)
+                            }
+                        }
                         "离线缓存" -> {
                             if (isAdded) {
                                 val intent =
                                     Intent(requireContext(), VideoCacheActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                 startActivity(intent)
                             }
                         }
@@ -84,7 +92,13 @@ class ProfileFragment : Fragment() {
                             if (isAdded) {
                                 val intent =
                                     Intent(requireContext(), WatchLaterActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                startActivity(intent)
+                            }
+                        }
+                        "个人收藏" -> {
+                            if (isAdded) {
+                                val intent =
+                                    Intent(requireContext(), StaredActivity::class.java)
                                 startActivity(intent)
                             }
                         }

@@ -89,12 +89,13 @@ class SearchResultActivity : AppCompatActivity() {
             }
 
             override fun onResponse(call: Call, response: Response) {
-                val result = Gson().fromJson(response.body?.string(), VideoSearch::class.java)
+                val responseStr = response.body?.string()
+                val result = Gson().fromJson(responseStr, VideoSearch::class.java)
                 MainScope().launch {
-                    binding.pageName.text = "搜索结果 (${result.data.numResults})"
+                    binding.pageName.text = "搜索结果 (${result.data?.numResults})"
                     if (result.code == 0) {
                         if (currentPage <= 50) {
-                            adapter.submitList(adapter.currentList + result.data.result!!)
+                            adapter.submitList(adapter.currentList + result.data?.result!!)
                             binding.swipeRefreshLayout.isRefreshing = false
                             currentPage++
 
@@ -109,8 +110,7 @@ class SearchResultActivity : AppCompatActivity() {
                         binding.swipeRefreshLayout.isRefreshing = false
                         ToastUtils.makeText(
                             "搜索失败了"
-                        )
-                            .show()
+                        ).show()
                     }
                 }
 

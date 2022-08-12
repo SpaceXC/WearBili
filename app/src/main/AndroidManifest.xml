@@ -25,6 +25,18 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.user.FollowListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.user.StarItemActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.user.StaredActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.other.RequireNetworkActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.welcome.StartActivity"
             android:exported="false" />
         <activity

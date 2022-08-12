@@ -556,12 +556,9 @@ class VideoInfoFragment : Fragment() {
             cn.spacexc.wearbili.manager.UserManager.subscribeUser(mid, 14, object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     MainScope().launch {
-
-
                         ToastUtils.makeText(
                             "关注失败了"
                         ).show()
-
                     }
                 }
 

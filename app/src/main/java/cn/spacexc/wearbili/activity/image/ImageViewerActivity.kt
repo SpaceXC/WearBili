@@ -24,5 +24,9 @@ class ImageViewerActivity : AppCompatActivity() {
                 textview.text = "${position + 1}/${list?.size}"
             }
         })
+        viewPager2.setOnLongClickListener {
+            finish()
+            false
+        }
     }
 }

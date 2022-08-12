@@ -179,7 +179,8 @@
                     android:layout_marginStart="11dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="11dp"
-                    android:layout_marginBottom="6dp" />
+                    android:layout_marginBottom="6dp"
+                    android:nestedScrollingEnabled="false" />
             </RelativeLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

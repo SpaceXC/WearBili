@@ -29,15 +29,18 @@ class SplashScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-        /*val intent =
-            Intent(this@SplashScreenActivity, MainActivity::class.java)
-        //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        overridePendingTransition(
-            R.anim.activity_fade_in,
-            R.anim.activity_fade_out
-        )
-        finish()*/
+        val canSkip = false
+        if (canSkip) {
+            val intent =
+                Intent(this@SplashScreenActivity, MainActivity::class.java)
+            //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            overridePendingTransition(
+                R.anim.activity_fade_in,
+                R.anim.activity_fade_out
+            )
+            finish()
+        }
         Log.d(TAG, "onCreate: ${UserManager.isLoggedIn()}")
         if (UserManager.isLoggedIn()) {
             lifecycleScope.launch {
@@ -46,7 +49,7 @@ class SplashScreenActivity : AppCompatActivity() {
                     override fun onFailure(call: Call, e: IOException) {
                         MainScope().launch {
                             ToastUtils.makeText("网络异常").show()
-                            val intent = Intent(
+                            /*val intent = Intent(
                                 this@SplashScreenActivity,
                                 SplashScreenActivity::class.java
                             )
@@ -56,7 +59,11 @@ class SplashScreenActivity : AppCompatActivity() {
                                 R.anim.activity_fade_in,
                                 R.anim.activity_fade_out
                             )
-                            finish()
+                            finish()*/
+                            NetworkUtils.requireRetry {
+                                Log.d(TAG, "onRetry: ")
+                            }
+
                         }
                     }
 

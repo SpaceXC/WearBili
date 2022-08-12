@@ -60,7 +60,7 @@ object VideoUtils {
             }
             for (i in 0..5) {
                 val r = mp2[(s / power(58, i) % 58).toInt()]
-                sb.replace(ss[i], ss[i] + 1, r)
+                sb.replace(ss[i], ss[i] + 1, r!!)
             }
             return sb.toString()
         } catch (e: ArrayIndexOutOfBoundsException) {
