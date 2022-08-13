@@ -6,9 +6,6 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
-import android.view.SurfaceHolder
-import android.widget.FrameLayout
 import android.widget.SeekBar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -137,7 +134,7 @@ class VideoPlayerActivity : AppCompatActivity() {
                 binding.title.visibility = it
             }
             videoResolution.observe(this@VideoPlayerActivity) {
-                resizeVideo(it.first, it.second)
+                //resizeVideo(it.first, it.second)
             }
             //在viewmodel监听播放状态，更改控制按钮图标
             playerStat.observe(this@VideoPlayerActivity) {
@@ -165,7 +162,7 @@ class VideoPlayerActivity : AppCompatActivity() {
         }
         uploadVideoViewingProgress(videoBvid, videoCid)
         //-----------Layout视图监听区域⬇️️-----------
-        binding.surfaceView.holder.addCallback(object :
+        /*binding.surfaceView.holder.addCallback(object :
             SurfaceHolder.Callback {     //surfaceview监听
             override fun surfaceCreated(p0: SurfaceHolder) {}
             override fun surfaceChanged(
@@ -178,7 +175,8 @@ class VideoPlayerActivity : AppCompatActivity() {
             }
 
             override fun surfaceDestroyed(p0: SurfaceHolder) {}
-        })
+        })*/
+        binding.playerView.player = viewModel.mediaPlayer
 
         binding.settingsButton.setOnClickListener {
             if (binding.motionLayout.currentState == R.id.start) {
@@ -390,7 +388,7 @@ class VideoPlayerActivity : AppCompatActivity() {
 
 
     //surfaceview适配视频大小
-    private fun resizeVideo(width: Int, height: Int) {
+    /*private fun resizeVideo(width: Int, height: Int) {
         if (width == 0 || height == 0) return       //啥都没有适配个__?
         if (width < height) {     //宽小于高，优先适配高度
             binding.surfaceView.layoutParams = FrameLayout.LayoutParams(
@@ -417,7 +415,7 @@ class VideoPlayerActivity : AppCompatActivity() {
         binding.mainPanel.invalidate()
         binding.loadingPanel.requestLayout()
         binding.loadingPanel.invalidate()
-    }
+    }*/
 
     //监听屏幕旋转
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -469,18 +467,6 @@ class VideoPlayerActivity : AppCompatActivity() {
                 }
             }
         } else return
-    }
-
-    private fun updateVideoResolution() {
-        lifecycleScope.launch {
-            if (viewModel.mediaPlayer.videoSize.height / viewModel.mediaPlayer.videoSize.width != binding.playerFrame.height / binding.playerFrame.width) {
-                resizeVideo(
-                    viewModel.mediaPlayer.videoSize.width,
-                    viewModel.mediaPlayer.videoSize.height
-                )
-                delay(1000)
-            }
-        }
     }
 
     override fun onDestroy() {

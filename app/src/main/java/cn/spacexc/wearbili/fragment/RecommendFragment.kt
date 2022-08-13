@@ -73,8 +73,15 @@ class RecommendFragment : Fragment() {
             videoList = emptyArray()
             getRecommendVideo(true)
         }
-        binding.swipeRefreshLayout.isRefreshing = true
-        getRecommendVideo(false)
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (adapter.currentList.isEmpty()) {
+            binding.swipeRefreshLayout.isRefreshing = true
+            getRecommendVideo(false)
+        }
     }
 
     private fun getRecommendVideo(isRefresh: Boolean) {

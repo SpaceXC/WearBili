@@ -78,8 +78,15 @@ class CommentFragment : Fragment() {
         binding.swipeRefreshLayout.setOnRefreshListener {
             getComment()
         }
-        binding.swipeRefreshLayout.isRefreshing = true
-        getComment()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (adapter.currentList.isEmpty()) {
+            binding.swipeRefreshLayout.isRefreshing = true
+            getComment()
+        }
     }
 
     fun getComment() {

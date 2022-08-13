@@ -29,6 +29,7 @@ import cn.spacexc.wearbili.dataclass.dynamic.dynamicimage.card.ImageCard
 import cn.spacexc.wearbili.dataclass.dynamic.dynamicimage.card.Picture
 import cn.spacexc.wearbili.dataclass.dynamic.dynamictext.card.TextCard
 import cn.spacexc.wearbili.dataclass.dynamic.dynamicvideo.card.VideoCard
+import cn.spacexc.wearbili.utils.CustomLinkMovementMethod
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import cn.spacexc.wearbili.utils.TimeUtils.toDateStr
@@ -244,7 +245,7 @@ class DynamicAdapter(val context: Context) :
             isUnderlineText = false
         }
 
-        holder.content.movementMethod = LinkMovementMethod.getInstance()
+        holder.content.movementMethod = CustomLinkMovementMethod.getInstance(holder.cardView)
     }
 
 }

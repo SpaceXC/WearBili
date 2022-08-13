@@ -2,5 +2,5 @@ package cn.spacexc.wearbili.dataclass.dynamic
 
 data class Attentions(
     val bangumis: List<Bangumi>,
-    val uids: List<Int>
+    val uids: List<Long>
 )

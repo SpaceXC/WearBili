@@ -9,7 +9,10 @@ import cn.spacexc.wearbili.dataclass.dynamic.dynamicimage.card.ImageCard
 import cn.spacexc.wearbili.dataclass.dynamic.dynamictext.card.TextCard
 import cn.spacexc.wearbili.dataclass.dynamic.dynamicvideo.card.VideoCard
 import cn.spacexc.wearbili.utils.NetworkUtils
+import cn.spacexc.wearbili.utils.ToastUtils.debugToast
 import com.google.gson.Gson
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
@@ -53,75 +56,42 @@ object DynamicManager {
 
     fun getRecommendDynamics(callback: DynamicResponseCallback) {
         if (!UserManager.isLoggedIn()) return
-        NetworkUtils.getUrl("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/dynamic_new?" +
-                //"uid=${CookiesManager.getCookieByName("DedeUserID")}" +
-                "&type=$type",
+        val url = "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/dynamic_new?" +
+                "uid=${UserManager.getUid()}" +
+                "&type=$type"
+        url.debugToast("动态请求")
+        NetworkUtils.getUrl(
+            url,
             object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     callback.onFailed(call, e)
+                    e.debugToast("网络错误")
                 }
 
                 override fun onResponse(call: Call, response: Response) {
                     try {
-                        /*val str = response.body?.string()
-                        val result = Gson().fromJson(str, Dynamic::class.java)
-                        val tempList = mutableListOf<Card>()
-                        for (dynamic in result.data.cards) {
-                            when (dynamic.desc.type) {
-                                1 -> {
-                                    val card =
-                                        Gson().fromJson(dynamic.card, ForwardShareCard::class.java)
-                                    when (dynamic.desc.orig_type) {
-                                        1 -> {
-                                            val orig = Gson().fromJson(
-                                                card.origin,
-                                                ForwardShareCard::class.java
-                                            )
-                                            card.originObj = orig
-                                        }
-                                        2 -> {
-                                            val orig =
-                                                Gson().fromJson(card.origin, ImageCard::class.java)
-                                            card.originObj = orig
-                                        }
-                                        4 -> {
-                                            val orig =
-                                                Gson().fromJson(card.origin, TextCard::class.java)
-                                            card.originObj = orig
-                                        }
-                                        8 -> {
-                                            val orig =
-                                                Gson().fromJson(card.origin, VideoCard::class.java)
-                                            card.originObj = orig
-                                        }
-                                    }
-                                    dynamic.cardObj = card
-                                    tempList.add(dynamic)
-                                }
-                                2 -> {
-                                    val card = Gson().fromJson(dynamic.card, ImageCard::class.java)
-                                    dynamic.cardObj = card
-                                    tempList.add(dynamic)
-                                }
-                                4 -> {
-                                    val card = Gson().fromJson(dynamic.card, TextCard::class.java)
-                                    dynamic.cardObj = card
-                                    tempList.add(dynamic)
-                                }
-                                8 -> {
-                                    val card = Gson().fromJson(dynamic.card, VideoCard::class.java)
-                                    dynamic.cardObj = card
-                                    tempList.add(dynamic)
-                                }
+                        val str = response.body?.string()
+                        MainScope().launch {
+                            str?.debugToast("动态返回数据")
+                            val tempList = dynamicListProcessor(str)
+                            tempList.debugToast("动态列表")
+                            //Log.d(TAG, "onResponse: $tempList")
+                            if (tempList.isNotEmpty()) {
+                                lastDynamicId = tempList[tempList.size - 1].desc.dynamic_id
+                                lastDynamicId.debugToast("")
+                                callback.onSuccess(tempList)
+                            } else {
+                                callback.onSuccess(emptyList())
                             }
-                        }*/
-                        val tempList = dynamicListProcessor(response.body?.string())
-                        //Log.d(TAG, "onResponse: $tempList")
-                        lastDynamicId = tempList[tempList.size - 1].desc.dynamic_id
-                        callback.onSuccess(tempList)
+                        }
+
                     } catch (e: Exception) {
                         //TODO Ignored
                         e.printStackTrace()
+                        MainScope().launch {
+                            e.debugToast("数据处理错误")
+                        }
+                        callback.onFailed(call, e)
                     }
 
                 }
@@ -329,7 +299,7 @@ object DynamicManager {
     }
 
     interface DynamicResponseCallback {
-        fun onFailed(call: Call, e: IOException)
+        fun onFailed(call: Call, e: Exception)
         fun onSuccess(dynamicCards: List<Card>)
     }
 }

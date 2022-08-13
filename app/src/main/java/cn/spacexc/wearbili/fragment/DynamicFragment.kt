@@ -15,11 +15,11 @@ import cn.spacexc.wearbili.databinding.FragmentDynamicBinding
 import cn.spacexc.wearbili.dataclass.dynamic.Card
 import cn.spacexc.wearbili.manager.DynamicManager
 import cn.spacexc.wearbili.utils.ToastUtils
+import cn.spacexc.wearbili.utils.ToastUtils.debugToast
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import okhttp3.Call
-import java.io.IOException
 
 
 class DynamicFragment : Fragment() {
@@ -52,7 +52,6 @@ class DynamicFragment : Fragment() {
             binding.recyclerView.smoothScrollToPosition(0)
 
         }
-        binding.swipeRefreshLayout.isRefreshing = true
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (newState == RecyclerView.SCROLL_STATE_DRAGGING or RecyclerView.SCROLL_STATE_SETTLING) {
@@ -69,29 +68,36 @@ class DynamicFragment : Fragment() {
                 }
             }
         })
-        getDynamic()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (adapter.currentList.isEmpty()) {
+            binding.swipeRefreshLayout.isRefreshing = true
+            getDynamic()
+        }
     }
 
     private fun getDynamic() {
-        if (!isAdded) return
+        ToastUtils.debugToast("检测登录...")
         if (!cn.spacexc.wearbili.manager.UserManager.isLoggedIn()) {
             ToastUtils.makeText("还没登录呐").show()
             MainActivity.currentPageId.value = 2
         }
+        ToastUtils.debugShowText("开始获取动态...")
+
         DynamicManager.getRecommendDynamics(object : DynamicManager.DynamicResponseCallback {
-            override fun onFailed(call: Call, e: IOException) {
-                if (!isAdded) return
+            override fun onFailed(call: Call, e: Exception) {
                 MainScope().launch {
                     binding.swipeRefreshLayout.isRefreshing = false
-
                     ToastUtils.makeText("动态获取失败").show()
+                    e.debugToast("网络异常")
                 }
 
             }
 
             override fun onSuccess(dynamicCards: List<Card>) {
-                if (!isAdded) return
-
                 MainScope().launch {
                     binding.swipeRefreshLayout.isRefreshing = false
                     //ToastUtils.makeText("动态获取成功$dynamicCards").show()
@@ -110,7 +116,7 @@ class DynamicFragment : Fragment() {
             MainActivity.currentPageId.value = 2
         }
         DynamicManager.getMoreDynamic(object : DynamicManager.DynamicResponseCallback {
-            override fun onFailed(call: Call, e: IOException) {
+            override fun onFailed(call: Call, e: Exception) {
 
                 MainScope().launch {
                     //binding.swipeRefreshLayout.isRefreshing = false

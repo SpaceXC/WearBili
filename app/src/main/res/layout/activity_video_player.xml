@@ -28,11 +28,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <SurfaceView
-                    android:id="@+id/surfaceView"
+                <com.google.android.exoplayer2.ui.PlayerView
+                    android:id="@+id/playerView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    app:use_controller="false" />
 
             </FrameLayout>
 
@@ -102,17 +103,18 @@
                             android:layout_marginStart="2dp"
                             android:layout_marginTop="2dp"
                             android:layout_marginEnd="4dp"
-                            android:fontFamily="@font/puhui_bold"
                             android:ellipsize="marquee"
                             android:focusable="true"
                             android:focusableInTouchMode="true"
+                            android:fontFamily="@font/puhui_bold"
                             android:singleLine="true"
                             android:textColor="#fff"
                             android:textSize="15sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toEndOf="@+id/back"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="SpeakableTextPresentCheck" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout

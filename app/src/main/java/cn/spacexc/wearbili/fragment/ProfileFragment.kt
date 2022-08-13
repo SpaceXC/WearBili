@@ -178,10 +178,10 @@ class ProfileFragment : Fragment() {
                             it.relativeLayout5.visibility = View.VISIBLE
                             it.settings.visibility = View.VISIBLE
                         }
-                        Glide.with(requireActivity()).load(user.data.face)
+                        Glide.with(Application.getContext()).load(user.data.face)
                             .placeholder(R.drawable.default_avatar).circleCrop()
                             .into(binding.avatar)
-                        Glide.with(requireActivity()).load(user.data.pendant.image_enhance)
+                        Glide.with(Application.getContext()).load(user.data.pendant.image_enhance)
                             .into(binding.pendant)
                         binding.usernameText.text = user.data.name
                         binding.fansText.text = user.data.follower.toShortChinese()
