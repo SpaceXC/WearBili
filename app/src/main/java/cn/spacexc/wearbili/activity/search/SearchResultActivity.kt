@@ -77,7 +77,7 @@ class SearchResultActivity : AppCompatActivity() {
         Log.d(Application.getTag(), "searchVideo: $currentPage")
         val keyword = getKeyword()
 
-        VideoManager.searchVideo(keyword!!, currentPage, object : Callback {
+        VideoManager.searchVideo(keyword ?: "", currentPage, object : Callback {
 
 
             override fun onFailure(call: Call, e: IOException) {

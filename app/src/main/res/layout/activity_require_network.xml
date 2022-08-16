@@ -6,10 +6,55 @@
     android:layout_height="match_parent"
     tools:context=".activity.other.RequireNetworkActivity">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout10"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline41"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.66" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline42"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.31" />
+
+        <ImageView
+            android:id="@+id/imageView23"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline41"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/circle_left_x05_cropped" />
+
+        <ImageView
+            android:id="@+id/imageView24"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline42"
+            app:srcCompat="@drawable/circle_lower_right" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/retry"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
@@ -17,56 +62,59 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline43"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.2" />
-
-            <TextView
-                android:id="@+id/textView23"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/puhui_bold"
-                android:gravity="center"
-                android:text="Σ(っ °Д °;)っ"
-                android:textColor="#ffffff"
-                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/guideline43" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/textView25"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:alpha="0.6"
-                android:fontFamily="@font/puhui_bold"
-                android:gravity="center"
-                android:text="将手表连接至互联网再试"
-                android:textColor="#ffffff"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView24" />
+                <TextView
+                    android:id="@+id/textView23"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/puhui_bold"
+                    android:gravity="center"
+                    android:text="Σ(っ °Д °;)っ"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/textView24"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:fontFamily="@font/puhui_bold"
-                android:gravity="center"
-                android:text="怎么连不上惹"
-                android:textColor="#ffffff"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView23" />
+                <TextView
+                    android:id="@+id/textView25"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:alpha="0.6"
+                    android:fontFamily="@font/puhui_bold"
+                    android:gravity="center"
+                    android:text="将手表连接至互联网再试"
+                    android:textColor="#ffffff"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView24" />
+
+                <TextView
+                    android:id="@+id/textView24"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/puhui_bold"
+                    android:gravity="center"
+                    android:text="怎么连不上惹"
+                    android:textColor="#ffffff"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView23" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
@@ -109,52 +157,6 @@
             app:layout_constraintEnd_toStartOf="@+id/timeText"
             app:layout_constraintTop_toTopOf="@+id/timeText"
             app:srcCompat="@drawable/cloud_off" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout10"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="-20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline41"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.66" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline42"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.31" />
-
-        <ImageView
-            android:id="@+id/imageView23"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline41"
-            app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/circle_left_x05_cropped" />
-
-        <ImageView
-            android:id="@+id/imageView24"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline42"
-            app:srcCompat="@drawable/circle_lower_right" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -159,7 +159,10 @@ class ProfileFragment : Fragment() {
                             binding.usernameText.text = "访客"
                             binding.textView14.visibility = View.VISIBLE
                             binding.login.visibility = View.VISIBLE
-
+                            binding.accountSurvey.visibility = View.GONE
+                            binding.imageView19.visibility = View.GONE
+                            binding.relativeLayout5.visibility = View.GONE
+                            binding.settings.visibility = View.GONE
                             binding.login.setOnClickListener {
                                 startActivity(
                                     Intent(

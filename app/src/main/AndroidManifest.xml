@@ -46,8 +46,6 @@
         <service
             android:name=".service.DownloadService"
             android:exported="false">
-
-            <!-- This is needed for Scheduler -->
             <intent-filter>
                 <action android:name="com.google.android.exoplayer.downloadService.action.RESTART" />
 

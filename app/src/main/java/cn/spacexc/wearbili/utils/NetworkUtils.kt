@@ -2,13 +2,13 @@ package cn.spacexc.wearbili.utils
 
 import android.content.Intent
 import android.graphics.drawable.Drawable
-import android.os.Parcelable
 import android.text.Html
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.activity.other.RequireNetworkActivity
 import cn.spacexc.wearbili.manager.CookiesManager
 import okhttp3.*
 import java.io.InputStream
+import java.io.Serializable
 import java.net.URL
 
 
@@ -35,6 +35,29 @@ object NetworkUtils {
 
         })
         .build()
+
+    private val clientWithoutRedirect = OkHttpClient.Builder()
+        .cookieJar(object : CookieJar {
+            override fun loadForRequest(url: HttpUrl): List<Cookie> {
+                return CookiesManager.getCookies()
+            }
+
+            override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
+                CookiesManager.saveCookies(cookies)
+            }
+
+        })
+        .followRedirects(false)
+        .followSslRedirects(false)
+        .build()
+
+    fun getUrlWithoutRedirect(url: String, callback: Callback) {
+        val request = Request.Builder()
+            .url(url)
+            .get()
+            .build()
+        clientWithoutRedirect.newCall(request).enqueue(callback)
+    }
 
     fun getUrl(url: String, callback: Callback) {
         val request = Request.Builder()
@@ -88,14 +111,9 @@ object NetworkUtils {
         val intent = Intent(Application.context, RequireNetworkActivity::class.java)
         intent.apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            val callbackObj = RequireNetworkActivity.RetryCallback()
-            callbackObj.callback = object : RequireNetworkActivity.RetryCallback.Retry {
-                override fun onRetry() {
-                    callback.invoke()
-                }
-
-            }
-            putExtra("callback", callbackObj as Parcelable)
+            val callbackObj = RequireNetworkActivity.RetryCallback(callback)
+            //callbackObj.callback = callback
+            putExtra("callback", callback as Serializable)
             Application.context?.startActivity(intent)
         }
     }
@@ -120,6 +138,11 @@ object NetworkUtils {
                 return@ImageGetter null
             }
         }
+    }
+
+    interface ResultCallback<T> {
+        fun onSuccess(result: T)
+        fun onFailed(e: Exception)
     }
 }
 

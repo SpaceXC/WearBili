@@ -73,6 +73,7 @@ class FollowGroupAdapter(private val context: Context) :
                         holder.swipeRefreshLayout.isRefreshing = false
                         adapter.submitList(result.data)
                         page++
+                        holder.recyclerView.smoothScrollToPosition(0)
                     }
                 }
 

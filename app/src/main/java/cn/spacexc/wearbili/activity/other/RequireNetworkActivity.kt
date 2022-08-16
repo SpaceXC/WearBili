@@ -1,7 +1,6 @@
 package cn.spacexc.wearbili.activity.other
 
 import android.os.Bundle
-import android.os.Parcelable
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -10,7 +9,7 @@ import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.utils.TimeUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.parcelize.Parcelize
+import java.io.Serializable
 
 class RequireNetworkActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,16 +22,15 @@ class RequireNetworkActivity : AppCompatActivity() {
             }
         }
         findViewById<ConstraintLayout>(R.id.retry).setOnClickListener {
-            (intent.getParcelableExtra<RetryCallback>("callback") as RetryCallback).callback.onRetry()
+            (intent.getSerializableExtra("callback") as () -> Unit).invoke()
         }
     }
 
-    @Parcelize
-    class RetryCallback : Parcelable {
-        lateinit var callback: Retry
+    class RetryCallback(callback: () -> Unit) : Serializable {
+        var call = callback as Serializable
+    }
 
-        interface Retry {
-            fun onRetry()
-        }
+    interface Retry {
+        fun onRetry()
     }
 }

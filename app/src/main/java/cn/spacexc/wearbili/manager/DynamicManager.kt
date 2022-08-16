@@ -73,15 +73,18 @@ object DynamicManager {
                         val str = response.body?.string()
                         MainScope().launch {
                             str?.debugToast("动态返回数据")
-                            val tempList = dynamicListProcessor(str)
+                            var code = 0
+                            val tempList = dynamicListProcessor(str) {
+                                code = it
+                            }
                             tempList.debugToast("动态列表")
                             //Log.d(TAG, "onResponse: $tempList")
                             if (tempList.isNotEmpty()) {
                                 lastDynamicId = tempList[tempList.size - 1].desc.dynamic_id
                                 lastDynamicId.debugToast("")
-                                callback.onSuccess(tempList)
+                                callback.onSuccess(tempList, code)
                             } else {
-                                callback.onSuccess(emptyList())
+                                callback.onSuccess(emptyList(), code)
                             }
                         }
 
@@ -109,62 +112,13 @@ object DynamicManager {
 
                 override fun onResponse(call: Call, response: Response) {
                     try {
-                        /*val str = response.body?.string()
-                        val result = Gson().fromJson(str, Dynamic::class.java)
-                        val tempList = mutableListOf<Card>()
-                        for (dynamic in result.data.cards) {
-                            when (dynamic.desc.type) {
-                                1 -> {
-                                    val card =
-                                        Gson().fromJson(dynamic.card, ForwardShareCard::class.java)
-                                    when (dynamic.desc.orig_type) {
-                                        1 -> {
-                                            val orig = Gson().fromJson(
-                                                card.origin,
-                                                ForwardShareCard::class.java
-                                            )
-                                            card.originObj = orig
-                                        }
-                                        2 -> {
-                                            val orig =
-                                                Gson().fromJson(card.origin, ImageCard::class.java)
-                                            card.originObj = orig
-                                        }
-                                        4 -> {
-                                            val orig =
-                                                Gson().fromJson(card.origin, TextCard::class.java)
-                                            card.originObj = orig
-                                        }
-                                        8 -> {
-                                            val orig =
-                                                Gson().fromJson(card.origin, VideoCard::class.java)
-                                            card.originObj = orig
-                                        }
-                                    }
-                                    dynamic.cardObj = card
-                                    tempList.add(dynamic)
-                                }
-                                2 -> {
-                                    val card = Gson().fromJson(dynamic.card, ImageCard::class.java)
-                                    dynamic.cardObj = card
-                                    tempList.add(dynamic)
-                                }
-                                4 -> {
-                                    val card = Gson().fromJson(dynamic.card, TextCard::class.java)
-                                    dynamic.cardObj = card
-                                    tempList.add(dynamic)
-                                }
-                                8 -> {
-                                    val card = Gson().fromJson(dynamic.card, VideoCard::class.java)
-                                    dynamic.cardObj = card
-                                    tempList.add(dynamic)
-                                }
-                            }
-                        }*/
-                        val tempList = dynamicListProcessor(response.body?.string())
+                        var code = 0
+                        val tempList = dynamicListProcessor(response.body?.string()) {
+                            code = it
+                        }
                         //Log.d(TAG, "onResponse: $tempList")
                         lastDynamicId = tempList[tempList.size - 1].desc.dynamic_id
-                        callback.onSuccess(tempList)
+                        callback.onSuccess(tempList, code)
                     } catch (e: Exception) {
                         Log.e(TAG, "onResponse: ${e.cause}", e)
                         e.printStackTrace()
@@ -182,8 +136,9 @@ object DynamicManager {
         )
     }
 
-    fun dynamicListProcessor(response: String?): List<Card> {
+    fun dynamicListProcessor(response: String?, callback: (Int) -> Unit): List<Card> {
         val result = Gson().fromJson(response, Dynamic::class.java)
+        callback.invoke(result.code)
         if (result.code != 0) {
             return emptyList()
         }
@@ -300,6 +255,6 @@ object DynamicManager {
 
     interface DynamicResponseCallback {
         fun onFailed(call: Call, e: Exception)
-        fun onSuccess(dynamicCards: List<Card>)
+        fun onSuccess(dynamicCards: List<Card>, code: Int)
     }
 }

@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.video.VideoPlayerActivity
-import cn.spacexc.wearbili.dataclass.VideoPagesData
+import cn.spacexc.wearbili.dataclass.video.Page
 
 /**
  * Created by XC-Qan on 2022/7/3.
@@ -22,13 +22,13 @@ import cn.spacexc.wearbili.dataclass.VideoPagesData
  */
 
 class VideoPartsAdapter(val bvid: String) :
-    ListAdapter<VideoPagesData, VideoPartsAdapter.VideoPartViewHolder>(object :
-        DiffUtil.ItemCallback<VideoPagesData>() {
-        override fun areItemsTheSame(oldItem: VideoPagesData, newItem: VideoPagesData): Boolean {
+    ListAdapter<Page, VideoPartsAdapter.VideoPartViewHolder>(object :
+        DiffUtil.ItemCallback<Page>() {
+        override fun areItemsTheSame(oldItem: Page, newItem: Page): Boolean {
             return false
         }
 
-        override fun areContentsTheSame(oldItem: VideoPagesData, newItem: VideoPagesData): Boolean {
+        override fun areContentsTheSame(oldItem: Page, newItem: Page): Boolean {
             return false
         }
 
@@ -41,14 +41,15 @@ class VideoPartsAdapter(val bvid: String) :
     }
 
     override fun onBindViewHolder(holder: VideoPartViewHolder, position: Int) {
+        val part = getItem(position)
         holder.partName.text = "P${position + 1} - ${getItem(position).part}"
         holder.itemView.setOnClickListener {
             val intent =
                 Intent(Application.getContext(), VideoPlayerActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            intent.putExtra("videoCid", getItem(position).cid)
+            intent.putExtra("videoCid", part.cid)
             intent.putExtra("videoBvid", bvid)
-            intent.putExtra("videoTitle", "P${position + 1} - ${getItem(position).part}")
+            intent.putExtra("videoTitle", "P${position + 1} - ${part.part}")
             Application.getContext().startActivity(intent)
         }
     }

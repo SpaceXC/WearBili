@@ -50,6 +50,7 @@
         <entry key="app/src/main/res/drawable/ic_baseline_person_outline_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_baseline_sort_24.xml" value="0.2795" />
+        <entry key="app/src/main/res/drawable/ic_baseline_thumb_up_24.xml" value="0.255" />
         <entry key="app/src/main/res/drawable/ic_baseline_update_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_cloud_download_fill0_wght400_grad0_opsz48.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_coin.xml" value="0.16230926513671873" />
@@ -64,6 +65,9 @@
         <entry key="app/src/main/res/drawable/ic_outline_monetization_on_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_outline_person_add_alt_1_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_outline_settings_24.xml" value="0.2795" />
+        <entry key="app/src/main/res/drawable/ic_outline_thumb_down_24.xml" value="0.255" />
+        <entry key="app/src/main/res/drawable/ic_outline_thumb_up_24.xml" value="0.255" />
+        <entry key="app/src/main/res/drawable/ic_outline_thumb_up_24_small.xml" value="0.255" />
         <entry key="app/src/main/res/drawable/ic_round_open_in_full_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_round_play_arrow_24.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/ic_round_star_border_24.xml" value="0.2795" />
@@ -92,7 +96,7 @@
         <entry key="app/src/main/res/layout/activity_photo_view.xml" value="0.13593597412109376" />
         <entry key="app/src/main/res/layout/activity_play_on_phone.xml" value="0.28961965134706813" />
         <entry key="app/src/main/res/layout/activity_qrcode.xml" value="0.9851752021563343" />
-        <entry key="app/src/main/res/layout/activity_require_network.xml" value="0.8467874794069192" />
+        <entry key="app/src/main/res/layout/activity_require_network.xml" value="2.128784635001697" />
         <entry key="app/src/main/res/layout/activity_search.xml" value="0.3059263214095035" />
         <entry key="app/src/main/res/layout/activity_search_result.xml" value="0.5472560975609756" />
         <entry key="app/src/main/res/layout/activity_special_search.xml" value="0.7875243664717348" />
@@ -110,7 +114,7 @@
         <entry key="app/src/main/res/layout/cell_card_horizontal_button.xml" value="0.29692671394799053" />
         <entry key="app/src/main/res/layout/cell_card_horizontal_button_large_avatar.xml" value="0.501201051190623" />
         <entry key="app/src/main/res/layout/cell_comment_hot_reply.xml" value="1.688235294117647" />
-        <entry key="app/src/main/res/layout/cell_comment_list.xml" value="0.5499988767276653" />
+        <entry key="app/src/main/res/layout/cell_comment_list.xml" value="1.2203090150273561" />
         <entry key="app/src/main/res/layout/cell_dynamic_image.xml" value="0.3095339888841385" />
         <entry key="app/src/main/res/layout/cell_follow_list.xml" value="0.9965217391304347" />
         <entry key="app/src/main/res/layout/cell_follow_list_recyclerview.xml" value="0.30483112441214194" />
@@ -126,7 +130,7 @@
         <entry key="app/src/main/res/layout/cell_video_part.xml" value="0.4676098287416232" />
         <entry key="app/src/main/res/layout/fragment_comment.xml" value="1.5185185185185186" />
         <entry key="app/src/main/res/layout/fragment_dynamic.xml" value="0.18854166666666666" />
-        <entry key="app/src/main/res/layout/fragment_profile.xml" value="1.6852941176470588" />
+        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.5840688368853402" />
         <entry key="app/src/main/res/layout/fragment_recommend.xml" value="0.41192626953125" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.2584748417629714" />
         <entry key="app/src/main/res/layout/fragment_video_info.xml" value="0.3051506316812439" />

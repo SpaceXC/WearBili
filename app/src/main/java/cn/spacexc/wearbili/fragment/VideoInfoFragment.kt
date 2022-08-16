@@ -17,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
@@ -34,9 +35,13 @@ import cn.spacexc.wearbili.activity.video.ViewFullVideoPartsActivity
 import cn.spacexc.wearbili.adapter.ButtonsAdapter
 import cn.spacexc.wearbili.adapter.VideoPartsAdapter
 import cn.spacexc.wearbili.databinding.FragmentVideoInfoBinding
-import cn.spacexc.wearbili.dataclass.*
+import cn.spacexc.wearbili.dataclass.RoundButtonData
+import cn.spacexc.wearbili.dataclass.SimplestUniversalDataClass
+import cn.spacexc.wearbili.dataclass.VideoStreamsFlv
 import cn.spacexc.wearbili.dataclass.user.User
 import cn.spacexc.wearbili.dataclass.user.UserFans
+import cn.spacexc.wearbili.dataclass.video.Data
+import cn.spacexc.wearbili.dataclass.video.VideoInfo
 import cn.spacexc.wearbili.listener.OnItemViewClickListener
 import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
@@ -76,6 +81,8 @@ class VideoInfoFragment : Fragment() {
     var isStared: Boolean = false
 
     var likes = 0L
+
+    private var likeButton: ButtonsAdapter.ButtonViewHolder? = null
 
 
     private val btnListUpperRow = MutableLiveData(
@@ -312,6 +319,8 @@ class VideoInfoFragment : Fragment() {
             buttonsAdapter.submitList(it)
             println(it)
         }
+        likeButton =
+            (binding.recyclerViewButtons.findViewHolderForAdapterPosition(1) as ButtonsAdapter.ButtonViewHolder?)
         binding.recyclerViewButtons.adapter = buttonsAdapter
         binding.recyclerViewParts.layoutManager = LinearLayoutManager(requireContext())
         videoPartsAdapter = VideoPartsAdapter((activity as VideoActivity).getId()!!)
@@ -320,47 +329,6 @@ class VideoInfoFragment : Fragment() {
         //getVideoIsLiked()
         isVideoLiked()
         getVideo()
-        getVideoParts()
-    }
-
-    private fun getVideoParts() {
-
-        val id = (activity as VideoActivity).getId()
-        VideoManager.getVideoParts(id, object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                MainScope().launch {
-                    ToastUtils.makeText(
-                        "加载失败了"
-                    ).show()
-
-                }
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                if (!isAdded) return
-                val responseStr = response.body?.string()
-                val result = Gson().fromJson(responseStr, VideoPages::class.java)
-                MainScope().launch {
-                    if (response.code == 200 && result.code == 0 && result.data.size != 1 or 0) {
-                        videoPartsAdapter.submitList(result.data.toList())
-                        binding.videoPartsTitle.visibility = View.VISIBLE
-                        binding.recyclerViewParts.visibility = View.VISIBLE
-                        binding.videoPartsTitle.setOnClickListener {
-                            val intent = Intent(
-                                requireActivity(),
-                                ViewFullVideoPartsActivity::class.java
-                            )
-                            intent.putExtra("data", responseStr)
-                            intent.putExtra("bvid", (activity as VideoActivity).getId())
-                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            Application.getContext().startActivity(intent)
-                        }
-
-                    }
-                }
-            }
-
-        })
     }
 
     private fun getVideo() {
@@ -389,6 +357,21 @@ class VideoInfoFragment : Fragment() {
                         binding.relativeLayout.visibility = View.VISIBLE
                         (activity as VideoActivity).currentVideo = video.data
                         (activity as VideoActivity).isInitialized = true
+
+                        videoPartsAdapter.submitList(video.data.pages)
+                        binding.videoPartsTitle.isVisible = video.data.pages.size != 1
+                        binding.recyclerViewParts.isVisible = video.data.pages.size != 1
+                        binding.videoPartsTitle.setOnClickListener {
+                            val intent = Intent(
+                                requireActivity(),
+                                ViewFullVideoPartsActivity::class.java
+                            )
+                            intent.putExtra("data", Gson().toJson(Data.Pages(video.data.pages)))
+                            intent.putExtra("bvid", (activity as VideoActivity).getId())
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            Application.getContext().startActivity(intent)
+                        }
+
                         binding.cover.setOnLongClickListener {
                             val intent =
                                 Intent(requireActivity(), PhotoViewActivity::class.java)

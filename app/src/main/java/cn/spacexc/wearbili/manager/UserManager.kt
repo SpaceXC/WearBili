@@ -1,9 +1,11 @@
 package cn.spacexc.wearbili.manager
 
+import android.net.Uri
+import cn.spacexc.wearbili.dataclass.user.AccessKeyGetter
 import cn.spacexc.wearbili.utils.NetworkUtils
-import okhttp3.Callback
-import okhttp3.FormBody
-import okhttp3.RequestBody
+import com.google.gson.Gson
+import okhttp3.*
+import java.io.IOException
 
 /**
  * Created by XC-Qan on 2022/6/8.
@@ -96,6 +98,39 @@ object UserManager {
             "https://api.bilibili.com/x/relation/tag?tagid=$groupId&pn=$page",
             callback
         )
+    }
+
+    fun getAccessKey(callback: NetworkUtils.ResultCallback<String>) {
+        NetworkUtils.getUrl(
+            "https://passport.bilibili.com/login/app/third?appkey=27eb53fc9058f8c3&api=http://link.acg.tv/forum.php&sign=67ec798004373253d60114caaad89a8c",
+            object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    callback.onFailed(e)
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val result =
+                        Gson().fromJson(response.body?.string(), AccessKeyGetter::class.java)
+                    NetworkUtils.getUrlWithoutRedirect(result.data.confirm_uri, object : Callback {
+                        override fun onFailure(call: Call, e: IOException) {
+                            callback.onFailed(e)
+                        }
+
+                        override fun onResponse(call: Call, response: Response) {
+                            if (response.isRedirect) {
+                                callback.onSuccess(
+                                    Uri.parse(response.headers["location"])
+                                        .getQueryParameter("access_key")!!
+                                )
+                            }
+
+                            //callback.onSuccess(response.request.url.queryParameter("access_key")!!)
+                        }
+
+                    })
+                }
+
+            })
     }
 
     //@Throws(IOException::class)

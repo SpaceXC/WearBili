@@ -6,7 +6,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import cn.spacexc.wearbili.adapter.VideoViewPagerAdapter
 import cn.spacexc.wearbili.databinding.ActivityVideoBinding
-import cn.spacexc.wearbili.dataclass.VideoInfoData
+import cn.spacexc.wearbili.dataclass.video.Data
 import cn.spacexc.wearbili.utils.TimeUtils
 import cn.spacexc.wearbili.utils.VideoUtils
 import kotlinx.coroutines.delay
@@ -41,7 +41,7 @@ class VideoActivity : AppCompatActivity() {
 
     }
 
-    var currentVideo: VideoInfoData? = null
+    var currentVideo: Data? = null
     var isInitialized = false
 
     fun getId() : String? {

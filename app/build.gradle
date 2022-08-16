@@ -13,7 +13,7 @@ android {
         minSdk 23
         targetSdk 32
         versionCode 1
-        versionName "Rel-AL 0.12.3"
+        versionName "Rel-AL 0.12.6"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -36,6 +36,12 @@ android {
         enabled = true
     }
 
+    android.applicationVariants.all {
+        variant ->
+            variant.outputs.all {
+                outputFileName = "${variant.versionName}.apk"
+            }
+    }
 }
 
 dependencies {

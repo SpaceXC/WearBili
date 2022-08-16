@@ -13,10 +13,8 @@ import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.other.SplashScreenActivity
 import cn.spacexc.wearbili.dataclass.LoginQrCode
 import cn.spacexc.wearbili.dataclass.QrCodeLoginStat
-import cn.spacexc.wearbili.utils.NetworkUtils
-import cn.spacexc.wearbili.utils.QRCodeUtil
-import cn.spacexc.wearbili.utils.TimeUtils
-import cn.spacexc.wearbili.utils.ToastUtils
+import cn.spacexc.wearbili.manager.UserManager
+import cn.spacexc.wearbili.utils.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.gson.Gson
@@ -125,25 +123,46 @@ class LoginActivity : AppCompatActivity() {
                                                             QrCodeLoginStat::class.java
                                                         )
                                                     if (codeStat.status) {
-                                                        ToastUtils.makeText(
-                                                            "登录成功"
-                                                        ).show()
-                                                        cancel()
-                                                        if (intent.getBooleanExtra(
-                                                                "fromHome",
-                                                                true
-                                                            )
-                                                        ) {
-                                                            val intent = Intent(
-                                                                this@LoginActivity,
-                                                                SplashScreenActivity::class.java
-                                                            )
-                                                            intent.flags =
-                                                                Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                                                            startActivity(intent)
-                                                        } else {
-                                                            finish()
-                                                        }
+                                                        ToastUtils.showText("请稍后...")
+                                                        UserManager.getAccessKey(object :
+                                                            NetworkUtils.ResultCallback<String> {
+                                                            override fun onSuccess(result: String) {
+                                                                Log.d(
+                                                                    Application.TAG,
+                                                                    "onSuccess: $result"
+                                                                )
+                                                                SharedPreferencesUtils.saveString(
+                                                                    "accessKey",
+                                                                    result
+                                                                )
+                                                                MainScope().launch {
+                                                                    ToastUtils.makeText(
+                                                                        "登录成功"
+                                                                    ).show()
+                                                                }
+                                                                cancel()
+                                                                if (intent.getBooleanExtra(
+                                                                        "fromHome",
+                                                                        true
+                                                                    )
+                                                                ) {
+                                                                    val intent = Intent(
+                                                                        this@LoginActivity,
+                                                                        SplashScreenActivity::class.java
+                                                                    )
+                                                                    intent.flags =
+                                                                        Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                                                    startActivity(intent)
+                                                                } else {
+                                                                    finish()
+                                                                }
+                                                            }
+
+                                                            override fun onFailed(e: Exception) {
+                                                                e.printStackTrace()
+                                                            }
+
+                                                        })
                                                     } else {
                                                         when (codeStat.data as Number) {
                                                             //-1.0 -> ToastUtils.makeText(this@LoginActivity, "密钥错误", Toast.LENGTH_SHORT).show()

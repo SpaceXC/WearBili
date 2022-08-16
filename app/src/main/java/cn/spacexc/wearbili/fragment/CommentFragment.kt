@@ -71,12 +71,12 @@ class CommentFragment : Fragment() {
                 val lastVisibleItemPosition = lm!!.findLastVisibleItemPosition()
                 val visibleItemCount = recyclerView.childCount
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItemPosition == totalItemCount - 1 && visibleItemCount > 0) {
-                    getComment()
+                    getComment(false)
                 }
             }
         })
         binding.swipeRefreshLayout.setOnRefreshListener {
-            getComment()
+            getComment(true)
         }
 
     }
@@ -85,11 +85,11 @@ class CommentFragment : Fragment() {
         super.onResume()
         if (adapter.currentList.isEmpty()) {
             binding.swipeRefreshLayout.isRefreshing = true
-            getComment()
+            getComment(true)
         }
     }
 
-    fun getComment() {
+    fun getComment(isRefresh: Boolean) {
         if ((activity as VideoActivity).currentVideo != null) {
             VideoManager.getCommentsByLikes(
                 (activity as VideoActivity).currentVideo!!.aid,
@@ -109,56 +109,22 @@ class CommentFragment : Fragment() {
                     }
 
                     override fun onResponse(call: Call, response: Response) {
-                        val comments =
+                        val result =
                             Gson().fromJson(response.body?.string(), VideoComment::class.java)
                         if (isAdded) {
                             MainScope().launch {
-                                if (comments.code == 0) {
-
-                                    val replies: MutableList<CommentContentData> =
-                                        comments.data.replies?.toMutableList()
-                                            ?: mutableListOf()
-                                    if (replies != prevList) {
-                                        prevList = replies
-                                        if (comments.data.top.member != null && comments.data.top.content != null) {
-                                            val top = comments.data.top
-                                            top.is_top = true
-                                            replies.remove(comments.data.top)
-                                            val topList = mutableListOf(top)
-
-                                            val finalList = topList + replies
-                                            adapter.submitList(finalList)
-                                        } else {
-                                            adapter.submitList(adapter.currentList + replies)
-
+                                if (result.code == 0) {
+                                    if (isRefresh) {
+                                        var top = mutableListOf<CommentContentData>()
+                                        if (result.data.top?.content != null && result.data.top.member != null) {
+                                            top = mutableListOf(result.data.top)
                                         }
-                                        page++
-                                        binding.swipeRefreshLayout.isRefreshing = false
+                                        adapter.submitList(top + result.data.replies?.toMutableList()!!)
                                     } else {
-                                        //ToastUtils.makeText(requireContext(), "再怎么翻都没有啦", Toast.LENGTH_SHORT).show()
+                                        adapter.submitList(adapter.currentList + result.data.replies!!)
                                     }
-
-
-                                    /*if(comments.data.cursor.is_begin){
-                                        val replies : MutableList<CommentContentData> = comments.data.replies.toMutableList()
-
-                                        if(comments.data.top_replies != null){
-                                            val top = mutableListOf(comments.data.top_replies)
-                                            replies.remove(comments.data.top_replies)
-                                            adapter.submitList(top + replies)
-                                        }
-                                        else{
-                                            adapter.submitList(replies)
-
-                                        }
-
-        //                                println(adapter.currentList)
-                                    }
-                                    else{
-                                        if(comments.data.cursor.is_end) isEnd = true
-                                        adapter.submitList(adapter.currentList + comments.data.replies)
-                                    }*/
-
+                                    binding.swipeRefreshLayout.isRefreshing = false
+                                    page++
                                 } else {
                                     binding.swipeRefreshLayout.isRefreshing = false
                                     ToastUtils.makeText(

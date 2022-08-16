@@ -29,6 +29,14 @@ class SplashScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
+        initApp()
+
+        /*NetworkUtils.requireRetry {
+            initApp()
+        }*/
+    }
+
+    fun initApp() {
         val canSkip = false
         if (canSkip) {
             val intent =
@@ -61,7 +69,7 @@ class SplashScreenActivity : AppCompatActivity() {
                             )
                             finish()*/
                             NetworkUtils.requireRetry {
-                                Log.d(TAG, "onRetry: ")
+                                initApp()
                             }
 
                         }
@@ -93,7 +101,7 @@ class SplashScreenActivity : AppCompatActivity() {
                                     override fun onFailure(call: Call, e: IOException) {
                                         MainScope().launch {
                                             ToastUtils.makeText("网络异常").show()
-                                            val intent = Intent(
+                                            /*val intent = Intent(
                                                 this@SplashScreenActivity,
                                                 SplashScreenActivity::class.java
                                             )
@@ -103,7 +111,10 @@ class SplashScreenActivity : AppCompatActivity() {
                                                 R.anim.activity_fade_in,
                                                 R.anim.activity_fade_out
                                             )
-                                            finish()
+                                            finish()*/
+                                            NetworkUtils.requireRetry {
+                                                initApp()
+                                            }
                                         }
                                     }
 

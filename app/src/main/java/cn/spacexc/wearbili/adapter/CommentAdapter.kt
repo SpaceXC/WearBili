@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.text.toSpannable
+import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,7 +36,10 @@ import com.bumptech.glide.Glide
  * 给！爷！写！注！释！
  */
 
-class CommentAdapter(val lifeCycleScope: LifecycleCoroutineScope, val context: Context) :
+class CommentAdapter(
+    val lifeCycleScope: LifecycleCoroutineScope,
+    val context: Context,
+) :
     ListAdapter<CommentContentData, CommentAdapter.VideoCommentViewHolder>(object :
         DiffUtil.ItemCallback<CommentContentData>() {
         override fun areItemsTheSame(
@@ -54,10 +58,10 @@ class CommentAdapter(val lifeCycleScope: LifecycleCoroutineScope, val context: C
 
     }) {
 
-    var uploaderMid: Long? = null
+    var uploaderMid: Long? = 0L
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoCommentViewHolder {
-        val inflater : LayoutInflater = LayoutInflater.from(parent.context)
+        val inflater: LayoutInflater = LayoutInflater.from(parent.context)
         return VideoCommentViewHolder(
             inflater.inflate(
                 R.layout.cell_comment_list,
@@ -72,12 +76,12 @@ class CommentAdapter(val lifeCycleScope: LifecycleCoroutineScope, val context: C
         //println(itemCount)
         val comment = getItem(position)
         holder.userName.text = comment.member!!.uname
+        holder.upLiked.isVisible = comment.up_action.like
         if (comment.replies != null) {
-            val hotRepliesAdapter = CommentHotRepliesAdapter(lifeCycleScope)
+            val hotRepliesAdapter = CommentHotRepliesAdapter(lifeCycleScope, uploaderMid)
             holder.replies.layoutManager = LinearLayoutManager(this@CommentAdapter.context)
             holder.replies.adapter = hotRepliesAdapter
             hotRepliesAdapter.submitList(comment.replies!!.toList())
-
             holder.repliesControl.text = comment.reply_control.sub_reply_entry_text
         } else {
             holder.repliesCard.visibility = View.GONE
@@ -87,6 +91,9 @@ class CommentAdapter(val lifeCycleScope: LifecycleCoroutineScope, val context: C
                 comment.member!!.vip.nickname_color
             )
         )
+        else {
+            holder.userName.setTextColor(Color.WHITE)
+        }
 
         holder.pubDate.text = (comment.ctime * 1000).toDateStr("yyyy-MM-dd")
 
@@ -111,9 +118,7 @@ class CommentAdapter(val lifeCycleScope: LifecycleCoroutineScope, val context: C
 
 
         holder.likes.text = comment.like.toShortChinese()
-        if (comment.member!!.mid == uploaderMid) {
-            holder.isUp.visibility = View.VISIBLE
-        }
+        holder.isUp.isVisible = comment.member?.mid == uploaderMid
         Glide.with(Application.getContext()).load(comment.member!!.avatar.replace("http", "https"))
             .circleCrop()
             .into(holder.avatar)
@@ -132,6 +137,7 @@ class CommentAdapter(val lifeCycleScope: LifecycleCoroutineScope, val context: C
         var replies: RecyclerView
         var repliesControl: TextView
         var repliesCard: LinearLayout
+        var upLiked: TextView
 
         init {
             avatar = itemView.findViewById(R.id.dynamicAvatar)
@@ -144,11 +150,15 @@ class CommentAdapter(val lifeCycleScope: LifecycleCoroutineScope, val context: C
             replies = itemView.findViewById(R.id.repliesList)
             repliesControl = itemView.findViewById(R.id.repliesControl)
             repliesCard = itemView.findViewById(R.id.repliesCard)
+            upLiked = itemView.findViewById(R.id.upLiked)
         }
     }
 }
 
-class CommentHotRepliesAdapter(val lifeCycleScope: LifecycleCoroutineScope) :
+class CommentHotRepliesAdapter(
+    val lifeCycleScope: LifecycleCoroutineScope,
+    private val upMid: Long?
+) :
     ListAdapter<CommentContentData.Replies, CommentHotRepliesViewHolder>(object :
         DiffUtil.ItemCallback<CommentContentData.Replies>() {
         override fun areItemsTheSame(
@@ -189,7 +199,7 @@ class CommentHotRepliesAdapter(val lifeCycleScope: LifecycleCoroutineScope) :
                 null
             ).toSpannable()
             sp.setSpan(
-                ForegroundColorSpan(Color.WHITE),
+                ForegroundColorSpan(if (reply.member.mid == upMid) Color.parseColor("#fb7299") else Color.WHITE),
                 0,
                 reply.member.uname.length,
                 Spanned.SPAN_INCLUSIVE_EXCLUSIVE

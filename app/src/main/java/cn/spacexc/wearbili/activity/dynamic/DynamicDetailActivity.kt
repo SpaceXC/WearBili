@@ -38,8 +38,8 @@ import java.io.IOException
 class DynamicDetailActivity : AppCompatActivity() {
     lateinit var binding: ActivityDynamicDetailBinding
     var page: Int = 1
-    var prevList = listOf<CommentContentData>()
-    var adapter: CommentAdapter = CommentAdapter(lifecycleScope, this)
+    val adapter = CommentAdapter(lifecycleScope, this@DynamicDetailActivity)
+    var isCommentEnd = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDynamicDetailBinding.inflate(layoutInflater)
@@ -49,7 +49,6 @@ class DynamicDetailActivity : AppCompatActivity() {
             getDynamicDetails(id.toString())
         }
         binding.comments.layoutManager = LinearLayoutManager(this)
-        binding.comments.adapter = adapter
         binding.swipeRefreshLayout.isRefreshing = true
         getDynamicDetails(id.toString())
         lifecycleScope.launch {
@@ -82,7 +81,13 @@ class DynamicDetailActivity : AppCompatActivity() {
                     binding.replies.text = "回复(${card.desc.comment ?: 0.toShortChinese()})"
                     when (card.desc.type) {
                         1 -> {
-                            getDynamicComments(1, card.desc.dynamic_id)
+                            getDynamicComments(1, card.desc.dynamic_id, true)
+                            binding.scrollView5.setOnScrollChangeListener { _, _, _, _, _ ->
+                                val contentView: View = binding.scrollView5.getChildAt(0)
+                                if (contentView.measuredHeight == binding.scrollView5.scrollY + binding.scrollView5.height) {
+                                    getDynamicComments(1, card.desc.dynamic_id, false)
+                                }
+                            }
                             if ((card.cardObj as ForwardShareCard).item.content.isNullOrEmpty()) {
                                 binding.dynamicText.text = "分享动态"
                             } else {
@@ -116,7 +121,13 @@ class DynamicDetailActivity : AppCompatActivity() {
                             }
                         }
                         2 -> {
-                            getDynamicComments(2, card.desc.rid)
+                            getDynamicComments(2, card.desc.rid, true)
+                            binding.scrollView5.setOnScrollChangeListener { _, _, _, _, _ ->
+                                val contentView: View = binding.scrollView5.getChildAt(0)
+                                if (contentView.measuredHeight == binding.scrollView5.scrollY + binding.scrollView5.height) {
+                                    getDynamicComments(2, card.desc.rid, false)
+                                }
+                            }
                             if ((card.cardObj as ImageCard).item.description.isNullOrEmpty()) {
                                 binding.dynamicText.text = "分享图片"
                             } else {
@@ -151,7 +162,13 @@ class DynamicDetailActivity : AppCompatActivity() {
                                 }
                         }
                         4 -> {
-                            getDynamicComments(4, card.desc.dynamic_id)
+                            getDynamicComments(4, card.desc.dynamic_id, true)
+                            binding.scrollView5.setOnScrollChangeListener { _, _, _, _, _ ->
+                                val contentView: View = binding.scrollView5.getChildAt(0)
+                                if (contentView.measuredHeight == binding.scrollView5.scrollY + binding.scrollView5.height) {
+                                    getDynamicComments(4, card.desc.dynamic_id, false)
+                                }
+                            }
                             Thread {
                                 val sp = Html.fromHtml(
                                     topicProcessor(
@@ -170,7 +187,13 @@ class DynamicDetailActivity : AppCompatActivity() {
                             binding.recyclerView.visibility = View.GONE
                         }
                         8 -> {
-                            getDynamicComments(8, (card.cardObj as VideoCard).aid)
+                            getDynamicComments(8, (card.cardObj as VideoCard).aid, true)
+                            binding.scrollView5.setOnScrollChangeListener { _, _, _, _, _ ->
+                                val contentView: View = binding.scrollView5.getChildAt(0)
+                                if (contentView.measuredHeight == binding.scrollView5.scrollY + binding.scrollView5.height) {
+                                    getDynamicComments(8, (card.cardObj as VideoCard).aid, false)
+                                }
+                            }
                             if ((card.cardObj as VideoCard).dynamic.isNullOrEmpty()) {
                                 binding.dynamicText.text = "投稿视频"
                             } else {
@@ -219,7 +242,7 @@ class DynamicDetailActivity : AppCompatActivity() {
         binding.dynamicText.movementMethod = LinkMovementMethod.getInstance()
     }
 
-    private fun getDynamicComments(type: Int, oid: Long) {
+    private fun getDynamicComments(type: Int, oid: Long, isRefresh: Boolean) {
         /**
          * 1 - 转发
          * 2 - 图文
@@ -233,6 +256,7 @@ class DynamicDetailActivity : AppCompatActivity() {
             8 -> 1
             else -> 0
         }
+        if (isCommentEnd) return
         DynamicManager.getCommentsByLikes(
             requestType,
             oid,
@@ -249,57 +273,33 @@ class DynamicDetailActivity : AppCompatActivity() {
 
                 override fun onResponse(call: Call, response: Response) {
                     val str = response.body?.string()
-                    val comments = Gson().fromJson(str, VideoComment::class.java)
+                    val result = Gson().fromJson(str, VideoComment::class.java)
+                    isCommentEnd = result.data.cursor.is_end
                     MainScope().launch {
+                        binding.commentCount.text =
+                            "评论(${result.data.cursor.all_count.toShortChinese()})"
+                        binding.comments.adapter = adapter
                         binding.swipeRefreshLayout.isRefreshing = false
-                        if (comments.code == 0) {
-                            val replies: MutableList<CommentContentData> =
-                                comments.data.replies?.toMutableList()
-                                    ?: mutableListOf()
-                            binding.commentCount.text =
-                                "评论(${comments.data.cursor.all_count.toShortChinese()})"
-                            if (replies != prevList) {
-                                prevList = replies
-                                if (comments.data.top.member != null && comments.data.top.content != null) {
-                                    val top = comments.data.top
-                                    top.is_top = true
-                                    replies.remove(comments.data.top)
-                                    val topList = mutableListOf(top)
-
-                                    val finalList = topList + replies
-                                    adapter.submitList(finalList)
-                                } else {
-                                    adapter.submitList(adapter.currentList + replies)
-
+                        if (result.code == 0) {
+                            if (isRefresh) {
+                                var top = mutableListOf<CommentContentData>()
+                                if (result.data.top?.content != null && result.data.top.member != null) {
+                                    top = mutableListOf(result.data.top)
                                 }
-                                page++
-                                binding.swipeRefreshLayout.isRefreshing = false
+                                if (!result.data.replies.isNullOrEmpty()) {
+                                    adapter.uploaderMid = result.data.upper.mid
+                                    adapter.submitList(top + result.data.replies.toMutableList())
+                                }
                             } else {
-                                //ToastUtils.makeText(requireContext(), "再怎么翻都没有啦", Toast.LENGTH_SHORT).show()
-                            }
-
-
-                            /*if(comments.data.cursor.is_begin){
-                                val replies : MutableList<CommentContentData> = comments.data.replies.toMutableList()
-
-                                if(comments.data.top_replies != null){
-                                    val top = mutableListOf(comments.data.top_replies)
-                                    replies.remove(comments.data.top_replies)
-                                    adapter.submitList(top + replies)
+                                if (!result.data.replies.isNullOrEmpty()) {
+                                    adapter.uploaderMid = result.data.upper.mid
+                                    adapter.submitList(adapter.currentList + result.data.replies)
                                 }
-                                else{
-                                    adapter.submitList(replies)
-
-                                }
-
-    //                                println(adapter.currentList)
                             }
-                            else{
-                                if(comments.data.cursor.is_end) isEnd = true
-                                adapter.submitList(adapter.currentList + comments.data.replies)
-                            }*/
-
+                            binding.swipeRefreshLayout.isRefreshing = false
+                            page++
                         } else {
+                            binding.swipeRefreshLayout.isRefreshing = false
                             ToastUtils.makeText(
                                 "评论加载失败啦"
                             ).show()

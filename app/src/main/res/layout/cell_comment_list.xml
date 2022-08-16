@@ -11,16 +11,16 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
         android:layout_marginEnd="10dp"
-        android:background="@drawable/background_level_card"
+        android:background="@drawable/background_small_circle"
         android:fontFamily="@font/puhui"
-        android:paddingStart="6dp"
-        android:paddingTop="1dp"
-        android:paddingEnd="6dp"
-        android:paddingBottom="1dp"
+        android:paddingStart="10dp"
+        android:paddingTop="2dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="2dp"
         android:text="UP"
         android:textColor="#fff"
         android:textSize="10sp"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/dynamicPubDate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -47,13 +47,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="10dp"
         android:fontFamily="@font/puhui_bold"
         android:paddingTop="4dp"
         android:singleLine="true"
         android:text="bishi"
         android:textColor="#fff"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/dynamicAvatar"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -133,6 +131,26 @@
         app:layout_constraintVertical_bias="0.5"
         app:srcCompat="@drawable/ic_outline_thumb_down_24" />
 
+    <TextView
+        android:id="@+id/upLiked"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/background_grey"
+        android:drawableStart="@drawable/ic_outline_thumb_up_24_small"
+        android:fontFamily="@font/puhui_medium"
+        android:gravity="center"
+        android:paddingStart="12dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="5dp"
+        android:text=" UP主觉得很赞"
+        android:textColor="#fff"
+        android:textSize="10sp"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="@+id/dynamicText"
+        app:layout_constraintTop_toBottomOf="@+id/dynamicText" />
+
     <LinearLayout
         android:id="@+id/repliesCard"
         android:layout_width="0dp"
@@ -143,7 +161,7 @@
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="@+id/dynamicText"
         app:layout_constraintStart_toStartOf="@+id/dynamicText"
-        app:layout_constraintTop_toBottomOf="@+id/dynamicText">
+        app:layout_constraintTop_toBottomOf="@+id/upLiked">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/repliesList"

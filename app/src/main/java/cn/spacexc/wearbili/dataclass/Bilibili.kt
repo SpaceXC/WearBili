@@ -1,6 +1,7 @@
 package cn.spacexc.wearbili.dataclass
 
 import android.os.Parcelable
+import cn.spacexc.wearbili.dataclass.video.Owner
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
@@ -113,48 +114,7 @@ data class VideoCardData(
 }
 */
 
-data class VideoInfo(
-    val code : Int,
-    val massage: String,
-    val data : VideoInfoData
-)
 
-@Parcelize
-data class VideoInfoData(
-    val bvid: String,
-    val aid: Long,
-    val cid: Long,
-    val videos: Int,
-    val pic: String,
-    val tid: Int,
-    val tname: String,
-    val title: String,
-    val pubdate: Long,
-    val duration: Long,
-    val ctime: Long,
-    val desc: String,
-    val owner: VideoOwner,
-    val stat: VideoStat,
-) : Parcelable
-
-@Parcelize
-data class VideoOwner(
-    val mid: Long,
-    val name: String,
-    val face: String
-) : Parcelable
-
-@Parcelize
-data class VideoStat(
-    val danmaku: Int,
-    val reply: Int,
-    val favorite: Int,
-    val coin: Int,
-    val share: Int,
-    val like: Long,
-    val dislike: Int,
-    val view: Long
-) : Parcelable
 
 data class VideoStreams(
     val data : VideoStreamData
@@ -269,7 +229,7 @@ data class CommentData(
     val hots: List<CommentContentData>,
     val notice: CommentNotice,
     val replies: List<CommentContentData>?,
-    val top: CommentContentData,
+    val top: CommentContentData?,
     val upper: UpperInfo
 )
 
@@ -901,7 +861,7 @@ data class RecommendVideoByVideoData(
     val is_ogv: Boolean,
     val mission_id: Int?,
     val ogv_info: Any?,
-    val owner: VideoOwner,
+    val owner: Owner,
     val pic: String,
     val pubdate: Int,
     val rcmd_reason: String,

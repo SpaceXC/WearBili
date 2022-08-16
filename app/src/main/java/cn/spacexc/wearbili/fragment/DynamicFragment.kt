@@ -1,5 +1,6 @@
 package cn.spacexc.wearbili.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,10 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.activity.MainActivity
+import cn.spacexc.wearbili.activity.user.LoginActivity
 import cn.spacexc.wearbili.adapter.DynamicAdapter
 import cn.spacexc.wearbili.databinding.FragmentDynamicBinding
 import cn.spacexc.wearbili.dataclass.dynamic.Card
 import cn.spacexc.wearbili.manager.DynamicManager
+import cn.spacexc.wearbili.utils.RecyclerViewUtils.TopLinearSmoothScroller
 import cn.spacexc.wearbili.utils.ToastUtils
 import cn.spacexc.wearbili.utils.ToastUtils.debugToast
 import com.bumptech.glide.Glide
@@ -44,13 +47,21 @@ class DynamicFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerView.layoutManager = object : LinearLayoutManager(requireContext()) {
+            override fun smoothScrollToPosition(
+                recyclerView: RecyclerView?,
+                state: RecyclerView.State?,
+                position: Int
+            ) {
+                val scroller = TopLinearSmoothScroller(view.context)
+                scroller.targetPosition = position
+                startSmoothScroll(scroller)
+            }
+        }
         adapter = DynamicAdapter(requireContext())
         binding.recyclerView.adapter = adapter
         binding.swipeRefreshLayout.setOnRefreshListener {
             getDynamic()
-            binding.recyclerView.smoothScrollToPosition(0)
-
         }
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -97,11 +108,24 @@ class DynamicFragment : Fragment() {
 
             }
 
-            override fun onSuccess(dynamicCards: List<Card>) {
+            override fun onSuccess(dynamicCards: List<Card>, code: Int) {
                 MainScope().launch {
-                    binding.swipeRefreshLayout.isRefreshing = false
-                    //ToastUtils.makeText("动态获取成功$dynamicCards").show()
-                    adapter.submitList(dynamicCards.toMutableList())
+                    when (code) {
+                        0 -> {
+                            binding.swipeRefreshLayout.isRefreshing = false
+                            //ToastUtils.makeText("动态获取成功$dynamicCards").show()
+                            adapter.submitList(dynamicCards.toMutableList())
+                            binding.recyclerView.smoothScrollToPosition(0)
+                        }
+                        -6 -> {
+                            ToastUtils.makeText("你还没有登录哦").show()
+                            val intent = Intent(requireActivity(), LoginActivity::class.java)
+                            intent.putExtra("fromHome", false)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                        }
+                    }
+
                 }
 
             }
@@ -125,12 +149,18 @@ class DynamicFragment : Fragment() {
 
             }
 
-            override fun onSuccess(dynamicCards: List<Card>) {
-
+            override fun onSuccess(dynamicCards: List<Card>, code: Int) {
                 MainScope().launch {
-                    //binding.swipeRefreshLayout.isRefreshing = false
-                    //ToastUtils.makeText("动态获取成功$dynamicCards").show()
-                    adapter.submitList(adapter.currentList + dynamicCards.toMutableList())
+                    when (code) {
+                        0 -> adapter.submitList(adapter.currentList + dynamicCards.toMutableList())
+                        -6 -> {
+                            ToastUtils.makeText("你还没有登录哦").show()
+                            val intent = Intent(requireActivity(), LoginActivity::class.java)
+                            intent.putExtra("fromHome", false)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                        }
+                    }
                 }
 
             }
