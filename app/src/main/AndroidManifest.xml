@@ -25,6 +25,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.other.SettingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.user.FollowListActivity"
             android:exported="false" />
         <activity

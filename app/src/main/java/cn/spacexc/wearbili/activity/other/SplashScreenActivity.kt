@@ -29,7 +29,16 @@ class SplashScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-        initApp()
+        val intent =
+            Intent(this@SplashScreenActivity, MainActivity::class.java)
+        //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        overridePendingTransition(
+            R.anim.activity_fade_in,
+            R.anim.activity_fade_out
+        )
+        finish()
+        //initApp()
 
         /*NetworkUtils.requireRetry {
             initApp()

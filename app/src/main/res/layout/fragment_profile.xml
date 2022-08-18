@@ -63,10 +63,53 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <ImageView
+                android:id="@+id/defAvatar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/default_avatar"
+                android:visibility="gone"
+                app:layout_constraintEnd_toStartOf="@+id/guideline49"
+                app:layout_constraintStart_toStartOf="@+id/guideline48"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/guest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/puhui_medium"
+                android:text="访客"
+                android:textColor="#fff"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/defAvatar" />
+
+            <TextView
+                android:id="@+id/loginHint"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:alpha="0.8"
+                android:fontFamily="@font/puhui"
+                android:gravity="center"
+                android:lines="1"
+                android:text="你还没有登录啊 (ﾟДﾟ*)ﾉ"
+                android:textColor="#fff"
+                android:textSize="12sp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/guest" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout9"
+                android:id="@+id/avatarGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -101,6 +144,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
+                    android:visibility="visible"
                     app:layout_constraintEnd_toStartOf="@+id/guideline39"
                     app:layout_constraintStart_toStartOf="@+id/guideline40"
                     app:layout_constraintTop_toTopOf="parent"
@@ -122,23 +166,6 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:id="@+id/textView14"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:alpha="0.8"
-                android:fontFamily="@font/puhui"
-                android:gravity="center"
-                android:lines="1"
-                android:text="你还没有登入呐"
-                android:textColor="#fff"
-                android:textSize="12sp"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/accountSurvey"
                 android:layout_width="match_parent"
@@ -147,7 +174,7 @@
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+                app:layout_constraintTop_toBottomOf="@+id/nicknameGroup">
 
                 <View
                     android:id="@+id/divider2"
@@ -231,13 +258,14 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
-                android:id="@+id/linearLayout"
+                android:id="@+id/nicknameGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout9">
+                app:layout_constraintTop_toBottomOf="@+id/avatarGroup">
 
                 <TextView
                     android:id="@+id/usernameText"
@@ -268,7 +296,7 @@
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/imageView19"
+                android:id="@+id/littleArrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
@@ -281,7 +309,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/accountSurvey" />
 
             <RelativeLayout
-                android:id="@+id/relativeLayout5"
+                android:id="@+id/buttonGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -290,7 +318,7 @@
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView19">
+                app:layout_constraintTop_toBottomOf="@+id/littleArrow">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"
@@ -311,7 +339,7 @@
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/relativeLayout5">
+                app:layout_constraintTop_toBottomOf="@+id/buttonGroup">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -347,6 +375,20 @@
                 </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline48"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.37" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline49"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.63" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

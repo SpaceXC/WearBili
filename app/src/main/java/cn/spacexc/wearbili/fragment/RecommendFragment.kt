@@ -8,10 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import cn.spacexc.wearbili.adapter.VideoRecommendListAdapter
+import cn.spacexc.wearbili.adapter.VideoPhoneEndRecommendListAdapter
 import cn.spacexc.wearbili.databinding.FragmentRecommendBinding
-import cn.spacexc.wearbili.dataclass.VideoRecommend
-import cn.spacexc.wearbili.dataclass.VideoRecommendItem
+import cn.spacexc.wearbili.dataclass.video.rcmd.Item
+import cn.spacexc.wearbili.dataclass.video.rcmd.RecommendVideo
 import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.utils.ToastUtils
 import com.bumptech.glide.Glide
@@ -28,10 +28,10 @@ class RecommendFragment : Fragment() {
     private var _binding: FragmentRecommendBinding? = null
     private val binding get() = _binding!!
 
-    lateinit var adapter: VideoRecommendListAdapter
+    lateinit var adapter: VideoPhoneEndRecommendListAdapter
 
 
-    var videoList: Array<VideoRecommendItem> = emptyArray()
+    var videoList: Array<Item> = emptyArray()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,7 +50,7 @@ class RecommendFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = VideoRecommendListAdapter(requireContext())
+        adapter = VideoPhoneEndRecommendListAdapter(requireContext())
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -98,8 +98,8 @@ class RecommendFragment : Fragment() {
 
                     override fun onResponse(call: Call, response: Response) {
                         val str = response.body?.string()
-                        val videos = Gson().fromJson(str, VideoRecommend::class.java)
-                        videoList += videos.data.item
+                        val videos = Gson().fromJson(str, RecommendVideo::class.java)
+                        videoList += videos.data.items
                         MainScope().launch {
                             if (response.code == 200) {
                                 binding.swipeRefreshLayout.isRefreshing = false

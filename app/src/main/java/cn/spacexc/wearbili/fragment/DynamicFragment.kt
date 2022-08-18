@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
-import cn.spacexc.wearbili.activity.MainActivity
 import cn.spacexc.wearbili.activity.user.LoginActivity
 import cn.spacexc.wearbili.adapter.DynamicAdapter
 import cn.spacexc.wearbili.databinding.FragmentDynamicBinding
@@ -63,6 +62,12 @@ class DynamicFragment : Fragment() {
         binding.swipeRefreshLayout.setOnRefreshListener {
             getDynamic()
         }
+        binding.login.setOnClickListener {
+            val intent = Intent(requireActivity(), LoginActivity::class.java)
+            intent.putExtra("fromHome", false)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+        }
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (newState == RecyclerView.SCROLL_STATE_DRAGGING or RecyclerView.SCROLL_STATE_SETTLING) {
@@ -93,8 +98,10 @@ class DynamicFragment : Fragment() {
     private fun getDynamic() {
         ToastUtils.debugToast("检测登录...")
         if (!cn.spacexc.wearbili.manager.UserManager.isLoggedIn()) {
-            ToastUtils.makeText("还没登录呐").show()
-            MainActivity.currentPageId.value = 2
+            binding.swipeRefreshLayout.isRefreshing = false
+            binding.swipeRefreshLayout.visibility = View.GONE
+            binding.requireLogin.visibility = View.VISIBLE
+
         }
         ToastUtils.debugShowText("开始获取动态...")
 
@@ -112,17 +119,17 @@ class DynamicFragment : Fragment() {
                 MainScope().launch {
                     when (code) {
                         0 -> {
+                            binding.login.visibility = View.GONE
+                            binding.requireLogin.visibility = View.GONE
                             binding.swipeRefreshLayout.isRefreshing = false
+                            binding.swipeRefreshLayout.visibility = View.VISIBLE
                             //ToastUtils.makeText("动态获取成功$dynamicCards").show()
                             adapter.submitList(dynamicCards.toMutableList())
                             binding.recyclerView.smoothScrollToPosition(0)
                         }
                         -6 -> {
-                            ToastUtils.makeText("你还没有登录哦").show()
-                            val intent = Intent(requireActivity(), LoginActivity::class.java)
-                            intent.putExtra("fromHome", false)
-                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            startActivity(intent)
+                            binding.requireLogin.visibility = View.VISIBLE
+                            binding.swipeRefreshLayout.visibility = View.GONE
                         }
                     }
 
@@ -136,8 +143,9 @@ class DynamicFragment : Fragment() {
     private fun getMoreDynamic() {
         //if (!isAdded) return
         if (!cn.spacexc.wearbili.manager.UserManager.isLoggedIn()) {
-            ToastUtils.makeText("还没登录呐").show()
-            MainActivity.currentPageId.value = 2
+            binding.swipeRefreshLayout.isRefreshing = false
+            binding.swipeRefreshLayout.visibility = View.GONE
+            binding.requireLogin.visibility = View.VISIBLE
         }
         DynamicManager.getMoreDynamic(object : DynamicManager.DynamicResponseCallback {
             override fun onFailed(call: Call, e: Exception) {
@@ -152,13 +160,15 @@ class DynamicFragment : Fragment() {
             override fun onSuccess(dynamicCards: List<Card>, code: Int) {
                 MainScope().launch {
                     when (code) {
-                        0 -> adapter.submitList(adapter.currentList + dynamicCards.toMutableList())
+                        0 -> {
+                            binding.requireLogin.visibility = View.GONE
+                            binding.requireLogin.visibility = View.GONE
+                            binding.swipeRefreshLayout.visibility = View.VISIBLE
+                            adapter.submitList(adapter.currentList + dynamicCards.toMutableList())
+                        }
                         -6 -> {
-                            ToastUtils.makeText("你还没有登录哦").show()
-                            val intent = Intent(requireActivity(), LoginActivity::class.java)
-                            intent.putExtra("fromHome", false)
-                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            startActivity(intent)
+                            binding.requireLogin.visibility = View.VISIBLE
+                            binding.swipeRefreshLayout.visibility = View.GONE
                         }
                     }
                 }

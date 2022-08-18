@@ -1,8 +1,10 @@
 package cn.spacexc.wearbili.manager
 
 import android.net.Uri
+import cn.spacexc.wearbili.dataclass.BaseData
 import cn.spacexc.wearbili.dataclass.user.AccessKeyGetter
 import cn.spacexc.wearbili.utils.NetworkUtils
+import cn.spacexc.wearbili.utils.SharedPreferencesUtils
 import com.google.gson.Gson
 import okhttp3.*
 import java.io.IOException
@@ -100,6 +102,23 @@ object UserManager {
         )
     }
 
+    fun logout(callback: NetworkUtils.ResultCallback<Boolean>) {
+        val body = FormBody.Builder()
+            .add("biliCSRF", CookiesManager.getCsrfToken()!!)
+            .build()
+        NetworkUtils.postUrl("http://passport.bilibili.com/login/exit/v2", body, object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                callback.onFailed(e)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val result = Gson().fromJson(response.body?.string(), BaseData::class.java)
+                callback.onSuccess(result.code == 0)
+            }
+
+        })
+    }
+
     fun getAccessKey(callback: NetworkUtils.ResultCallback<String>) {
         NetworkUtils.getUrl(
             "https://passport.bilibili.com/login/app/third?appkey=27eb53fc9058f8c3&api=http://link.acg.tv/forum.php&sign=67ec798004373253d60114caaad89a8c",
@@ -133,6 +152,7 @@ object UserManager {
             })
     }
 
+    fun getAccessKey(): String? = SharedPreferencesUtils.getString("accessKey", "")
     //@Throws(IOException::class)
     /*fun saveAccessKey(cookie: String?): String? {
         try {

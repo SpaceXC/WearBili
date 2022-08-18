@@ -2,6 +2,7 @@ package cn.spacexc.wearbili.manager
 
 import android.util.Log
 import cn.spacexc.wearbili.Application
+import cn.spacexc.wearbili.Application.Companion.TAG
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.ToastUtils
 import cn.spacexc.wearbili.utils.VideoUtils
@@ -18,40 +19,14 @@ import java.io.IOException
 
 object VideoManager {
     fun getRecommendVideo(callback: Callback) {
-        if (CookiesManager.getCookies().isEmpty()) {
-            Log.d(Application.getTag(), "getRecommendVideo: 1" + CookiesManager.getCookies())
-            //Analytics.trackEvent("Device Info:${DeviceManager.getDeviceName()}, Upload time: ${System.currentTimeMillis()}, Has cookies: ${CookiesManager.getCookies().isNotEmpty()}, Cookies: ${CookiesManager.getCookies()}")
-            CookiesManager.uploadCookies()
-            NetworkUtils.getUrl(
-                "https://bilibili.com",
-                object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-                    }
-
-                    override fun onResponse(call: Call, response: Response) {
-                        NetworkUtils.getUrl(
-                            "https://api.bilibili.com/x/web-interface/index/top/rcmd?fresh_type=3&version=1&ps=10&fresh_idx=1&fresh_idx_1h=1&homepage_ver=1",
-                            callback
-                        )
-                        Log.d(
-                            Application.getTag(),
-                            "getRecommendVideo: " + CookiesManager.getCookies()
-                        )
-                        //Analytics.trackEvent("Device Info:${DeviceManager.getDeviceName()}, Upload time: ${System.currentTimeMillis()}, Has cookies: ${CookiesManager.getCookies().isNotEmpty()}, Cookies: ${CookiesManager.getCookies()}")
-                        CookiesManager.uploadCookies()
-                    }
-                })
-        }
-        else {
-            NetworkUtils.getUrl(
-                "https://api.bilibili.com/x/web-interface/index/top/rcmd?fresh_type=3&version=1&ps=10&fresh_idx=1&fresh_idx_1h=1&homepage_ver=1",
-                callback
-            )
-            Log.d(Application.getTag(), "getRecommendVideo: " + CookiesManager.getCookies())
-            CookiesManager.uploadCookies()
-
-
-        }
+        val url =
+            if (UserManager.getAccessKey() != null) "http://app.bilibili.com/x/v2/feed/index?access_key=${UserManager.getAccessKey()}" else "http://app.bilibili.com/x/v2/feed/index"
+        Log.d(TAG, "getRecommendVideo: $url")
+        NetworkUtils.getUrl(
+            url,
+            callback
+        )
+        Log.d(Application.getTag(), "getRecommendVideo: " + CookiesManager.getCookies())
     }
 
     fun getVideoById(id: String?, callback: Callback) {
@@ -62,7 +37,7 @@ object VideoManager {
         }
     }
 
-    fun getVideoUrl(bvid : String, cid : Long, callback: Callback) {
+    fun getVideoUrl(bvid: String, cid: Long, callback: Callback) {
         //NetworkUtils.getUrl("http://api.bilibili.com/x/player/playurl?cid=$cid&bvid=$bvid&fnval=1", callback)
         NetworkUtils.getUrl(
             "https://api.bilibili.com/x/player/playurl?cid=$cid&bvid=$bvid&platform=web&qn=80",

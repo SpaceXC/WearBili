@@ -127,39 +127,35 @@ class LoginActivity : AppCompatActivity() {
                                                         UserManager.getAccessKey(object :
                                                             NetworkUtils.ResultCallback<String> {
                                                             override fun onSuccess(result: String) {
-                                                                Log.d(
-                                                                    Application.TAG,
-                                                                    "onSuccess: $result"
-                                                                )
-                                                                SharedPreferencesUtils.saveString(
-                                                                    "accessKey",
-                                                                    result
-                                                                )
                                                                 MainScope().launch {
-                                                                    ToastUtils.makeText(
-                                                                        "登录成功"
-                                                                    ).show()
-                                                                }
-                                                                cancel()
-                                                                if (intent.getBooleanExtra(
-                                                                        "fromHome",
-                                                                        true
+                                                                    SharedPreferencesUtils.saveString(
+                                                                        "accessKey",
+                                                                        result
                                                                     )
-                                                                ) {
-                                                                    val intent = Intent(
-                                                                        this@LoginActivity,
-                                                                        SplashScreenActivity::class.java
-                                                                    )
-                                                                    intent.flags =
-                                                                        Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                                                                    startActivity(intent)
-                                                                } else {
-                                                                    finish()
+                                                                    ToastUtils.makeText("登录成功")
+                                                                        .show()
+                                                                    if (intent.getBooleanExtra(
+                                                                            "fromHome",
+                                                                            true
+                                                                        )
+                                                                    ) {
+                                                                        val intent = Intent(
+                                                                            this@LoginActivity,
+                                                                            SplashScreenActivity::class.java
+                                                                        )
+                                                                        intent.flags =
+                                                                            Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                                                        startActivity(intent)
+                                                                    } else {
+                                                                        finish()
+                                                                    }
                                                                 }
                                                             }
 
                                                             override fun onFailed(e: Exception) {
-                                                                e.printStackTrace()
+                                                                MainScope().launch {
+                                                                    ToastUtils.showText("登录失败！$e")
+                                                                }
                                                             }
 
                                                         })

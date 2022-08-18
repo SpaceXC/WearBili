@@ -6,7 +6,6 @@ import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -15,7 +14,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -84,6 +83,15 @@ class VideoInfoFragment : Fragment() {
 
     private var likeButton: ButtonsAdapter.ButtonViewHolder? = null
 
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            if (granted) {
+                playWithTaiWan()
+            } else {
+                ToastUtils.showText("请授予权限以调用抬腕视频")
+            }
+        }
+
 
     private val btnListUpperRow = MutableLiveData(
         mutableListOf(
@@ -94,6 +102,7 @@ class VideoInfoFragment : Fragment() {
                 "小电视播放器播放",
                 "小电视播放器播放"
             ),
+            //RoundButtonData(R.drawable.ic_baseline_play_circle_outline_24, "test", "test"),
             RoundButtonData(R.drawable.ic_outline_monetization_on_24, "投币", "投币"),
             RoundButtonData(R.drawable.ic_round_star_border_24, "收藏", "收藏"),
             RoundButtonData(R.drawable.ic_outline_thumb_down_24, "点踩", "点踩"),
@@ -109,51 +118,9 @@ class VideoInfoFragment : Fragment() {
     }
 
     fun requestPermission() {
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED ||
-            ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED ||
-            ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.MANAGE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.MANAGE_EXTERNAL_STORAGE
-                ),
-                0
-            )
-        } else {
-            playWithTaiWan()
-        }
+        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            0 -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED || grantResults.isNotEmpty() && grantResults[1] == PackageManager.PERMISSION_GRANTED || grantResults.isNotEmpty() && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        playWithTaiWan()
-                    }
-                } else {
-                    ToastUtils.makeText("请授予权限以写入H码").show()
-                }
-            }
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -171,54 +138,57 @@ class VideoInfoFragment : Fragment() {
 
     private fun playWithTaiWan() {
         lifecycleScope.launch {
-            try {
-                bvid?.let {
-                    VideoManager.getVideoUrl(it, cid, object : Callback {
-                        override fun onFailure(call: Call, e: IOException) {
-                            MainScope().launch {
-                                ToastUtils.makeText(
-                                    "网络异常"
-                                ).show()
+            kotlin.runCatching {
+                try {
+                    bvid?.let {
+                        VideoManager.getVideoUrl(it, cid, object : Callback {
+                            override fun onFailure(call: Call, e: IOException) {
+                                MainScope().launch {
+                                    ToastUtils.makeText(
+                                        "网络异常"
+                                    ).show()
 
-                            }
-                        }
-
-                        override fun onResponse(call: Call, response: Response) {
-                            val responseString = response.body?.string()
-                            val videoUrls: VideoStreamsFlv = Gson().fromJson(
-                                responseString,
-                                VideoStreamsFlv::class.java
-                            )        //创建视频数据对象
-                            MainScope().launch {
-                                val path =
-                                    File(Environment.getExternalStorageDirectory().absolutePath + "/HankMi/").absoluteFile
-                                val file =
-                                    File(Environment.getExternalStorageDirectory().absolutePath + "/HankMi/keydata.hmd").absoluteFile
-                                Log.d(
-                                    TAG,
-                                    "onResponse: " + Environment.getExternalStorageDirectory().absolutePath + "/HankMi/cache/media"
-                                )
-                                if (!path.exists()) {
-                                    path.mkdir()
-                                    file.createNewFile()
-                                }
-                                file.writeText("hmmedia=[${videoUrls.data.durl[0].url}]")
-
-                                val intent = Intent().apply {
-                                    action = "com.hankmi.media"
-                                    startActivity(this)
                                 }
                             }
 
-                        }
+                            override fun onResponse(call: Call, response: Response) {
+                                val responseString = response.body?.string()
+                                val videoUrls: VideoStreamsFlv = Gson().fromJson(
+                                    responseString,
+                                    VideoStreamsFlv::class.java
+                                )        //创建视频数据对象
+                                MainScope().launch {
+                                    val path =
+                                        File(Environment.getExternalStorageDirectory().absolutePath + "/HankMi/").absoluteFile
+                                    val file =
+                                        File(Environment.getExternalStorageDirectory().absolutePath + "/HankMi/keydata.hmd").absoluteFile
+                                    Log.d(
+                                        TAG,
+                                        "onResponse: " + Environment.getExternalStorageDirectory().absolutePath + "/HankMi/cache/media"
+                                    )
+                                    if (!path.exists()) {
+                                        path.mkdir()
+                                        file.createNewFile()
+                                    }
+                                    file.writeText("hmmedia=[${videoUrls.data.durl[0].url}]")
 
-                    })
-                }
-            } catch (e: Exception) {
-                MainScope().launch {
-                    ToastUtils.makeText("视频加载失败")
+                                    val intent = Intent().apply {
+                                        action = "com.hankmi.media"
+                                        startActivity(this)
+                                    }
+                                }
+
+                            }
+
+                        })
+                    }
+                } catch (e: Exception) {
+                    MainScope().launch {
+                        ToastUtils.makeText("视频加载失败")
+                    }
                 }
             }
+
         }
     }
 
@@ -311,6 +281,7 @@ class VideoInfoFragment : Fragment() {
                             ToastUtils.makeText("需要安装小电视播放器哦").show()
                         }
                     }
+                    "test" -> requestPermission()
                 }
             }
 

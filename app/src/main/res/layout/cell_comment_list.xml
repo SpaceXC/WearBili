@@ -26,7 +26,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/dynamicPubDate"
         app:layout_constraintTop_toTopOf="@+id/dynamicPubDate"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.5" />
 
     <ImageView
         android:id="@+id/dynamicAvatar"
@@ -34,6 +34,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="-4dp"
         android:adjustViewBounds="true"
         app:layout_constraintBottom_toBottomOf="@+id/dynamicPubDate"
         app:layout_constraintDimensionRatio="1:1"
@@ -63,7 +64,6 @@
         android:layout_marginTop="4dp"
         android:alpha="0.7"
         android:fontFamily="@font/puhui"
-        android:paddingBottom="8dp"
         android:text="11-45-14"
         android:textColor="#fff"
         android:textSize="10sp"
@@ -97,13 +97,14 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="9dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="9dp"
+        android:layout_marginBottom="2dp"
         android:background="#318C8C8C"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+        app:layout_constraintTop_toBottomOf="@+id/repliesCard" />
 
     <ImageView
         android:id="@+id/imageView6"
@@ -135,7 +136,7 @@
         android:id="@+id/upLiked"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="6dp"
         android:background="@drawable/background_grey"
         android:drawableStart="@drawable/ic_outline_thumb_up_24_small"
         android:fontFamily="@font/puhui_medium"
@@ -149,7 +150,7 @@
         android:textSize="10sp"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="@+id/dynamicText"
-        app:layout_constraintTop_toBottomOf="@+id/dynamicText" />
+        app:layout_constraintTop_toBottomOf="@+id/likes" />
 
     <LinearLayout
         android:id="@+id/repliesCard"
@@ -190,16 +191,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="6dp"
+        android:layout_marginTop="6dp"
         android:alpha="0.7"
         android:fontFamily="@font/puhui"
         android:text="1.2w"
         android:textColor="#fff"
         android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/divider"
         app:layout_constraintStart_toEndOf="@+id/imageView6"
-        app:layout_constraintTop_toBottomOf="@+id/repliesCard" />
+        app:layout_constraintTop_toBottomOf="@+id/dynamicText" />
 
     <TextView
         android:id="@+id/replies"

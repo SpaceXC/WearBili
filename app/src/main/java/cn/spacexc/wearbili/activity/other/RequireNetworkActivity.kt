@@ -1,20 +1,31 @@
 package cn.spacexc.wearbili.activity.other
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
+import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
+import cn.spacexc.wearbili.utils.RESULT_RETRY
 import cn.spacexc.wearbili.utils.TimeUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.io.Serializable
 
 class RequireNetworkActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_require_network)
+        val requestDataLauncher =
+            this.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_RETRY) {
+                    val data = result.data?.getStringExtra("data")
+                    // Handle data from SecondActivity
+                }
+            }
         lifecycleScope.launch {
             while (true) {
                 findViewById<TextView>(R.id.timeText).text = TimeUtils.getCurrentTime()
@@ -22,15 +33,17 @@ class RequireNetworkActivity : AppCompatActivity() {
             }
         }
         findViewById<ConstraintLayout>(R.id.retry).setOnClickListener {
-            (intent.getSerializableExtra("callback") as () -> Unit).invoke()
+            val intent = Intent()
+            setResult(RESULT_RETRY)
+            finish()
         }
     }
 
-    class RetryCallback(callback: () -> Unit) : Serializable {
-        var call = callback as Serializable
-    }
 
-    interface Retry {
-        fun onRetry()
+    companion object {
+        fun requireRetry(callback: () -> Unit) {
+            val intent = Intent(Application.context, this::class.java)
+
+        }
     }
 }

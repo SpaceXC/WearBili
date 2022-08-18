@@ -8,10 +8,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
+import cn.spacexc.wearbili.activity.other.SettingsActivity
 import cn.spacexc.wearbili.activity.user.FollowListActivity
 import cn.spacexc.wearbili.activity.user.LoginActivity
 import cn.spacexc.wearbili.activity.user.StaredActivity
@@ -109,6 +111,14 @@ class ProfileFragment : Fragment() {
                 it.submitList(buttonList)
             }
         refreshLogin()
+        binding.settings.setOnClickListener {
+            if (isAdded) {
+                val intent =
+                    Intent(requireContext(), SettingsActivity::class.java)
+                startActivity(intent)
+            }
+        }
+        binding.defAvatar.setOnClickListener { refreshLogin() }
         binding.avatar.setOnClickListener { refreshLogin() }
     }
 
@@ -122,9 +132,19 @@ class ProfileFragment : Fragment() {
         binding.usernameText.text = "加载中..."
         binding.avatar.isEnabled = false
         if (UserManager.getUserCookie() == null) {
-            binding.usernameText.text = "访客"
-            binding.textView14.visibility = View.VISIBLE
-            binding.login.visibility = View.VISIBLE
+            binding.apply {
+                defAvatar.isVisible = true
+                guest.isVisible = true
+                loginHint.isVisible = true
+                login.isVisible = true
+
+                avatarGroup.isVisible = false
+                accountSurvey.isVisible = false
+                nicknameGroup.isVisible = false
+                littleArrow.isVisible = false
+                buttonGroup.isVisible = false
+                settings.isVisible = false
+            }
 
             binding.login.setOnClickListener {
                 startActivity(
@@ -140,10 +160,11 @@ class ProfileFragment : Fragment() {
                     MainScope().launch {
                         ToastUtils.makeText(
                             "获取用户信息失败，点击头像重试"
-                        )
-                            .show()
-                        binding.usernameText.text = "加载失败"
-                        binding.avatar.isEnabled = true
+                        ).show()
+                        binding.guest.isVisible = true
+                        binding.defAvatar.isVisible = true
+                        binding.guest.text = "加载失败"
+                        binding.defAvatar.isEnabled = true
 
                     }
                 }
@@ -156,41 +177,52 @@ class ProfileFragment : Fragment() {
                             SpaceProfileResult::class.java
                         )
                         if (user.code == -101) {
-                            binding.usernameText.text = "访客"
-                            binding.textView14.visibility = View.VISIBLE
-                            binding.login.visibility = View.VISIBLE
-                            binding.accountSurvey.visibility = View.GONE
-                            binding.imageView19.visibility = View.GONE
-                            binding.relativeLayout5.visibility = View.GONE
-                            binding.settings.visibility = View.GONE
-                            binding.login.setOnClickListener {
-                                startActivity(
-                                    Intent(
-                                        requireActivity(),
-                                        LoginActivity::class.java
-                                    )
-                                )
+                            binding.apply {
+                                defAvatar.isVisible = true
+                                guest.isVisible = true
+                                loginHint.isVisible = true
+                                login.isVisible = true
+                                guest.text = "访客"
+
+                                avatarGroup.isVisible = false
+                                accountSurvey.isVisible = false
+                                nicknameGroup.isVisible = false
+                                littleArrow.isVisible = false
+                                buttonGroup.isVisible = false
+                                settings.isVisible = false
                             }
-                            ToastUtils.makeText("账号未登录").show()
-                            startActivity(Intent(requireActivity(), LoginActivity::class.java))
                             return@launch
                         }
-                        binding.also {
-                            it.accountSurvey.visibility = View.VISIBLE
-                            it.imageView19.visibility = View.VISIBLE
-                            it.relativeLayout5.visibility = View.VISIBLE
-                            it.settings.visibility = View.VISIBLE
+                        binding.apply {
+                            defAvatar.isVisible = false
+                            guest.isVisible = false
+                            loginHint.isVisible = false
+                            login.isVisible = false
+                            guest.text = "访客"
+
+                            avatarGroup.isVisible = true
+                            accountSurvey.isVisible = true
+                            nicknameGroup.isVisible = true
+                            littleArrow.isVisible = true
+                            buttonGroup.isVisible = true
+                            settings.isVisible = true
                         }
                         Glide.with(Application.getContext()).load(user.data.face)
                             .placeholder(R.drawable.default_avatar).circleCrop()
                             .into(binding.avatar)
-                        Glide.with(Application.getContext()).load(user.data.pendant.image_enhance)
-                            .into(binding.pendant)
+                        if (!user.data.pendant.image_enhance.isNullOrEmpty()) {
+                            Glide.with(Application.getContext())
+                                .load(user.data.pendant.image_enhance)
+                                .placeholder(R.drawable.empty_placeholder)
+                                .into(binding.pendant)
+                        } else {
+                            Glide.with(Application.getContext()).load(R.drawable.empty_placeholder)
+                                .into(binding.pendant)
+                        }
                         binding.usernameText.text = user.data.name
                         binding.fansText.text = user.data.follower.toShortChinese()
                         binding.coinsText.text = user.data.coins.toString()
                         //binding.uidText.text = "UID ${user.data.mid}"
-                        //binding.signText.text = user.data.sign.ifEmpty { "这个人什么都没写..." }
                         binding.levelText.text = "LV${user.data.level}"
                         binding.levelText.visibility = View.VISIBLE
                         if (user.data.vip.nickname_color.isNotEmpty()) {

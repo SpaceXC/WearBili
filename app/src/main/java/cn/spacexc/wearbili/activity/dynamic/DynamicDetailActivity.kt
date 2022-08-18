@@ -46,6 +46,7 @@ class DynamicDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         val id = intent.getLongExtra("dynamicId", 0)
         binding.swipeRefreshLayout.setOnRefreshListener {
+            page = 1
             getDynamicDetails(id.toString())
         }
         binding.comments.layoutManager = LinearLayoutManager(this)

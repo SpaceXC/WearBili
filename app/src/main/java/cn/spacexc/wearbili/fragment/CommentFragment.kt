@@ -36,7 +36,6 @@ class CommentFragment : Fragment() {
     val adapter = CommentAdapter(lifecycleScope, Application.context!!)
     private val layoutManager = LinearLayoutManager(Application.getContext())
 
-    var prevList: MutableList<CommentContentData>? = null
 
 
     init {
@@ -76,6 +75,7 @@ class CommentFragment : Fragment() {
             }
         })
         binding.swipeRefreshLayout.setOnRefreshListener {
+            page = 1
             getComment(true)
         }
 

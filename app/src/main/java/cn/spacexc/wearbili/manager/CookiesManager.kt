@@ -1,5 +1,7 @@
 package cn.spacexc.wearbili.manager
 
+import android.util.Log
+import cn.spacexc.wearbili.Application.Companion.TAG
 import cn.spacexc.wearbili.utils.Cookies
 import cn.spacexc.wearbili.utils.SharedPreferencesUtils
 import com.google.gson.Gson
@@ -15,17 +17,17 @@ import okhttp3.Cookie
  */
 
 object CookiesManager {
-    fun getCookies() : List<Cookie>{
+    fun getCookies(): List<Cookie> {
         val cookieString = SharedPreferencesUtils.getString("cookies", "")
-        if(cookieString.isNullOrEmpty()) return emptyList()
+        if (cookieString.isNullOrEmpty()) return emptyList()
 
         val tempCookies = Gson().fromJson(cookieString, Cookies::class.java)
         return tempCookies.cookies
     }
 
     fun saveCookies(cookies: List<Cookie>) {
-        val tempCookie = Cookies(cookies)
-        val cookiesObj = Cookies(getCookies().unionCookies(tempCookie.cookies))
+        val cookiesTemp = getCookies().toMutableList().unionCookies(cookies).toMutableList()
+        val cookiesObj = Cookies(cookiesTemp)
         val cookieString = Gson().toJson(cookiesObj)
         SharedPreferencesUtils.saveString("cookies", cookieString)
     }
@@ -55,12 +57,34 @@ object CookiesManager {
         Analytics.trackEvent("Device Cookies Upload ${System.currentTimeMillis()}", properties)
     }
 
+    fun MutableList<Cookie>.unionCookies(secondList: List<Cookie>): List<Cookie> {
+        val temp: MutableList<Cookie> = mutableListOf()
+        val cookiesToAdd: MutableList<Cookie> = secondList.toMutableList()
+        temp.addAll(this)
+        if (temp.isEmpty()) {
+            temp.addAll(secondList)
+            return temp
+        }
+        temp.mapIndexed { index, cookie ->
+            for (cookieToAdd in secondList) {
+                if (cookie.name == cookieToAdd.name && cookie.path == cookieToAdd.path) {
+                    temp[index] = cookieToAdd
+                    cookiesToAdd.remove(cookieToAdd)
+                }
+            }
+        }
+        Log.d(TAG, "unionCookiesSecond: $secondList")
+        Log.d(TAG, "unionCookiesTemp: $temp")
+        temp.addAll(cookiesToAdd)
+        return temp
+    }
+
     fun getCsrfToken(): String? {
         return getCookieByName("bili_jct")
     }
 
-    private fun List<Cookie>.unionCookies(cookies: List<Cookie>): List<Cookie> {
-        /*val temp = this.toMutableList()
+    /*private fun List<Cookie>.unionCookies(cookies: List<Cookie>): List<Cookie> {
+        *//*val temp = this.toMutableList()
         for (cookie in this.indices){
             for(cookiesAdd in cookies){
                 if(this[cookie].name == cookiesAdd.name && this[cookie].domain == cookiesAdd.domain){
@@ -70,7 +94,7 @@ object CookiesManager {
                     temp.add(cookiesAdd)
                 }
             }
-        }*/
+        }*//*
         return cookies + this
-    }
+    }*/
 }

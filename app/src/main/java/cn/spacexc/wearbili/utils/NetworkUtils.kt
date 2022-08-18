@@ -8,7 +8,6 @@ import cn.spacexc.wearbili.activity.other.RequireNetworkActivity
 import cn.spacexc.wearbili.manager.CookiesManager
 import okhttp3.*
 import java.io.InputStream
-import java.io.Serializable
 import java.net.URL
 
 
@@ -19,8 +18,9 @@ import java.net.URL
  * 给！爷！写！注！释！
  * 给！爷！写！注！释！
  */
+const val RESULT_RETRY = 1
 
-class Cookies(var cookies: List<Cookie>)
+class Cookies(var cookies: MutableList<Cookie>)
 
 object NetworkUtils {
     private val client = OkHttpClient.Builder()
@@ -110,11 +110,7 @@ object NetworkUtils {
     fun requireRetry(callback: () -> Unit) {
         val intent = Intent(Application.context, RequireNetworkActivity::class.java)
         intent.apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            val callbackObj = RequireNetworkActivity.RetryCallback(callback)
-            //callbackObj.callback = callback
-            putExtra("callback", callback as Serializable)
-            Application.context?.startActivity(intent)
+            Application.context?.startActivity(this)
         }
     }
 
