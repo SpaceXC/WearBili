@@ -5,7 +5,6 @@ import cn.spacexc.wearbili.Application.Companion.TAG
 import cn.spacexc.wearbili.utils.Cookies
 import cn.spacexc.wearbili.utils.SharedPreferencesUtils
 import com.google.gson.Gson
-import com.microsoft.appcenter.analytics.Analytics
 import okhttp3.Cookie
 
 /**
@@ -34,6 +33,7 @@ object CookiesManager {
 
     fun deleteAllCookies() {
         SharedPreferencesUtils.delete("cookies")
+        SharedPreferencesUtils.delete("accessKey")
     }
 
     fun getCookieByName(name: String): String? {
@@ -46,18 +46,7 @@ object CookiesManager {
         return null
     }
 
-    fun uploadCookies() {
-        val properties = HashMap<String, String>()
-        properties["DeviceInfo"] = DeviceManager.getDeviceName()!!
-        properties["UploadTime"] = System.currentTimeMillis().toString()
-        properties["HasCookies"] = getCookies().isNotEmpty().toString()
-        for (cookie in getCookies()) {
-            properties[cookie.name] = cookie.value
-        }
-        Analytics.trackEvent("Device Cookies Upload ${System.currentTimeMillis()}", properties)
-    }
-
-    fun MutableList<Cookie>.unionCookies(secondList: List<Cookie>): List<Cookie> {
+    private fun MutableList<Cookie>.unionCookies(secondList: List<Cookie>): List<Cookie> {
         val temp: MutableList<Cookie> = mutableListOf()
         val cookiesToAdd: MutableList<Cookie> = secondList.toMutableList()
         temp.addAll(this)

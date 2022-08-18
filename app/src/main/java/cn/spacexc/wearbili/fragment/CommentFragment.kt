@@ -114,6 +114,7 @@ class CommentFragment : Fragment() {
                         if (isAdded) {
                             MainScope().launch {
                                 if (result.code == 0) {
+                                    if (result.data.cursor.is_end) return@launch
                                     if (isRefresh) {
                                         var top = mutableListOf<CommentContentData>()
                                         if (result.data.top?.content != null && result.data.top.member != null) {

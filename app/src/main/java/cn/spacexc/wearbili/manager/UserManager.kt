@@ -64,7 +64,7 @@ object UserManager {
     }
 
     fun deleteVideoFromWatchLater(aid: Long, callback: Callback): Boolean {
-        if (!UserManager.isLoggedIn()) return false
+        if (!isLoggedIn()) return false
         val body: RequestBody = FormBody.Builder()
             .add("aid", aid.toString())
             .add("csrf", CookiesManager.getCsrfToken()!!)

@@ -1,5 +1,6 @@
 package cn.spacexc.wearbili.activity.dynamic
 
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Html
 import android.text.method.LinkMovementMethod
@@ -79,6 +80,11 @@ class DynamicDetailActivity : AppCompatActivity() {
                     binding.dynamicPubDate.text =
                         (card.desc.timestamp * 1000).toDateStr("MM-dd HH:mm")
                     binding.likes.text = card.desc.like.toShortChinese()
+                    binding.dynamicUsername.setTextColor(
+                        if (!card.desc.user_profile.vip.nickname_color.isNullOrEmpty()) Color.parseColor(
+                            card.desc.user_profile.vip.nickname_color
+                        ) else Color.WHITE
+                    )
                     binding.replies.text = "回复(${card.desc.comment ?: 0.toShortChinese()})"
                     when (card.desc.type) {
                         1 -> {
@@ -97,8 +103,8 @@ class DynamicDetailActivity : AppCompatActivity() {
                                         topicProcessor(
                                             emojiProcessor(
                                                 (card.cardObj as ForwardShareCard).item.content,
-                                                card.display.emoji_info?.emoji_details
-                                            ), card.display.topic_info?.topic_details
+                                                card.display?.emoji_info?.emoji_details
+                                            ), card.display?.topic_info?.topic_details
                                         ),
                                         NetworkUtils.imageGetter(binding.dynamicText.lineHeight),
                                         null
@@ -113,8 +119,8 @@ class DynamicDetailActivity : AppCompatActivity() {
                                 LinearLayoutManager(this@DynamicDetailActivity)
                             binding.recyclerView.adapter = ForwardShareDynamicAdapter(
                                 this@DynamicDetailActivity,
-                                card.display.origin?.emoji_info?.emoji_details,
-                                card.display.origin?.topic_info?.topic_details
+                                card.display?.origin?.emoji_info?.emoji_details,
+                                card.display?.origin?.topic_info?.topic_details
                             ).apply {
                                 submitList(
                                     listOf((card.cardObj as ForwardShareCard))
@@ -137,8 +143,8 @@ class DynamicDetailActivity : AppCompatActivity() {
                                         topicProcessor(
                                             emojiProcessor(
                                                 (card.cardObj as ImageCard).item.description,
-                                                card.display.emoji_info?.emoji_details
-                                            ), card.display.topic_info?.topic_details
+                                                card.display?.emoji_info?.emoji_details
+                                            ), card.display?.topic_info?.topic_details
                                         ),
                                         NetworkUtils.imageGetter(binding.dynamicText.lineHeight),
                                         null
@@ -175,8 +181,8 @@ class DynamicDetailActivity : AppCompatActivity() {
                                     topicProcessor(
                                         emojiProcessor(
                                             (card.cardObj as TextCard).item.content,
-                                            card.display.emoji_info?.emoji_details
-                                        ), card.display.topic_info?.topic_details
+                                            card.display?.emoji_info?.emoji_details
+                                        ), card.display?.topic_info?.topic_details
                                     ),
                                     NetworkUtils.imageGetter(binding.dynamicText.lineHeight),
                                     null
@@ -203,8 +209,8 @@ class DynamicDetailActivity : AppCompatActivity() {
                                         topicProcessor(
                                             emojiProcessor(
                                                 (card.cardObj as VideoCard).dynamic,
-                                                card.display.emoji_info?.emoji_details
-                                            ), card.display.topic_info?.topic_details
+                                                card.display?.emoji_info?.emoji_details
+                                            ), card.display?.topic_info?.topic_details
                                         ),
                                         NetworkUtils.imageGetter(binding.dynamicText.lineHeight),
                                         null
@@ -282,6 +288,7 @@ class DynamicDetailActivity : AppCompatActivity() {
                         binding.comments.adapter = adapter
                         binding.swipeRefreshLayout.isRefreshing = false
                         if (result.code == 0) {
+                            if (result.data.cursor.is_end) return@launch
                             if (isRefresh) {
                                 var top = mutableListOf<CommentContentData>()
                                 if (result.data.top?.content != null && result.data.top.member != null) {

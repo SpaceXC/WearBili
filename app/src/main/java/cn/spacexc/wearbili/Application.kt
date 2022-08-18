@@ -29,18 +29,6 @@ class Application : android.app.Application() {
         }
 
         const val TAG = "WearBiliTag"
-        private const val versionCode = "0.8.9"
-        private const val releaseType = "Rel-AL"
-        val versionString = getAppVersion()
-
-        private fun getAppVersion(): String {
-            return try {
-                val packageInfo = context?.packageManager?.getPackageInfo(context?.packageName!!, 0)
-                packageInfo?.versionName ?: ""
-            } catch (e: Exception) {
-                ""
-            }
-        }
     }
 
     override fun onCreate() {

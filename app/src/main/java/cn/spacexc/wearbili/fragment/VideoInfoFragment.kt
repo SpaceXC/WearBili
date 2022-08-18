@@ -34,6 +34,7 @@ import cn.spacexc.wearbili.activity.video.ViewFullVideoPartsActivity
 import cn.spacexc.wearbili.adapter.ButtonsAdapter
 import cn.spacexc.wearbili.adapter.VideoPartsAdapter
 import cn.spacexc.wearbili.databinding.FragmentVideoInfoBinding
+import cn.spacexc.wearbili.dataclass.BaseData
 import cn.spacexc.wearbili.dataclass.RoundButtonData
 import cn.spacexc.wearbili.dataclass.SimplestUniversalDataClass
 import cn.spacexc.wearbili.dataclass.VideoStreamsFlv
@@ -511,21 +512,23 @@ class VideoInfoFragment : Fragment() {
                 override fun onFailure(call: Call, e: IOException) {
                     MainScope().launch {
                         ToastUtils.makeText(
-                            "关注失败了"
+                            "网络异常"
                         ).show()
                     }
                 }
 
                 override fun onResponse(call: Call, response: Response) {
-
+                    val result = Gson().fromJson(response.body?.string(), BaseData::class.java)
                     MainScope().launch {
-                        ToastUtils.makeText(
-                            "关注成功了"
-                        ).show()
-                        updateVideoFansStat(video)
+                        if (result.code == 0) {
+                            ToastUtils.makeText(
+                                "关注成功了"
+                            ).show()
+                            updateVideoFansStat(video)
+                        } else {
+                            ToastUtils.showText("关注失败了，错误码${result.code}")
+                        }
                     }
-
-
                 }
 
             })
@@ -534,18 +537,23 @@ class VideoInfoFragment : Fragment() {
                 override fun onFailure(call: Call, e: IOException) {
                     MainScope().launch {
                         ToastUtils.makeText(
-                            "取关失败了"
+                            "网络异常"
                         ).show()
 
                     }
                 }
 
                 override fun onResponse(call: Call, response: Response) {
+                    val result = Gson().fromJson(response.body?.string(), BaseData::class.java)
                     MainScope().launch {
-                        ToastUtils.makeText(
-                            "取关成功了"
-                        ).show()
-                        updateVideoFansStat(video)
+                        if (result.code == 0) {
+                            ToastUtils.makeText(
+                                "取关成功了"
+                            ).show()
+                            updateVideoFansStat(video)
+                        } else {
+                            ToastUtils.showText("取关失败了，错误码${result.code}")
+                        }
                     }
 
                 }

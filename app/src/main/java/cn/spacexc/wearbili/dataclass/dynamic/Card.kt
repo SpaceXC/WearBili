@@ -7,7 +7,7 @@ data class Card(
     val card: String,
     var cardObj: Any?,
     val desc: Desc,
-    val display: Display,
+    val display: Display?,
     val extend_json: String,
     val extra: Extra?,
     val acl: Int,

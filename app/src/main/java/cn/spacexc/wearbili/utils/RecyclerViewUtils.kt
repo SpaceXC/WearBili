@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.LinearSmoothScroller
  * 给！爷！写！注！释！
  */
 
-public class RecyclerViewUtils {
-    public class TopLinearSmoothScroller(context: Context?) : LinearSmoothScroller(context) {
+class RecyclerViewUtils {
+    class TopLinearSmoothScroller(context: Context?) : LinearSmoothScroller(context) {
         override fun getVerticalSnapPreference(): Int {
             return SNAP_TO_START
         }

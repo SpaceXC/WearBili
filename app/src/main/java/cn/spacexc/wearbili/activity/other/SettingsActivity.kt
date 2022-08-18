@@ -16,7 +16,9 @@ import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.TimeUtils
 import cn.spacexc.wearbili.utils.ToastUtils
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SettingsActivity : AppCompatActivity() {
     private val settingsList = listOf(
@@ -31,21 +33,28 @@ class SettingsActivity : AppCompatActivity() {
             action = {
                 UserManager.logout(object : NetworkUtils.ResultCallback<Boolean> {
                     override fun onSuccess(result: Boolean) {
-                        if (result) {
-                            CookiesManager.deleteAllCookies()
-                            ToastUtils.showText("登出成功")
-                            Intent(this@SettingsActivity, SplashScreenActivity::class.java).apply {
-                                flags =
-                                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                startActivity(this)
+                        MainScope().launch {
+                            if (result) {
+                                CookiesManager.deleteAllCookies()
+                                ToastUtils.showText("登出成功")
+                                Intent(
+                                    this@SettingsActivity,
+                                    SplashScreenActivity::class.java
+                                ).apply {
+                                    flags =
+                                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                    startActivity(this)
+                                }
+                            } else {
+                                ToastUtils.showText("网络异常")
                             }
-                        } else {
-                            ToastUtils.showText("网络异常")
                         }
                     }
 
                     override fun onFailed(e: Exception) {
-                        ToastUtils.showText("网络异常")
+                        MainScope().launch {
+                            ToastUtils.showText("网络异常")
+                        }
                     }
 
                 })

@@ -75,8 +75,8 @@ class DownloadService : DownloadService(
      * Creates and displays notifications for downloads when they complete or fail.
      *
      *
-     * This helper will outlive the lifespan of a single instance of [DemoDownloadService].
-     * It is static to avoid leaking the first [DemoDownloadService] instance.
+     * This helper will outlive the lifespan of a single instance of [DownloadService].
+     * It is static to avoid leaking the first [DownloadService] instance.
      */
     private class TerminalStateNotificationHelper(
         context: Context, notificationHelper: DownloadNotificationHelper, firstNotificationId: Int
@@ -88,23 +88,26 @@ class DownloadService : DownloadService(
         override fun onDownloadChanged(
             downloadManager: DownloadManager, download: Download, finalException: Exception?
         ) {
-            val notification: Notification
-            notification = if (download.state == Download.STATE_COMPLETED) {
-                notificationHelper.buildDownloadCompletedNotification(
-                    context,
-                    R.drawable.ic_baseline_done_24,  /* contentIntent= */
-                    null,
-                    Util.fromUtf8Bytes(download.request.data)
-                )
-            } else if (download.state == Download.STATE_FAILED) {
-                notificationHelper.buildDownloadFailedNotification(
-                    context,
-                    R.drawable.ic_baseline_done_24,  /* contentIntent= */
-                    null,
-                    Util.fromUtf8Bytes(download.request.data)
-                )
-            } else {
-                return
+            val notification: Notification = when (download.state) {
+                Download.STATE_COMPLETED -> {
+                    notificationHelper.buildDownloadCompletedNotification(
+                        context,
+                        R.drawable.ic_baseline_done_24,  /* contentIntent= */
+                        null,
+                        Util.fromUtf8Bytes(download.request.data)
+                    )
+                }
+                Download.STATE_FAILED -> {
+                    notificationHelper.buildDownloadFailedNotification(
+                        context,
+                        R.drawable.ic_baseline_done_24,  /* contentIntent= */
+                        null,
+                        Util.fromUtf8Bytes(download.request.data)
+                    )
+                }
+                else -> {
+                    return
+                }
             }
             NotificationUtil.setNotification(context, nextNotificationId++, notification)
         }

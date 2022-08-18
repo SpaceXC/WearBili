@@ -31,10 +31,6 @@ class CustomLinkMovementMethod(private val view: View?) : LinkMovementMethod() {
     }
 
     companion object {
-        /*val instance: CustomLinkMovementMethod?
-            get() {
-
-            }*/
         fun getInstance(view: View?): CustomLinkMovementMethod? {
             if (sInstance == null) sInstance = CustomLinkMovementMethod(view)
             return sInstance

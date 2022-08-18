@@ -93,8 +93,10 @@ class DynamicAdapter(val context: Context) :
         holder.pubDate.text = (card.desc.timestamp * 1000).toDateStr("MM-dd HH:mm")
         holder.likes.text = card.desc.like.toShortChinese()
         holder.replies.text = "回复(${card.desc.comment ?: 0.toShortChinese()})"
-        if (!card.desc.user_profile.vip.nickname_color.isNullOrEmpty()) holder.userName.setTextColor(
-            Color.parseColor(card.desc.user_profile.vip.nickname_color)
+        holder.userName.setTextColor(
+            if (!card.desc.user_profile.vip.nickname_color.isNullOrEmpty()) Color.parseColor(
+                card.desc.user_profile.vip.nickname_color
+            ) else Color.WHITE
         )
         try {
             Glide.with(context).load(card.desc.user_profile.info.face)
@@ -126,8 +128,8 @@ class DynamicAdapter(val context: Context) :
                             topicProcessor(
                                 emojiProcessor(
                                     (card.cardObj as ForwardShareCard).item.content,
-                                    card.display.emoji_info?.emoji_details
-                                ), card.display.topic_info?.topic_details
+                                    card.display?.emoji_info?.emoji_details
+                                ), card.display?.topic_info?.topic_details
                             ),
                             NetworkUtils.imageGetter(holder.content.lineHeight),
                             null
@@ -152,8 +154,8 @@ class DynamicAdapter(val context: Context) :
                 holder.recyclerView.layoutManager = LinearLayoutManager(context)
                 holder.recyclerView.adapter = ForwardShareDynamicAdapter(
                     context,
-                    card.display.origin?.emoji_info?.emoji_details,
-                    card.display.origin?.topic_info?.topic_details
+                    card.display?.origin?.emoji_info?.emoji_details,
+                    card.display?.origin?.topic_info?.topic_details
                 ).apply {
                     submitList(
                         listOf((card.cardObj as ForwardShareCard))
@@ -169,8 +171,8 @@ class DynamicAdapter(val context: Context) :
                             topicProcessor(
                                 emojiProcessor(
                                     (card.cardObj as ImageCard).item.description,
-                                    card.display.emoji_info?.emoji_details
-                                ), card.display.topic_info?.topic_details
+                                    card.display?.emoji_info?.emoji_details
+                                ), card.display?.topic_info?.topic_details
                             ),
                             NetworkUtils.imageGetter(holder.content.lineHeight),
                             null
@@ -198,8 +200,8 @@ class DynamicAdapter(val context: Context) :
                         topicProcessor(
                             emojiProcessor(
                                 (card.cardObj as TextCard).item.content,
-                                card.display.emoji_info?.emoji_details
-                            ), card.display.topic_info?.topic_details
+                                card.display?.emoji_info?.emoji_details
+                            ), card.display?.topic_info?.topic_details
                         ),
                         NetworkUtils.imageGetter(holder.content.lineHeight),
                         null
@@ -219,8 +221,8 @@ class DynamicAdapter(val context: Context) :
                             topicProcessor(
                                 emojiProcessor(
                                     (card.cardObj as VideoCard).dynamic,
-                                    card.display.emoji_info?.emoji_details
-                                ), card.display.topic_info?.topic_details
+                                    card.display?.emoji_info?.emoji_details
+                                ), card.display?.topic_info?.topic_details
                             ),
                             NetworkUtils.imageGetter(holder.content.lineHeight),
                             null

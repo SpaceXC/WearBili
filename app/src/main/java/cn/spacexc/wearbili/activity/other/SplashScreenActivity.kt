@@ -32,13 +32,13 @@ class SplashScreenActivity : AppCompatActivity() {
         val intent =
             Intent(this@SplashScreenActivity, MainActivity::class.java)
         //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
+        /*startActivity(intent)
         overridePendingTransition(
             R.anim.activity_fade_in,
             R.anim.activity_fade_out
-        )
+        )*/
         finish()
-        //initApp()
+        initApp()
 
         /*NetworkUtils.requireRetry {
             initApp()

@@ -427,25 +427,25 @@ class VideoPlayerActivity : AppCompatActivity() {
      *  解压弹幕数据
      *  From CSDN
      */
-    fun decompress(data: ByteArray): ByteArray {
-        var output: ByteArray
+    fun decompress(data: ByteArray?): ByteArray? {
+        var output: ByteArray?
         val decompresser = Inflater(true)
         decompresser.reset()
         decompresser.setInput(data)
-        val o = ByteArrayOutputStream(data.size)
+        val o = data?.size?.let { ByteArrayOutputStream(it) }
         try {
             val buf = ByteArray(1024)
             while (!decompresser.finished()) {
                 val i = decompresser.inflate(buf)
-                o.write(buf, 0, i)
+                o?.write(buf, 0, i)
             }
-            output = o.toByteArray()
+            output = o?.toByteArray()
         } catch (e: Exception) {
             output = data
             e.printStackTrace()
         } finally {
             try {
-                o.close()
+                o?.close()
             } catch (e: IOException) {
                 e.printStackTrace()
             }
