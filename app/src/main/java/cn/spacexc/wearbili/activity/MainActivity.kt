@@ -1,5 +1,6 @@
 package cn.spacexc.wearbili.activity
 
+import OnClickListerExtended
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,8 @@ import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.other.MenuActivity
 import cn.spacexc.wearbili.adapter.MainViewPagerAdapter
 import cn.spacexc.wearbili.databinding.ActivityMainBinding
+import cn.spacexc.wearbili.fragment.DynamicFragment
+import cn.spacexc.wearbili.fragment.RecommendFragment
 import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.utils.TimeUtils
 import kotlinx.coroutines.delay
@@ -21,7 +24,6 @@ class MainActivity : AppCompatActivity() {
     companion object {
         var currentPageId: MutableLiveData<Int> = MutableLiveData(R.id.recommendFragment)
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +74,31 @@ class MainActivity : AppCompatActivity() {
                 else -> ""
             })
         }
+
+        binding.titleBar.setOnTouchListener(OnClickListerExtended(object :
+            OnClickListerExtended.OnClickCallback {
+            override fun onSingleClick() {
+
+            }
+
+            override fun onDoubleClick() {
+                val fragment =
+                    supportFragmentManager.findFragmentByTag("f${binding.viewpager.currentItem}")
+                when (binding.viewpager.currentItem) {
+                    0 -> {
+                        (fragment as RecommendFragment).apply {
+                            refresh()
+                        }
+                    }
+                    1 -> {
+                        (fragment as DynamicFragment).apply {
+                            refresh()
+                        }
+                    }
+                }
+            }
+
+        }))
 
         lifecycleScope.launch {
             while (true) {

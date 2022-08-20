@@ -29,6 +29,7 @@ package cn.spacexc.wearbili.utils
 }*/
 
 object ListUtils {
+    @Deprecated("这个傻逼方法已经过时了", ReplaceWith("CookiesManager.unionCookies()"), DeprecationLevel.ERROR)
     fun <T : Any> MutableList<T>.add(secondList: List<T>) {
         for (node in this) {
             for (node2 in secondList) {

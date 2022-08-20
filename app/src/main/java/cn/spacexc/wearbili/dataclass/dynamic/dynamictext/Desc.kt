@@ -8,7 +8,7 @@ data class Desc(
     val inner_id: Int,
     val is_liked: Int,
     val like: Int,
-    val orig_dy_id: Int,
+    val orig_dy_id: Long,
     val orig_dy_id_str: String,
     val orig_type: Int,
     val pre_dy_id: Int,

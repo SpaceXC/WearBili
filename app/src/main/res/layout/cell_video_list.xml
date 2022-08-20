@@ -27,8 +27,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="12dp"
-            android:paddingBottom="10dp">
+            android:paddingTop="6dp"
+            android:paddingBottom="8dp">
 
             <ImageView
                 android:id="@+id/listCover"
@@ -38,7 +38,8 @@
                 android:layout_marginEnd="4dp"
                 android:adjustViewBounds="true"
                 android:visibility="visible"
-                app:layout_constraintDimensionRatio="16:10"
+                app:layout_constraintBottom_toTopOf="@id/listUpName"
+                app:layout_constraintDimensionRatio="16:11"
                 app:layout_constraintEnd_toStartOf="@+id/guideline2"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -116,16 +117,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="10dp"
+                android:layout_marginBottom="7dp"
                 android:ellipsize="end"
                 android:fontFamily="@font/puhui_medium"
                 android:gravity="center_vertical"
-                android:lines="3"
+                android:maxLines="3"
+                android:text="标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题"
                 android:textColor="#fff"
                 android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@+id/listCover"
+                app:layout_constraintBottom_toTopOf="@+id/listUpName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintTop_toTopOf="@+id/listCover" />
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

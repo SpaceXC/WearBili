@@ -36,11 +36,12 @@ class OnClickListerExtended(private val myClickCallBack: OnClickCallback) :
         if (event.action == MotionEvent.ACTION_DOWN) {
             clickCount++
             GlobalScope.launch {
-                if (clickCount == 1) myClickCallBack.onSingleClick()
+                if (clickCount == 1) myClickCallBack.onSingleClick();
                 else if (clickCount == 2) myClickCallBack.onDoubleClick()
                 delay(timeout.toLong())
                 clickCount = 0
                 cancel()
+                v.performClick()
             }
         }
         return false

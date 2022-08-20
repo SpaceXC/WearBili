@@ -7,7 +7,7 @@
     tools:context=".fragment.SearchFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
+        android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#000"

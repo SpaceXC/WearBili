@@ -15,4 +15,8 @@ object LogUtils {
     fun Any.log(description: String) {
         Log.d(TAG, "$description: $this")
     }
+
+    fun Any.log() {
+        Log.d(TAG, "$this")
+    }
 }

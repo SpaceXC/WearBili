@@ -1,6 +1,7 @@
 package cn.spacexc.wearbili.adapter
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,6 +62,7 @@ class FollowedUserAdapter(private val context: Context) :
         holder.username.text = user.uname
         Glide.with(context).load(user.face).circleCrop().placeholder(R.drawable.default_avatar)
             .into(holder.avatar)
+        holder.username.setTextColor(Color.parseColor(user.vip.nickname_color.ifEmpty { "#FFFFFF" }))
         holder.isFollowed.setBackgroundResource(R.drawable.background_grey)
         holder.isFollowed.text = "已关注"
         holder.isFollowed.setOnClickListener {

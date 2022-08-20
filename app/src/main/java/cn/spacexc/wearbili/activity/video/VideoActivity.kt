@@ -1,5 +1,6 @@
 package cn.spacexc.wearbili.activity.video
 
+import OnClickListerExtended
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -7,6 +8,7 @@ import androidx.viewpager2.widget.ViewPager2
 import cn.spacexc.wearbili.adapter.VideoViewPagerAdapter
 import cn.spacexc.wearbili.databinding.ActivityVideoBinding
 import cn.spacexc.wearbili.dataclass.video.Data
+import cn.spacexc.wearbili.fragment.CommentFragment
 import cn.spacexc.wearbili.utils.TimeUtils
 import cn.spacexc.wearbili.utils.VideoUtils
 import kotlinx.coroutines.delay
@@ -30,6 +32,25 @@ class VideoActivity : AppCompatActivity() {
                 })
             }
         })
+        binding.titleBar.setOnTouchListener(OnClickListerExtended(object :
+            OnClickListerExtended.OnClickCallback {
+            override fun onSingleClick() {
+
+            }
+
+            override fun onDoubleClick() {
+                val fragment =
+                    supportFragmentManager.findFragmentByTag("f${binding.viewPager2.currentItem}")
+                when (binding.viewPager2.currentItem) {
+                    1 -> {
+                        (fragment as CommentFragment).apply {
+                            refresh()
+                        }
+                    }
+                }
+            }
+
+        }))
         lifecycleScope.launch {
             while (true) {
                 binding.timeText.text = TimeUtils.getCurrentTime()

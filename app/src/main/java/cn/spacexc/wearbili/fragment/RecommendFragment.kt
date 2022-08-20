@@ -1,6 +1,7 @@
 package cn.spacexc.wearbili.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import cn.spacexc.wearbili.Application.Companion.TAG
 import cn.spacexc.wearbili.adapter.VideoPhoneEndRecommendListAdapter
 import cn.spacexc.wearbili.databinding.FragmentRecommendBinding
 import cn.spacexc.wearbili.dataclass.video.rcmd.Item
@@ -26,7 +28,7 @@ import java.io.IOException
 
 class RecommendFragment : Fragment() {
     private var _binding: FragmentRecommendBinding? = null
-    private val binding get() = _binding!!
+    val binding get() = _binding!!
 
     lateinit var adapter: VideoPhoneEndRecommendListAdapter
 
@@ -50,6 +52,7 @@ class RecommendFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d(TAG, "onViewCreated: $tag")
         adapter = VideoPhoneEndRecommendListAdapter(requireContext())
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -84,7 +87,20 @@ class RecommendFragment : Fragment() {
         }
     }
 
-    private fun getRecommendVideo(isRefresh: Boolean) {
+    fun refresh() {
+        if (isAdded) {
+            requireActivity().runOnUiThread {
+                this.binding.recyclerView.smoothScrollToPosition(0)
+                this.binding.swipeRefreshLayout.isRefreshing = true
+                videoList = emptyArray()
+                getRecommendVideo(true)
+            }
+        }
+
+
+    }
+
+    fun getRecommendVideo(isRefresh: Boolean) {
         lifecycleScope.launch {
             kotlin.runCatching {
                 VideoManager.getRecommendVideo(object : Callback {

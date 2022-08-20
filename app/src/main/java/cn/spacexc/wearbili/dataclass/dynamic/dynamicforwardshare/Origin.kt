@@ -6,7 +6,7 @@ data class Origin(
     val dynamic_id: Long,
     val dynamic_id_str: String,
     val inner_id: Int,
-    val orig_dy_id: Int,
+    val orig_dy_id: Long,
     val orig_dy_id_str: String,
     val pre_dy_id: Int,
     val pre_dy_id_str: String,

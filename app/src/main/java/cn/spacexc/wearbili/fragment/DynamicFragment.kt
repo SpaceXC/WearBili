@@ -26,7 +26,7 @@ import okhttp3.Call
 
 class DynamicFragment : Fragment() {
     private var _binding: FragmentDynamicBinding? = null
-    private val binding get() = _binding!!
+    val binding get() = _binding!!
 
 
     lateinit var adapter: DynamicAdapter
@@ -42,6 +42,18 @@ class DynamicFragment : Fragment() {
     ): View {
         _binding = FragmentDynamicBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    fun refresh() {
+        if (isAdded) {
+            requireActivity().runOnUiThread {
+                binding.recyclerView.smoothScrollToPosition(0)
+                binding.swipeRefreshLayout.isRefreshing = true
+                getDynamic()
+            }
+        }
+
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -95,7 +107,7 @@ class DynamicFragment : Fragment() {
         }
     }
 
-    private fun getDynamic() {
+    fun getDynamic() {
         ToastUtils.debugToast("检测登录...")
         if (!cn.spacexc.wearbili.manager.UserManager.isLoggedIn()) {
             binding.swipeRefreshLayout.isRefreshing = false

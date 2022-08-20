@@ -37,7 +37,7 @@ class SplashScreenActivity : AppCompatActivity() {
             R.anim.activity_fade_in,
             R.anim.activity_fade_out
         )*/
-        finish()
+        //finish()
         initApp()
 
         /*NetworkUtils.requireRetry {

@@ -16,6 +16,7 @@ import cn.spacexc.wearbili.databinding.FragmentCommentBinding
 import cn.spacexc.wearbili.dataclass.CommentContentData
 import cn.spacexc.wearbili.dataclass.VideoComment
 import cn.spacexc.wearbili.manager.VideoManager
+import cn.spacexc.wearbili.utils.RecyclerViewUtils
 import cn.spacexc.wearbili.utils.ToastUtils
 import com.google.gson.Gson
 import kotlinx.coroutines.MainScope
@@ -34,9 +35,17 @@ class CommentFragment : Fragment() {
     var page: Int = 1
 
     val adapter = CommentAdapter(lifecycleScope, Application.context!!)
-    private val layoutManager = LinearLayoutManager(Application.getContext())
-
-
+    private val layoutManager = object : LinearLayoutManager(Application.getContext()) {
+        override fun smoothScrollToPosition(
+            recyclerView: RecyclerView?,
+            state: RecyclerView.State?,
+            position: Int
+        ) {
+            val scroller = RecyclerViewUtils.TopLinearSmoothScroller(view?.context)
+            scroller.targetPosition = position
+            startSmoothScroll(scroller)
+        }
+    }
 
     init {
         Log.d(Application.getTag(), "CommentFragmentLoaded")
@@ -54,6 +63,17 @@ class CommentFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun refresh() {
+        if (isAdded) {
+            requireActivity().runOnUiThread {
+                page = 1
+                binding.recyclerView.smoothScrollToPosition(0)
+                binding.swipeRefreshLayout.isRefreshing = true
+                getComment(true)
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

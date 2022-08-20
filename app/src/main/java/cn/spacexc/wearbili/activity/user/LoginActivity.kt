@@ -82,17 +82,18 @@ class LoginActivity : AppCompatActivity() {
                                 QRCodeUtil.ERROR_CORRECTION_M
                             )
                         //qrImageView.setImageBitmap(bitmap)
-                        try {
-                            Glide.with(this@LoginActivity)
-                                .load(bitmap)
-                                .skipMemoryCache(true)
-                                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                .into(qrImageView)
+                        if (!this@LoginActivity.isDestroyed) {
+                            try {
+                                Glide.with(this@LoginActivity)
+                                    .load(bitmap)
+                                    .skipMemoryCache(true)
+                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                    .into(qrImageView)
 
-                        } catch (e: OutOfMemoryError) {
+                            } catch (e: OutOfMemoryError) {
 
+                            }
                         }
-
                         lifecycleScope.launch {
                             while (true) {
                                 val body: FormBody = FormBody.Builder()

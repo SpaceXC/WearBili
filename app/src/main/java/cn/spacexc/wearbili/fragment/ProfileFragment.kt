@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
-import cn.spacexc.wearbili.activity.other.SettingsActivity
+import cn.spacexc.wearbili.activity.settings.SettingsActivity
 import cn.spacexc.wearbili.activity.user.FollowListActivity
 import cn.spacexc.wearbili.activity.user.LoginActivity
 import cn.spacexc.wearbili.activity.user.StaredActivity
@@ -210,14 +210,14 @@ class ProfileFragment : Fragment() {
                         Glide.with(Application.getContext()).load(user.data.face)
                             .placeholder(R.drawable.default_avatar).circleCrop()
                             .into(binding.avatar)
+                        //user.data.pendant.image_enhance = ""
                         if (!user.data.pendant.image_enhance.isNullOrEmpty()) {
                             Glide.with(Application.getContext())
                                 .load(user.data.pendant.image_enhance)
                                 .placeholder(R.drawable.empty_placeholder)
                                 .into(binding.pendant)
                         } else {
-                            Glide.with(Application.getContext()).load(R.drawable.empty_placeholder)
-                                .into(binding.pendant)
+                            binding.pendant.setImageResource(R.drawable.empty_placeholder)
                         }
                         binding.usernameText.text = user.data.name
                         binding.fansText.text = user.data.follower.toShortChinese()
