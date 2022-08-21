@@ -12,12 +12,13 @@ import cn.spacexc.wearbili.Application
  */
 object SharedPreferencesUtils {
     private const val PREFS_NAME = "cn.spacexc.wearbili.sharedpreferences"
-    private val preferences = Application.getContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    private val preferences =
+        Application.getContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     private val editor = preferences.edit()
 
 
-    fun getString(key: String?, defaultValue: String?): String? {
-        return preferences.getString(key, defaultValue)
+    fun getString(key: String?, defaultValue: String): String {
+        return preferences.getString(key, defaultValue) ?: defaultValue
     }
 
     fun getInt(key: String?, defaultValue: Int?): Int {

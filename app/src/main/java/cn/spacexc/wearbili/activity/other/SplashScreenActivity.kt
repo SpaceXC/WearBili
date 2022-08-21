@@ -149,15 +149,11 @@ class SplashScreenActivity : AppCompatActivity() {
 
                                         }
                                     }
-
                                 })
-
                             }
                         }
                     }
-
                 })
-
             }
         } else {
             val intent = Intent(this@SplashScreenActivity, LoginActivity::class.java)

@@ -3,8 +3,8 @@
     android:shape="oval">
     <!-- 滑动块的宽高 -->
     <size
-        android:width="15dp"
-        android:height="15dp" />
+        android:width="20dp"
+        android:height="20dp" />
     <solid android:color="#FFFFFF" />
     <!-- 透明的描边-->
     <stroke

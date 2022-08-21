@@ -33,7 +33,7 @@ class ImageViewerActivity : AppCompatActivity() {
             toggleInfoVisibility()
 
         }
-        findViewById<ImageView>(R.id.back).setOnClickListener { finish() }
+        findViewById<ImageView>(R.id.pageName).setOnClickListener { finish() }
         viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)

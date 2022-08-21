@@ -52,14 +52,22 @@ class AboutActivity : AppCompatActivity() {
         recyclerView4.layoutManager = LinearLayoutManager(this)
 
         recyclerView1.adapter = HorizontalButtonAdapter(object : OnItemViewClickListener {
-            override fun onClick(buttonName: String) {
+            override fun onClick(buttonName: String, viewHolder: RecyclerView.ViewHolder) {
+
+            }
+
+            override fun onLongClick(buttonName: String, viewHolder: RecyclerView.ViewHolder) {
 
             }
         }).also { it.submitList(firstList) }
         recyclerView2.adapter = UserHorizontalButtonAdapter(this).also { it.submitList(secondList) }
         recyclerView3.adapter = UserHorizontalButtonAdapter(this).also { it.submitList(thirdList) }
         recyclerView4.adapter = HorizontalButtonAdapter(object : OnItemViewClickListener {
-            override fun onClick(buttonName: String) {
+            override fun onClick(buttonName: String, viewHolder: RecyclerView.ViewHolder) {
+
+            }
+
+            override fun onLongClick(buttonName: String, viewHolder: RecyclerView.ViewHolder) {
 
             }
         }).also { it.submitList(forthList) }

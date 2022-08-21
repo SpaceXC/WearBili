@@ -22,15 +22,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.Application.Companion.TAG
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.image.PhotoViewActivity
+import cn.spacexc.wearbili.activity.settings.ChooseSettingsActivity
 import cn.spacexc.wearbili.activity.user.LoginActivity
-import cn.spacexc.wearbili.activity.video.PlayOnPhoneActivity
-import cn.spacexc.wearbili.activity.video.VideoActivity
-import cn.spacexc.wearbili.activity.video.VideoPlayerActivity
-import cn.spacexc.wearbili.activity.video.ViewFullVideoPartsActivity
+import cn.spacexc.wearbili.activity.video.*
 import cn.spacexc.wearbili.adapter.ButtonsAdapter
 import cn.spacexc.wearbili.adapter.VideoPartsAdapter
 import cn.spacexc.wearbili.databinding.FragmentVideoInfoBinding
@@ -43,6 +42,7 @@ import cn.spacexc.wearbili.dataclass.user.UserFans
 import cn.spacexc.wearbili.dataclass.video.Data
 import cn.spacexc.wearbili.dataclass.video.VideoInfo
 import cn.spacexc.wearbili.listener.OnItemViewClickListener
+import cn.spacexc.wearbili.manager.SettingsManager
 import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import cn.spacexc.wearbili.utils.TimeUtils.secondToTime
@@ -96,14 +96,8 @@ class VideoInfoFragment : Fragment() {
 
     private val btnListUpperRow = MutableLiveData(
         mutableListOf(
-            RoundButtonData(R.drawable.ic_baseline_play_circle_outline_24, "内建播放", "内建播放"),
+            RoundButtonData(R.drawable.ic_baseline_play_circle_outline_24, "播放", "播放"),
             RoundButtonData(R.drawable.ic_outline_thumb_up_24, "点赞", "点赞"),
-            RoundButtonData(
-                R.drawable.ic_baseline_play_circle_outline_24,
-                "小电视播放器播放",
-                "小电视播放器播放"
-            ),
-            //RoundButtonData(R.drawable.ic_baseline_play_circle_outline_24, "test", "test"),
             RoundButtonData(R.drawable.ic_outline_monetization_on_24, "投币", "投币"),
             RoundButtonData(R.drawable.ic_round_star_border_24, "收藏", "收藏"),
             RoundButtonData(R.drawable.ic_outline_thumb_down_24, "点踩", "点踩"),
@@ -201,7 +195,7 @@ class VideoInfoFragment : Fragment() {
         )
         binding.recyclerViewButtons.layoutManager = GridLayoutManager(requireContext(), 3)
         buttonsAdapter = ButtonsAdapter(true, object : OnItemViewClickListener {
-            override fun onClick(buttonName: String) {
+            override fun onClick(buttonName: String, viewHolder: RecyclerView.ViewHolder) {
                 when (buttonName) {
                     "手机观看" -> {
                         if (isAdded) {
@@ -218,14 +212,52 @@ class VideoInfoFragment : Fragment() {
                     "点赞" -> {
                         likeVideo()
                     }
-                    "内建播放" -> {
-                        val intent =
-                            Intent(requireActivity(), VideoPlayerActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        intent.putExtra("videoBvid", bvid)
-                        intent.putExtra("videoCid", cid)
-                        intent.putExtra("videoTitle", videoTitle)
-                        startActivity(intent)
+                    "播放" -> {
+                        when (SettingsManager.defPlayer()) {
+                            "builtinPlayer" -> {
+                                val intent =
+                                    Intent(requireActivity(), VideoPlayerActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                intent.putExtra("videoBvid", bvid)
+                                intent.putExtra("videoCid", cid)
+                                intent.putExtra("videoTitle", videoTitle)
+                                startActivity(intent)
+                            }
+                            "minifyPlayer" -> {
+                                val intent =
+                                    Intent(requireActivity(), MinifyVideoPlayer::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                intent.putExtra("videoBvid", bvid)
+                                intent.putExtra("videoCid", cid)
+                                intent.putExtra("videoTitle", videoTitle)
+                                startActivity(intent)
+                            }
+                            "microTvPlayer" -> {
+                                try {
+                                    val intent = Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse("wearbiliplayer://receive:8080/play?&bvid=$bvid&cid=$cid&aid=0")
+                                    )
+                                    startActivity(intent)
+                                } catch (e: ActivityNotFoundException) {
+                                    ToastUtils.makeText("需要安装小电视播放器哦").show()
+                                }
+                            }
+                            "microTaiwan" -> {
+                                ToastUtils.showText("敬请期待")
+                            }
+                            "other" -> {
+                                try {
+                                    val intent = Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse("wearbili-3rd://receive:8080/play?&bvid=$bvid&cid=$cid")
+                                    )
+                                    startActivity(intent)
+                                } catch (e: ActivityNotFoundException) {
+                                    ToastUtils.showText("没有找到其他播放器哦")
+                                }
+                            }
+                        }
                     }
                     "稍后再看" -> {
                         bvid?.let { it1 ->
@@ -271,18 +303,21 @@ class VideoInfoFragment : Fragment() {
                             })
                         }
                     }
-                    "小电视播放器播放" -> {
-                        try {
-                            val intent = Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse("wearbiliplayer://receive:8080/play?&bvid=$bvid&cid=$cid&aid=0")
-                            )
-                            startActivity(intent)
-                        } catch (e: ActivityNotFoundException) {
-                            ToastUtils.makeText("需要安装小电视播放器哦").show()
-                        }
+                }
+            }
+
+            override fun onLongClick(buttonName: String, viewHolder: RecyclerView.ViewHolder) {
+                when (buttonName) {
+                    "播放" -> {
+                        Log.d(TAG, "setOnLongClickListener: ")
+                        val intent = Intent(context, ChooseSettingsActivity::class.java)
+                        val item = SettingsManager.getSettingByName("defaultPlayer")
+                        intent.putExtra("item", item)
+                        /*intent.putExtra("itemKey", item?.settingName)
+                        intent.putExtra("itemName", item?.displayName)
+                        intent.putExtra("defVal", item?.defString)*/
+                        startActivity(intent)
                     }
-                    "test" -> requestPermission()
                 }
             }
 
@@ -293,6 +328,7 @@ class VideoInfoFragment : Fragment() {
         }
         likeButton =
             (binding.recyclerViewButtons.findViewHolderForAdapterPosition(1) as ButtonsAdapter.ButtonViewHolder?)
+
         binding.recyclerViewButtons.adapter = buttonsAdapter
         binding.recyclerViewParts.layoutManager = LinearLayoutManager(requireContext())
         videoPartsAdapter = VideoPartsAdapter((activity as VideoActivity).getId()!!)

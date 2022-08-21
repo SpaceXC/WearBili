@@ -1,5 +1,7 @@
 package cn.spacexc.wearbili.adapter
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -12,8 +14,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.R
+import cn.spacexc.wearbili.activity.settings.ChooseSettingsActivity
 import cn.spacexc.wearbili.dataclass.settings.SettingItem
 import cn.spacexc.wearbili.dataclass.settings.SettingType.*
+import cn.spacexc.wearbili.utils.SharedPreferencesUtils
+import cn.spacexc.wearbili.utils.ToastUtils
 
 /**
  * Created by XC-Qan on 2022/8/18.
@@ -23,17 +28,18 @@ import cn.spacexc.wearbili.dataclass.settings.SettingType.*
  * 给！爷！写！注！释！
  */
 
-class SettingsAdapter : ListAdapter<SettingItem, SettingsAdapter.SettingItemViewHolder>(object :
-    DiffUtil.ItemCallback<SettingItem>() {
-    override fun areItemsTheSame(oldItem: SettingItem, newItem: SettingItem): Boolean {
-        return oldItem.settingName == newItem.settingName
-    }
+class SettingsAdapter(private val context: Context) :
+    ListAdapter<SettingItem, SettingsAdapter.SettingItemViewHolder>(object :
+        DiffUtil.ItemCallback<SettingItem>() {
+        override fun areItemsTheSame(oldItem: SettingItem, newItem: SettingItem): Boolean {
+            return oldItem.settingName == newItem.settingName
+        }
 
-    override fun areContentsTheSame(oldItem: SettingItem, newItem: SettingItem): Boolean {
-        return oldItem.displayName == newItem.displayName
-    }
+        override fun areContentsTheSame(oldItem: SettingItem, newItem: SettingItem): Boolean {
+            return oldItem.displayName == newItem.displayName
+        }
 
-}) {
+    }) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SettingItemViewHolder {
         return SettingItemViewHolder(
             LayoutInflater.from(parent.context)
@@ -60,12 +66,27 @@ class SettingsAdapter : ListAdapter<SettingItem, SettingsAdapter.SettingItemView
             TYPE_CHOOSE -> {
                 holder.switch.isVisible = false
                 holder.arrow.isVisible = true
-                //TODO(Not yet implemented)
+                holder.itemView.setOnClickListener {
+                    val intent = Intent(context, ChooseSettingsActivity::class.java)
+                    intent.putExtra("item", item)/*
+                    intent.putExtra("itemKey", item.settingName)
+                    intent.putExtra("itemName", item.displayName)
+                    intent.putExtra("defVal", item.defString)*/
+                    context.startActivity(intent)
+                }
             }
             TYPE_SWITCH -> {
                 holder.switch.isVisible = true
                 holder.arrow.isVisible = false
-                //TODO(Not yet implemented)
+                holder.switch.isChecked =
+                    SharedPreferencesUtils.getBoolean(item.settingName, item.defBool)
+                holder.switch.setOnCheckedChangeListener { _, b ->
+                    SharedPreferencesUtils.saveBool(item.settingName, b)
+                    ToastUtils.debugToast("${item.settingName}: $b")
+                }
+                holder.itemView.setOnClickListener {
+                    holder.switch.isChecked = !holder.switch.isChecked
+                }
             }
             TYPE_CATEGORY -> {
                 holder.switch.isVisible = false

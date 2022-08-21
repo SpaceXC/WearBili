@@ -90,6 +90,7 @@
         <entry key="app/src/main/res/layout-land/fragment_video_playing.xml" value="0.32708333333333334" />
         <entry key="app/src/main/res/layout/activity_about.xml" value="0.1004403716152154" />
         <entry key="app/src/main/res/layout/activity_activate.xml" value="0.3056861906797777" />
+        <entry key="app/src/main/res/layout/activity_choose_settings.xml" value="0.9961240310077519" />
         <entry key="app/src/main/res/layout/activity_dynamic.xml" value="0.18854166666666666" />
         <entry key="app/src/main/res/layout/activity_dynamic_detail.xml" value="0.3056861906797777" />
         <entry key="app/src/main/res/layout/activity_follow_list.xml" value="1.6852941176470588" />
@@ -98,6 +99,7 @@
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.3838958740234375" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.5180053710937502" />
         <entry key="app/src/main/res/layout/activity_menu.xml" value="0.3250251321231616" />
+        <entry key="app/src/main/res/layout/activity_minify_video_player.xml" value="1.6852941176470588" />
         <entry key="app/src/main/res/layout/activity_photo_view.xml" value="0.13593597412109376" />
         <entry key="app/src/main/res/layout/activity_play_on_phone.xml" value="0.28961965134706813" />
         <entry key="app/src/main/res/layout/activity_qrcode.xml" value="0.9851752021563343" />
@@ -128,10 +130,10 @@
         <entry key="app/src/main/res/layout/cell_hot_search.xml" value="0.4475079014970752" />
         <entry key="app/src/main/res/layout/cell_image_viewer.xml" value="0.18828125" />
         <entry key="app/src/main/res/layout/cell_normal_dynamic.xml" value="0.3898199875853507" />
-        <entry key="app/src/main/res/layout/cell_radio_setting_item.xml" value="1.6852941176470588" />
+        <entry key="app/src/main/res/layout/cell_radio_setting_item.xml" value="1.4692307692307693" />
         <entry key="app/src/main/res/layout/cell_round_button.xml" value="0.24121928495519304" />
         <entry key="app/src/main/res/layout/cell_round_button_otld.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/cell_setting_item_button.xml" value="1.2726262709673715" />
+        <entry key="app/src/main/res/layout/cell_setting_item_button.xml" value="0.9455445544554455" />
         <entry key="app/src/main/res/layout/cell_star_folder.xml" value="0.5513517257310946" />
         <entry key="app/src/main/res/layout/cell_video_dynamic.xml" value="1.419076199001736" />
         <entry key="app/src/main/res/layout/cell_video_list.xml" value="1.2356842041015628" />

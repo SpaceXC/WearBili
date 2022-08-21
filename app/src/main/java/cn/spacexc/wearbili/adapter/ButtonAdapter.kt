@@ -70,7 +70,11 @@ class ButtonsAdapter(isOutlined: Boolean, onItemViewClickListener: OnItemViewCli
         holder.name.text = item.displayName
         println(item.displayName)
         holder.itemView.setOnClickListener {
-            onItemViewClickListener.onClick(item.buttonName)
+            onItemViewClickListener.onClick(item.buttonName, holder)
+        }
+        holder.itemView.setOnLongClickListener {
+            onItemViewClickListener.onLongClick(item.buttonName, holder)
+            true
         }
     }
 

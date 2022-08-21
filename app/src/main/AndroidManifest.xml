@@ -26,6 +26,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.video.MinifyVideoPlayer"
+            android:exported="false" />
+        <activity
             android:name=".activity.settings.ChooseSettingsActivity"
             android:exported="false" />
         <activity

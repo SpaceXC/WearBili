@@ -9,11 +9,15 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="2dp"
         app:cardBackgroundColor="#78242424"
         app:cardCornerRadius="8dp"
         app:cardElevation="0dp"
         app:cardMaxElevation="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -28,7 +32,10 @@
                 android:id="@+id/radioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:buttonTint="#fff"
+                android:buttonTint="#FE679A"
+                android:checked="false"
+                android:scaleX="0.8"
+                android:scaleY="0.8"
                 app:layout_constraintBottom_toBottomOf="@+id/icon"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/icon"
@@ -45,7 +52,7 @@
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintStart_toEndOf="@+id/radioButton"
                 app:layout_constraintTop_toTopOf="@+id/guideline9"
-                app:srcCompat="@drawable/ic_outline_account_circle_24" />
+                app:srcCompat="@mipmap/app_icon" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline9"

@@ -64,4 +64,16 @@ object ToastUtils {
             makeText("$description: $this").show()
         }
     }
+
+    fun Any.debugToast() {
+        if (isDebug()) {
+            makeText("$this").show()
+        }
+    }
+
+    fun debugToast(content: String?) {
+        if (isDebug()) {
+            makeText("$content").show()
+        }
+    }
 }

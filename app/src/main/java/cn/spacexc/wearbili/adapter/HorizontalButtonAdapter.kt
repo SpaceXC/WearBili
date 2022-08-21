@@ -59,7 +59,7 @@ class HorizontalButtonAdapter(val onItemViewClickListener: OnItemViewClickListen
         holder.name.text = getItem(position).mainText
         holder.description.text = getItem(position).description
         holder.itemView.setOnClickListener {
-            onItemViewClickListener.onClick(getItem(position).mainText)
+            onItemViewClickListener.onClick(getItem(position).mainText, holder)
         }
     }
 

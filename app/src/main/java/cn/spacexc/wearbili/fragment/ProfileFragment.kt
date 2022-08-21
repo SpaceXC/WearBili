@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.settings.SettingsActivity
@@ -74,7 +75,7 @@ class ProfileFragment : Fragment() {
         }
         binding.recyclerView.adapter =
             ButtonsAdapter(false, object : OnItemViewClickListener {
-                override fun onClick(buttonName: String) {
+                override fun onClick(buttonName: String, viewHolder: RecyclerView.ViewHolder) {
                     when (buttonName) {
                         "我的关注" -> {
                             if (isAdded) {
@@ -105,6 +106,10 @@ class ProfileFragment : Fragment() {
                             }
                         }
                     }
+                }
+
+                override fun onLongClick(buttonName: String, viewHolder: RecyclerView.ViewHolder) {
+
                 }
 
             }).also {

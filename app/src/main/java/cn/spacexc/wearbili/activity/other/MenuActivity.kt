@@ -43,7 +43,7 @@ class MenuActivity : AppCompatActivity() {
         }
         recyclerView.adapter =
             ButtonsAdapter(false, object : OnItemViewClickListener {
-                override fun onClick(buttonName: String) {
+                override fun onClick(buttonName: String, viewHolder: RecyclerView.ViewHolder) {
                     when (buttonName) {
                         "首页" -> {
                             MainActivity.currentPageId.value =
@@ -102,6 +102,10 @@ class MenuActivity : AppCompatActivity() {
                             }
                         }
                     }
+                }
+
+                override fun onLongClick(buttonName: String, viewHolder: RecyclerView.ViewHolder) {
+
                 }
 
             }).also {

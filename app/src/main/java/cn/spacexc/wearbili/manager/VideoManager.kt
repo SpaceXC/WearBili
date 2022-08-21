@@ -45,6 +45,14 @@ object VideoManager {
         )
     }
 
+    fun getVideoMp4Url(bvid: String, cid: Long, callback: Callback) {
+        //NetworkUtils.getUrl("http://api.bilibili.com/x/player/playurl?cid=$cid&bvid=$bvid&fnval=1", callback)
+        NetworkUtils.getUrl(
+            "http://api.bilibili.com/x/player/playurl?cid=$cid&bvid=$bvid&fnval=1&platform=web",
+            callback
+        )
+    }
+
     fun getDanmaku(cid: Long, callback: Callback) {
         NetworkUtils.getUrl("https://api.bilibili.com/x/v1/dm/list.so?oid=$cid", callback)
     }
