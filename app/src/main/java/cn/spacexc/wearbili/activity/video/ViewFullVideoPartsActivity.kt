@@ -4,12 +4,13 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.wear.widget.WearableLinearLayoutManager
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.adapter.VideoPartsAdapter
 import cn.spacexc.wearbili.dataclass.video.Data
 import cn.spacexc.wearbili.utils.TimeUtils
+import cn.spacexc.wearbili.utils.WearableLayoutManagerCallback
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
 
@@ -22,7 +23,8 @@ class ViewFullVideoPartsActivity : AppCompatActivity() {
         val timeText = findViewById<TextView>(R.id.timeText)
         val data = Gson().fromJson(intent.getStringExtra("data"), Data.Pages::class.java)
 //        val data = intent.getParcelableExtra<VideoPages>("data")
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager =
+            WearableLinearLayoutManager(this, WearableLayoutManagerCallback())
         recyclerView.adapter =
             VideoPartsAdapter(intent.getStringExtra("bvid")!!).also { it.submitList(data.pages) }
         pageName.text = "查看全部 (${data.pages.size})"

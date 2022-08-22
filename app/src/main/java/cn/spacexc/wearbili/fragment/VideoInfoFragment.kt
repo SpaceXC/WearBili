@@ -389,13 +389,51 @@ class VideoInfoFragment : Fragment() {
                         }
                         binding.cover.setOnClickListener {
                             //(activity as VideoActivity).setPage(2)
-                            val intent =
-                                Intent(requireActivity(), VideoPlayerActivity::class.java)
-                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            intent.putExtra("videoBvid", video.data.bvid)
-                            intent.putExtra("videoCid", video.data.cid)
-                            intent.putExtra("videoTitle", videoTitle)
-                            startActivity(intent)
+                            when (SettingsManager.defPlayer()) {
+                                "builtinPlayer" -> {
+                                    val intent =
+                                        Intent(requireActivity(), VideoPlayerActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                    intent.putExtra("videoBvid", bvid)
+                                    intent.putExtra("videoCid", cid)
+                                    intent.putExtra("videoTitle", videoTitle)
+                                    startActivity(intent)
+                                }
+                                "minifyPlayer" -> {
+                                    val intent =
+                                        Intent(requireActivity(), MinifyVideoPlayer::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                    intent.putExtra("videoBvid", bvid)
+                                    intent.putExtra("videoCid", cid)
+                                    intent.putExtra("videoTitle", videoTitle)
+                                    startActivity(intent)
+                                }
+                                "microTvPlayer" -> {
+                                    try {
+                                        val intent = Intent(
+                                            Intent.ACTION_VIEW,
+                                            Uri.parse("wearbiliplayer://receive:8080/play?&bvid=$bvid&cid=$cid&aid=0")
+                                        )
+                                        startActivity(intent)
+                                    } catch (e: ActivityNotFoundException) {
+                                        ToastUtils.makeText("需要安装小电视播放器哦").show()
+                                    }
+                                }
+                                "microTaiwan" -> {
+                                    ToastUtils.showText("敬请期待")
+                                }
+                                "other" -> {
+                                    try {
+                                        val intent = Intent(
+                                            Intent.ACTION_VIEW,
+                                            Uri.parse("wearbili-3rd://receive:8080/play?&bvid=$bvid&cid=$cid")
+                                        )
+                                        startActivity(intent)
+                                    } catch (e: ActivityNotFoundException) {
+                                        ToastUtils.showText("没有找到其他播放器哦")
+                                    }
+                                }
+                            }
                         }
                         binding.videoTitle.text = video.data.title
                         binding.bvidText.text = video.data.bvid

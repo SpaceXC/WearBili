@@ -6,9 +6,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.wear.widget.WearableLinearLayoutManager
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.user.LoginActivity
 import cn.spacexc.wearbili.adapter.WatchLaterAdapter
@@ -16,6 +16,7 @@ import cn.spacexc.wearbili.dataclass.watchlater.WatchLater
 import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.utils.TimeUtils
 import cn.spacexc.wearbili.utils.ToastUtils
+import cn.spacexc.wearbili.utils.WearableLayoutManagerCallback
 import com.google.gson.Gson
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -35,7 +36,8 @@ class WatchLaterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_watch_later)
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager =
+            WearableLinearLayoutManager(this, WearableLayoutManagerCallback())
         recyclerView.adapter = adapter
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout)
         pageName = findViewById(R.id.pageName)

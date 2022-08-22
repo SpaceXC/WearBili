@@ -14,5 +14,5 @@ data class DecorateCard(
     val jump_url: String,
     val mid: Long,
     val name: String,
-    val uid: Int
+    val uid: Long
 )

@@ -7,12 +7,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.wear.widget.WearableLinearLayoutManager
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.adapter.SearchResultAdapter
 import cn.spacexc.wearbili.databinding.ActivitySearchResultBinding
 import cn.spacexc.wearbili.dataclass.VideoSearch
 import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.utils.ToastUtils
+import cn.spacexc.wearbili.utils.WearableLayoutManagerCallback
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import kotlinx.coroutines.MainScope
@@ -30,7 +32,7 @@ class SearchResultActivity : AppCompatActivity() {
 
 
     lateinit var adapter: SearchResultAdapter
-    private val layoutManager = LinearLayoutManager(this)
+    private val layoutManager = WearableLinearLayoutManager(this, WearableLayoutManagerCallback())
 
     var currentPage: Int = 1
 

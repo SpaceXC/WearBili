@@ -9,5 +9,5 @@ data class Item(
     val reply: Int,
     val rp_id: Long,
     val timestamp: Int,
-    val uid: Int
+    val uid: Long
 )

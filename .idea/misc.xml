@@ -17,6 +17,7 @@
         <entry key="app/src/main/res/drawable-xhdpi/chat_bubble.xml" value="0.255" />
         <entry key="app/src/main/res/drawable-xhdpi/cloud_off.xml" value="0.255" />
         <entry key="app/src/main/res/drawable-xhdpi/video_library.xml" value="0.255" />
+        <entry key="app/src/main/res/drawable-xxhdpi/drive_file_rename_outline.xml" value="0.1605" />
         <entry key="app/src/main/res/drawable/background_button.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/background_card_view.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable/background_card_view_no_corner.xml" value="0.2795" />
@@ -88,7 +89,7 @@
         <entry key="app/src/main/res/font/roboto_bold.xml" value="0.3247863247863248" />
         <entry key="app/src/main/res/font/roboto_medium.xml" value="0.3384615384615385" />
         <entry key="app/src/main/res/layout-land/fragment_video_playing.xml" value="0.32708333333333334" />
-        <entry key="app/src/main/res/layout/activity_about.xml" value="0.1004403716152154" />
+        <entry key="app/src/main/res/layout/activity_about.xml" value="1.5528776838160632" />
         <entry key="app/src/main/res/layout/activity_activate.xml" value="0.3056861906797777" />
         <entry key="app/src/main/res/layout/activity_choose_settings.xml" value="0.9961240310077519" />
         <entry key="app/src/main/res/layout/activity_dynamic.xml" value="0.18854166666666666" />
@@ -97,11 +98,12 @@
         <entry key="app/src/main/res/layout/activity_history.xml" value="0.3056861906797777" />
         <entry key="app/src/main/res/layout/activity_image_viewer.xml" value="1.5158730158730158" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.3838958740234375" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.5180053710937502" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.23927392739273928" />
         <entry key="app/src/main/res/layout/activity_menu.xml" value="0.3250251321231616" />
         <entry key="app/src/main/res/layout/activity_minify_video_player.xml" value="1.6852941176470588" />
         <entry key="app/src/main/res/layout/activity_photo_view.xml" value="0.13593597412109376" />
         <entry key="app/src/main/res/layout/activity_play_on_phone.xml" value="0.28961965134706813" />
+        <entry key="app/src/main/res/layout/activity_post.xml" value="0.9961240310077519" />
         <entry key="app/src/main/res/layout/activity_qrcode.xml" value="0.9851752021563343" />
         <entry key="app/src/main/res/layout/activity_require_network.xml" value="2.128784635001697" />
         <entry key="app/src/main/res/layout/activity_search.xml" value="0.3059263214095035" />
@@ -112,18 +114,19 @@
         <entry key="app/src/main/res/layout/activity_star_item.xml" value="0.3056861906797777" />
         <entry key="app/src/main/res/layout/activity_stared.xml" value="0.31236347750109217" />
         <entry key="app/src/main/res/layout/activity_start.xml" value="1.6852941176470588" />
-        <entry key="app/src/main/res/layout/activity_video.xml" value="0.4251190185546876" />
+        <entry key="app/src/main/res/layout/activity_video.xml" value="0.2917505030181087" />
         <entry key="app/src/main/res/layout/activity_video_cache.xml" value="0.5268648960379045" />
         <entry key="app/src/main/res/layout/activity_video_long_click.xml" value="0.3613135842715992" />
-        <entry key="app/src/main/res/layout/activity_video_player.xml" value="0.28784219001610306" />
+        <entry key="app/src/main/res/layout/activity_video_player.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_view_full_video_parts.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_view_full_video_parts_actvity.xml" value="0.18247863247863247" />
         <entry key="app/src/main/res/layout/activity_watch_later.xml" value="0.28299643281807374" />
         <entry key="app/src/main/res/layout/cell_card_horizontal_button.xml" value="0.29692671394799053" />
         <entry key="app/src/main/res/layout/cell_card_horizontal_button_large_avatar.xml" value="0.501201051190623" />
-        <entry key="app/src/main/res/layout/cell_comment_hot_reply.xml" value="1.688235294117647" />
+        <entry key="app/src/main/res/layout/cell_comment_hot_reply.xml" value="0.1" />
         <entry key="app/src/main/res/layout/cell_comment_list.xml" value="2.45079229159618" />
         <entry key="app/src/main/res/layout/cell_dynamic_image.xml" value="0.3095339888841385" />
+        <entry key="app/src/main/res/layout/cell_edit_button.xml" value="1.6852941176470588" />
         <entry key="app/src/main/res/layout/cell_follow_list.xml" value="0.9965217391304347" />
         <entry key="app/src/main/res/layout/cell_follow_list_recyclerview.xml" value="0.30483112441214194" />
         <entry key="app/src/main/res/layout/cell_forward_share_dynamic.xml" value="0.47720364741641336" />
@@ -139,8 +142,8 @@
         <entry key="app/src/main/res/layout/cell_video_list.xml" value="1.2356842041015628" />
         <entry key="app/src/main/res/layout/cell_video_part.xml" value="0.4676098287416232" />
         <entry key="app/src/main/res/layout/cell_video_rcmd.xml" value="0.5895061728395061" />
-        <entry key="app/src/main/res/layout/fragment_comment.xml" value="1.5185185185185186" />
-        <entry key="app/src/main/res/layout/fragment_dynamic.xml" value="1.1032318644573966" />
+        <entry key="app/src/main/res/layout/fragment_comment.xml" value="0.36777920410783055" />
+        <entry key="app/src/main/res/layout/fragment_dynamic.xml" value="0.2771317829457364" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="1.6852941176470588" />
         <entry key="app/src/main/res/layout/fragment_recommend.xml" value="0.41192626953125" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.2584748417629714" />
@@ -173,7 +176,7 @@
   <component name="VisualizationToolProject">
     <option name="state">
       <ProjectState>
-        <option name="scale" value="1.1032318644573966" />
+        <option name="scale" value="0.5535710951861211" />
       </ProjectState>
     </option>
   </component>

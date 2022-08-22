@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.wear.widget.WearableLinearLayoutManager
 import cn.spacexc.wearbili.Application.Companion.TAG
 import cn.spacexc.wearbili.adapter.VideoPhoneEndRecommendListAdapter
 import cn.spacexc.wearbili.databinding.FragmentRecommendBinding
@@ -16,6 +17,7 @@ import cn.spacexc.wearbili.dataclass.video.rcmd.Item
 import cn.spacexc.wearbili.dataclass.video.rcmd.RecommendVideo
 import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.utils.ToastUtils
+import cn.spacexc.wearbili.utils.WearableLayoutManagerCallback
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import kotlinx.coroutines.MainScope
@@ -54,8 +56,9 @@ class RecommendFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated: $tag")
         adapter = VideoPhoneEndRecommendListAdapter(requireContext())
+        binding.recyclerView.layoutManager =
+            WearableLinearLayoutManager(requireContext(), WearableLayoutManagerCallback())
         binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (newState == RecyclerView.SCROLL_STATE_DRAGGING or RecyclerView.SCROLL_STATE_SETTLING) {

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.wear.widget.WearableLinearLayoutManager
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.activity.user.LoginActivity
 import cn.spacexc.wearbili.adapter.DynamicAdapter
@@ -18,6 +19,7 @@ import cn.spacexc.wearbili.manager.DynamicManager
 import cn.spacexc.wearbili.utils.RecyclerViewUtils.TopLinearSmoothScroller
 import cn.spacexc.wearbili.utils.ToastUtils
 import cn.spacexc.wearbili.utils.ToastUtils.debugToast
+import cn.spacexc.wearbili.utils.WearableLayoutManagerCallback
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -58,7 +60,8 @@ class DynamicFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.recyclerView.layoutManager = object : LinearLayoutManager(requireContext()) {
+        binding.recyclerView.layoutManager = object :
+            WearableLinearLayoutManager(requireActivity(), WearableLayoutManagerCallback()) {
             override fun smoothScrollToPosition(
                 recyclerView: RecyclerView?,
                 state: RecyclerView.State?,

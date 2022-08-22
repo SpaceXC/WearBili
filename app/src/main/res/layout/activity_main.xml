@@ -50,8 +50,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        app:boxedEdges="all"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:boxedEdges="none">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/titleBar"

@@ -18,7 +18,7 @@ data class Origin(
     val stype: Int,
     val timestamp: Int,
     val type: Int,
-    val uid: Int,
+    val uid: Long,
     val uid_type: Int,
     val view: Int
 )

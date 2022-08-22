@@ -108,8 +108,8 @@ object NetworkUtils {
     }
 
     fun requireRetry(callback: () -> Unit) {
-        val intent = Intent(Application.context, RequireNetworkActivity::class.java)
-        intent.apply {
+        Intent(Application.context, RequireNetworkActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
             Application.context?.startActivity(this)
         }
     }

@@ -7,7 +7,7 @@ import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.wear.widget.WearableLinearLayoutManager
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.video.VideoActivity
@@ -19,6 +19,7 @@ import cn.spacexc.wearbili.manager.SearchManager
 import cn.spacexc.wearbili.utils.TimeUtils
 import cn.spacexc.wearbili.utils.ToastUtils
 import cn.spacexc.wearbili.utils.VideoUtils
+import cn.spacexc.wearbili.utils.WearableLayoutManagerCallback
 import com.google.gson.Gson
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -52,7 +53,7 @@ class SearchActivity : AppCompatActivity() {
         }
         binding.pageName.setOnClickListener { finish() }
         binding.hotSearchRecyclerView.adapter = adapter
-        val layoutManager = LinearLayoutManager(this)
+        val layoutManager = WearableLinearLayoutManager(this, WearableLayoutManagerCallback())
         binding.hotSearchRecyclerView.layoutManager = layoutManager
         binding.search.setOnClickListener {
             searchKeyword()

@@ -5,12 +5,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.wear.widget.WearableLinearLayoutManager
 import cn.spacexc.wearbili.adapter.StarFolderItemAdapter
 import cn.spacexc.wearbili.databinding.ActivityStarItemBinding
 import cn.spacexc.wearbili.dataclass.star.StarFolderItemList
 import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.TimeUtils
+import cn.spacexc.wearbili.utils.WearableLayoutManagerCallback
 import com.google.gson.Gson
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -39,7 +41,8 @@ class StarItemActivity : AppCompatActivity() {
         }
         val folderId = intent.getLongExtra("folderId", 0L)
         binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.layoutManager =
+            WearableLinearLayoutManager(this, WearableLayoutManagerCallback())
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 val lm = recyclerView.layoutManager as LinearLayoutManager?

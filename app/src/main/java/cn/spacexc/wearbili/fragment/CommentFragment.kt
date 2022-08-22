@@ -35,17 +35,7 @@ class CommentFragment : Fragment() {
     var page: Int = 1
 
     val adapter = CommentAdapter(lifecycleScope, Application.context!!)
-    private val layoutManager = object : LinearLayoutManager(Application.getContext()) {
-        override fun smoothScrollToPosition(
-            recyclerView: RecyclerView?,
-            state: RecyclerView.State?,
-            position: Int
-        ) {
-            val scroller = RecyclerViewUtils.TopLinearSmoothScroller(view?.context)
-            scroller.targetPosition = position
-            startSmoothScroll(scroller)
-        }
-    }
+    //lateinit var layoutManager: WearableLinearLayoutManager
 
     init {
         Log.d(Application.getTag(), "CommentFragmentLoaded")
@@ -82,7 +72,17 @@ class CommentFragment : Fragment() {
         binding.recyclerView.adapter = adapter.also {
             adapter.uploaderMid = (activity as VideoActivity).currentVideo?.owner?.mid
         }
-        binding.recyclerView.layoutManager = layoutManager
+        binding.recyclerView.layoutManager = object : LinearLayoutManager(requireActivity()) {
+            override fun smoothScrollToPosition(
+                recyclerView: RecyclerView?,
+                state: RecyclerView.State?,
+                position: Int
+            ) {
+                val scroller = RecyclerViewUtils.TopLinearSmoothScroller(view?.context)
+                scroller.targetPosition = position
+                startSmoothScroll(scroller)
+            }
+        }
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 val lm = recyclerView.layoutManager as LinearLayoutManager?

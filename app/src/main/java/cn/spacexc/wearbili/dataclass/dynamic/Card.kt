@@ -31,7 +31,7 @@ data class Card(
     val stype: Int,
     val timestamp: Long,
     val type: Int,
-    val uid: Int,
+    val uid: Long,
     val uid_type: Int,
     val user_profile: UserProfile,
     val view: Int

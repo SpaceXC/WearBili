@@ -26,6 +26,7 @@ import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import cn.spacexc.wearbili.utils.TimeUtils.toDateStr
 import com.bumptech.glide.Glide
+import com.google.android.material.card.MaterialCardView
 
 
 /**
@@ -36,11 +37,14 @@ import com.bumptech.glide.Glide
  * 给！爷！写！注！释！
  */
 
+const val TYPE_SEND = 0
+const val TYPE_SHOW = 1
+
 class CommentAdapter(
     val lifeCycleScope: LifecycleCoroutineScope,
     val context: Context,
 ) :
-    ListAdapter<CommentContentData, CommentAdapter.VideoCommentViewHolder>(object :
+    ListAdapter<CommentContentData, RecyclerView.ViewHolder>(object :
         DiffUtil.ItemCallback<CommentContentData>() {
         override fun areItemsTheSame(
             oldItem: CommentContentData,
@@ -60,68 +64,86 @@ class CommentAdapter(
 
     var uploaderMid: Long? = 0L
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoCommentViewHolder {
+    override fun getItemViewType(position: Int): Int {
+        //return super.getItemViewType(position)
+        return if (position == 0) TYPE_SEND
+        else TYPE_SHOW
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater: LayoutInflater = LayoutInflater.from(parent.context)
-        return VideoCommentViewHolder(
+        return if (viewType == TYPE_SHOW) VideoCommentViewHolder(
             inflater.inflate(
                 R.layout.cell_comment_list,
                 parent,
                 false
             )
         )
+        else EditAndSendViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.cell_edit_button, parent, false)
+        )
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindViewHolder(holder: VideoCommentViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         //println(itemCount)
-        val comment = getItem(position)
-        holder.userName.text = comment.member!!.uname
-        holder.upLiked.isVisible = comment.up_action.like
-        if (comment.replies != null) {
-            val hotRepliesAdapter = CommentHotRepliesAdapter(lifeCycleScope, uploaderMid)
-            holder.replies.layoutManager = LinearLayoutManager(this@CommentAdapter.context)
-            holder.replies.adapter = hotRepliesAdapter
-            hotRepliesAdapter.submitList(comment.replies!!.toList())
-            holder.repliesControl.text = comment.reply_control.sub_reply_entry_text
-        } else {
-            holder.repliesCard.visibility = View.GONE
-        }
-        if (comment.member!!.vip.nickname_color.isNotEmpty()) holder.userName.setTextColor(
-            Color.parseColor(
-                comment.member!!.vip.nickname_color
-            )
-        )
-        else {
-            holder.userName.setTextColor(Color.WHITE)
-        }
-
-        holder.pubDate.text = (comment.ctime * 1000).toDateStr("yyyy-MM-dd")
-
-
-        comment.content?.emote?.forEach {
-            comment.content?.message = comment.content?.message?.replace(
-                it.key,
-                "<img src=\"${it.value.url.replace("http", "https")}\"/>"
-            )!!
-        }
-
-        Thread {
-            val sp = Html.fromHtml(
-                comment.content?.message,
-                NetworkUtils.imageGetter(holder.content.lineHeight),
-                null
-            )
-            holder.content.post {
-                holder.content.text = sp
+        if (holder is VideoCommentViewHolder) {
+            val comment = getItem(position)
+            holder.userName.text = comment.member!!.uname
+            holder.upLiked.isVisible = comment.up_action.like
+            if (comment.replies != null) {
+                val hotRepliesAdapter = CommentHotRepliesAdapter(lifeCycleScope, uploaderMid)
+                holder.replies.layoutManager = LinearLayoutManager(this@CommentAdapter.context)
+                holder.replies.adapter = hotRepliesAdapter
+                hotRepliesAdapter.submitList(comment.replies!!.toList())
+                holder.repliesControl.text = comment.reply_control.sub_reply_entry_text
+            } else {
+                holder.repliesCard.visibility = View.GONE
             }
-        }.start()
+            if (comment.member!!.vip.nickname_color.isNotEmpty()) holder.userName.setTextColor(
+                Color.parseColor(
+                    comment.member!!.vip.nickname_color
+                )
+            )
+            else {
+                holder.userName.setTextColor(Color.WHITE)
+            }
+
+            holder.pubDate.text = (comment.ctime * 1000).toDateStr("yyyy-MM-dd")
 
 
-        holder.likes.text = comment.like.toShortChinese()
-        holder.isUp.isVisible = comment.member?.mid == uploaderMid
-        Glide.with(Application.getContext()).load(comment.member!!.avatar.replace("http", "https"))
-            .circleCrop()
-            .into(holder.avatar)
+            comment.content?.emote?.forEach {
+                comment.content?.message = comment.content?.message?.replace(
+                    it.key,
+                    "<img src=\"${it.value.url.replace("http", "https")}\"/>"
+                )!!
+            }
+
+            Thread {
+                val sp = Html.fromHtml(
+                    comment.content?.message,
+                    NetworkUtils.imageGetter(holder.content.lineHeight),
+                    null
+                )
+                holder.content.post {
+                    holder.content.text = sp
+                }
+            }.start()
+
+
+            holder.likes.text = comment.like.toShortChinese()
+            holder.isUp.isVisible = comment.member?.mid == uploaderMid
+            Glide.with(Application.getContext())
+                .load(comment.member!!.avatar.replace("http", "https"))
+                .circleCrop()
+                .into(holder.avatar)
+        }
+        if (holder is EditAndSendViewHolder) {
+            holder.textView.text = "发一条友善的评论~"
+            holder.cardView.setOnClickListener {
+
+            }
+        }
 
     }
 
@@ -151,6 +173,16 @@ class CommentAdapter(
             repliesControl = itemView.findViewById(R.id.repliesControl)
             repliesCard = itemView.findViewById(R.id.repliesCard)
             upLiked = itemView.findViewById(R.id.upLiked)
+        }
+    }
+
+    class EditAndSendViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val cardView: MaterialCardView
+        val textView: TextView
+
+        init {
+            cardView = itemView.findViewById(R.id.cardView)
+            textView = itemView.findViewById(R.id.editInfo)
         }
     }
 }

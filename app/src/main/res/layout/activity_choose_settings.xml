@@ -147,13 +147,11 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/description">
 
-                <androidx.recyclerview.widget.RecyclerView
+                <androidx.wear.widget.WearableRecyclerView
                     android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:nestedScrollingEnabled="false">
-
-                </androidx.recyclerview.widget.RecyclerView>
+                    android:nestedScrollingEnabled="false" />
             </RelativeLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
