@@ -9,11 +9,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.wear.widget.WearableLinearLayoutManager
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.dataclass.follow.FollowGroupUsers
 import cn.spacexc.wearbili.dataclass.follow.Group
 import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.utils.NetworkUtils
+import cn.spacexc.wearbili.utils.WearableLayoutManagerCallback
 import com.google.gson.Gson
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -55,7 +57,8 @@ class FollowGroupAdapter(private val context: Context) :
         val obj = getItem(position)
         val adapter = FollowedUserAdapter(context)
         holder.swipeRefreshLayout.isRefreshing = true
-        holder.recyclerView.layoutManager = LinearLayoutManager(context)
+        holder.recyclerView.layoutManager =
+            WearableLinearLayoutManager(context, WearableLayoutManagerCallback())
         holder.recyclerView.adapter = adapter
         holder.swipeRefreshLayout.setOnRefreshListener {
             page = 1

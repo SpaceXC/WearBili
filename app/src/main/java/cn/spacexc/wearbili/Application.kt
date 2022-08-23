@@ -38,6 +38,8 @@ class Application : android.app.Application() {
             this, "0365b962-2310-4b53-ba45-d92d84171f57",
             Analytics::class.java, Crashes::class.java
         )
+
+        //UserManager.loginWithPassword("480816699", "MangoLiu2190")
     }
 
     override fun onTerminate() {

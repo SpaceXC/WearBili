@@ -1,8 +1,12 @@
 package cn.spacexc.wearbili.manager
 
 import android.net.Uri
+import android.util.Log
+import cn.spacexc.wearbili.Application.Companion.TAG
 import cn.spacexc.wearbili.dataclass.BaseData
+import cn.spacexc.wearbili.dataclass.HashSalt
 import cn.spacexc.wearbili.dataclass.user.AccessKeyGetter
+import cn.spacexc.wearbili.utils.EncryptUtils
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.SharedPreferencesUtils
 import com.google.gson.Gson
@@ -152,45 +156,33 @@ object UserManager {
             })
     }
 
-    fun getAccessKey(): String? = SharedPreferencesUtils.getString("accessKey", "")
-    //@Throws(IOException::class)
-    /*fun saveAccessKey(cookie: String?): String? {
-        try {
-            var url = "https://passport.bilibili.com/login/app/third?api=http://link.acg.tv/forum.php&appkey=27eb53fc9058f8c3&sign=67ec798004373253d60114caaad89a8c"
+    @Deprecated("Api url invalid")
+    fun loginWithPassword(username: String, password: String) {
+        NetworkUtils.getUrl("http://passport.bilibili.com/login?act=getkey", object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
 
-            NetworkUtils.getUrl(url, object : Callback{
-                override fun onFailure(call: Call, e: IOException) {
-
-                }
-
-                override fun onResponse(call: Call, response: Response) {
-
-                }
-
-            })
-
-            url =
-                JSONObject(response.body!!.string()).getJSONObject("data").getString("confirm_uri")
-            val client: OkHttpClient = Builder().connectTimeout(15, TimeUnit.SECONDS)
-                .readTimeout(15, TimeUnit.SECONDS)
-                .followRedirects(false)
-                .followSslRedirects(false).build()
-            var requestBuilder: Builder = Builder().url(url)
-            var i = 0
-            while (i < headers2.size) {
-                requestBuilder = requestBuilder.addHeader(headers2[i], headers2[i + 1])
-                i += 2
             }
-            val request: Request = requestBuilder.build()
-            response = client.newCall(request).execute()
-            val url_location = response.header("location")
-            return url_location!!.substring(
-                url_location.indexOf("access_key=") + 11,
-                url_location.indexOf("&", url_location.indexOf("access_key="))
-            )
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
-        return ""
-    }*/
+
+            override fun onResponse(call: Call, response: Response) {
+                val result = Gson().fromJson(response.body?.string(), HashSalt::class.java)
+                val pwd = EncryptUtils.rsaEncrypt("${result.hash}$password", result.key)
+                NetworkUtils.getUrl(
+                    "https://account.bilibili.com/api/login/v2?userid=$username&pwd=${pwd}",
+                    object : Callback {
+                        override fun onFailure(call: Call, e: IOException) {
+
+                        }
+
+                        override fun onResponse(call: Call, response: Response) {
+                            Log.d(TAG, "onResponse: ${response.body?.string()}")
+                        }
+
+                    })
+            }
+
+        })
+    }
+
+    fun getAccessKey(): String? = SharedPreferencesUtils.getString("accessKey", "")
+
 }

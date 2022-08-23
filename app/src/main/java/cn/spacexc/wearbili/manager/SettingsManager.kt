@@ -66,10 +66,21 @@ object SettingsManager {
         ),
         SettingItem(
             type = SettingType.TYPE_SWITCH,
+            settingName = "hasScrollVfx",
+            displayName = "滑动动效",
+            description = "曲线列表边缘",
+            iconRes = R.drawable.ic_baseline_filter_list_24,
+            requireRestart = true,
+            defBool = Application.context?.resources?.configuration?.isScreenRound!!,
+            requireSave = true,
+        ),
+        SettingItem(
+            type = SettingType.TYPE_SWITCH,
             settingName = "isDebugging",
             displayName = "调试开关",
-            description = "开启后将显示调试信息",
+            description = "显示调试信息",
             iconRes = R.drawable.ic_baseline_code_24,
+            defBool = false,
             requireSave = true,
         ),
         SettingItem(
@@ -120,5 +131,6 @@ object SettingsManager {
     }
 
     fun isDebug(): Boolean = SharedPreferencesUtils.getBoolean("isDebugging", false)
+    fun hasScrollVfx(): Boolean = SharedPreferencesUtils.getBoolean("hasScrollVfx", true)
     fun defPlayer(): String = SharedPreferencesUtils.getString("defaultPlayer", "builtinPlayer")
 }

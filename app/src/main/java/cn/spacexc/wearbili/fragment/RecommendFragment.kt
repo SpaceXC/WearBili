@@ -88,6 +88,7 @@ class RecommendFragment : Fragment() {
             binding.swipeRefreshLayout.isRefreshing = true
             getRecommendVideo(false)
         }
+        binding.recyclerView.requestFocus()
     }
 
     fun refresh() {

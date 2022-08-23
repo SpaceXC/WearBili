@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.wear.widget.WearableLinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.adapter.StarFolderAdapter
 import cn.spacexc.wearbili.databinding.ActivityStaredBinding
@@ -13,7 +13,6 @@ import cn.spacexc.wearbili.dataclass.star.StarList
 import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.TimeUtils
-import cn.spacexc.wearbili.utils.WearableLayoutManagerCallback
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import kotlinx.coroutines.MainScope
@@ -32,7 +31,7 @@ class StaredActivity : AppCompatActivity() {
         binding = ActivityStaredBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.recyclerView.layoutManager =
-            WearableLinearLayoutManager(this, WearableLayoutManagerCallback())
+            LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
         binding.pageName.setOnClickListener { finish() }
         binding.swipeRefreshLayout.setOnRefreshListener { getStarFolder() }

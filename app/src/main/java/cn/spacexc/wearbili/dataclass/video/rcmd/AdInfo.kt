@@ -7,7 +7,7 @@ data class AdInfo(
     val client_ip: String,
     val cm_mark: Int,
     val creative_content: CreativeContent,
-    val creative_id: Int,
+    val creative_id: Long,
     val creative_style: Int,
     val creative_type: Int,
     val extra: Extra,

@@ -1,8 +1,13 @@
 package cn.spacexc.wearbili.utils
 
+import android.util.Base64
 import java.math.BigInteger
+import java.security.KeyFactory
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+import java.security.interfaces.RSAPublicKey
+import java.security.spec.X509EncodedKeySpec
+import javax.crypto.Cipher
 
 /**
  * Created by XC-Qan on 2022/7/28.
@@ -40,5 +45,21 @@ object EncryptUtils {
             md5code.insert(0, "0")
         }
         return md5code.toString()
+    }
+
+    @Throws(Exception::class)
+    fun rsaEncrypt(str: String, key: String): String? {
+        var key = key
+        key = key.replace("-----BEGIN PUBLIC KEY-----", "")
+        key = key.replace("-----END PUBLIC KEY-----", "")
+        val decoded = Base64.decode(key, Base64.DEFAULT)
+        val pubKey = KeyFactory.getInstance("RSA")
+            .generatePublic(X509EncodedKeySpec(decoded)) as RSAPublicKey
+        val cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding")
+        cipher.init(Cipher.ENCRYPT_MODE, pubKey)
+        return Base64.encodeToString(
+            cipher.doFinal(str.toByteArray(charset("UTF-8"))),
+            Base64.NO_PADDING
+        )
     }
 }

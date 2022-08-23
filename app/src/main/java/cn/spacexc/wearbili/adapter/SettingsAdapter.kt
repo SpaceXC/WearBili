@@ -1,5 +1,6 @@
 package cn.spacexc.wearbili.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.settings.ChooseSettingsActivity
+import cn.spacexc.wearbili.activity.settings.RequireRestartActivity
 import cn.spacexc.wearbili.dataclass.settings.SettingItem
 import cn.spacexc.wearbili.dataclass.settings.SettingType.*
 import cn.spacexc.wearbili.utils.SharedPreferencesUtils
@@ -68,10 +70,7 @@ class SettingsAdapter(private val context: Context) :
                 holder.arrow.isVisible = true
                 holder.itemView.setOnClickListener {
                     val intent = Intent(context, ChooseSettingsActivity::class.java)
-                    intent.putExtra("item", item)/*
-                    intent.putExtra("itemKey", item.settingName)
-                    intent.putExtra("itemName", item.displayName)
-                    intent.putExtra("defVal", item.defString)*/
+                    intent.putExtra("item", item)
                     context.startActivity(intent)
                 }
             }
@@ -83,6 +82,12 @@ class SettingsAdapter(private val context: Context) :
                 holder.switch.setOnCheckedChangeListener { _, b ->
                     SharedPreferencesUtils.saveBool(item.settingName, b)
                     ToastUtils.debugToast("${item.settingName}: $b")
+                    if (item.requireRestart) {
+                        Intent(context, RequireRestartActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            context.startActivity(this)
+                        }
+                    }
                 }
                 holder.itemView.setOnClickListener {
                     holder.switch.isChecked = !holder.switch.isChecked
@@ -96,6 +101,7 @@ class SettingsAdapter(private val context: Context) :
         }
     }
 
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     class SettingItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val icon: ImageView
         val name: TextView

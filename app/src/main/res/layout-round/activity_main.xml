@@ -69,7 +69,6 @@
                 android:id="@+id/pageName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="7dp"
                 android:drawableEnd="@drawable/ic_baseline_keyboard_arrow_down_24"
                 android:fontFamily="@font/puhui_bold"
                 android:gravity="center"
@@ -77,6 +76,7 @@
                 android:textColor="#fff"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="@+id/timeText"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/timeText" />
 
@@ -91,6 +91,7 @@
                 android:text="12:00"
                 android:textColor="#fff"
                 android:textSize="16sp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -100,6 +101,8 @@
             android:id="@+id/viewpager"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

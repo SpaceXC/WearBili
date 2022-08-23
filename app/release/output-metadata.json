@@ -11,9 +11,9 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 91,
-      "versionName": "Rel-AL 0.13.3",
-      "outputFile": "Rel-AL 0.13.3.apk"
+      "versionCode": 1,
+      "versionName": "Rel-AL 0.13.4",
+      "outputFile": "Rel-AL 0.13.4.apk"
     }
   ],
   "elementType": "File"

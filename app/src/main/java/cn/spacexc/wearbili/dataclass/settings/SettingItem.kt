@@ -22,6 +22,7 @@ data class SettingItem(
     val defString: String = "",
     val defBool: Boolean = false,
     val description: String,
+    val requireRestart: Boolean = false,
     val action: () -> Unit = {},
     val chooseItems: List<ChooseItem> = emptyList(),
     val categoryItems: List<SettingItem> = emptyList(),

@@ -20,13 +20,17 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
+        android:hardwareAccelerated="true"
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
         android:theme="@style/Theme.WearBili"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".PostActivity"
+            android:name=".activity.settings.RequireRestartActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.comment.PostActivity"
             android:exported="false" />
         <activity
             android:name=".activity.video.MinifyVideoPlayer"

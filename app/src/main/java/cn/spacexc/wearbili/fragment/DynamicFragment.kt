@@ -16,6 +16,7 @@ import cn.spacexc.wearbili.adapter.DynamicAdapter
 import cn.spacexc.wearbili.databinding.FragmentDynamicBinding
 import cn.spacexc.wearbili.dataclass.dynamic.Card
 import cn.spacexc.wearbili.manager.DynamicManager
+import cn.spacexc.wearbili.utils.LogUtils.log
 import cn.spacexc.wearbili.utils.RecyclerViewUtils.TopLinearSmoothScroller
 import cn.spacexc.wearbili.utils.ToastUtils
 import cn.spacexc.wearbili.utils.ToastUtils.debugToast
@@ -131,6 +132,7 @@ class DynamicFragment : Fragment() {
             }
 
             override fun onSuccess(dynamicCards: List<Card>, code: Int) {
+                dynamicCards.log()
                 MainScope().launch {
                     when (code) {
                         0 -> {

@@ -78,7 +78,7 @@ class CommentFragment : Fragment() {
                 state: RecyclerView.State?,
                 position: Int
             ) {
-                val scroller = RecyclerViewUtils.TopLinearSmoothScroller(view?.context)
+                val scroller = RecyclerViewUtils.TopLinearSmoothScroller(view.context)
                 scroller.targetPosition = position
                 startSmoothScroll(scroller)
             }
