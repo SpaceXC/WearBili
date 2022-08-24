@@ -3,17 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:keepScreenOn="true"
-    android:background="#000">
+    android:background="#000"
+    android:keepScreenOn="true">
 
-    <androidx.constraintlayout.motion.widget.MotionLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/motionLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:foregroundGravity="center"
         android:visibility="visible"
-        app:boxedEdges="all"
-        app:layoutDescription="@xml/activity_video_player_xml_constraintlayout6_scene">
+        app:boxedEdges="none">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,8 +31,8 @@
                     android:id="@+id/playerView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:surface_type="texture_view"
                     android:layout_gravity="center"
+                    app:surface_type="texture_view"
                     app:use_controller="false" />
 
             </FrameLayout>
@@ -116,6 +115,13 @@
                             app:layout_constraintStart_toEndOf="@+id/back"
                             app:layout_constraintTop_toTopOf="parent"
                             tools:ignore="SpeakableTextPresentCheck" />
+
+                        <androidx.constraintlayout.widget.Guideline
+                            android:id="@+id/guideline58"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:layout_constraintGuide_begin="20dp" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -271,18 +277,18 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/settingsPanel"
-            android:layout_width="100dp"
-            android:layout_height="0dp"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
             android:background="#242424"
-            tools:layout_editor_absoluteX="227dp">
+            android:translationX="150dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <Button
-                android:id="@+id/button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Button"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -296,6 +302,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.constraintlayout.motion.widget.MotionLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.wear.widget.BoxInsetLayout>

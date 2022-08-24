@@ -16,6 +16,7 @@
         <entry key="app/src/main/res/drawable-v24/warning.xml" value="0.2795" />
         <entry key="app/src/main/res/drawable-xhdpi/chat_bubble.xml" value="0.255" />
         <entry key="app/src/main/res/drawable-xhdpi/cloud_off.xml" value="0.255" />
+        <entry key="app/src/main/res/drawable-xhdpi/play_arrow.xml" value="0.255" />
         <entry key="app/src/main/res/drawable-xhdpi/video_library.xml" value="0.255" />
         <entry key="app/src/main/res/drawable-xxhdpi/drive_file_rename_outline.xml" value="0.1605" />
         <entry key="app/src/main/res/drawable/background_button.xml" value="0.2795" />
@@ -110,6 +111,7 @@
         <entry key="app/src/main/res/layout-round/activity_start.xml" value="1.790625" />
         <entry key="app/src/main/res/layout-round/activity_video.xml" value="1.790625" />
         <entry key="app/src/main/res/layout-round/activity_video_cache.xml" value="1.790625" />
+        <entry key="app/src/main/res/layout-round/activity_video_player.xml" value="0.45381011962890616" />
         <entry key="app/src/main/res/layout-round/activity_watch_later.xml" value="1.790625" />
         <entry key="app/src/main/res/layout-round/fragment_comment.xml" value="1.790625" />
         <entry key="app/src/main/res/layout-round/fragment_video_info.xml" value="1.0533088235294117" />
@@ -142,7 +144,7 @@
         <entry key="app/src/main/res/layout/activity_video.xml" value="0.2917505030181087" />
         <entry key="app/src/main/res/layout/activity_video_cache.xml" value="0.5268648960379045" />
         <entry key="app/src/main/res/layout/activity_video_long_click.xml" value="0.3613135842715992" />
-        <entry key="app/src/main/res/layout/activity_video_player.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_video_player.xml" value="0.7579868485774901" />
         <entry key="app/src/main/res/layout/activity_view_full_video_parts.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_view_full_video_parts_actvity.xml" value="0.18247863247863247" />
         <entry key="app/src/main/res/layout/activity_watch_later.xml" value="0.28299643281807374" />

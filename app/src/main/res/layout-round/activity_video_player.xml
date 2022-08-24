@@ -6,14 +6,13 @@
     android:background="#000"
     android:keepScreenOn="true">
 
-    <androidx.constraintlayout.motion.widget.MotionLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/motionLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:foregroundGravity="center"
         android:visibility="visible"
-        app:boxedEdges="all"
-        app:layoutDescription="@xml/activity_video_player_xml_constraintlayout6_scene">
+        app:boxedEdges="none">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -63,6 +62,42 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
+                    <TextView
+                        android:id="@+id/settingsButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_marginEnd="4dp"
+                        android:background="@drawable/background_grey"
+                        android:drawableStart="@drawable/ic_baseline_arrow_back_ios_new_24"
+                        android:fontFamily="@font/puhui_bold"
+                        android:gravity="center"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:textColor="#fff"
+                        android:textSize="12sp"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="@+id/rotate"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/rotate" />
+
+                    <ImageView
+                        android:id="@+id/rotate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/background_grey"
+                        android:paddingStart="8dp"
+                        android:paddingTop="8dp"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="8dp"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/screen_rotation" />
+
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/title"
                         android:layout_width="match_parent"
@@ -83,39 +118,54 @@
                             android:textColor="#fff"
                             android:textSize="12sp"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="@+id/videoTitle"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/videoTitle" />
 
                         <ImageView
                             android:id="@+id/back"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
                             android:adjustViewBounds="true"
-                            app:layout_constraintBottom_toBottomOf="@+id/onlineCount"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toTopOf="@+id/videoTitle"
+                            app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="@+id/videoTitle"
+                            app:layout_constraintTop_toTopOf="parent"
                             app:srcCompat="@drawable/ic_baseline_arrow_back_ios_24" />
 
                         <TextView
                             android:id="@+id/videoTitle"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="2dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginEnd="4dp"
+                            android:layout_marginTop="20dp"
                             android:ellipsize="marquee"
                             android:focusable="true"
                             android:focusableInTouchMode="true"
                             android:fontFamily="@font/puhui_bold"
+                            android:gravity="center"
                             android:singleLine="true"
                             android:textColor="#fff"
                             android:textSize="15sp"
-                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/guideline60"
                             app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintStart_toEndOf="@+id/back"
+                            app:layout_constraintStart_toStartOf="@+id/guideline58"
                             app:layout_constraintTop_toTopOf="parent"
                             tools:ignore="SpeakableTextPresentCheck" />
+
+                        <androidx.constraintlayout.widget.Guideline
+                            android:id="@+id/guideline58"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:layout_constraintGuide_percent="0.15" />
+
+                        <androidx.constraintlayout.widget.Guideline
+                            android:id="@+id/guideline60"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:layout_constraintGuide_percent="0.85" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -131,9 +181,9 @@
                             android:id="@+id/progressText"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
+                            android:layout_marginStart="16dp"
                             android:layout_marginTop="6dp"
-                            android:layout_marginEnd="10dp"
+                            android:layout_marginEnd="16dp"
                             android:layout_marginBottom="2dp"
                             android:ellipsize="marquee"
                             android:fontFamily="@font/puhui_bold"
@@ -149,30 +199,19 @@
                             style="@style/CustomSeekbarStyle"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="6dp"
+                            android:layout_marginStart="26dp"
+                            android:layout_marginEnd="26dp"
+                            android:layout_marginBottom="4dp"
                             android:paddingStart="10dp"
                             android:paddingEnd="10dp"
                             android:splitTrack="false"
                             android:thumb="@drawable/background_progress_thumb"
-                            app:layout_constraintBottom_toTopOf="@+id/rotate"
+                            app:layout_constraintBottom_toTopOf="@+id/control"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent" />
 
                         <ImageView
-                            android:id="@+id/control"
-                            android:layout_width="wrap_content"
-                            android:layout_height="0dp"
-                            android:layout_marginStart="10dp"
-                            android:adjustViewBounds="true"
-                            android:paddingTop="4dp"
-                            android:paddingBottom="4dp"
-                            app:layout_constraintBottom_toBottomOf="@+id/rotate"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="@+id/rotate"
-                            app:srcCompat="@drawable/play" />
-
-                        <ImageView
-                            android:id="@+id/rotate"
+                            android:id="@+id/rotate2"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_marginEnd="12dp"
@@ -181,14 +220,15 @@
                             android:paddingTop="8dp"
                             android:paddingEnd="8dp"
                             android:paddingBottom="8dp"
-                            app:layout_constraintBottom_toBottomOf="@+id/settingsButton"
+                            android:visibility="invisible"
+                            app:layout_constraintBottom_toBottomOf="@+id/settingsButton2"
                             app:layout_constraintDimensionRatio="1:1"
-                            app:layout_constraintEnd_toStartOf="@+id/settingsButton"
-                            app:layout_constraintTop_toTopOf="@+id/settingsButton"
+                            app:layout_constraintEnd_toStartOf="@+id/settingsButton2"
+                            app:layout_constraintTop_toTopOf="@+id/settingsButton2"
                             app:srcCompat="@drawable/screen_rotation" />
 
                         <TextView
-                            android:id="@+id/settingsButton"
+                            android:id="@+id/settingsButton2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="10dp"
@@ -204,8 +244,22 @@
                             android:text="选项"
                             android:textColor="#fff"
                             android:textSize="12sp"
+                            android:visibility="invisible"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/control"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:adjustViewBounds="true"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            app:layout_constraintBottom_toBottomOf="@+id/rotate2"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/rotate2"
+                            app:srcCompat="@drawable/play" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -272,17 +326,16 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/settingsPanel"
             android:layout_width="100dp"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             android:background="#242424"
-            tools:layout_editor_absoluteX="227dp">
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <Button
-                android:id="@+id/button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Button"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -296,6 +349,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.constraintlayout.motion.widget.MotionLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.wear.widget.BoxInsetLayout>

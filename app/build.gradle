@@ -13,7 +13,7 @@ android {
         minSdk 23
         targetSdk 32
         versionCode 1
-        versionName "Rel-AL 0.13.5"
+        versionName "Rel-AL 0.14.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -78,6 +78,7 @@ dependencies {
     implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
     //noinspection GradleDependency
     implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
+    //noinspection GradleDependency
     implementation 'com.google.android.exoplayer:exoplayer:2.18.0'
     implementation 'com.github.jxiang112:ExpandCollapseTextView:v1.0.2'
     implementation 'androidx.work:work-runtime-ktx:2.7.1'

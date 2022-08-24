@@ -12,7 +12,7 @@ class SpecialSearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_special_search)
         findViewById<ConstraintLayout>(R.id.getSomeEnergy).setOnClickListener {
-            val intent = Intent(this, QRCodeActivity::class.java).apply {
+            Intent(this, QRCodeActivity::class.java).apply {
                 //data = Uri.parse("android.resource://$packageName/${R.drawable.sp_search_one}")
                 putExtra("extendMessage", "扫码打开能量加油站")
                 putExtra("qrCodeUrl", "https://www.bilibili.com/blackboard/dynamic/306424")

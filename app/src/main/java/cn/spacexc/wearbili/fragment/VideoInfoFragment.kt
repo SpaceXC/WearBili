@@ -11,11 +11,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.view.InputDeviceCompat
+import androidx.core.view.MotionEventCompat
+import androidx.core.view.ViewConfigurationCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
@@ -60,6 +61,7 @@ import okhttp3.Callback
 import okhttp3.Response
 import java.io.File
 import java.io.IOException
+import kotlin.math.roundToInt
 
 class VideoInfoFragment : Fragment() {
     private var _binding: FragmentVideoInfoBinding? = null
@@ -205,8 +207,13 @@ class VideoInfoFragment : Fragment() {
                                 "qrCodeUrl",
                                 "https://www.bilibili.com/video/${(activity as VideoActivity).getId()}"
                             )
-                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            requireActivity().startActivity(intent)
+                            startActivity(intent)
+                            /*val intent = Intent(requireActivity(), ConfirmationActivity::class.java).apply {
+                                putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.SUCCESS_ANIMATION)
+                                putExtra(ConfirmationActivity.EXTRA_ANIMATION_DURATION_MILLIS, 10000)
+                                putExtra(ConfirmationActivity.EXTRA_MESSAGE, "https://www.bilibili.com/video/${(activity as VideoActivity).getId()}")
+                            }
+                            startActivity(intent)*/
                         }
                     }
                     "点赞" -> {
@@ -250,7 +257,7 @@ class VideoInfoFragment : Fragment() {
                                 try {
                                     val intent = Intent(
                                         Intent.ACTION_VIEW,
-                                        Uri.parse("wearbili-3rd://receive:8080/play?&bvid=$bvid&cid=$cid")
+                                        Uri.parse("wearbili-3rd://video/play?&bvid=$bvid&cid=$cid")
                                     )
                                     startActivity(intent)
                                 } catch (e: ActivityNotFoundException) {
@@ -328,6 +335,23 @@ class VideoInfoFragment : Fragment() {
         }
         likeButton =
             (binding.recyclerViewButtons.findViewHolderForAdapterPosition(1) as ButtonsAdapter.ButtonViewHolder?)
+
+        binding.scrollview?.setOnGenericMotionListener { v, ev ->
+            if (ev.action == MotionEvent.ACTION_SCROLL &&
+                ev.isFromSource(InputDeviceCompat.SOURCE_ROTARY_ENCODER)
+            ) {
+                // Don't forget the negation here
+                val delta = -ev.getAxisValue(MotionEventCompat.AXIS_SCROLL) *
+                        ViewConfigurationCompat.getScaledVerticalScrollFactor(
+                            ViewConfiguration.get(context), requireContext()
+                        )
+                // Swap these axes to scroll horizontally instead
+                v.scrollBy(0, delta.roundToInt() * 10)
+                true
+            } else {
+                false
+            }
+        }
 
         binding.recyclerViewButtons.adapter = buttonsAdapter
         binding.recyclerViewParts.layoutManager = LinearLayoutManager(requireContext())

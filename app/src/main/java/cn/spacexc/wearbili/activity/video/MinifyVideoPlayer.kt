@@ -57,7 +57,7 @@ class MinifyVideoPlayer : AppCompatActivity() {
                         progressBar.isVisible = false
                         videoView.start()
                     }
-                    videoView.setOnErrorListener { mediaPlayer, i, i2 ->
+                    videoView.setOnErrorListener { _, _, _ ->
                         Log.d(TAG, "onResponse: Error!")
                         true
                     }

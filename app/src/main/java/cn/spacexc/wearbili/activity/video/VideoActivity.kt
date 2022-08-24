@@ -35,9 +35,7 @@ class VideoActivity : AppCompatActivity() {
         binding.titleBar.setOnTouchListener(OnClickListerExtended(object :
             OnClickListerExtended.OnClickCallback {
             override fun onSingleClick() {
-
             }
-
             override fun onDoubleClick() {
                 val fragment =
                     supportFragmentManager.findFragmentByTag("f${binding.viewPager2.currentItem}")
@@ -87,20 +85,6 @@ class VideoActivity : AppCompatActivity() {
         binding.viewPager2.currentItem = page - 1
     }
 
-    // Activity中
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String?>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        // 获取到Activity下的Fragment
-        val fragments = supportFragmentManager.fragments
-        // 查找在Fragment中onRequestPermissionsResult方法并调用
-        for (fragment in fragments) {
-            fragment?.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        }
-    }
 
     /*private var startY = 0f //手指按下时的Y坐标
 

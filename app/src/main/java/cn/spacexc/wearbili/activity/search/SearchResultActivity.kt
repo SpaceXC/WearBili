@@ -90,6 +90,7 @@ class SearchResultActivity : AppCompatActivity() {
                 }
             }
 
+            @SuppressLint("SetTextI18n")
             override fun onResponse(call: Call, response: Response) {
                 val responseStr = response.body?.string()
                 val result = Gson().fromJson(responseStr, VideoSearch::class.java)

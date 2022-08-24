@@ -58,7 +58,7 @@ class FollowGroupAdapter(private val context: Context) :
         val adapter = FollowedUserAdapter(context)
         holder.swipeRefreshLayout.isRefreshing = true
         holder.recyclerView.layoutManager =
-            WearableLinearLayoutManager(context, WearableLayoutManagerCallback())
+            WearableLinearLayoutManager(context, WearableLayoutManagerCallback(100f))
         holder.recyclerView.adapter = adapter
         holder.swipeRefreshLayout.setOnRefreshListener {
             page = 1

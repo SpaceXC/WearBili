@@ -44,6 +44,7 @@ class OnClickListerExtended(private val myClickCallBack: OnClickCallback) :
                 v.performClick()
             }
         }
+        v.performClick()
         return false
     }
 

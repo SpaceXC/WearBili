@@ -19,7 +19,8 @@ import kotlin.math.abs
  * From https://www.soinside.com/question/gTBStHR4chmpZeYVWbJ8R8
  * MODIFIED BY XC on 2022/08/22
  */
-class WearableLayoutManagerCallback : WearableLinearLayoutManager.LayoutCallback() {
+class WearableLayoutManagerCallback(private val maxVal: Float = 0.27555555555555555555f) :
+    WearableLinearLayoutManager.LayoutCallback() {
     override fun onLayoutFinished(child: View, parent: RecyclerView) {
         if (SettingsManager.hasScrollVfx()) {
             child.apply {
@@ -59,10 +60,10 @@ class WearableLayoutManagerCallback : WearableLinearLayoutManager.LayoutCallback
                      *  活成了自己最讨厌的样子）
                      */
                     var progressToCenter =
-                        abs(0.5f - yRelativeToCenterOffset).coerceAtMost(0.27555555555555555555f)  //我：卑微乙方.jpg
+                        abs(0.5f - yRelativeToCenterOffset).coerceAtMost(maxVal)  //我：卑微乙方.jpg
 
                     // Follow a curved path, rather than triangular!
-                    progressToCenter = Math.cos(progressToCenter * Math.PI * 0.70f).toFloat()
+                    progressToCenter = Math.cos(progressToCenter * Math.PI * 0.7f).toFloat()
                     child.scaleX = progressToCenter
                     child.scaleY = progressToCenter
                 } catch (e: Exception) {

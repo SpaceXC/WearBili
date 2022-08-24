@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.animation.TranslateAnimation
 import android.widget.SeekBar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -50,6 +51,11 @@ class VideoPlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityVideoPlayerBinding
 
     private var isLoadingPanelShowed = false
+
+    private var isSettingPanelShowing = false
+
+    val animIn = TranslateAnimation(150f, 0f, 0f, 0f)
+    val animOut = TranslateAnimation(0f, 150f, 0f, 0f)
 
 
     val viewModel by viewModels<VideoPlayerViewModel>()
@@ -132,6 +138,9 @@ class VideoPlayerActivity : AppCompatActivity() {
             controllerVisibility.observe(this@VideoPlayerActivity) {
                 binding.controller.visibility = it
                 binding.title.visibility = it
+                binding.rotate.visibility = it
+                binding.settingsButton.visibility = it
+                binding.videoTitle.requestFocus()
             }
             videoResolution.observe(this@VideoPlayerActivity) {
                 //resizeVideo(it.first, it.second)
@@ -179,19 +188,17 @@ class VideoPlayerActivity : AppCompatActivity() {
         binding.playerView.player = viewModel.mediaPlayer
 
         binding.settingsButton.setOnClickListener {
-            if (binding.motionLayout.currentState == R.id.start) {
-                binding.motionLayout.transitionToEnd()
-            }
+
+            binding.settingsPanel.startAnimation(if (isSettingPanelShowing) animOut else animIn)
+            isSettingPanelShowing = !isSettingPanelShowing
         }
 
         //点击屏幕触发播放控制器显示
         binding.constraintLayout8.setOnClickListener {
-            if (binding.motionLayout.currentState == R.id.end) {
-                binding.motionLayout.transitionToStart()
-            }
-            if (binding.motionLayout.currentState == R.id.start) {
-                viewModel.toggleControllerVisibility()
-            }
+            if (isSettingPanelShowing) {
+                binding.settingsPanel.startAnimation(animOut)
+                isSettingPanelShowing = !isSettingPanelShowing
+            } else viewModel.toggleControllerVisibility()
         }
         /*{
             viewModel.toggleControllerVisibility()
@@ -262,6 +269,7 @@ class VideoPlayerActivity : AppCompatActivity() {
         binding.back.setOnClickListener {
             finish()
         }
+        binding.videoTitle.setOnClickListener { finish() }
         //-----------Layout视图监听区域⬆️-----------
 
         //-----------弹幕相关区域⬇️️️-----------
@@ -384,6 +392,11 @@ class VideoPlayerActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putLong("currentPosition", viewModel.mediaPlayer.currentPosition)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.videoTitle.requestFocus()
     }
 
 
