@@ -13,7 +13,7 @@ android {
         minSdk 23
         targetSdk 32
         versionCode 1
-        versionName "Rel-AL 0.14.1"
+        versionName "Rel-AL 0.14.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

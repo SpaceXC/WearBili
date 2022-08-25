@@ -3,8 +3,10 @@ package cn.spacexc.wearbili.manager
 import android.util.Log
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.Application.Companion.TAG
+import cn.spacexc.wearbili.utils.LogUtils.logWithGeneric
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.ToastUtils
+import cn.spacexc.wearbili.utils.ToastUtils.debugToastWithGeneric
 import cn.spacexc.wearbili.utils.VideoUtils
 import okhttp3.*
 import java.io.IOException
@@ -59,7 +61,8 @@ object VideoManager {
 
     fun searchVideo(keyword: String, page: Int, callback: Callback) {
         NetworkUtils.getUrl(
-            "https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword=$keyword&page=$page",
+            "https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword=$keyword&page=$page".debugToastWithGeneric()
+                .logWithGeneric(),
             callback
         )
     }

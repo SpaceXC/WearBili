@@ -19,4 +19,9 @@ object LogUtils {
     fun Any.log() {
         Log.d(TAG, "$this")
     }
+
+    fun <T> T.logWithGeneric(): T {
+        Log.d(TAG, "logWithGeneric: $this")
+        return this
+    }
 }

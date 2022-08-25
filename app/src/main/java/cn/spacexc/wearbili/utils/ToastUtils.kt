@@ -76,4 +76,9 @@ object ToastUtils {
             makeText("$content").show()
         }
     }
+
+    fun <T> T.debugToastWithGeneric(): T {
+        if (isDebug()) makeText("$this")
+        return this
+    }
 }

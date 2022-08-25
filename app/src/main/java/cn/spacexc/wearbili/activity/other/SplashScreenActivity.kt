@@ -38,6 +38,18 @@ class SplashScreenActivity : AppCompatActivity() {
             R.anim.activity_fade_out
         )*/
         //finish()
+        NetworkUtils.getUrl("https://bilibili.com", object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                NetworkUtils.requireRetry { }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                MainScope().launch {
+                    initApp()
+                }
+            }
+
+        })
         initApp()
 
         /*NetworkUtils.requireRetry {

@@ -14,6 +14,7 @@ import cn.spacexc.wearbili.databinding.ActivitySearchResultBinding
 import cn.spacexc.wearbili.dataclass.VideoSearch
 import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.utils.ToastUtils
+import cn.spacexc.wearbili.utils.ToastUtils.debugToast
 import cn.spacexc.wearbili.utils.WearableLayoutManagerCallback
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
@@ -95,6 +96,7 @@ class SearchResultActivity : AppCompatActivity() {
                 val responseStr = response.body?.string()
                 val result = Gson().fromJson(responseStr, VideoSearch::class.java)
                 MainScope().launch {
+                    responseStr?.debugToast("搜索返回结果")
                     binding.pageName.text = "搜索结果 (${result.data?.numResults})"
                     if (result.code == 0) {
                         if (currentPage <= 50) {
