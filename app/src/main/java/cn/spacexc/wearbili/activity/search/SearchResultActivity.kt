@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,8 +14,8 @@ import cn.spacexc.wearbili.adapter.SearchResultAdapter
 import cn.spacexc.wearbili.databinding.ActivitySearchResultBinding
 import cn.spacexc.wearbili.dataclass.VideoSearch
 import cn.spacexc.wearbili.manager.VideoManager
+import cn.spacexc.wearbili.utils.LogUtils.log
 import cn.spacexc.wearbili.utils.ToastUtils
-import cn.spacexc.wearbili.utils.ToastUtils.debugToast
 import cn.spacexc.wearbili.utils.WearableLayoutManagerCallback
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
@@ -96,21 +97,29 @@ class SearchResultActivity : AppCompatActivity() {
                 val responseStr = response.body?.string()
                 val result = Gson().fromJson(responseStr, VideoSearch::class.java)
                 MainScope().launch {
-                    responseStr?.debugToast("搜索返回结果")
+                    responseStr?.log("搜索返回结果")
                     binding.pageName.text = "搜索结果 (${result.data?.numResults})"
                     if (result.code == 0) {
-                        if (currentPage <= 50) {
-                            adapter.submitList(adapter.currentList + result.data?.result!!)
-                            binding.swipeRefreshLayout.isRefreshing = false
-                            currentPage++
+                        if(result.data?.result != null){
+                            binding.noResult.isVisible = false
+                            if (currentPage <= 50) {
+                                adapter.submitList(adapter.currentList + result.data?.result!!)
+                                binding.swipeRefreshLayout.isRefreshing = false
+                                currentPage++
 
-                        } else {
-                            binding.swipeRefreshLayout.isRefreshing = false
-                            ToastUtils.makeText(
-                                "搜索到底了"
-                            ).show()
+                            } else {
+                                binding.swipeRefreshLayout.isRefreshing = false
+                                ToastUtils.makeText(
+                                    "搜索到底了"
+                                ).show()
 
+                            }
                         }
+                        else{
+                            binding.noResult.isVisible = true
+                            binding.swipeRefreshLayout.isRefreshing = false
+                        }
+
                     } else {
                         binding.swipeRefreshLayout.isRefreshing = false
                         ToastUtils.makeText(

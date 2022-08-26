@@ -112,10 +112,8 @@ class MenuActivity : AppCompatActivity() {
                 it.submitList(buttonList)
             }
         findViewById<TextView>(R.id.pageName).setOnClickListener {
-            finish(); overridePendingTransition(
-            R.anim.activity_in_y,
-            R.anim.activity_out_y
-        )
+            finish()
+            overridePendingTransition(R.anim.activity_in_y, R.anim.activity_out_y)
         }
 
         lifecycleScope.launch {

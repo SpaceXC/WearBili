@@ -1,15 +1,23 @@
 package cn.spacexc.wearbili.fragment
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
+import cn.spacexc.wearbili.activity.comment.COMMENT_TYPE
+import cn.spacexc.wearbili.activity.comment.COMMENT_TYPE_VIDEO
+import cn.spacexc.wearbili.activity.comment.PostActivity
 import cn.spacexc.wearbili.activity.video.VideoActivity
 import cn.spacexc.wearbili.adapter.CommentAdapter
 import cn.spacexc.wearbili.databinding.FragmentCommentBinding
@@ -31,10 +39,30 @@ class CommentFragment : Fragment() {
     private var _binding: FragmentCommentBinding? = null
     private val binding get() = _binding!!
 
+    private val activityResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult: ActivityResult ->
+            if(activityResult.resultCode == Activity.RESULT_OK){
+                when (activityResult.data?.getIntExtra("code", 0)) {
+                    0 -> {
+                        val comment = Gson().fromJson(
+                            activityResult.data?.getStringExtra("commentDataStr"),
+                            CommentContentData::class.java
+                        )
+                        val currentMutableList = adapter.currentList.toMutableList()
+                        currentMutableList.removeAt(0)
+                        val list = listOf(null, comment) + currentMutableList
+                        adapter.submitList(list)
+                        binding.recyclerView.smoothScrollToPosition(0)
+                        ToastUtils.showText("发送成功")
+                    }
+                }
+
+            }
+        }
 
     var page: Int = 1
 
-    val adapter = CommentAdapter(lifecycleScope, Application.context!!)
+    lateinit var adapter: CommentAdapter
     //lateinit var layoutManager: WearableLinearLayoutManager
 
     init {
@@ -69,6 +97,15 @@ class CommentFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (!isAdded) return
+        adapter = CommentAdapter(lifecycleScope, Application.context!!) {
+
+            activityResultLauncher.launch(Intent(requireActivity(), PostActivity::class.java).apply {
+                putExtra(COMMENT_TYPE, COMMENT_TYPE_VIDEO)
+                putExtra("oid", (requireActivity() as VideoActivity).currentVideo?.aid)
+            })
+
+
+        }
         binding.recyclerView.adapter = adapter.also {
             adapter.uploaderMid = (activity as VideoActivity).currentVideo?.owner?.mid
         }
@@ -121,8 +158,7 @@ class CommentFragment : Fragment() {
                                 binding.swipeRefreshLayout.isRefreshing = false
                                 ToastUtils.makeText(
                                     "评论加载失败啦"
-                                )
-                                    .show()
+                                ).show()
                             }
 
                         }
@@ -140,7 +176,7 @@ class CommentFragment : Fragment() {
                                         if (result.data.top?.content != null && result.data.top.member != null) {
                                             top = mutableListOf(result.data.top)
                                         }
-                                        adapter.submitList(top + result.data.replies?.toMutableList()!!)
+                                        adapter.submitList(listOf(null) + top + result.data.replies?.toMutableList()!!)
                                     } else {
                                         adapter.submitList(adapter.currentList + result.data.replies!!)
                                     }

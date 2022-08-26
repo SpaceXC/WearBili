@@ -1,5 +1,6 @@
 package cn.spacexc.wearbili.activity.video
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +15,7 @@ import com.google.gson.Gson
 import kotlinx.coroutines.delay
 
 class ViewFullUgcSeasonActivity : AppCompatActivity() {
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_full_video_parts)

@@ -63,9 +63,10 @@ class VideoPhoneEndRecommendListAdapter(val context: Context) :
         holder.listUpName.text = video.args.up_name
         holder.listVideoViews.text = video.cover_left_text_1
 
+        if(video.goto != "av") return
+
         //holder.listVideoDuration.text = TimeUtils.secondToTime(video.duration.toLong())
         holder.cardView.setOnClickListener {
-
             val intent = Intent(Application.getContext(), VideoActivity::class.java)
             intent.putExtra("videoId", VideoUtils.av2bv("av${video.player_args.aid}"))
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK

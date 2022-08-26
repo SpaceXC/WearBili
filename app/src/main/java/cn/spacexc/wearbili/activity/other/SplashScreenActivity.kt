@@ -50,7 +50,7 @@ class SplashScreenActivity : AppCompatActivity() {
             }
 
         })
-        initApp()
+        //initApp()
 
         /*NetworkUtils.requireRetry {
             initApp()

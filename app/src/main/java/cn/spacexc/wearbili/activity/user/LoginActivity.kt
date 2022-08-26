@@ -127,7 +127,10 @@ class LoginActivity : AppCompatActivity() {
                                                         ToastUtils.showText("请稍后...")
                                                         UserManager.getAccessKey(object :
                                                             NetworkUtils.ResultCallback<String> {
-                                                            override fun onSuccess(result: String) {
+                                                            override fun onSuccess(
+                                                                result: String,
+                                                                code: Int
+                                                            ) {
                                                                 MainScope().launch {
                                                                     SharedPreferencesUtils.saveString(
                                                                         "accessKey",

@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 class AboutActivity : AppCompatActivity() {
     private val firstList = listOf(
-        HorizontalButtonData(R.drawable.ic_outline_info_24, "Rel-AL 0.14.2", "版本号"),
+        HorizontalButtonData(R.drawable.ic_outline_info_24, "Rel-AL 0.14.3", "版本号"),
         HorizontalButtonData(R.drawable.ic_github, "Github", "查看我们的开源项目"),
     )
     private val secondList = listOf(
@@ -30,12 +30,8 @@ class AboutActivity : AppCompatActivity() {
             "UI/UA设计师"
         )      //Rechrd你无不无聊啊我还得多加一个逻辑我真的谢谢您嘞
     )
-    private val thirdList = listOf(
-        HorizontalButtonData(0, "uid198338518", "组织")
-    )
-    private val forthList = listOf(
-        HorizontalButtonData(R.drawable.ic_github, "SocialSisterYi/bilibili-API-collect", "API仓库")
-    )
+    private val thirdList = listOf(HorizontalButtonData(0, "uid198338518", "组织"))
+    private val forthList = listOf(HorizontalButtonData(R.drawable.ic_github, "SocialSisterYi/bilibili-API-collect", "API仓库"))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +67,7 @@ class AboutActivity : AppCompatActivity() {
 
             }
         }).also { it.submitList(forthList) }
+
         findViewById<TextView>(R.id.pageName).setOnClickListener { finish() }
         lifecycleScope.launch {
             while (true) {

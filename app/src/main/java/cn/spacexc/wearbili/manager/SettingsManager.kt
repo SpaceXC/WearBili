@@ -93,7 +93,7 @@ object SettingsManager {
             description = "登出当前的账号",
             action = {
                 UserManager.logout(object : NetworkUtils.ResultCallback<Boolean> {
-                    override fun onSuccess(result: Boolean) {
+                    override fun onSuccess(result: Boolean, code: Int) {
                         MainScope().launch {
                             if (result) {
                                 CookiesManager.deleteAllCookies()

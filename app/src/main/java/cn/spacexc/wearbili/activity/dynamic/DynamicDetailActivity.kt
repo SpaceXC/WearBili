@@ -40,12 +40,13 @@ import java.io.IOException
 class DynamicDetailActivity : AppCompatActivity() {
     lateinit var binding: ActivityDynamicDetailBinding
     var page: Int = 1
-    val adapter = CommentAdapter(lifecycleScope, this@DynamicDetailActivity)
+    lateinit var adapter: CommentAdapter
     var isCommentEnd = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDynamicDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        adapter = CommentAdapter(lifecycleScope, this@DynamicDetailActivity) {}
         val id = intent.getLongExtra("dynamicId", 0)
         binding.swipeRefreshLayout.setOnRefreshListener {
             page = 1

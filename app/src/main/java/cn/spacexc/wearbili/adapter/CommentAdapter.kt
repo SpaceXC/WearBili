@@ -43,6 +43,7 @@ const val TYPE_SHOW = 1
 class CommentAdapter(
     val lifeCycleScope: LifecycleCoroutineScope,
     val context: Context,
+    private val onSendComment: () -> Unit
 ) :
     ListAdapter<CommentContentData, RecyclerView.ViewHolder>(object :
         DiffUtil.ItemCallback<CommentContentData>() {
@@ -118,6 +119,7 @@ class CommentAdapter(
                     "<img src=\"${it.value.url.replace("http", "https")}\"/>"
                 )!!
             }
+            comment.content?.message?.replace("\\n", "<br>")
 
             Thread {
                 val sp = Html.fromHtml(
@@ -141,7 +143,7 @@ class CommentAdapter(
         if (holder is EditAndSendViewHolder) {
             holder.textView.text = "发一条友善的评论~"
             holder.cardView.setOnClickListener {
-
+                onSendComment.invoke()
             }
         }
 

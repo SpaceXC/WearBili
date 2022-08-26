@@ -1,6 +1,7 @@
 package cn.spacexc.wearbili.activity
 
 import OnClickListerExtended
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         var currentPageId: MutableLiveData<Int> = MutableLiveData(R.id.recommendFragment)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -77,10 +79,12 @@ class MainActivity : AppCompatActivity() {
 
         binding.titleBar.setOnTouchListener(OnClickListerExtended(object :
             OnClickListerExtended.OnClickCallback {
+            @SuppressLint("ClickableViewAccessibility")
             override fun onSingleClick() {
 
             }
 
+            @SuppressLint("ClickableViewAccessibility")
             override fun onDoubleClick() {
                 val fragment =
                     supportFragmentManager.findFragmentByTag("f${binding.viewpager.currentItem}")

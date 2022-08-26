@@ -33,6 +33,7 @@ class OnClickListerExtended(private val myClickCallBack: OnClickCallback) :
             }, timeout.toLong()) //延时timeout后执行run方法中的代码
         }
         return false //让点击事件继续传播，方便再给View添加其他事件监听*/
+        v.performClick()
         if (event.action == MotionEvent.ACTION_DOWN) {
             clickCount++
             GlobalScope.launch {

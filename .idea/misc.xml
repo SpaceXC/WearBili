@@ -100,6 +100,7 @@
         <entry key="app/src/main/res/layout-round/activity_minify_video_player.xml" value="1.790625" />
         <entry key="app/src/main/res/layout-round/activity_photo_view.xml" value="1.790625" />
         <entry key="app/src/main/res/layout-round/activity_play_on_phone.xml" value="1.2621145374449338" />
+        <entry key="app/src/main/res/layout-round/activity_post.xml" value="0.9018867924528302" />
         <entry key="app/src/main/res/layout-round/activity_qrcode.xml" value="1.790625" />
         <entry key="app/src/main/res/layout-round/activity_require_network.xml" value="1.790625" />
         <entry key="app/src/main/res/layout-round/activity_require_restart.xml" value="1.2621145374449338" />
@@ -127,14 +128,15 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.23927392739273928" />
         <entry key="app/src/main/res/layout/activity_menu.xml" value="1.2621145374449338" />
         <entry key="app/src/main/res/layout/activity_minify_video_player.xml" value="1.6852941176470588" />
+        <entry key="app/src/main/res/layout/activity_personal_space.xml" value="0.3065412569474134" />
         <entry key="app/src/main/res/layout/activity_photo_view.xml" value="0.13593597412109376" />
         <entry key="app/src/main/res/layout/activity_play_on_phone.xml" value="1.5916666666666666" />
-        <entry key="app/src/main/res/layout/activity_post.xml" value="0.9961240310077519" />
+        <entry key="app/src/main/res/layout/activity_post.xml" value="1.6852941176470588" />
         <entry key="app/src/main/res/layout/activity_qrcode.xml" value="0.9851752021563343" />
         <entry key="app/src/main/res/layout/activity_require_network.xml" value="2.128784635001697" />
         <entry key="app/src/main/res/layout/activity_require_restart.xml" value="0.8083333333333333" />
         <entry key="app/src/main/res/layout/activity_search.xml" value="0.3059263214095035" />
-        <entry key="app/src/main/res/layout/activity_search_result.xml" value="0.5472560975609756" />
+        <entry key="app/src/main/res/layout/activity_search_result.xml" value="0.5164305768694195" />
         <entry key="app/src/main/res/layout/activity_settings.xml" value="0.562015503875969" />
         <entry key="app/src/main/res/layout/activity_special_search.xml" value="0.7875243664717348" />
         <entry key="app/src/main/res/layout/activity_splash_screen.xml" value="0.5623099831973808" />
@@ -203,7 +205,7 @@
   <component name="VisualizationToolProject">
     <option name="state">
       <ProjectState>
-        <option name="scale" value="0.5535710951861211" />
+        <option name="scale" value="0.5164305768694195" />
       </ProjectState>
     </option>
   </component>

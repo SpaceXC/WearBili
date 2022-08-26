@@ -21,6 +21,7 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -29,13 +30,9 @@
                 android:background="@drawable/empty_placeholder"
                 android:fontFamily="@font/puhui_medium"
                 android:paddingTop="0dp"
-                android:text="这是一条评论这是一条评论这是一条评论这是一条评论这是一条评论这是一条评论这是一条评论这是一条评论这是一条评论这是一条评论"
-                android:textColor="#fff" />
-
-            <TextView
-                android:id="@+id/textView14"
-                android:layout_width="match_parent"
-                android:layout_height="60dp" />
+                android:paddingBottom="50dp"
+                android:textColor="#fff"
+                android:textCursorDrawable="@drawable/cursor_drawable" />
 
         </LinearLayout>
     </ScrollView>
@@ -49,7 +46,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
-            android:id="@+id/imageView19"
+            android:id="@+id/send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -59,14 +56,14 @@
             android:paddingEnd="13dp"
             android:paddingBottom="13dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageView29"
+            app:layout_constraintEnd_toStartOf="@+id/emoji"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@drawable/ic_outline_send_24" />
 
         <ImageView
-            android:id="@+id/imageView29"
+            android:id="@+id/emoji"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/background_grey"
@@ -75,13 +72,13 @@
             android:paddingEnd="13dp"
             android:paddingBottom="13dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageView30"
+            app:layout_constraintEnd_toStartOf="@+id/enter"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/imageView19"
+            app:layout_constraintStart_toEndOf="@+id/send"
             app:srcCompat="@drawable/ic_outline_sentiment_satisfied_24" />
 
         <ImageView
-            android:id="@+id/imageView30"
+            android:id="@+id/enter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -93,8 +90,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/imageView29"
-            app:srcCompat="@drawable/ic_outline_backspace_24" />
+            app:layout_constraintStart_toEndOf="@+id/emoji"
+            app:srcCompat="@drawable/ic_baseline_subdirectory_arrow_left_24" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

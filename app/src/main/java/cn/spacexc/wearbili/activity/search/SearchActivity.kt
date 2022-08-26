@@ -68,37 +68,6 @@ class SearchActivity : AppCompatActivity() {
         }
         getDefaultSearchContent()
         getHotSearch()
-//        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-//                val lm = recyclerView.layoutManager as LinearLayoutManager?
-//                val totalItemCount = recyclerView.adapter!!.itemCount
-//                val lastVisibleItemPosition = lm!!.findLastVisibleItemPosition()
-//                val visibleItemCount = recyclerView.childCount
-//                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItemPosition == totalItemCount - 1 && visibleItemCount > 0) {
-//                    searchKeyword(binding.keywordInput.text.toString(), false)
-//                }
-//            }
-//        })
-//        binding.keywordInput.addTextChangedListener(object : TextWatcher{
-//            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-//
-//            }
-//
-//            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) =
-//                if(p0?.isNotEmpty() == true) {
-//                    binding.recyclerView.smoothScrollToPosition(0)
-//                    currentPage = 1
-//                    searchKeyword(p0.toString(), true)
-//                }
-//                else{
-//                    adapter.submitList(emptyList())
-//                }
-//
-//            override fun afterTextChanged(p0: Editable?) {
-//
-//            }
-//
-//        })
     }
 
     private fun getDefaultSearchContent() {
@@ -124,9 +93,7 @@ class SearchActivity : AppCompatActivity() {
                         defaultContent = result.data.show_name
                         defaultType = result.data.goto_type
                         defaultVideoAv = result.data.goto_value
-                    } catch (e: Exception) {
-
-                    }
+                    } catch (e: Exception) { }
                 }
 
             }

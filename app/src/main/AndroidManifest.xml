@@ -18,14 +18,17 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
-        android:hardwareAccelerated="true"
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
         android:theme="@style/Theme.WearBili"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".activity.user.PersonalSpaceActivity"
+            android:exported="false" />
         <activity android:name="androidx.wear.activity.ConfirmationActivity" />
         <activity
             android:name=".activity.settings.RequireRestartActivity"
@@ -104,7 +107,7 @@
         <activity
             android:name=".activity.other.AboutActivity"
             android:exported="false" />
-        <activity
+         <activity
             android:name=".activity.video.VideoCacheActivity"
             android:exported="false" />
         <activity
@@ -128,7 +131,6 @@
                 <action android:name="android.intent.action.VIEW" />
                 <!-- 表示该页面可以被隐式调用，必须加上该项 -->
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data
                     android:host="search"
                     android:path="/result"
