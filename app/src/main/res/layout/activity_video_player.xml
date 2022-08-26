@@ -96,17 +96,17 @@
                             app:layout_constraintTop_toTopOf="@+id/videoTitle"
                             app:srcCompat="@drawable/ic_baseline_arrow_back_ios_24" />
 
-                        <TextView
-                            android:id="@+id/videoTitle"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="2dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginEnd="4dp"
-                            android:ellipsize="marquee"
-                            android:focusable="true"
-                            android:focusableInTouchMode="true"
-                            android:fontFamily="@font/puhui_bold"
+                        <cn.spacexc.wearbili.customview.MarqueeTextView
+                                android:id="@+id/videoTitle"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginTop="2dp"
+                                android:layout_marginEnd="4dp"
+                                android:ellipsize="marquee"
+                                android:focusable="true"
+                                android:focusableInTouchMode="true"
+                                android:fontFamily="@font/puhui_bold"
                             android:singleLine="true"
                             android:textColor="#fff"
                             android:textSize="15sp"

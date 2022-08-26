@@ -26,7 +26,6 @@ import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
-import java.text.SimpleDateFormat
 import java.util.*
 
 class SearchResultActivity : AppCompatActivity() {
@@ -46,6 +45,8 @@ class SearchResultActivity : AppCompatActivity() {
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = layoutManager
         binding.swipeRefreshLayout.isRefreshing = true
+        binding.pageName.text = getKeyword()
+        binding.pageName.requestFocus()
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (newState == RecyclerView.SCROLL_STATE_DRAGGING or RecyclerView.SCROLL_STATE_SETTLING) {
@@ -67,10 +68,8 @@ class SearchResultActivity : AppCompatActivity() {
         }
         binding.pageName.setOnClickListener { finish() }
         lifecycleScope.launch {
-            @SuppressLint("SimpleDateFormat") val sdf = SimpleDateFormat("HH:mm")
             while (true) {
-                val date = sdf.format(Date())
-                binding.timeText.text = date
+                binding.timeText.text = cn.spacexc.wearbili.utils.TimeUtils.getCurrentTime()
                 delay(500)
             }
         }
@@ -98,7 +97,7 @@ class SearchResultActivity : AppCompatActivity() {
                 val result = Gson().fromJson(responseStr, VideoSearch::class.java)
                 MainScope().launch {
                     responseStr?.log("搜索返回结果")
-                    binding.pageName.text = "搜索结果 (${result.data?.numResults})"
+                    binding.pageName.text = "$keyword (${result.data?.numResults})"
                     if (result.code == 0) {
                         if(result.data?.result != null){
                             binding.noResult.isVisible = false

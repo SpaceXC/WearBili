@@ -55,9 +55,17 @@ class PostActivity : AppCompatActivity() {
         val oid = intent.getLongExtra("oid", 0)
         val content = binding.input.text?.toString()
 
-        CommentManager.sendComment(type!!, oid, content!!, object : NetworkUtils.ResultCallback<CommentSent>{
+        if (content.isNullOrEmpty()) {
+            ToastUtils.showText("发些有意义的东西叭")
+            return
+        }
+
+        CommentManager.sendComment(type!!, oid, content!!, object : NetworkUtils.ResultCallback<CommentSent> {
             override fun onSuccess(result: CommentSent, code: Int) {
-                setResult(Activity.RESULT_OK, Intent().putExtra("commentDataStr", Gson().toJson(result.data.reply)).putExtra("code", result.code))
+                setResult(
+                    Activity.RESULT_OK,
+                    Intent().putExtra("commentDataStr", Gson().toJson(result.data.reply)).putExtra("code", result.code)
+                )
                 finish()
             }
 

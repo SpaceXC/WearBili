@@ -10,13 +10,22 @@ import java.security.spec.X509EncodedKeySpec
 import javax.crypto.Cipher
 
 /**
- * Created by XC-Qan on 2022/7/28.
- * I'm very cute so please be nice to my code!
- * 给！爷！写！注！释！
- * 给！爷！写！注！释！
- * 给！爷！写！注！释！
+ * Some part of this file is copied from luern0313's repository WristBili
+ *
+ * Thanks a lot to his contributors
  */
 
+/**
+ * Created by XC-Qan on 2022/7/28.
+ *
+ * I'm very cute so please be nice to my code!
+ *
+ * 给！爷！写！注！释！
+ *
+ * 给！爷！写！注！释！
+ *
+ * 给！爷！写！注！释！
+ */
 
 object EncryptUtils {
     enum class AppSignType {
@@ -49,10 +58,10 @@ object EncryptUtils {
 
     @Throws(Exception::class)
     fun rsaEncrypt(str: String, key: String): String? {
-        var key = key
-        key = key.replace("-----BEGIN PUBLIC KEY-----", "")
-        key = key.replace("-----END PUBLIC KEY-----", "")
-        val decoded = Base64.decode(key, Base64.DEFAULT)
+        var keyTemp = key
+        keyTemp = keyTemp.replace("-----BEGIN PUBLIC KEY-----", "")
+        keyTemp = keyTemp.replace("-----END PUBLIC KEY-----", "")
+        val decoded = Base64.decode(keyTemp, Base64.DEFAULT)
         val pubKey = KeyFactory.getInstance("RSA")
             .generatePublic(X509EncodedKeySpec(decoded)) as RSAPublicKey
         val cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding")

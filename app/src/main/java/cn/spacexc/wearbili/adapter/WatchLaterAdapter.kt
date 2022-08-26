@@ -89,7 +89,7 @@ class WatchLaterAdapter(val context: Context) :
             Glide.with(context).load(video.pic).skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .placeholder(R.drawable.placeholder).apply(options).into(holder.listCover)
-        } catch (e: OutOfMemoryError) {
+        } catch (_: OutOfMemoryError) {
 
         }
     }

@@ -107,48 +107,66 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/titleBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:id="@+id/pageName"
-                android:layout_width="wrap_content"
+                android:id="@+id/titleBar"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="2dp"
-                android:ellipsize="end"
-                android:fontFamily="@font/puhui_bold"
-                android:gravity="start|center_vertical"
-                android:lines="1"
-                android:text="搜索"
-                android:textColor="#fff"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="@+id/timeText"
-                app:layout_constraintEnd_toStartOf="@+id/timeText"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/timeText" />
+                app:layout_constraintTop_toTopOf="parent">
+
+            <cn.spacexc.wearbili.customview.MarqueeTextView
+                    android:id="@+id/pageName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="middle"
+                    android:fontFamily="@font/puhui_bold"
+                    android:gravity="center_horizontal"
+                    android:lines="1"
+                    android:textColor="#fff"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/timeText"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline64"
+                    app:layout_constraintStart_toStartOf="@+id/guideline63"
+                    app:layout_constraintTop_toTopOf="@+id/timeText"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginEnd="14dp"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:focusable="auto"
+                    android:focusableInTouchMode="true"/>
 
             <TextView
-                android:id="@+id/timeText"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginEnd="8dp"
-                android:fontFamily="@font/googlesans_medium"
-                android:gravity="center"
-                android:paddingTop="1dp"
-                android:text="12:00"
-                android:textColor="#fff"
-                android:textSize="16sp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                    android:id="@+id/timeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/googlesans_medium"
+                    android:gravity="center"
+                    android:paddingTop="1dp"
+                    android:text="12:00"
+                    android:textColor="#fff"
+                    android:textSize="16sp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/guideline63"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.15"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/guideline64"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.85"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

@@ -10,11 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.wear.widget.WearableRecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:focusable="true" />
+        <cn.spacexc.wearbili.customview.AutoFocusWearableRecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="true"/>
 
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

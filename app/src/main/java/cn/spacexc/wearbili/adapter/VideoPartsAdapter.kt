@@ -1,5 +1,6 @@
 package cn.spacexc.wearbili.adapter
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
@@ -40,6 +41,7 @@ class VideoPartsAdapter(val bvid: String) :
         )
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: VideoPartViewHolder, position: Int) {
         val part = getItem(position)
         holder.partName.text = "P${position + 1} - ${getItem(position).part}"

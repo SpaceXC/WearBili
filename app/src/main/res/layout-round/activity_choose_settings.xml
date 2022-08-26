@@ -109,17 +109,17 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/pageName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="55dp"
-                android:fontFamily="@font/puhui_bold"
-                android:text="默认播放器"
-                android:textColor="#fff"
-                android:textSize="24sp"
-                app:layout_constraintEnd_toStartOf="@+id/guideline62"
-                app:layout_constraintStart_toStartOf="@+id/guideline61"
-                app:layout_constraintTop_toTopOf="parent" />
+                    android:id="@+id/pageName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:fontFamily="@font/puhui_bold"
+                    android:text="默认播放器"
+                    android:textColor="#fff"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline62"
+                    app:layout_constraintStart_toStartOf="@+id/guideline61"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
                 android:id="@+id/description"
