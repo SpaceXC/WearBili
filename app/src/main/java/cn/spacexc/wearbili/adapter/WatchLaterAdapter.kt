@@ -16,6 +16,7 @@ import cn.spacexc.wearbili.activity.video.VideoActivity
 import cn.spacexc.wearbili.activity.video.VideoLongClickActivity
 import cn.spacexc.wearbili.dataclass.watchlater.WatchLaterListObject
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
+import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -92,6 +93,7 @@ class WatchLaterAdapter(val context: Context) :
         } catch (_: OutOfMemoryError) {
 
         }
+        holder.cardView.addClickScale()
     }
 
     class WatchLaterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

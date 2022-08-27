@@ -54,12 +54,13 @@ class VideoPlayerActivity : AppCompatActivity() {
 
     private var isSettingPanelShowing = false
 
-    val animIn = TranslateAnimation(150f, 0f, 0f, 0f)
-    val animOut = TranslateAnimation(0f, 150f, 0f, 0f)
+    private val animIn = TranslateAnimation(150f, 0f, 0f, 0f)
+    private val animOut = TranslateAnimation(0f, 150f, 0f, 0f)
 
 
     val viewModel by viewModels<VideoPlayerViewModel>()
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityVideoPlayerBinding.inflate(layoutInflater)
@@ -68,6 +69,9 @@ class VideoPlayerActivity : AppCompatActivity() {
         val videoBvid = intent.getStringExtra("videoBvid")!!
         val videoCid = intent.getLongExtra("videoCid", 0)
         val videoTitle = intent.getStringExtra("videoTitle")
+
+        val progress = intent.getLongExtra("progress", 0L) * 1000
+        viewModel.progress = progress
 
         binding.videoTitle.text = videoTitle
         Log.d(Application.getTag(), "onCreate: BVID:$videoBvid, CID: $videoCid")
@@ -151,6 +155,7 @@ class VideoPlayerActivity : AppCompatActivity() {
                     PlayerStatus.PLAYING -> {
                         binding.control.setImageResource(R.drawable.round_pause_black)
                     }
+
                     else -> {
                         binding.control.setImageResource(R.drawable.play)
 
@@ -218,6 +223,7 @@ class VideoPlayerActivity : AppCompatActivity() {
                         resizeVideo(it.first, it.second)
                     }*/
                 }
+
                 ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE -> {
                     requestedOrientation =
                         ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -225,6 +231,7 @@ class VideoPlayerActivity : AppCompatActivity() {
                         resizeVideo(it.second, it.first)
                     }*/
                 }
+
                 ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED -> {
                     requestedOrientation =
                         ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -233,6 +240,7 @@ class VideoPlayerActivity : AppCompatActivity() {
                     }*/
 
                 }
+
                 else -> Log.d(Application.TAG, "onCreate: $requestedOrientation")
             }
 

@@ -12,7 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.video.VideoPlayerActivity
-import cn.spacexc.wearbili.dataclass.video.Page
+import cn.spacexc.wearbili.dataclass.videoDetail.Page
+import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
 
 /**
  * Created by XC-Qan on 2022/7/3.
@@ -54,6 +55,7 @@ class VideoPartsAdapter(val bvid: String) :
             intent.putExtra("videoTitle", "P${position + 1} - ${part.part}")
             Application.getContext().startActivity(intent)
         }
+        holder.itemView.addClickScale()
     }
 
     class VideoPartViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -33,6 +33,7 @@ import com.google.android.material.card.MaterialCardView
  * 给！爷！写！注！释！
  */
 
+@Deprecated("Use phone-end recommend adapter instead")
 class VideoRecommendListAdapter(val context: Context) :
     ListAdapter<VideoRecommendItem, VideoRecommendListAdapter.VideoViewHolder>(object :
         DiffUtil.ItemCallback<VideoRecommendItem>() {

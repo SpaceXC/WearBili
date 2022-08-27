@@ -1,13 +1,13 @@
 package cn.spacexc.wearbili.activity.video
 
 import OnClickListerExtended
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import cn.spacexc.wearbili.adapter.VideoViewPagerAdapter
 import cn.spacexc.wearbili.databinding.ActivityVideoBinding
-import cn.spacexc.wearbili.dataclass.video.Data
 import cn.spacexc.wearbili.fragment.CommentFragment
 import cn.spacexc.wearbili.utils.TimeUtils
 import cn.spacexc.wearbili.utils.VideoUtils
@@ -17,6 +17,8 @@ import kotlinx.coroutines.launch
 
 class VideoActivity : AppCompatActivity() {
     private lateinit var binding : ActivityVideoBinding
+
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityVideoBinding.inflate(layoutInflater)
@@ -36,6 +38,7 @@ class VideoActivity : AppCompatActivity() {
             OnClickListerExtended.OnClickCallback {
             override fun onSingleClick() {
             }
+
             override fun onDoubleClick() {
                 val fragment =
                     supportFragmentManager.findFragmentByTag("f${binding.viewPager2.currentItem}")
@@ -60,7 +63,7 @@ class VideoActivity : AppCompatActivity() {
 
     }
 
-    var currentVideo: Data? = null
+    var currentVideo: cn.spacexc.wearbili.dataclass.videoDetail.Data? = null
     var isInitialized = false
 
     fun getId() : String? {

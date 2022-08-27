@@ -17,6 +17,7 @@ import cn.spacexc.wearbili.activity.video.VideoActivity
 import cn.spacexc.wearbili.activity.video.VideoLongClickActivity
 import cn.spacexc.wearbili.dataclass.video.rcmd.Item
 import cn.spacexc.wearbili.utils.VideoUtils
+import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -62,6 +63,7 @@ class VideoPhoneEndRecommendListAdapter(val context: Context) :
         holder.listVideoTitle.text = video.title
         holder.listUpName.text = video.args.up_name
         holder.listVideoViews.text = video.cover_left_text_1
+        holder.cardView.addClickScale()
 
         if(video.goto != "av") return
 

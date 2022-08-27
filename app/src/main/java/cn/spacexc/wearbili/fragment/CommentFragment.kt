@@ -149,7 +149,7 @@ class CommentFragment : Fragment() {
     fun getComment(isRefresh: Boolean) {
         if ((activity as VideoActivity).currentVideo != null) {
             VideoManager.getCommentsByLikes(
-                (activity as VideoActivity).currentVideo!!.aid,
+                (activity as VideoActivity).currentVideo!!.stat.aid,
                 page,
                 object : Callback {
                     override fun onFailure(call: Call, e: IOException) {

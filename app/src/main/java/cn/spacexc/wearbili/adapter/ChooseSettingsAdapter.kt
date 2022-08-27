@@ -13,6 +13,7 @@ import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.dataclass.settings.ChooseItem
 import cn.spacexc.wearbili.utils.SharedPreferencesUtils
 import cn.spacexc.wearbili.utils.ToastUtils
+import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
 
 /**
  * Created by XC-Qan on 2022/8/21.
@@ -64,6 +65,7 @@ class ChooseSettingsAdapter(private val key: String, private val defVal: String)
         holder.itemView.setOnClickListener {
             holder.radioButton.isChecked = true
         }
+        holder.itemView.addClickScale()
     }
 
     class ChooseSettingItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

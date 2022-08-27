@@ -34,6 +34,7 @@ import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import cn.spacexc.wearbili.utils.TimeUtils.toDateStr
 import cn.spacexc.wearbili.utils.VideoUtils
+import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -54,6 +55,7 @@ fun emojiProcessor(content: String?, emojis: List<EmojiDetail>?): String? {
             temp = temp?.replace(emoji.emoji_name, "<img src=\"${emoji.url}\"/>")
         }
     }
+    temp?.replace("\n", "<br>")
     return temp
 }
 
@@ -242,8 +244,8 @@ class DynamicAdapter(val context: Context) :
             else -> holder.content.text = "不支持的动态类型：${card.desc.type}"
         }
         holder.content.paint.apply {
-            underlineColor = Color.TRANSPARENT
-            underlineThickness = 0f
+            //underlineColor = Color.TRANSPARENT
+            //underlineThickness = 0f
             isUnderlineText = false
         }
 
@@ -337,6 +339,7 @@ class DynamicImageAdapter(val context: Context) :
             intent.putExtra("currentPhotoItem", position)
             context.startActivity(intent)
         }
+        holder.itemView.addClickScale()
     }
 
     class DynamicImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

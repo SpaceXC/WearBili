@@ -12,7 +12,7 @@ import javax.crypto.Cipher
 /**
  * Some part of this file is copied from luern0313's repository WristBili
  *
- * Thanks a lot to his contributors
+ * Thanks a lot to him and his contributors
  */
 
 /**
@@ -33,12 +33,14 @@ object EncryptUtils {
         TYPE_TV
     }
 
+    private val appSecrets = mapOf(
+        AppSignType.TYPE_COMMON to "560c52ccd288fed045859ed18bffd973",
+        AppSignType.TYPE_TV to "59b43e04ad6965f34319062b478f83dd"
+    )
+
     fun getAppSign(type: AppSignType, params: String): String {
-        val content = "${params}59b43e04ad6965f34319062b478f83dd"
-        return when (type) {
-            AppSignType.TYPE_TV -> md5(content)
-            else -> ""
-        }
+        val content = "${params}${appSecrets[type]}"
+        return md5(content)
     }
 
     fun md5(plainText: String): String {

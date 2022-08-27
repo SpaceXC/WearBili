@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.dataclass.HorizontalButtonData
 import cn.spacexc.wearbili.listener.OnItemViewClickListener
+import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
 
 /**
  * Created by XC-Qan on 2022/6/30.
@@ -55,6 +56,7 @@ class HorizontalButtonAdapter(val onItemViewClickListener: OnItemViewClickListen
     }
 
     override fun onBindViewHolder(holder: ButtonViewHolder, position: Int) {
+        holder.itemView.addClickScale()
         holder.icon.setImageResource(getItem(position).iconResId)
         holder.name.text = getItem(position).mainText
         holder.description.text = getItem(position).description

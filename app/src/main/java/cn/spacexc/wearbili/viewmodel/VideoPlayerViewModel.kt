@@ -13,6 +13,7 @@ import androidx.lifecycle.viewModelScope
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.Application.Companion.TAG
 import cn.spacexc.wearbili.utils.TimeUtils.secondToTime
+import cn.spacexc.wearbili.utils.ToastUtils
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
@@ -46,6 +47,8 @@ class VideoPlayerViewModel : ViewModel() {
     private var httpDataSourceFactory = DefaultHttpDataSource.Factory()
 
     var mediaPlayer: ExoPlayer
+
+    var progress = 0L
 
     init {
         httpDataSourceFactory = DefaultHttpDataSource.Factory()
@@ -118,6 +121,7 @@ class VideoPlayerViewModel : ViewModel() {
                             //_playerStatus.value = PlayerStatus.NOT_READY
                             //_progressBarVisibility.value = View.VISIBLE
                         }
+
                         ExoPlayer.STATE_BUFFERING -> {
                             _isLoadingPanelVisible.value = true
                             danmakuView.pause()
@@ -125,6 +129,7 @@ class VideoPlayerViewModel : ViewModel() {
                             this@VideoPlayerViewModel.isPlaying = false
 
                         }
+
                         ExoPlayer.STATE_READY -> {
                             _videoResolution.value = Pair(videoSize.width, videoSize.height)
                             _bufferPercent.value = bufferedPercentage
@@ -133,6 +138,10 @@ class VideoPlayerViewModel : ViewModel() {
                             _isLoadingPanelVisible.value = false
                             _playerStatus.value = PlayerStatus.PLAYING
                             statTextView.text = "${statTextView.text}\n加载完成"
+                            if (_isVideoLoaded.value == false && progress != 0L) {
+                                mediaPlayer.seekTo(progress)
+                                ToastUtils.showText("已为您定位到${(progress / 1000).secondToTime()}")
+                            }
                             _isVideoLoaded.value = true
                             this@VideoPlayerViewModel.isPlaying = true
                             Log.d(
@@ -145,17 +154,20 @@ class VideoPlayerViewModel : ViewModel() {
                             updatePlayerProgress()
 
                         }
+
                         ExoPlayer.STATE_ENDED -> {
                             _playerStatus.value = PlayerStatus.COMPLETED
                             danmakuView.pause()
                             this@VideoPlayerViewModel.isPlaying = false
                         }
+
                         else -> {
 
                         }
                     }
                     Log.d(Application.getTag(), "changed state to $playbackState")
                 }
+
             })
             prepare()
         }
@@ -199,16 +211,19 @@ class VideoPlayerViewModel : ViewModel() {
                 danmakuView.pause()
                 _playerStatus.value = PlayerStatus.PAUSED
             }
+
             PlayerStatus.PAUSED -> {
                 mediaPlayer.play()
                 danmakuView.start(mediaPlayer.currentPosition)
                 _playerStatus.value = PlayerStatus.PLAYING
             }
+
             PlayerStatus.COMPLETED -> {
                 mediaPlayer.play()
                 danmakuView.restart()
                 _playerStatus.value = PlayerStatus.PLAYING
             }
+
             else -> return
         }
 

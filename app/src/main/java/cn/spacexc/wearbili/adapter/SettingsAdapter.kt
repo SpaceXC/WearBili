@@ -21,6 +21,7 @@ import cn.spacexc.wearbili.dataclass.settings.SettingItem
 import cn.spacexc.wearbili.dataclass.settings.SettingType.*
 import cn.spacexc.wearbili.utils.SharedPreferencesUtils
 import cn.spacexc.wearbili.utils.ToastUtils
+import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
 
 /**
  * Created by XC-Qan on 2022/8/18.
@@ -99,6 +100,7 @@ class SettingsAdapter(private val context: Context) :
                 //TODO(Not yet implemented)
             }
         }
+        holder.itemView.addClickScale()
     }
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")

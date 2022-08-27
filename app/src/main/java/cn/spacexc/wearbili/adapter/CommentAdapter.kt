@@ -25,6 +25,7 @@ import cn.spacexc.wearbili.dataclass.CommentContentData
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import cn.spacexc.wearbili.utils.TimeUtils.toDateStr
+import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
 import com.bumptech.glide.Glide
 import com.google.android.material.card.MaterialCardView
 
@@ -145,6 +146,7 @@ class CommentAdapter(
             holder.cardView.setOnClickListener {
                 onSendComment.invoke()
             }
+            holder.cardView.addClickScale()
         }
 
     }

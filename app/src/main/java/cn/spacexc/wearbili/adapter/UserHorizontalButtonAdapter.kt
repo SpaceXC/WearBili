@@ -14,6 +14,7 @@ import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.dataclass.HorizontalButtonData
 import cn.spacexc.wearbili.dataclass.user.User
 import cn.spacexc.wearbili.manager.UserManager
+import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.gson.Gson
@@ -88,7 +89,7 @@ class UserHorizontalButtonAdapter(val context: Context) :
                                     .into(holder.icon)
                             }
 
-                        } catch (e: OutOfMemoryError) {
+                        } catch (_: OutOfMemoryError) {
 
                         }
                     }
@@ -96,7 +97,6 @@ class UserHorizontalButtonAdapter(val context: Context) :
                 })
         } else {
             try {
-
                 holder.name.text = getItem(position).mainText
                 holder.description.text = getItem(position).description
                 Glide.with(context).load(R.drawable.akari).skipMemoryCache(true)
@@ -104,10 +104,12 @@ class UserHorizontalButtonAdapter(val context: Context) :
                     .placeholder(R.drawable.default_avatar).circleCrop()
                     .into(holder.icon)
 
-            } catch (e: OutOfMemoryError) {
+            } catch (_: OutOfMemoryError) {
 
             }
         }
+        holder.itemView.setOnClickListener { }
+        holder.itemView.addClickScale()
     }
 
     class ButtonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

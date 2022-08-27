@@ -17,6 +17,7 @@ import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.video.VideoActivity
 import cn.spacexc.wearbili.dataclass.VideoSearch
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
+import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -86,6 +87,7 @@ class SearchResultAdapter(val context: Context) :
         } catch (e: OutOfMemoryError) {
 
         }
+        holder.itemView.addClickScale()
 
 
         //GlideUtils.loadPicsFitWidth(Application.getContext(), "https:${video.pic}", R.drawable.placeholder, R.drawable.placeholder, holder.listCover)

@@ -1,5 +1,6 @@
 package cn.spacexc.wearbili.activity.image
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
@@ -19,6 +20,7 @@ import cn.spacexc.wearbili.utils.LogUtils.log
 class ImageViewerActivity : AppCompatActivity() {
     var isInfoVisible = true
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image_viewer)
@@ -31,7 +33,6 @@ class ImageViewerActivity : AppCompatActivity() {
         findViewById<FrameLayout>(R.id.frame).setOnClickListener {
             "Clicked".log()
             toggleInfoVisibility()
-
         }
         findViewById<ImageView>(R.id.pageName).setOnClickListener { finish() }
         viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {

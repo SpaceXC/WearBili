@@ -11,8 +11,8 @@ import cn.spacexc.wearbili.activity.MainActivity
 import cn.spacexc.wearbili.activity.user.LoginActivity
 import cn.spacexc.wearbili.dataclass.LeanCloudUserSearch
 import cn.spacexc.wearbili.manager.CookiesManager
+import cn.spacexc.wearbili.manager.LCManager
 import cn.spacexc.wearbili.manager.UserManager
-import cn.spacexc.wearbili.utils.LCManager
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.ToastUtils
 import com.google.gson.Gson

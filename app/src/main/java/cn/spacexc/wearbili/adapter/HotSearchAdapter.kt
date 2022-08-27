@@ -13,6 +13,7 @@ import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.search.SearchResultActivity
 import cn.spacexc.wearbili.dataclass.HotSearchData
+import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
 import com.bumptech.glide.Glide
 
 /**
@@ -62,6 +63,7 @@ class HotSearchAdapter : ListAdapter<HotSearchData, HotSearchAdapter.HotSearchVi
             Glide.with(Application.getContext()).load(searchData.icon.replace("http", "https"))
                 .into(holder.hotTypeImageView)
         }
+        holder.itemView.addClickScale()
     }
 
     class HotSearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

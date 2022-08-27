@@ -16,6 +16,7 @@ import cn.spacexc.wearbili.dataclass.star.StarFolderData
 import cn.spacexc.wearbili.dataclass.star.StarListObj
 import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.utils.NetworkUtils
+import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import kotlinx.coroutines.MainScope
@@ -77,6 +78,7 @@ class StarFolderAdapter(private val context: Context) :
             intent.putExtra("folderId", folder.id)
             context.startActivity(intent)
         }
+        holder.itemView.addClickScale()
     }
 
     class StarFolderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

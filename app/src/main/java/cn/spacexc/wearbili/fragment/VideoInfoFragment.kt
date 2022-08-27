@@ -1,7 +1,6 @@
 package cn.spacexc.wearbili.fragment
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -40,11 +39,11 @@ import cn.spacexc.wearbili.dataclass.SimplestUniversalDataClass
 import cn.spacexc.wearbili.dataclass.VideoStreamsFlv
 import cn.spacexc.wearbili.dataclass.user.User
 import cn.spacexc.wearbili.dataclass.user.UserFans
-import cn.spacexc.wearbili.dataclass.video.Data
-import cn.spacexc.wearbili.dataclass.video.VideoInfo
+import cn.spacexc.wearbili.dataclass.videoDetail.VideoDetailInfo
 import cn.spacexc.wearbili.listener.OnItemViewClickListener
 import cn.spacexc.wearbili.manager.SettingsManager
 import cn.spacexc.wearbili.manager.VideoManager
+import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import cn.spacexc.wearbili.utils.TimeUtils.secondToTime
 import cn.spacexc.wearbili.utils.TimeUtils.toDateStr
@@ -71,6 +70,8 @@ class VideoInfoFragment : Fragment() {
     var bvid: String? = ""
     var cid = 0L
     var videoTitle = ""
+
+    var progress: Long? = 0
 
     lateinit var videoPartsAdapter: VideoPartsAdapter
 
@@ -228,6 +229,7 @@ class VideoInfoFragment : Fragment() {
                                 intent.putExtra("videoBvid", bvid)
                                 intent.putExtra("videoCid", cid)
                                 intent.putExtra("videoTitle", videoTitle)
+                                intent.putExtra("progress", progress)
                                 startActivity(intent)
                             }
                             "minifyPlayer" -> {
@@ -360,10 +362,184 @@ class VideoInfoFragment : Fragment() {
         //binding.recyclerViewLower.adapter = ButtonsAdapter(true).also { it.submitList(btnListLowerRow) }
         //getVideoIsLiked()
         isVideoLiked()
-        getVideo()
+        getInfo()
     }
 
-    private fun getVideo() {
+    private fun getInfo() {
+        if (!isAdded) return
+        val id = (activity as VideoActivity).getId()
+        VideoManager.getVideoInfo(id!!, object : NetworkUtils.ResultCallback<VideoDetailInfo> {
+            override fun onSuccess(video: VideoDetailInfo, code: Int) {
+                MainScope().launch {
+                    if (video.code == 0) {
+                        updateVideoFansStat(video)
+                        bvid = video.data.bvid
+                        cid = video.data.cid
+                        progress = (video.data.history?.progress ?: 0)
+                        videoTitle = video.data.title
+                        likes = video.data.stat.like
+                        binding.relativeLayout.visibility = View.VISIBLE
+                        (activity as VideoActivity).currentVideo = video.data
+                        (activity as VideoActivity).isInitialized = true
+
+                        videoPartsAdapter.submitList(video.data.pages)
+                        binding.videoPartsTitle.isVisible = video.data.pages.size != 1
+                        binding.recyclerViewParts.isVisible = video.data.pages.size != 1
+                        binding.videoPartsTitle.setOnClickListener {
+                            val intent = Intent(
+                                requireActivity(),
+                                ViewFullVideoPartsActivity::class.java
+                            )
+                            intent.putExtra(
+                                "data",
+                                Gson().toJson(cn.spacexc.wearbili.dataclass.videoDetail.Data.Pages(video.data.pages))
+                            )
+                            intent.putExtra("bvid", (activity as VideoActivity).getId())
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            Application.getContext().startActivity(intent)
+                        }
+
+                        binding.cover.setOnLongClickListener {
+                            val intent =
+                                Intent(requireActivity(), PhotoViewActivity::class.java)
+                            intent.putExtra("imageUrl", video.data.pic)
+                            startActivity(intent)
+                            true
+                        }
+                        binding.cover.setOnClickListener {
+                            //(activity as VideoActivity).setPage(2)
+                            when (SettingsManager.defPlayer()) {
+                                "builtinPlayer" -> {
+                                    val intent =
+                                        Intent(requireActivity(), VideoPlayerActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                    intent.putExtra("videoBvid", bvid)
+                                    intent.putExtra("videoCid", cid)
+                                    intent.putExtra("videoTitle", videoTitle)
+                                    intent.putExtra("progress", progress)
+                                    startActivity(intent)
+                                }
+
+                                "minifyPlayer" -> {
+                                    val intent =
+                                        Intent(requireActivity(), MinifyVideoPlayer::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                    intent.putExtra("videoBvid", bvid)
+                                    intent.putExtra("videoCid", cid)
+                                    intent.putExtra("videoTitle", videoTitle)
+                                    startActivity(intent)
+                                }
+
+                                "microTvPlayer" -> {
+                                    try {
+                                        val intent = Intent(
+                                            Intent.ACTION_VIEW,
+                                            Uri.parse("wearbiliplayer://receive:8080/play?&bvid=$bvid&cid=$cid&aid=0")
+                                        )
+                                        startActivity(intent)
+                                    } catch (e: ActivityNotFoundException) {
+                                        ToastUtils.makeText("需要安装小电视播放器哦").show()
+                                    }
+                                }
+
+                                "microTaiwan" -> {
+                                    ToastUtils.showText("敬请期待")
+                                }
+
+                                "other" -> {
+                                    try {
+                                        val intent = Intent(
+                                            Intent.ACTION_VIEW,
+                                            Uri.parse("wearbili-3rd://receive:8080/play?&bvid=$bvid&cid=$cid")
+                                        )
+                                        startActivity(intent)
+                                    } catch (e: ActivityNotFoundException) {
+                                        ToastUtils.showText("没有找到其他播放器哦")
+                                    }
+                                }
+                            }
+                        }
+                        binding.videoTitle.text = video.data.title
+                        binding.bvidText.text = video.data.bvid
+                        binding.duration.text = video.data.duration.secondToTime()
+                        binding.uploaderName.text = video.data.owner.name
+                        binding.danmakusCount.text = video.data.stat.danmaku.toShortChinese()
+                        binding.viewsCount.text = video.data.stat.view.toShortChinese()
+                        binding.pubdateText.text = (video.data.pubdate * 1000).toDateStr()
+                        binding.videoDesc.setText(video.data.desc)
+                        binding.follow.setOnClickListener {
+                            followUser(video.data.owner.mid, video)
+                        }
+                        if (video.data.history?.progress == null) {
+                            VideoManager.uploadVideoViewingProgress(
+                                video.data.bvid,
+                                video.data.cid,
+                                0
+                            )
+                        }
+                        //isLikedStr.value = video.data.stat.like.toString()
+                        (binding.recyclerViewButtons.findViewHolderForAdapterPosition(1) as ButtonsAdapter.ButtonViewHolder).name.text =
+                            video.data.stat.like.toShortChinese()
+                        btnListUpperRow.value?.get(0)?.displayName =
+                            video.data.stat.like.toShortChinese()
+                        Glide.with(this@VideoInfoFragment).load(video.data.owner.face)
+                            .skipMemoryCache(true)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .placeholder(R.drawable.default_avatar).circleCrop()
+                            .into(binding.uploaderAvatar)
+
+
+                        binding.bvidText.setOnLongClickListener {
+                            val clipboardManager: ClipboardManager =
+                                ContextCompat.getSystemService(
+                                    requireContext(),
+                                    ClipboardManager::class.java
+                                ) as ClipboardManager
+                            val clip: ClipData =
+                                ClipData.newPlainText("wearbili bvid", video.data.bvid)
+                            clipboardManager.setPrimaryClip(clip)
+                            ToastUtils.makeText("已复制BV号")
+                                .show()
+                            true
+                        }
+
+                        binding.videoDesc.setOnLongClickListener {
+                            val clipboardManager: ClipboardManager =
+                                ContextCompat.getSystemService(
+                                    requireContext(),
+                                    ClipboardManager::class.java
+                                ) as ClipboardManager
+                            val clip: ClipData =
+                                ClipData.newPlainText("wearbili desc", video.data.desc)
+                            clipboardManager.setPrimaryClip(clip)
+                            ToastUtils.makeText("已复制简介")
+                                .show()
+                            true
+                        }
+                        val roundedCorners = RoundedCorners(10)
+                        val options = RequestOptions.bitmapTransform(roundedCorners)
+                        Glide.with(requireContext()).load(video.data.pic)
+                            .placeholder(R.drawable.placeholder).skipMemoryCache(true)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .apply(options)
+                            .into(binding.cover)
+
+                        //GlideUtils.loadPicsFitWidth(Application.getContext(), video.data.pic, R.drawable.placeholder, R.drawable.placeholder, binding.cover)
+                    } else {
+                        ToastUtils.makeText("加载失败了")
+                            .show()
+
+                    }
+                }
+            }
+
+            override fun onFailed(e: Exception) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+    /*private fun getVideo() {
         if (!isAdded) return
         val id = (activity as VideoActivity).getId()
         VideoManager.getVideoById(id, object : Callback {
@@ -378,7 +554,7 @@ class VideoInfoFragment : Fragment() {
 
             @SuppressLint("SetTextI18n")
             override fun onResponse(call: Call, response: Response) {
-                val video = Gson().fromJson(response.body?.string(), VideoInfo::class.java)
+                val video = Gson().fromJson(response.body?.string(), VideoDetailInfo::class.java)
                 updateVideoFansStat(video)
                 MainScope().launch {
                     if (response.code == 200 && video.code == 0) {
@@ -398,7 +574,7 @@ class VideoInfoFragment : Fragment() {
                                 requireActivity(),
                                 ViewFullVideoPartsActivity::class.java
                             )
-                            intent.putExtra("data", Gson().toJson(Data.Pages(video.data.pages)))
+                            intent.putExtra("data", Gson().toJson(cn.spacexc.wearbili.dataclass.videoDetail.Data.Pages(video.data.pages)))
                             intent.putExtra("bvid", (activity as VideoActivity).getId())
                             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                             Application.getContext().startActivity(intent)
@@ -533,9 +709,9 @@ class VideoInfoFragment : Fragment() {
             }
 
         })
-    }
+    }*/
 
-    fun updateVideoFansStat(video: VideoInfo) {
+    fun updateVideoFansStat(video: VideoDetailInfo) {
         if (!isAdded) return
         cn.spacexc.wearbili.manager.UserManager.getUserById(
             video.data.owner.mid,
@@ -595,7 +771,7 @@ class VideoInfoFragment : Fragment() {
             })
     }
 
-    fun followUser(mid: Long, video: VideoInfo) {
+    fun followUser(mid: Long, video: VideoDetailInfo) {
         if (cn.spacexc.wearbili.manager.UserManager.getUserCookie() == null) {
             ToastUtils.makeText("你还没有登录哦").show()
             val intent = Intent(requireActivity(), LoginActivity::class.java)

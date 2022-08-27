@@ -3,11 +3,14 @@ package cn.spacexc.wearbili.manager
 import android.util.Log
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.Application.Companion.TAG
-import cn.spacexc.wearbili.utils.LogUtils.logWithGeneric
+import cn.spacexc.wearbili.dataclass.videoDetail.VideoDetailInfo
+import cn.spacexc.wearbili.utils.EncryptUtils
+import cn.spacexc.wearbili.utils.LogUtils.log
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.ToastUtils
 import cn.spacexc.wearbili.utils.ToastUtils.debugToastWithGeneric
 import cn.spacexc.wearbili.utils.VideoUtils
+import com.google.gson.Gson
 import okhttp3.*
 import java.io.IOException
 
@@ -62,7 +65,7 @@ object VideoManager {
     fun searchVideo(keyword: String, page: Int, callback: Callback) {
         NetworkUtils.getUrl(
             "https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword=$keyword&page=$page".debugToastWithGeneric()
-                .logWithGeneric(),
+                .log(),
             callback
         )
     }
@@ -145,5 +148,25 @@ object VideoManager {
             .build()
         NetworkUtils.postUrl("http://api.bilibili.com/x/v2/history/toview/add", body, callback)
         return true
+    }
+
+    fun getVideoInfo(bvid: String, callback: NetworkUtils.ResultCallback<VideoDetailInfo>) {
+        val baseUrl = "https://app.bilibili.com/x/v2/view"
+        val params: String =
+            "access_key=${UserManager.getAccessKey()}&appkey=${ConfigurationManager.configurations["appKey"]}&build=${ConfigurationManager.configurations["build"]}&bvid=$bvid&mobi_app=${ConfigurationManager.configurations["mobi_app"]}&plat=0&platform=${ConfigurationManager.configurations["platform"]}&ts=${(System.currentTimeMillis() / 1000).toInt()}"
+        val sign: String = EncryptUtils.getAppSign(EncryptUtils.AppSignType.TYPE_COMMON, params)
+        val url = "$baseUrl?$params&sign=$sign"
+        url.log()
+        NetworkUtils.getUrl(url, object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                callback.onFailed(e)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val result = Gson().fromJson(response.body?.string(), VideoDetailInfo::class.java)
+                callback.onSuccess(result, result.code)
+            }
+
+        })
     }
 }

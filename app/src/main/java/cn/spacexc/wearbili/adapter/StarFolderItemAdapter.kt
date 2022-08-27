@@ -17,6 +17,7 @@ import cn.spacexc.wearbili.activity.video.VideoLongClickActivity
 import cn.spacexc.wearbili.dataclass.star.Media
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import cn.spacexc.wearbili.utils.ToastUtils
+import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -85,7 +86,7 @@ class StarFolderItemAdapter(private val context: Context) :
                 false
             }
         }
-
+        holder.cardView.addClickScale()
     }
 
     class StarFolderItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

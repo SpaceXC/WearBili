@@ -12,16 +12,21 @@ import cn.spacexc.wearbili.Application.Companion.TAG
  */
 
 object LogUtils {
-    fun Any.log(description: String) {
-        Log.d(TAG, "$description: $this")
-    }
+    /*    fun Any.log(description: String) {
+            Log.d(TAG, "$description: $this")
+        }
 
-    fun Any.log() {
+        fun Any.log() {
+            Log.d(TAG, "$this")
+        }*/
+
+    fun <T> T.log(): T {
         Log.d(TAG, "$this")
+        return this
     }
 
-    fun <T> T.logWithGeneric(): T {
-        Log.d(TAG, "logWithGeneric: $this")
+    fun <T> T.log(description: String): T {
+        Log.d(TAG, "$description: $this")
         return this
     }
 }

@@ -6,102 +6,102 @@
     android:foreground="?selectableItemBackground">
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="2dp"
-        app:cardBackgroundColor="#78242424"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="0dp"
-        app:cardMaxElevation="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:strokeColor="#70707070"
-        app:strokeWidth="0.1dp">
+            android:id="@+id/cardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="6dp"
+            app:cardBackgroundColor="#78242424"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
+            app:cardMaxElevation="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="#70707070"
+            app:strokeWidth="0.1dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
             <androidx.constraintlayout.utils.widget.ImageFilterView
-                android:id="@+id/cover"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="6dp"
-                android:layout_marginBottom="12dp"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintDimensionRatio="16:10"
-                app:layout_constraintEnd_toStartOf="@+id/guideline2"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:round="6dp"
-                app:srcCompat="@drawable/placeholder" />
+                    android:id="@+id/cover"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginBottom="12dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="18:13"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:round="6dp"
+                    app:srcCompat="@drawable/placeholder"/>
 
             <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="visible"
-                app:layout_constraintGuide_percent="0.38" />
+                    android:id="@+id/guideline2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="visible"
+                    app:layout_constraintGuide_percent="0.38"/>
 
             <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline44"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.5" />
+                    android:id="@+id/guideline44"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent="0.5"/>
 
             <TextView
-                android:id="@+id/title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="2dp"
-                android:fontFamily="@font/puhui_bold"
-                android:singleLine="true"
-                android:text="测试收藏夹"
-                android:textColor="#fff"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toTopOf="@+id/guideline44"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/guideline2" />
+                    android:id="@+id/title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="2dp"
+                    android:fontFamily="@font/puhui_bold"
+                    android:singleLine="true"
+                    android:text="测试收藏夹"
+                    android:textColor="#fff"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toTopOf="@+id/guideline44"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/guideline2"/>
 
             <TextView
-                android:id="@+id/itemCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="2dp"
-                android:alpha="0.7"
-                android:fontFamily="@font/puhui_medium"
-                android:text="114514/1919810"
-                android:textColor="#fff"
-                android:textSize="12sp"
-                app:layout_constraintStart_toEndOf="@+id/imageView26"
-                app:layout_constraintTop_toTopOf="@+id/guideline44" />
+                    android:id="@+id/itemCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="2dp"
+                    android:alpha="0.7"
+                    android:fontFamily="@font/puhui_medium"
+                    android:text="114514/1919810"
+                    android:textColor="#fff"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toEndOf="@+id/imageView26"
+                    app:layout_constraintTop_toTopOf="@+id/guideline44"/>
 
             <ImageView
-                android:id="@+id/imageView26"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:adjustViewBounds="true"
-                android:alpha="0.7"
-                app:layout_constraintBottom_toBottomOf="@+id/itemCount"
-                app:layout_constraintStart_toStartOf="@+id/title"
-                app:layout_constraintTop_toTopOf="@+id/itemCount"
-                app:srcCompat="@drawable/video_library" />
+                    android:id="@+id/imageView26"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:adjustViewBounds="true"
+                    android:alpha="0.7"
+                    app:layout_constraintBottom_toBottomOf="@+id/itemCount"
+                    app:layout_constraintStart_toStartOf="@+id/title"
+                    app:layout_constraintTop_toTopOf="@+id/itemCount"
+                    app:srcCompat="@drawable/video_library"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

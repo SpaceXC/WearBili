@@ -1,5 +1,6 @@
 package cn.spacexc.wearbili.activity.user
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ import cn.spacexc.wearbili.dataclass.star.StarList
 import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.TimeUtils
+import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import kotlinx.coroutines.MainScope
@@ -42,6 +44,7 @@ class StaredActivity : AppCompatActivity() {
             }
         }
         binding.swipeRefreshLayout.isRefreshing = true
+        binding.cardView.addClickScale()
         getStarFolder()
     }
 
@@ -53,6 +56,7 @@ class StaredActivity : AppCompatActivity() {
                 }
             }
 
+            @SuppressLint("SetTextI18n")
             override fun onResponse(call: Call, response: Response) {
                 val result = Gson().fromJson(response.body?.string(), StarList::class.java)
                 val tempList = result.data.list.toMutableList()
