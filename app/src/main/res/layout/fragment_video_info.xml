@@ -281,15 +281,15 @@
                 tools:ignore="ImageContrastCheck,SpeakableTextPresentCheck" />
 
             <TextView
-                android:id="@+id/duration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="2dp"
-                android:fontFamily="@font/puhui_medium"
-                android:textColor="#fff"
-                app:layout_constraintBottom_toBottomOf="@+id/cover"
-                app:layout_constraintEnd_toEndOf="@+id/cover" />
+                    android:id="@+id/duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/puhui_medium"
+                    android:textColor="#fff"
+                    app:layout_constraintBottom_toBottomOf="@+id/cover"
+                    app:layout_constraintEnd_toEndOf="@+id/cover"/>
 
             <TextView
                 android:id="@+id/videoTitle"

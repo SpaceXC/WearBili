@@ -43,11 +43,14 @@ import cn.spacexc.wearbili.dataclass.videoDetail.VideoDetailInfo
 import cn.spacexc.wearbili.listener.OnItemViewClickListener
 import cn.spacexc.wearbili.manager.SettingsManager
 import cn.spacexc.wearbili.manager.VideoManager
+import cn.spacexc.wearbili.utils.LogUtils.log
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import cn.spacexc.wearbili.utils.TimeUtils.secondToTime
 import cn.spacexc.wearbili.utils.TimeUtils.toDateStr
 import cn.spacexc.wearbili.utils.ToastUtils
+import cn.spacexc.wearbili.utils.ToastUtils.debugToast
+import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -369,22 +372,23 @@ class VideoInfoFragment : Fragment() {
         if (!isAdded) return
         val id = (activity as VideoActivity).getId()
         VideoManager.getVideoInfo(id!!, object : NetworkUtils.ResultCallback<VideoDetailInfo> {
-            override fun onSuccess(video: VideoDetailInfo, code: Int) {
+            override fun onSuccess(result: VideoDetailInfo, code: Int) {
                 MainScope().launch {
-                    if (video.code == 0) {
-                        updateVideoFansStat(video)
-                        bvid = video.data.bvid
-                        cid = video.data.cid
-                        progress = (video.data.history?.progress ?: 0)
-                        videoTitle = video.data.title
-                        likes = video.data.stat.like
+                    result.log()
+                    if (code == 0) {
+                        updateVideoFansStat(result)
+                        bvid = result.data.bvid
+                        cid = result.data.cid
+                        progress = (result.data.history?.progress ?: 0)
+                        videoTitle = result.data.title
+                        likes = result.data.stat.like
                         binding.relativeLayout.visibility = View.VISIBLE
-                        (activity as VideoActivity).currentVideo = video.data
+                        (activity as VideoActivity).currentVideo = result.data
                         (activity as VideoActivity).isInitialized = true
 
-                        videoPartsAdapter.submitList(video.data.pages)
-                        binding.videoPartsTitle.isVisible = video.data.pages.size != 1
-                        binding.recyclerViewParts.isVisible = video.data.pages.size != 1
+                        videoPartsAdapter.submitList(result.data.pages)
+                        binding.videoPartsTitle.isVisible = result.data.pages.size != 1
+                        binding.recyclerViewParts.isVisible = result.data.pages.size != 1
                         binding.videoPartsTitle.setOnClickListener {
                             val intent = Intent(
                                 requireActivity(),
@@ -392,7 +396,7 @@ class VideoInfoFragment : Fragment() {
                             )
                             intent.putExtra(
                                 "data",
-                                Gson().toJson(cn.spacexc.wearbili.dataclass.videoDetail.Data.Pages(video.data.pages))
+                                Gson().toJson(cn.spacexc.wearbili.dataclass.videoDetail.Data.Pages(result.data.pages))
                             )
                             intent.putExtra("bvid", (activity as VideoActivity).getId())
                             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -402,7 +406,7 @@ class VideoInfoFragment : Fragment() {
                         binding.cover.setOnLongClickListener {
                             val intent =
                                 Intent(requireActivity(), PhotoViewActivity::class.java)
-                            intent.putExtra("imageUrl", video.data.pic)
+                            intent.putExtra("imageUrl", result.data.pic)
                             startActivity(intent)
                             true
                         }
@@ -459,30 +463,30 @@ class VideoInfoFragment : Fragment() {
                                 }
                             }
                         }
-                        binding.videoTitle.text = video.data.title
-                        binding.bvidText.text = video.data.bvid
-                        binding.duration.text = video.data.duration.secondToTime()
-                        binding.uploaderName.text = video.data.owner.name
-                        binding.danmakusCount.text = video.data.stat.danmaku.toShortChinese()
-                        binding.viewsCount.text = video.data.stat.view.toShortChinese()
-                        binding.pubdateText.text = (video.data.pubdate * 1000).toDateStr()
-                        binding.videoDesc.setText(video.data.desc)
+                        binding.videoTitle.text = result.data.title
+                        binding.bvidText.text = result.data.bvid
+                        binding.duration.text = result.data.duration.secondToTime()
+                        binding.uploaderName.text = result.data.owner.name
+                        binding.danmakusCount.text = result.data.stat.danmaku.toShortChinese()
+                        binding.viewsCount.text = result.data.stat.view.toShortChinese()
+                        binding.pubdateText.text = (result.data.pubdate * 1000).toDateStr()
+                        binding.videoDesc.setText(result.data.desc)
                         binding.follow.setOnClickListener {
-                            followUser(video.data.owner.mid, video)
+                            followUser(result.data.owner.mid, result)
                         }
-                        if (video.data.history?.progress == null) {
+                        if (result.data.history?.progress == null) {
                             VideoManager.uploadVideoViewingProgress(
-                                video.data.bvid,
-                                video.data.cid,
+                                result.data.bvid,
+                                result.data.cid,
                                 0
                             )
                         }
                         //isLikedStr.value = video.data.stat.like.toString()
                         (binding.recyclerViewButtons.findViewHolderForAdapterPosition(1) as ButtonsAdapter.ButtonViewHolder).name.text =
-                            video.data.stat.like.toShortChinese()
+                            result.data.stat.like.toShortChinese()
                         btnListUpperRow.value?.get(0)?.displayName =
-                            video.data.stat.like.toShortChinese()
-                        Glide.with(this@VideoInfoFragment).load(video.data.owner.face)
+                            result.data.stat.like.toShortChinese()
+                        Glide.with(this@VideoInfoFragment).load(result.data.owner.face)
                             .skipMemoryCache(true)
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .placeholder(R.drawable.default_avatar).circleCrop()
@@ -496,7 +500,7 @@ class VideoInfoFragment : Fragment() {
                                     ClipboardManager::class.java
                                 ) as ClipboardManager
                             val clip: ClipData =
-                                ClipData.newPlainText("wearbili bvid", video.data.bvid)
+                                ClipData.newPlainText("wearbili bvid", result.data.bvid)
                             clipboardManager.setPrimaryClip(clip)
                             ToastUtils.makeText("已复制BV号")
                                 .show()
@@ -510,7 +514,7 @@ class VideoInfoFragment : Fragment() {
                                     ClipboardManager::class.java
                                 ) as ClipboardManager
                             val clip: ClipData =
-                                ClipData.newPlainText("wearbili desc", video.data.desc)
+                                ClipData.newPlainText("wearbili desc", result.data.desc)
                             clipboardManager.setPrimaryClip(clip)
                             ToastUtils.makeText("已复制简介")
                                 .show()
@@ -518,23 +522,36 @@ class VideoInfoFragment : Fragment() {
                         }
                         val roundedCorners = RoundedCorners(10)
                         val options = RequestOptions.bitmapTransform(roundedCorners)
-                        Glide.with(requireContext()).load(video.data.pic)
+                        Glide.with(requireContext()).load(result.data.pic)
                             .placeholder(R.drawable.placeholder).skipMemoryCache(true)
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .apply(options)
                             .into(binding.cover)
+                        binding.cover.addClickScale()
+                        binding.follow.addClickScale()
+                        binding.videoDesc.addClickScale()
 
                         //GlideUtils.loadPicsFitWidth(Application.getContext(), video.data.pic, R.drawable.placeholder, R.drawable.placeholder, binding.cover)
                     } else {
-                        ToastUtils.makeText("加载失败了")
-                            .show()
+                        when (code) {
+                            -404 -> {
+                                ToastUtils.makeText("视频不见了")
+                                    .show()
+                            }
+
+                            else -> ToastUtils.makeText("加载失败了").show()
+                        }
+
 
                     }
                 }
             }
 
             override fun onFailed(e: Exception) {
-                TODO("Not yet implemented")
+                MainScope().launch {
+                    ToastUtils.makeText("网络异常")
+                    e.stackTrace.debugToast()
+                }
             }
 
         })

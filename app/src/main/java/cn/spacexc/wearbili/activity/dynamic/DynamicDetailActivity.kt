@@ -123,7 +123,8 @@ class DynamicDetailActivity : AppCompatActivity() {
                             binding.recyclerView.adapter = ForwardShareDynamicAdapter(
                                 this@DynamicDetailActivity,
                                 card.display?.origin?.emoji_info?.emoji_details,
-                                card.display?.origin?.topic_info?.topic_details
+                                card.display?.origin?.topic_info?.topic_details,
+                                card.desc.orig_dy_id!!
                             ).apply {
                                 submitList(
                                     listOf((card.cardObj as ForwardShareCard))

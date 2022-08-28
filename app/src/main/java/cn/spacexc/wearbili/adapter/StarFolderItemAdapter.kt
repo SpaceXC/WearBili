@@ -60,7 +60,7 @@ class StarFolderItemAdapter(private val context: Context) :
             Glide.with(context).load(video.cover).skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .placeholder(R.drawable.placeholder).apply(options).into(holder.listCover)
-        } catch (e: OutOfMemoryError) {
+        } catch (_: OutOfMemoryError) {
 
         }
 
@@ -74,6 +74,7 @@ class StarFolderItemAdapter(private val context: Context) :
             if (video.attr == 1) {
                 ToastUtils.makeText("视频已失效").show()
             }
+
         }
         holder.cardView.setOnLongClickListener {
             if (video.attr == 0) {

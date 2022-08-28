@@ -7,7 +7,7 @@ data class UgcSeason(
     val id: Int,
     val intro: String,
     val is_pay_season: Boolean,
-    val mid: Int,
+    val mid: Long,
     val season_type: Int,
     val sections: List<Section>,
     val sign_state: Int,

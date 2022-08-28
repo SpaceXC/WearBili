@@ -35,7 +35,7 @@ data class Extra(
     val special_industry_tips: String,
     val store_callup_card: Boolean,
     val track_id: String,
-    val up_mid: Int,
+    val up_mid: Long,
     val upzone_entrance_report_id: Int,
     val upzone_entrance_type: Int,
     val use_ad_web_v2: Boolean

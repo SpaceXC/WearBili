@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
 
             binding.pageName.text = (when (it) {
                 R.id.recommendFragment -> "推荐"
-                R.id.searchFragment -> "搜索"
+                R.id.dynamicFragment -> "动态"
                 R.id.profileFragment -> "我的"
 
                 else -> ""

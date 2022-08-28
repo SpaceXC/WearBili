@@ -7,7 +7,7 @@ data class Author(
     val is_deleted: Int,
     val is_fake_account: Int,
     val is_senior_member: Int,
-    val mid: Int,
+    val mid: Long,
     val name: String,
     val rank: Int,
     val sex: String,

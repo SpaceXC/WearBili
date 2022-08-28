@@ -6,7 +6,7 @@ data class Card(
     val adver: Adver,
     val adver_account_id: Int,
     val adver_logo: String,
-    val adver_mid: Int,
+    val adver_mid: Long,
     val adver_name: String,
     val adver_page_url: String,
     val callup_url: String,

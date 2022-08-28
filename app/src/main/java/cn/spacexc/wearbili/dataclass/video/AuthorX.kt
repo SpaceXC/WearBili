@@ -2,6 +2,6 @@ package cn.spacexc.wearbili.dataclass.video
 
 data class AuthorX(
     val face: String,
-    val mid: Int,
+    val mid: Long,
     val name: String
 )

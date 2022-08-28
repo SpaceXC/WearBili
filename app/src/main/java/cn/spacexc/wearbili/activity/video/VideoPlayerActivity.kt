@@ -122,6 +122,7 @@ class VideoPlayerActivity : AppCompatActivity() {
                     binding.tips.isVisible = it
                     binding.loadingGif.isVisible = it
                     binding.loadingPanel.setBackgroundColor(Color.TRANSPARENT)
+                    binding.loadingPanel.isVisible = it
                 }
 
 

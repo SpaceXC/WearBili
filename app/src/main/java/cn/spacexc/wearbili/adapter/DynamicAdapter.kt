@@ -157,7 +157,8 @@ class DynamicAdapter(val context: Context) :
                 holder.recyclerView.adapter = ForwardShareDynamicAdapter(
                     context,
                     card.display?.origin?.emoji_info?.emoji_details,
-                    card.display?.origin?.topic_info?.topic_details
+                    card.display?.origin?.topic_info?.topic_details,
+                    card.desc.orig_dy_id!!
                 ).apply {
                     submitList(
                         listOf((card.cardObj as ForwardShareCard))
@@ -248,7 +249,7 @@ class DynamicAdapter(val context: Context) :
             //underlineThickness = 0f
             isUnderlineText = false
         }
-
+        holder.cardView.addClickScale()
         holder.content.movementMethod = CustomLinkMovementMethod.getInstance(holder.cardView)
     }
 
@@ -397,9 +398,9 @@ class DynamicVideoAdapter(val context: Context) :
             Glide.with(context).load(video.pic).skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .placeholder(R.drawable.placeholder).apply(options).into(holder.videoCover)
-        } catch (e: OutOfMemoryError) {
-
+        } catch (_: OutOfMemoryError) {
         }
+        holder.itemView.addClickScale()
     }
 
     class VideoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -417,8 +418,9 @@ class DynamicVideoAdapter(val context: Context) :
 
 class ForwardShareDynamicAdapter(
     val context: Context,
-    val emojis: List<EmojiDetail>?,
-    val topics: List<TopicDetail>?
+    private val emojis: List<EmojiDetail>?,
+    private val topics: List<TopicDetail>?,
+    val dyId: Long
 ) :
     ListAdapter<ForwardShareCard, ForwardShareDynamicViewHolder>(object :
         DiffUtil.ItemCallback<ForwardShareCard>() {
@@ -473,7 +475,6 @@ class ForwardShareDynamicAdapter(
          */
         when (card.originObj) {
             is ForwardShareCard -> {
-
                 if (card.item.content.isNullOrEmpty()) {
                     holder.content.text = "分享动态"
                 } else {
@@ -487,12 +488,11 @@ class ForwardShareDynamicAdapter(
                             holder.content.text = sp
                         }
                     }.start()
-
                 }
                 holder.recyclerView.visibility = View.VISIBLE
                 holder.recyclerView.layoutManager = LinearLayoutManager(context)
                 holder.recyclerView.adapter =
-                    ForwardShareDynamicAdapter(context, emojis, topics).also {
+                    ForwardShareDynamicAdapter(context, emojis, topics, dyId).also {
                         it.submitList(
                             listOf((card.originObj as ForwardShareCard))
                         )
@@ -574,9 +574,16 @@ class ForwardShareDynamicAdapter(
                 )
                 }
             }
+
             else -> holder.content.text = "不支持的动态类型"
 
         }
+        holder.cardView.setOnClickListener {
+            val intent = Intent(context, DynamicDetailActivity::class.java)
+            intent.putExtra("dynamicId", dyId)
+            context.startActivity(intent)
+        }
+        holder.itemView.addClickScale()
         holder.content.movementMethod = LinkMovementMethod.getInstance()
     }
 
