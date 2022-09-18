@@ -1,6 +1,7 @@
 package cn.spacexc.wearbili.activity.settings
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -22,12 +23,16 @@ class RequireRestartActivity : AppCompatActivity() {
             }
         }
         /**
-         * From https://blog.csdn.net/lebulangzhen/article/details/108789777
+         * From [CSDN](https://blog.csdn.net/lebulangzhen/article/details/108789777)
          */
         findViewById<ConstraintLayout>(R.id.restart).setOnClickListener {
-            val intent = packageManager.getLaunchIntentForPackage(packageName)
+            val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CUPCAKE) {
+                packageManager.getLaunchIntentForPackage(packageName)
+            } else {
+                TODO("VERSION.SDK_INT < CUPCAKE")
+            }
             intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent);
+            startActivity(intent)
             //杀掉以前进程
             android.os.Process.killProcess(android.os.Process.myPid())
 

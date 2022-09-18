@@ -115,7 +115,8 @@ object NetworkUtils {
     }
 
     /**
-     * From CSDN https://blog.csdn.net/qq_16131393/article/details/51565278
+     * From [CSDN](https://blog.csdn.net/qq_16131393/article/details/51565278)
+     *
      * MODIFIED BY XC-QAN
      */
     fun imageGetter(size: Int): Html.ImageGetter {
@@ -124,7 +125,7 @@ object NetworkUtils {
             try {
                 `is` = URL(source).content as InputStream
                 val d = Drawable.createFromStream(`is`, "src")
-                d.setBounds(
+                d?.setBounds(
                     0, 0, size,
                     size
                 )

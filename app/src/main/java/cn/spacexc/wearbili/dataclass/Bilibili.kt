@@ -784,7 +784,7 @@ data class VideoStreamsFlv(
 
 data class OnlineInfos(
     val code: Int,
-    val `data`: OnlineInfoData,
+    val `data`: OnlineInfoData?,
     val message: String,
     val ttl: Int
 )
@@ -793,7 +793,7 @@ data class OnlineInfoData(
     val abtest: Abtest,
     val count: String,
     val show_switch: ShowSwitch,
-    val total: String
+    val total: String?
 )
 
 data class Abtest(

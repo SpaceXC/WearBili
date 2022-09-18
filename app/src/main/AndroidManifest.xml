@@ -164,6 +164,10 @@
         <meta-data
                 android:name="preloaded_fonts"
                 android:resource="@array/preloaded_fonts"/>
+        <meta-data
+                android:name="com.google.android.wearable.standalone"
+                android:value="true"/>
+
         <service
                 android:name=".service.DownloadService"
                 android:exported="false">

@@ -16,6 +16,7 @@ import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.settings.SettingsActivity
 import cn.spacexc.wearbili.activity.user.FollowListActivity
+import cn.spacexc.wearbili.activity.user.HistoryActivity
 import cn.spacexc.wearbili.activity.user.LoginActivity
 import cn.spacexc.wearbili.activity.user.StaredActivity
 import cn.spacexc.wearbili.activity.video.VideoCacheActivity
@@ -77,6 +78,13 @@ class ProfileFragment : Fragment() {
             ButtonsAdapter(false, object : OnItemViewClickListener {
                 override fun onClick(buttonName: String, viewHolder: RecyclerView.ViewHolder) {
                     when (buttonName) {
+                        "历史记录" -> {
+                            if (isAdded) {
+                                val intent =
+                                    Intent(requireContext(), HistoryActivity::class.java)
+                                startActivity(intent)
+                            }
+                        }
                         "我的关注" -> {
                             if (isAdded) {
                                 val intent =
@@ -125,6 +133,12 @@ class ProfileFragment : Fragment() {
         }
         binding.defAvatar.setOnClickListener { refreshLogin() }
         binding.avatar.setOnClickListener { refreshLogin() }
+        binding.login.setOnClickListener {
+            val intent = Intent(requireActivity(), LoginActivity::class.java)
+            intent.putExtra("fromHome", false)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+        }
     }
 
     private fun refreshLogin() {

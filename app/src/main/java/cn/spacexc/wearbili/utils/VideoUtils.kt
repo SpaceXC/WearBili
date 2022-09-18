@@ -10,6 +10,11 @@ import okio.ArrayIndexOutOfBoundsException
  * 给！爷！写！注！释！
  */
 
+/**
+ * 此程序非完全原创，改编自GH站内某大佬的Java程序，修改了部分代码，且转换为Kotlin
+ *
+ * 算法来源同上
+ */
 object VideoUtils {
     //这里是由知乎大佬不知道用什么方法得出的转换用数字
     var ss = intArrayOf(11, 10, 3, 8, 4, 6, 2, 9, 5, 7)

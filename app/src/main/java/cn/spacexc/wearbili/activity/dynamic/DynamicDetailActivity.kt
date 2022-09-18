@@ -282,6 +282,7 @@ class DynamicDetailActivity : AppCompatActivity() {
                     }
                 }
 
+                @SuppressLint("SetTextI18n")
                 override fun onResponse(call: Call, response: Response) {
                     val str = response.body?.string()
                     val result = Gson().fromJson(str, VideoComment::class.java)

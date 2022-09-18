@@ -24,7 +24,7 @@ object GlideUtils {
      *
      * @param context context对象
      * @param imageUrl 图片网络地址
-     * @param erroImageId 载入失败图片网络地址
+     * @param errorImageId 载入失败图片网络地址
      * @param placeImageId 占位图片网络地址
      * @param imageView 要载入图片的ImageView对象
      */

@@ -1,11 +1,17 @@
 package cn.spacexc.wearbili.activity.video
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Color
+import android.os.BatteryManager
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.animation.TranslateAnimation
 import android.widget.SeekBar
 import androidx.activity.viewModels
@@ -19,8 +25,10 @@ import cn.spacexc.wearbili.dataclass.OnlineInfos
 import cn.spacexc.wearbili.dataclass.VideoStreamsFlv
 import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.manager.VideoManager
+import cn.spacexc.wearbili.utils.TimeUtils
 import cn.spacexc.wearbili.utils.TimeUtils.secondToTime
 import cn.spacexc.wearbili.utils.ToastUtils
+import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
 import cn.spacexc.wearbili.viewmodel.OnSeekCompleteListener
 import cn.spacexc.wearbili.viewmodel.PlayerStatus
 import cn.spacexc.wearbili.viewmodel.VideoPlayerViewModel
@@ -57,10 +65,24 @@ class VideoPlayerActivity : AppCompatActivity() {
     private val animIn = TranslateAnimation(150f, 0f, 0f, 0f)
     private val animOut = TranslateAnimation(0f, 150f, 0f, 0f)
 
+    /**
+     * From CSDN https://blog.csdn.net/libeifs/article/details/6630281
+     */
+    private var BatteryN //目前电量
+            = 0
+    private var BatteryV //电池电压
+            = 0
+    private var BatteryT //电池温度
+            = 0.0
+    private var BatteryStatus //电池状态
+            : String? = null
+    private var BatteryTemp //电池使用情况
+            : String? = null
+
 
     val viewModel by viewModels<VideoPlayerViewModel>()
 
-    @SuppressLint("SourceLockedOrientationActivity")
+    @SuppressLint("SourceLockedOrientationActivity", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityVideoPlayerBinding.inflate(layoutInflater)
@@ -88,19 +110,22 @@ class VideoPlayerActivity : AppCompatActivity() {
                             response.body?.string(),
                             OnlineInfos::class.java
                         )
-                        binding.onlineCount.text = "${info.data.total}人在看"
+                        binding.onlineCount.text = "${info.data?.total}人在看"
 
                     }
                 }
 
             })
 
-
-            /*while (true) {
-                binding.timeText.text = TimeUtils.getCurrentTime()
+            while (true) {
+                binding.watchStats?.text = "电量$BatteryN% 温度${BatteryT * 0.1}°C ${TimeUtils.getCurrentTime()}"
                 delay(500)
-            }*/
+            }
         }
+
+
+        // 注册一个系统 BroadcastReceiver，作为访问电池计量之用这个不能直接在AndroidManifest.xml中注册
+        registerReceiver(mBatInfoReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
 
         viewModel.apply {
             danmakuView = binding.danmakuView       //赋值viewmodel弹幕视图
@@ -108,8 +133,6 @@ class VideoPlayerActivity : AppCompatActivity() {
             progressText = binding.progressText
             statTextView = binding.loadingStatText
             //-----------LiveData监听区域⬇️-----------
-            //TODO 更复杂的加载动画逻辑（os：到底谁才是真正的甲方啊还有这个垃圾as卡死了真的配不上我尊贵的M1Pro
-            //TODO
             isLoadingPanelVisible.observe(this@VideoPlayerActivity) {
                 if (isLoadingPanelShowed) {
                     binding.progressCircle.clearAnimation()
@@ -146,6 +169,7 @@ class VideoPlayerActivity : AppCompatActivity() {
                 binding.rotate.visibility = it
                 binding.settingsButton.visibility = it
                 binding.videoTitle.requestFocus()
+                binding.watchStats?.isVisible = !(it == View.VISIBLE)
             }
             videoResolution.observe(this@VideoPlayerActivity) {
                 //resizeVideo(it.first, it.second)
@@ -250,6 +274,7 @@ class VideoPlayerActivity : AppCompatActivity() {
         //TODO:快退3秒
         binding.progress.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {     //进度条拖动监听
+            @SuppressLint("SetTextI18n")
             override fun onProgressChanged(p0: SeekBar?, progress: Int, fromUser: Boolean) {
                 viewModel.isPlaying = false
                 //viewModel.togglePlayerPlayStat(PlayerStatus.Seeking)
@@ -279,6 +304,10 @@ class VideoPlayerActivity : AppCompatActivity() {
             finish()
         }
         binding.videoTitle.setOnClickListener { finish() }
+
+        binding.control.addClickScale()
+        binding.rotate.addClickScale()
+        binding.settingsButton.addClickScale()
         //-----------Layout视图监听区域⬆️-----------
 
         //-----------弹幕相关区域⬇️️️-----------
@@ -438,6 +467,35 @@ class VideoPlayerActivity : AppCompatActivity() {
         binding.loadingPanel.requestLayout()
         binding.loadingPanel.invalidate()
     }*/
+
+    private val mBatInfoReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        @SuppressLint("SetTextI18n")
+        override fun onReceive(context: Context?, intent: Intent) {
+            val action = intent.action
+            /*
+             * 如果捕捉到的action是ACTION_BATTERY_CHANGED， 就运行onBatteryInfoReceiver()
+             */if (Intent.ACTION_BATTERY_CHANGED.equals(action)) {
+                BatteryN = intent.getIntExtra("level", 0) //目前电量
+                BatteryV = intent.getIntExtra("voltage", 0) //电池电压
+                BatteryT = intent.getIntExtra("temperature", 0).toDouble() //电池温度
+                when (intent.getIntExtra("status", BatteryManager.BATTERY_STATUS_UNKNOWN)) {
+                    BatteryManager.BATTERY_STATUS_CHARGING -> BatteryStatus = "充电状态"
+                    BatteryManager.BATTERY_STATUS_DISCHARGING -> BatteryStatus = "放电状态"
+                    BatteryManager.BATTERY_STATUS_NOT_CHARGING -> BatteryStatus = "未充电"
+                    BatteryManager.BATTERY_STATUS_FULL -> BatteryStatus = "充满电"
+                    BatteryManager.BATTERY_STATUS_UNKNOWN -> BatteryStatus = "未知道状态"
+                }
+                when (intent.getIntExtra("health", BatteryManager.BATTERY_HEALTH_UNKNOWN)) {
+                    BatteryManager.BATTERY_HEALTH_UNKNOWN -> BatteryTemp = "未知错误"
+                    BatteryManager.BATTERY_HEALTH_GOOD -> BatteryTemp = "状态良好"
+                    BatteryManager.BATTERY_HEALTH_DEAD -> BatteryTemp = "电池没有电"
+                    BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE -> BatteryTemp = "电池电压过高"
+                    BatteryManager.BATTERY_HEALTH_OVERHEAT -> BatteryTemp = "电池过热"
+                }
+                binding.watchStats?.text = "电量$BatteryN% 温度${BatteryT * 0.1}°C ${TimeUtils.getCurrentTime()}"
+            }
+        }
+    }
 
     //监听屏幕旋转
     override fun onConfigurationChanged(newConfig: Configuration) {

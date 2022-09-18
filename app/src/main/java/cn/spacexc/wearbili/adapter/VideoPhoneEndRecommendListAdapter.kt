@@ -86,8 +86,8 @@ class VideoPhoneEndRecommendListAdapter(val context: Context) :
         val roundedCorners = RoundedCorners(10)
         val options = RequestOptions.bitmapTransform(roundedCorners)
         try {
-            Glide.with(context).load(video.cover).skipMemoryCache(true)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
+            Glide.with(context).load(video.cover)/*.skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)*/
                 .placeholder(R.drawable.placeholder).apply(options).into(holder.listCover)
         } catch (_: OutOfMemoryError) {
 

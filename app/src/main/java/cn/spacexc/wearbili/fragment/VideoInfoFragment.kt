@@ -86,6 +86,8 @@ class VideoInfoFragment : Fragment() {
     var isCoined: Boolean = false
     var isStared: Boolean = false
 
+    lateinit var videoActivity: VideoActivity
+
     var likes = 0L
 
     private var likeButton: ButtonsAdapter.ButtonViewHolder? = null
@@ -195,9 +197,10 @@ class VideoInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        videoActivity = activity as VideoActivity
         Log.d(
             Application.getTag(),
-            "onViewCreated: Video ID: ${(activity as VideoActivity).getId()}"
+            "onViewCreated: Video ID: ${videoActivity.getId()}"
         )
         binding.recyclerViewButtons.layoutManager = GridLayoutManager(requireContext(), 3)
         buttonsAdapter = ButtonsAdapter(true, object : OnItemViewClickListener {
@@ -209,13 +212,13 @@ class VideoInfoFragment : Fragment() {
                                 Intent(requireActivity(), PlayOnPhoneActivity::class.java)
                             intent.putExtra(
                                 "qrCodeUrl",
-                                "https://www.bilibili.com/video/${(activity as VideoActivity).getId()}"
+                                "https://www.bilibili.com/video/${videoActivity.getId()}"
                             )
                             startActivity(intent)
                             /*val intent = Intent(requireActivity(), ConfirmationActivity::class.java).apply {
                                 putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.SUCCESS_ANIMATION)
                                 putExtra(ConfirmationActivity.EXTRA_ANIMATION_DURATION_MILLIS, 10000)
-                                putExtra(ConfirmationActivity.EXTRA_MESSAGE, "https://www.bilibili.com/video/${(activity as VideoActivity).getId()}")
+                                putExtra(ConfirmationActivity.EXTRA_MESSAGE, "https://www.bilibili.com/video/${videoActivity.getId()}")
                             }
                             startActivity(intent)*/
                         }
@@ -341,7 +344,7 @@ class VideoInfoFragment : Fragment() {
         likeButton =
             (binding.recyclerViewButtons.findViewHolderForAdapterPosition(1) as ButtonsAdapter.ButtonViewHolder?)
 
-        binding.scrollview?.setOnGenericMotionListener { v, ev ->
+        /*binding.scrollview?.setOnGenericMotionListener { v, ev ->
             if (ev.action == MotionEvent.ACTION_SCROLL &&
                 ev.isFromSource(InputDeviceCompat.SOURCE_ROTARY_ENCODER)
             ) {
@@ -356,11 +359,11 @@ class VideoInfoFragment : Fragment() {
             } else {
                 false
             }
-        }
+        }*/
 
         binding.recyclerViewButtons.adapter = buttonsAdapter
         binding.recyclerViewParts.layoutManager = LinearLayoutManager(requireContext())
-        videoPartsAdapter = VideoPartsAdapter((activity as VideoActivity).getId()!!)
+        videoPartsAdapter = VideoPartsAdapter(videoActivity.getId()!!)
         binding.recyclerViewParts.adapter = videoPartsAdapter
         //binding.recyclerViewLower.adapter = ButtonsAdapter(true).also { it.submitList(btnListLowerRow) }
         //getVideoIsLiked()
@@ -368,9 +371,14 @@ class VideoInfoFragment : Fragment() {
         getInfo()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        Glide.with(this).pauseAllRequests()
+    }
+
     private fun getInfo() {
         if (!isAdded) return
-        val id = (activity as VideoActivity).getId()
+        val id = videoActivity.getId()
         VideoManager.getVideoInfo(id!!, object : NetworkUtils.ResultCallback<VideoDetailInfo> {
             override fun onSuccess(result: VideoDetailInfo, code: Int) {
                 MainScope().launch {
@@ -383,8 +391,8 @@ class VideoInfoFragment : Fragment() {
                         videoTitle = result.data.title
                         likes = result.data.stat.like
                         binding.relativeLayout.visibility = View.VISIBLE
-                        (activity as VideoActivity).currentVideo = result.data
-                        (activity as VideoActivity).isInitialized = true
+                        videoActivity.currentVideo = result.data
+                        videoActivity.isInitialized = true
 
                         videoPartsAdapter.submitList(result.data.pages)
                         binding.videoPartsTitle.isVisible = result.data.pages.size != 1
@@ -398,7 +406,7 @@ class VideoInfoFragment : Fragment() {
                                 "data",
                                 Gson().toJson(cn.spacexc.wearbili.dataclass.videoDetail.Data.Pages(result.data.pages))
                             )
-                            intent.putExtra("bvid", (activity as VideoActivity).getId())
+                            intent.putExtra("bvid", videoActivity.getId())
                             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                             Application.getContext().startActivity(intent)
                         }
@@ -411,7 +419,7 @@ class VideoInfoFragment : Fragment() {
                             true
                         }
                         binding.cover.setOnClickListener {
-                            //(activity as VideoActivity).setPage(2)
+                            //videoActivity.setPage(2)
                             when (SettingsManager.defPlayer()) {
                                 "builtinPlayer" -> {
                                     val intent =
@@ -527,7 +535,7 @@ class VideoInfoFragment : Fragment() {
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .apply(options)
                             .into(binding.cover)
-                        binding.cover.addClickScale()
+                        binding.cover.addClickScale(scale = 0.95f)
                         binding.follow.addClickScale()
                         binding.videoDesc.addClickScale()
 
@@ -556,9 +564,10 @@ class VideoInfoFragment : Fragment() {
 
         })
     }
+
     /*private fun getVideo() {
         if (!isAdded) return
-        val id = (activity as VideoActivity).getId()
+        val id = videoActivity.getId()
         VideoManager.getVideoById(id, object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 MainScope().launch {
@@ -580,8 +589,8 @@ class VideoInfoFragment : Fragment() {
                         videoTitle = video.data.title
                         likes = video.data.stat.like
                         binding.relativeLayout.visibility = View.VISIBLE
-                        (activity as VideoActivity).currentVideo = video.data
-                        (activity as VideoActivity).isInitialized = true
+                        videoActivity.currentVideo = video.data
+                        videoActivity.isInitialized = true
 
                         videoPartsAdapter.submitList(video.data.pages)
                         binding.videoPartsTitle.isVisible = video.data.pages.size != 1
@@ -592,7 +601,7 @@ class VideoInfoFragment : Fragment() {
                                 ViewFullVideoPartsActivity::class.java
                             )
                             intent.putExtra("data", Gson().toJson(cn.spacexc.wearbili.dataclass.videoDetail.Data.Pages(video.data.pages)))
-                            intent.putExtra("bvid", (activity as VideoActivity).getId())
+                            intent.putExtra("bvid", videoActivity.getId())
                             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                             Application.getContext().startActivity(intent)
                         }
@@ -605,7 +614,7 @@ class VideoInfoFragment : Fragment() {
                             true
                         }
                         binding.cover.setOnClickListener {
-                            //(activity as VideoActivity).setPage(2)
+                            //videoActivity.setPage(2)
                             when (SettingsManager.defPlayer()) {
                                 "builtinPlayer" -> {
                                     val intent =
@@ -856,7 +865,7 @@ class VideoInfoFragment : Fragment() {
 
     private fun getVideoIsLiked() {
         if (!isAdded) return
-        val bvid = (activity as VideoActivity).getId()
+        val bvid = videoActivity.getId()
         if (bvid != null) {
             VideoManager.isLiked(bvid, object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
@@ -894,7 +903,7 @@ class VideoInfoFragment : Fragment() {
             return
         }
         VideoManager.likeVideo(
-            (activity as VideoActivity).getId()!!,
+            videoActivity.getId()!!,
             isLiked,
             object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
@@ -960,7 +969,7 @@ class VideoInfoFragment : Fragment() {
     }
 
     fun isVideoLiked() {
-        VideoManager.isLiked((activity as VideoActivity).getId()!!, object : Callback {
+        VideoManager.isLiked(videoActivity.getId()!!, object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 MainScope().launch {
                     ToastUtils.makeText("网络异常").show()

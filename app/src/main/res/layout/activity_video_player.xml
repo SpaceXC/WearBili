@@ -302,6 +302,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+                android:text="电量100% 温度42.3°C 12:00"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/watchStats"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textColor="#B0B0B0"
+                android:fontFamily="@font/puhui"
+                android:textSize="10sp"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="4dp"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.wear.widget.BoxInsetLayout>

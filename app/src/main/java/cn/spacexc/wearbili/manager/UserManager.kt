@@ -5,8 +5,10 @@ import android.util.Log
 import cn.spacexc.wearbili.Application.Companion.TAG
 import cn.spacexc.wearbili.dataclass.BaseData
 import cn.spacexc.wearbili.dataclass.HashSalt
+import cn.spacexc.wearbili.dataclass.history.History
 import cn.spacexc.wearbili.dataclass.user.AccessKeyGetter
 import cn.spacexc.wearbili.utils.EncryptUtils
+import cn.spacexc.wearbili.utils.LogUtils.log
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.SharedPreferencesUtils
 import com.google.gson.Gson
@@ -183,6 +185,34 @@ object UserManager {
         })
     }
 
-    fun getAccessKey(): String? = SharedPreferencesUtils.getString("accessKey", "")
+    fun getAccessKey(): String = SharedPreferencesUtils.getString("accessKey", "")
 
+    fun getUserSpaceDetail(mid: Long){
+        /*val baseUrl = "https://app.bilibili.com/x/v2/space"
+        val params: String =
+            "access_key=${getAccessKey()}&appkey=${ConfigurationManager.configurations["appKey"]}&build=${ConfigurationManager.configurations["build"]}&ps=20&mobi_app=${ConfigurationManager.configurations["mobi_app"]}&plat=0&platform=${ConfigurationManager.configurations["platform"]}&ts=${(System.currentTimeMillis() / 1000).toInt()}&vmid=$mid"
+        val sign: String = EncryptUtils.getAppSign(EncryptUtils.AppSignType.TYPE_COMMON, params)
+        val url = "$baseUrl?$params&sign=$sign"
+        url.log()*/
+
+        val baseUrl = "http://app.bilibili.com/x/v2/space"
+        val params = "access_key=${getAccessKey()}&appkey=${ConfigurationManager.configurations["appKey"]}&build=${ConfigurationManager.configurations["build"]}&mobi_app=${ConfigurationManager.configurations["mobi_app"]}&platform=${ConfigurationManager.configurations["platform"]}&ps=20&ts=" + (System.currentTimeMillis() / 1000).toInt() + "&vmid=" + mid
+        val sign: String = EncryptUtils.getAppSign(EncryptUtils.AppSignType.TYPE_COMMON, params)
+        val url = "$baseUrl?$params&sign=$sign"
+        url.log()
+    }
+    
+    fun getHistory(viewAtTimeStamp: Long, callback: NetworkUtils.ResultCallback<History>){
+            NetworkUtils.getUrl("https://api.bilibili.com/x/web-interface/history/cursor?max=0&view_at=$viewAtTimeStamp&business=", object : Callback{
+                override fun onFailure(call: Call, e: IOException) {
+                    callback.onFailed(e)
+                }
+    
+                override fun onResponse(call: Call, response: Response) {
+                    val result = Gson().fromJson(response.body?.string(), History::class.java)
+                    callback.onSuccess(result)
+                }
+    
+            })
+        }
 }

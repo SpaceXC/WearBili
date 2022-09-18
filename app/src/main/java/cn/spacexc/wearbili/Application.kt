@@ -2,6 +2,7 @@ package cn.spacexc.wearbili
 
 import android.annotation.SuppressLint
 import android.content.Context
+import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.utils.ToastUtils
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
@@ -39,6 +40,7 @@ class Application : android.app.Application() {
             Analytics::class.java, Crashes::class.java
         )
         //UserManager.loginWithPassword("480816699", "MangoLiu2190")
+        UserManager.getUserSpaceDetail(480816699L)
     }
 
     override fun onTerminate() {
