@@ -2,6 +2,8 @@
 <androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="#000000"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:boxedEdges="top|left|right">
@@ -9,6 +11,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout3"
         android:layout_width="match_parent"
+        android:background="#000000"
+
         android:layout_height="match_parent">
 
         <ImageView

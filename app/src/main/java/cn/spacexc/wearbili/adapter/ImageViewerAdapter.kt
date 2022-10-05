@@ -54,7 +54,7 @@ class ImageViewerAdapter(val context: Context) :
         val photoView: PhotoView
 
         init {
-            photoView = itemView.findViewById(R.id.imageViewerPhotoView)
+            photoView = itemView.findViewById(R.id.dynamicImageView)
         }
     }
 

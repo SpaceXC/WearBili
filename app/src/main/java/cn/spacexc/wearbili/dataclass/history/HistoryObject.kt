@@ -2,7 +2,7 @@ package cn.spacexc.wearbili.dataclass.history
 
 data class HistoryObject(
     val author_face: String,
-    val author_mid: Int,
+    val author_mid: Long,
     val author_name: String,
     val badge: String,
     val cover: String?,

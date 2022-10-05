@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000000"
+
     android:clipChildren="false"
     tools:context=".activity.search.SpecialSearchActivity">
 

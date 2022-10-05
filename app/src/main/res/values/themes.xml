@@ -11,7 +11,7 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         =        <!-- Customize your theme here. -->
-        <item name="android:windowBackground">#000</item>
+        <item name="android:windowBackground">#000000</item>
     </style>
 
     <!--自定义seekbarstyle-->

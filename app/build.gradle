@@ -11,9 +11,9 @@ android {
     defaultConfig {
         applicationId "cn.spacexc.wearbili"
         minSdk 25
-        targetSdk 32
+        targetSdk 33
         versionCode 1
-        versionName "Rel-AL 0.15.0"
+        versionName "Rel-AL 0.15.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

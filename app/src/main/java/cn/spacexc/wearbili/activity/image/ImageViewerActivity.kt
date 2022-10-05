@@ -2,6 +2,7 @@ package cn.spacexc.wearbili.activity.image
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.Window
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.widget.FrameLayout
@@ -23,6 +24,7 @@ class ImageViewerActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
         setContentView(R.layout.activity_image_viewer)
         val list = intent.getParcelableArrayListExtra<Picture>("imageList")
         val textview = findViewById<TextView>(R.id.textView10)

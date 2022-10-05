@@ -12,14 +12,6 @@ import cn.spacexc.wearbili.Application.Companion.TAG
  */
 
 object LogUtils {
-    /*    fun Any.log(description: String) {
-            Log.d(TAG, "$description: $this")
-        }
-
-        fun Any.log() {
-            Log.d(TAG, "$this")
-        }*/
-
     fun <T> T.log(): T {
         Log.d(TAG, "$this")
         return this

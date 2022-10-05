@@ -2,6 +2,7 @@ package cn.spacexc.wearbili.ui
 
 import android.content.res.Configuration.UI_MODE_TYPE_WATCH
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -38,11 +39,19 @@ object CirclesBackground {
         var topWidth by remember { mutableStateOf(0.dp) }
         val localDensity = LocalDensity.current
         Box(Modifier.fillMaxSize()) {
-            Row(Modifier.align(Alignment.BottomStart).fillMaxSize()) {
+            Row(
+                Modifier
+                    .align(Alignment.BottomStart)
+                    .fillMaxSize()
+                    .background(Color.Black)) {
                 Image(
                     painter = painterResource(id = R.drawable.circle_left_x05_cropped),
                     contentDescription = null,
-                    modifier = Modifier.weight(75f).align(Alignment.Bottom).height(bottomWidth).fillMaxWidth()
+                    modifier = Modifier
+                        .weight(75f)
+                        .align(Alignment.Bottom)
+                        .height(bottomWidth)
+                        .fillMaxWidth()
                         .onGloballyPositioned {
                             bottomWidth = with(localDensity) { it.size.width.toDp() }
                         },
@@ -50,12 +59,19 @@ object CirclesBackground {
                 )
                 Spacer(Modifier.weight(25f))
             }
-            Row(Modifier.align(Alignment.TopEnd).fillMaxSize()) {
+            Row(
+                Modifier
+                    .align(Alignment.TopEnd)
+                    .fillMaxSize()) {
                 Spacer(Modifier.weight(25f))
                 Image(
                     painter = painterResource(id = R.drawable.circle_right_x05_cropped),
                     contentDescription = null,
-                    modifier = Modifier.weight(75f).align(Alignment.Top).height(topWidth).fillMaxWidth()
+                    modifier = Modifier
+                        .weight(75f)
+                        .align(Alignment.Top)
+                        .height(topWidth)
+                        .fillMaxWidth()
                         .onGloballyPositioned {
                             topWidth = with(localDensity) { it.size.width.toDp() }
                         },
@@ -79,27 +95,44 @@ object CirclesBackground {
         val localDensity = LocalDensity.current
         Box(Modifier.fillMaxSize()) {
             Box(modifier = Modifier.fillMaxSize()){
-                Row(Modifier.align(Alignment.BottomStart).fillMaxSize()) {
+                Row(
+                    Modifier
+                        .align(Alignment.BottomStart)
+                        .fillMaxSize()
+                        .background(Color.Black)) {
                     Image(
                         painter = painterResource(id = R.drawable.circle_left_x05_cropped),
                         contentDescription = null,
-                        modifier = Modifier.weight(75f).align(Alignment.Bottom).height(bottomWidth).fillMaxWidth()
+                        modifier = Modifier
+                            .weight(75f)
+                            .align(Alignment.Bottom)
+                            .height(bottomWidth)
+                            .fillMaxWidth()
                             .onGloballyPositioned {
                                 bottomWidth = with(localDensity) { it.size.width.toDp() }
-                            }.alpha(0.78f),
+                            }
+                            .alpha(0.78f),
                         contentScale = ContentScale.FillWidth
                     )
                     Spacer(Modifier.weight(25f))
                 }
-                Row(Modifier.align(Alignment.TopEnd).fillMaxSize()) {
+                Row(
+                    Modifier
+                        .align(Alignment.TopEnd)
+                        .fillMaxSize()) {
                     Spacer(Modifier.weight(25f))
                     Image(
                         painter = painterResource(id = R.drawable.circle_right_x05_cropped),
                         contentDescription = null,
-                        modifier = Modifier.weight(75f).align(Alignment.Top).height(topWidth).fillMaxWidth()
+                        modifier = Modifier
+                            .weight(75f)
+                            .align(Alignment.Top)
+                            .height(topWidth)
+                            .fillMaxWidth()
                             .onGloballyPositioned {
                                 topWidth = with(localDensity) { it.size.width.toDp() }
-                            }.alpha(0.78f),
+                            }
+                            .alpha(0.78f),
                         contentScale = ContentScale.Fit
 
                     )
@@ -108,18 +141,27 @@ object CirclesBackground {
             Column(Modifier.fillMaxSize()) {
                 Column(Modifier.fillMaxWidth()) {
                     Spacer(Modifier.height(6.dp))
-                    Row {
-                        Spacer(Modifier.width(7.5f.dp))
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.padding(start = 7.5f.dp, end = 7.5f.dp)
+                    ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.clickable(onClick = {
-                                onBack()
-                            }, interactionSource = remember { MutableInteractionSource() }, indication = null)
+                            modifier = Modifier.clickable(
+                                onClick = {
+                                    onBack()
+                                },
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            )
                         ) {
                             Icon(
                                 imageVector = Icons.Default.ArrowBackIos,
                                 contentDescription = null,
-                                modifier = Modifier.height(16.dp).width(16.dp).align(Alignment.CenterVertically)
+                                modifier = Modifier
+                                    .height(16.dp)
+                                    .width(16.dp)
+                                    .align(Alignment.CenterVertically)
                                     .offset(y = 0.9f.dp),
                                 tint = Color.White
                             )
@@ -130,14 +172,27 @@ object CirclesBackground {
                                 fontFamily = puhuiFamily,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White,
-                                modifier = Modifier.onGloballyPositioned {
-                                    textHeight = with(localDensity) {
-                                        it.size.height.toDp()
+                                modifier = Modifier
+                                    .onGloballyPositioned {
+                                        textHeight = with(localDensity) {
+                                            it.size.height.toDp()
+                                        }
                                     }
-                                }.align(Alignment.CenterVertically)
+                                    .align(Alignment.CenterVertically)
                             )
                         }
-                        Spacer(Modifier.width(7.5f.dp))
+                        /*Text(
+                            text = title,
+                            fontSize = 16.sp,
+                            fontFamily = puhuiFamily,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
+                            modifier = Modifier.onGloballyPositioned {
+                                textHeight = with(localDensity) {
+                                    it.size.height.toDp()
+                                }
+                            }.align(Alignment.CenterVertically)
+                        )*/
                     }
                     Spacer(Modifier.height(6.dp))
                 }   //标题栏
