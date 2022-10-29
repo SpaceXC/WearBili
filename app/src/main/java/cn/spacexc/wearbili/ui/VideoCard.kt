@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cn.spacexc.wearbili.Application
+import cn.spacexc.wearbili.activity.video.BangumiActivity
 import cn.spacexc.wearbili.activity.video.VideoActivity
 import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
 import coil.compose.AsyncImage
@@ -48,12 +49,20 @@ object VideoUis {
         hasViews: Boolean = true,
         videoBvid: String = "",
         clickable: Boolean = false,
+        isBangumi: Boolean = false,
+        epid: String = "",
         context: Context = Application.getContext()
     ) {
         var iconHeight by remember { mutableStateOf(0.dp) }
         val localDensity = LocalDensity.current
         Column(modifier = Modifier.clickVfx {
-            if (clickable && videoBvid.isNotEmpty()) {
+            if (isBangumi && epid.isNotEmpty()) {
+                Intent(context, BangumiActivity::class.java).apply {
+                    putExtra("id", epid)
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    context.startActivity(this)
+                }
+            } else if (clickable && videoBvid.isNotEmpty()) {
                 Intent(context, VideoActivity::class.java).apply {
                     putExtra("videoId", videoBvid)
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -63,7 +72,10 @@ object VideoUis {
         }) {
             Spacer(Modifier.height(4.dp))
             Column(
-                modifier = Modifier.clip(RoundedCornerShape(10.dp)).border(width = 0.1f.dp, color = Color(112, 112, 112, 70)).background(color = Color(36, 36, 36, 100))
+                modifier = Modifier
+                    .clip(RoundedCornerShape(10.dp))
+                    .border(width = 0.1f.dp, color = Color(112, 112, 112, 70))
+                    .background(color = Color(36, 36, 36, 100))
                     .padding(start = 6.dp, end = 6.dp, top = 10.dp, bottom = 10.dp),
             ) {
                 Row(
@@ -71,7 +83,10 @@ object VideoUis {
 
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(modifier = Modifier.weight(0.8f).fillMaxHeight().align(Alignment.CenterVertically)) {
+                    Row(modifier = Modifier
+                        .weight(0.8f)
+                        .fillMaxHeight()
+                        .align(Alignment.CenterVertically)) {
                         Spacer(Modifier.width(4.dp))
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
@@ -79,15 +94,22 @@ object VideoUis {
                                 .crossfade(true)
                                 .build(),
                             contentDescription = null,
-                            modifier = Modifier.fillMaxWidth().aspectRatio(1.6f, matchHeightConstraintsFirst = false)
-                                .align(Alignment.CenterVertically).clip(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .aspectRatio(1.6f, matchHeightConstraintsFirst = false)
+                                .align(Alignment.CenterVertically)
+                                .clip(
                                     RoundedCornerShape(8.dp)
-                                ).offset(y = (1f).dp),
+                                )
+                                .offset(y = (1f).dp),
                             contentScale = ContentScale.Crop,
                         )
                         Spacer(Modifier.width(8.dp))
                     }
-                    Row(modifier = Modifier.weight(1f).fillMaxHeight().align(Alignment.CenterVertically)) {
+                    Row(modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .align(Alignment.CenterVertically)) {
                         Spacer(Modifier.width(8.dp))
                         Text(
                             text = videoName,
@@ -106,21 +128,29 @@ object VideoUis {
                 Row {
                     Icon(
                         imageVector = Icons.Outlined.Person,
-                        modifier = Modifier.alpha(0.5f).width(iconHeight).height(iconHeight),
+                        modifier = Modifier
+                            .alpha(0.5f)
+                            .width(iconHeight)
+                            .height(iconHeight),
                         contentDescription = null,
                         tint = Color.White
                     )
                     Spacer(Modifier.width(1.dp))
-                    Text(text = uploader, color = Color.White, modifier = Modifier.alpha(0.5f).onGloballyPositioned {
-                        iconHeight = with(localDensity) {
-                            it.size.height.toDp()
-                        }
-                    }, fontFamily = puhuiFamily, fontSize = 9.sp, fontWeight = FontWeight.Medium)
+                    Text(text = uploader, color = Color.White, modifier = Modifier
+                        .alpha(0.5f)
+                        .onGloballyPositioned {
+                            iconHeight = with(localDensity) {
+                                it.size.height.toDp()
+                            }
+                        }, fontFamily = puhuiFamily, fontSize = 9.sp, fontWeight = FontWeight.Medium)
                     if (hasViews) {
                         Spacer(Modifier.width(6.dp))
                         Icon(
                             imageVector = Icons.Outlined.PlayCircleOutline,
-                            modifier = Modifier.alpha(0.5f).width(iconHeight).height(iconHeight),
+                            modifier = Modifier
+                                .alpha(0.5f)
+                                .width(iconHeight)
+                                .height(iconHeight),
                             contentDescription = null,
                             tint = Color.White
                         )

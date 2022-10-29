@@ -13,7 +13,7 @@ android {
         minSdk 25
         targetSdk 33
         versionCode 1
-        versionName "Rel-AL 0.15.1"
+        versionName "Rel-AL 0.16.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -104,4 +104,6 @@ dependencies {
 
     // Foundation is additive, so you can use the mobile version in your Wear OS app.
     implementation "androidx.wear.compose:compose-foundation:1.0.0"
+    implementation "com.google.accompanist:accompanist-pager:0.27.0"
+
 }

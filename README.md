@@ -18,7 +18,7 @@ WearBili是由个人开发者XCちゃん开发的，运行在手表上的第三�
 - ......
 
 当然，如果您在软件使用过程中触发了任何 不在FAQ内有提及的/未知/其他人或您没有提交过的
-Bug，请在[Bug反馈仓库](https://github.com/XC-Qan/WearBili-BugReport/issues)下的[issue页面](https://github.com/XC-Qan/WearBili-BugReport/issues)参照提供的模板反馈Bug。请注意，尽量不要提交任何已经被回答过的问题，尝试让您的问题更有水平。软件已经接入Microsoft
+Bug，请在[Bug反馈仓库](https://github.com/XC/WearBili-BugReport/issues)下的[issue页面](https://github.com/XC/WearBili-BugReport/issues)参照提供的模板反馈Bug。请注意，尽量不要提交任何已经被回答过的问题，尝试让您的问题更有水平。软件已经接入Microsoft
 Azure App Center崩溃上报系统，在您设备上的任何崩溃及其日志信息将会在网络条件允许的情况下自动上报。此系统不会收集您设备和账号中的任何敏感信息。感谢您一如既往的支持。
 
 ## 使用

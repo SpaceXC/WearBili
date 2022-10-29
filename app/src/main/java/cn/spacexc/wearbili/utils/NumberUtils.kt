@@ -25,13 +25,13 @@ object NumberUtils {
             } else tenThousand + "万"
         }
         if (this > 100000000) {
-            /*val numStr = num.toString()
+            val numStr = this.toString()
             val yi = numStr.substring(0, numStr.length - 8)
-            val numAfterYi : String = numStr[numStr.length - 8].toString()
-            return if(numAfterYi != "0"){
+            val numAfterYi: String = numStr[numStr.length - 8].toString()
+            return if (numAfterYi != "0") {
                 "$yi.$numAfterYi" + "亿"
-            } else yi + "亿"*/
-            return this.toString()
+            } else yi + "亿"
+            //return this.toString()
         }
         return ""
     }

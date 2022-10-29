@@ -13,13 +13,13 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
+import cn.spacexc.wearbili.activity.video.BangumiActivity
 import cn.spacexc.wearbili.activity.video.VideoActivity
 import cn.spacexc.wearbili.activity.video.VideoLongClickActivity
 import cn.spacexc.wearbili.dataclass.video.rcmd.Item
 import cn.spacexc.wearbili.utils.VideoUtils
 import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.card.MaterialCardView
@@ -65,24 +65,30 @@ class VideoPhoneEndRecommendListAdapter(val context: Context) :
         holder.listVideoViews.text = video.cover_left_text_1
         holder.cardView.addClickScale()
 
-        if(video.goto != "av") return
+        if (video.goto == "av") {
+            holder.cardView.setOnClickListener {
+                val intent = Intent(Application.getContext(), VideoActivity::class.java)
+                intent.putExtra("videoId", VideoUtils.av2bv("av${video.player_args.aid}"))
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                Application.getContext().startActivity(intent)
 
-        //holder.listVideoDuration.text = TimeUtils.secondToTime(video.duration.toLong())
-        holder.cardView.setOnClickListener {
-            val intent = Intent(Application.getContext(), VideoActivity::class.java)
-            intent.putExtra("videoId", VideoUtils.av2bv("av${video.player_args.aid}"))
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            Application.getContext().startActivity(intent)
-
+            }
+            holder.cardView.setOnLongClickListener {
+                val intent = Intent(context, VideoLongClickActivity::class.java)
+                intent.putExtra("bvid", VideoUtils.av2bv("av${video.player_args.aid}"))
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                context.startActivity(intent)
+                true
+            }
         }
-        holder.cardView.setOnLongClickListener {
-            val intent = Intent(context, VideoLongClickActivity::class.java)
-            intent.putExtra("bvid", VideoUtils.av2bv("av${video.player_args.aid}"))
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            context.startActivity(intent)
-            true
+        if (video.goto == "bangumi") {
+            holder.cardView.setOnClickListener {
+                val intent = Intent(Application.getContext(), BangumiActivity::class.java)
+                intent.putExtra("id", video.param)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                Application.getContext().startActivity(intent)
+            }
         }
-
         val roundedCorners = RoundedCorners(10)
         val options = RequestOptions.bitmapTransform(roundedCorners)
         try {

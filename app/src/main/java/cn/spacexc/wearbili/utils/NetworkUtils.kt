@@ -19,6 +19,8 @@ import java.net.URL
  * 给！爷！写！注！释！
  */
 const val RESULT_RETRY = 1
+const val USER_AGENT =
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
 
 class Cookies(var cookies: MutableList<Cookie>)
 
@@ -55,6 +57,7 @@ object NetworkUtils {
         val request = Request.Builder()
             .url(url)
             .get()
+            .header("User-Agent", USER_AGENT)
             .build()
         clientWithoutRedirect.newCall(request).enqueue(callback)
     }
@@ -63,6 +66,7 @@ object NetworkUtils {
         val request = Request.Builder()
             .url(url)
             .get()
+            .header("User-Agent", USER_AGENT)
             .build()
         client.newCall(request).enqueue(callback)
     }
@@ -77,6 +81,7 @@ object NetworkUtils {
                 "X-LC-Sign",
                 "${EncryptUtils.md5("${currentTime}VuirpQYiGiekok2L03M9NX4o")},$currentTime"
             )
+            .header("User-Agent", USER_AGENT)
             .build()
         client.newCall(request).enqueue(callback)
     }
@@ -86,6 +91,7 @@ object NetworkUtils {
         val request = Request.Builder()
             .url(url)
             .get()
+            .header("User-Agent", USER_AGENT)
             .build()
         return client.newCall(request).execute()
     }
@@ -94,6 +100,7 @@ object NetworkUtils {
         val request: Request = Request.Builder()
             .url(url)
             .post(body)
+            .header("User-Agent", USER_AGENT)
             .build()
         client.newCall(request).enqueue(callback)
 
@@ -103,6 +110,7 @@ object NetworkUtils {
         val request: Request = Request.Builder()
             .url(url)
             .post(FormBody.Builder().build())
+            .header("User-Agent", USER_AGENT)
             .build()
         client.newCall(request).enqueue(callback)
     }

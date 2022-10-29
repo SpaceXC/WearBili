@@ -203,16 +203,18 @@ object UserManager {
     }
     
     fun getHistory(viewAtTimeStamp: Long, callback: NetworkUtils.ResultCallback<History>){
-            NetworkUtils.getUrl("https://api.bilibili.com/x/web-interface/history/cursor?max=0&view_at=$viewAtTimeStamp&business=", object : Callback{
-                override fun onFailure(call: Call, e: IOException) {
-                    callback.onFailed(e)
-                }
-    
-                override fun onResponse(call: Call, response: Response) {
-                    val result = Gson().fromJson(response.body?.string(), History::class.java)
-                    callback.onSuccess(result)
-                }
-    
-            })
+            NetworkUtils.getUrl(
+                "https://api.bilibili.com/x/web-interface/history/cursor?max=0&view_at=$viewAtTimeStamp&business=".log(),
+                object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        callback.onFailed(e)
+                    }
+
+                    override fun onResponse(call: Call, response: Response) {
+                        val result = Gson().fromJson(response.body?.string(), History::class.java)
+                        callback.onSuccess(result)
+                    }
+
+                })
         }
 }

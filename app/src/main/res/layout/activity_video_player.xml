@@ -193,9 +193,25 @@
                             app:layout_constraintTop_toTopOf="@+id/settingsButton"
                             app:srcCompat="@drawable/screen_rotation" />
 
+                        <ImageView
+                            android:id="@+id/danmakuSwitch"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@drawable/background_pink"
+                            android:paddingStart="8dp"
+                            android:paddingTop="8dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="8dp"
+                            app:layout_constraintBottom_toBottomOf="@+id/settingsButton"
+                            app:layout_constraintDimensionRatio="1:1"
+                            app:layout_constraintEnd_toStartOf="@+id/rotate"
+                            app:layout_constraintTop_toTopOf="@+id/settingsButton"
+                            app:srcCompat="@drawable/ic_danmaku" />
+
                         <TextView
                             android:id="@+id/settingsButton"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="10dp"
                             android:layout_marginBottom="6dp"

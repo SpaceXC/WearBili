@@ -9,6 +9,7 @@ import cn.spacexc.wearbili.Application.Companion.TAG
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.MainActivity
 import cn.spacexc.wearbili.activity.user.LoginActivity
+import cn.spacexc.wearbili.activity.video.BangumiActivity
 import cn.spacexc.wearbili.dataclass.LeanCloudUserSearch
 import cn.spacexc.wearbili.manager.CookiesManager
 import cn.spacexc.wearbili.manager.LCManager
@@ -29,15 +30,17 @@ class SplashScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-        val intent =
-            Intent(this@SplashScreenActivity, MainActivity::class.java)
-        //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        /*startActivity(intent)
+        /*val intent =
+            Intent(this@SplashScreenActivity, BangumiActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        intent.putExtra("id", "42962")
+        intent.putExtra("idType", ID_TYPE_SSID)
+        startActivity(intent)
         overridePendingTransition(
             R.anim.activity_fade_in,
             R.anim.activity_fade_out
-        )*/
-        //finish()
+        )
+        finish()*/
         NetworkUtils.getUrl("https://bilibili.com", object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 NetworkUtils.requireRetry { }
@@ -61,7 +64,8 @@ class SplashScreenActivity : AppCompatActivity() {
         val canSkip = false
         if (canSkip) {
             val intent =
-                Intent(this@SplashScreenActivity, MainActivity::class.java)
+                Intent(this@SplashScreenActivity, BangumiActivity::class.java)
+            intent.putExtra("epid", "312080")
             //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             overridePendingTransition(
@@ -69,6 +73,7 @@ class SplashScreenActivity : AppCompatActivity() {
                 R.anim.activity_fade_out
             )
             finish()
+            return
         }
         Log.d(TAG, "onCreate: ${UserManager.isLoggedIn()}")
         if (UserManager.isLoggedIn()) {

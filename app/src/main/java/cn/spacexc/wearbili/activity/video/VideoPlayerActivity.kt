@@ -16,6 +16,7 @@ import android.view.animation.TranslateAnimation
 import android.widget.SeekBar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import cn.spacexc.wearbili.Application
@@ -167,6 +168,7 @@ class VideoPlayerActivity : AppCompatActivity() {
                 binding.controller.visibility = it
                 binding.title.visibility = it
                 binding.rotate.visibility = it
+                binding.danmakuSwitch.visibility = it
                 binding.settingsButton.visibility = it
                 binding.videoTitle.requestFocus()
                 binding.watchStats?.isVisible = !(it == View.VISIBLE)
@@ -218,9 +220,20 @@ class VideoPlayerActivity : AppCompatActivity() {
         binding.playerView.player = viewModel.mediaPlayer
 
         binding.settingsButton.setOnClickListener {
-
             binding.settingsPanel.startAnimation(if (isSettingPanelShowing) animOut else animIn)
             isSettingPanelShowing = !isSettingPanelShowing
+        }
+
+        binding.danmakuSwitch.setOnClickListener {
+            binding.danmakuView.isVisible = !binding.danmakuView.isVisible
+            binding.danmakuSwitch.background =
+                if (binding.danmakuView.isVisible) AppCompatResources.getDrawable(
+                    this@VideoPlayerActivity,
+                    R.drawable.background_pink
+                ) else AppCompatResources.getDrawable(
+                    this@VideoPlayerActivity,
+                    R.drawable.background_grey
+                )
         }
 
         //点击屏幕触发播放控制器显示
@@ -307,6 +320,7 @@ class VideoPlayerActivity : AppCompatActivity() {
 
         binding.control.addClickScale()
         binding.rotate.addClickScale()
+        binding.danmakuSwitch.addClickScale()
         binding.settingsButton.addClickScale()
         //-----------Layout视图监听区域⬆️-----------
 

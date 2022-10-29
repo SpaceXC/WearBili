@@ -5,15 +5,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.ScalingLazyColumn
 import cn.spacexc.wearbili.manager.SettingsManager
@@ -37,7 +35,8 @@ class HistoryActivity : AppCompatActivity() {
                     state = refreshState,
                     onRefresh = {
                         viewModel.getHistory(true)
-                    }
+                    },
+                    modifier = Modifier.padding(if (LocalConfiguration.current.isScreenRound) 8.dp else 0.dp)
                 ){
                     if(SettingsManager.hasScrollVfx()){
                         ScalingLazyColumn(modifier = Modifier.fillMaxSize()) {
@@ -45,13 +44,15 @@ class HistoryActivity : AppCompatActivity() {
                                 item {
                                     VideoCard(
                                         videoName = it.title,
-                                        views = if(it.progress != -1) "看到 ${it.progress.secondToTime()}" else "已看完",
+                                        views = if (it.progress != -1) "看到 ${it.progress.secondToTime()}" else "已看完",
                                         uploader = it.author_name,
-                                        coverUrl = if(it.cover.isNullOrEmpty()) it.covers[0] else it.cover,
+                                        coverUrl = if (it.cover.isNullOrEmpty()) it.covers[0] else it.cover,
                                         hasViews = it.history.business == "archive",
                                         clickable = it.history.business == "archive",
                                         videoBvid = it.history.bvid ?: "",
-                                        context = this@HistoryActivity
+                                        context = this@HistoryActivity,
+                                        isBangumi = it.history.epid != 0,
+                                        epid = if (it.history.epid != 0) it.history.epid.toString() else ""
                                     )
                                 }
                             }
@@ -63,7 +64,9 @@ class HistoryActivity : AppCompatActivity() {
                         }
                     }
                     else{
-                        LazyColumn(modifier = Modifier.padding(start = 8.dp, end = 8.dp).fillMaxSize()) {
+                        LazyColumn(modifier = Modifier
+                            .padding(start = 8.dp, end = 8.dp)
+                            .fillMaxSize()) {
                             historyList?.forEach {
                                 item {
                                     VideoCard(

@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,7 +44,8 @@ object CirclesBackground {
                 Modifier
                     .align(Alignment.BottomStart)
                     .fillMaxSize()
-                    .background(Color.Black)) {
+                    .background(Color.Black)
+            ) {
                 Image(
                     painter = painterResource(id = R.drawable.circle_left_x05_cropped),
                     contentDescription = null,
@@ -62,7 +64,8 @@ object CirclesBackground {
             Row(
                 Modifier
                     .align(Alignment.TopEnd)
-                    .fillMaxSize()) {
+                    .fillMaxSize()
+            ) {
                 Spacer(Modifier.weight(25f))
                 Image(
                     painter = painterResource(id = R.drawable.circle_right_x05_cropped),
@@ -88,18 +91,23 @@ object CirclesBackground {
     }
 
     @Composable
-    fun RegularBackgroundWithTitleAndBackArrow(title: String, onBack: () -> Unit = {}, content: @Composable () -> Unit) {
+    fun RegularBackgroundWithTitleAndBackArrow(
+        title: String,
+        onBack: () -> Unit = {},
+        content: @Composable () -> Unit
+    ) {
         var bottomWidth by remember { mutableStateOf(0.dp) }
         var topWidth by remember { mutableStateOf(0.dp) }
         var textHeight by remember { mutableStateOf(0.dp) }
         val localDensity = LocalDensity.current
         Box(Modifier.fillMaxSize()) {
-            Box(modifier = Modifier.fillMaxSize()){
+            Box(modifier = Modifier.fillMaxSize()) {
                 Row(
                     Modifier
                         .align(Alignment.BottomStart)
                         .fillMaxSize()
-                        .background(Color.Black)) {
+                        .background(Color.Black)
+                ) {
                     Image(
                         painter = painterResource(id = R.drawable.circle_left_x05_cropped),
                         contentDescription = null,
@@ -119,7 +127,8 @@ object CirclesBackground {
                 Row(
                     Modifier
                         .align(Alignment.TopEnd)
-                        .fillMaxSize()) {
+                        .fillMaxSize()
+                ) {
                     Spacer(Modifier.weight(25f))
                     Image(
                         painter = painterResource(id = R.drawable.circle_right_x05_cropped),
@@ -141,59 +150,72 @@ object CirclesBackground {
             Column(Modifier.fillMaxSize()) {
                 Column(Modifier.fillMaxWidth()) {
                     Spacer(Modifier.height(6.dp))
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.padding(start = 7.5f.dp, end = 7.5f.dp)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.clickable(
-                                onClick = {
-                                    onBack()
-                                },
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null
-                            )
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowBackIos,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .height(16.dp)
-                                    .width(16.dp)
-                                    .align(Alignment.CenterVertically)
-                                    .offset(y = 0.9f.dp),
-                                tint = Color.White
-                            )
-                            //Spacer(Modifier.width(2.dp))
-                            Text(
-                                text = title,
-                                fontSize = 16.sp,
-                                fontFamily = puhuiFamily,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.White,
-                                modifier = Modifier
-                                    .onGloballyPositioned {
-                                        textHeight = with(localDensity) {
-                                            it.size.height.toDp()
-                                        }
-                                    }
-                                    .align(Alignment.CenterVertically)
-                            )
-                        }
-                        /*Text(
+                    if (LocalConfiguration.current.isScreenRound) {
+                        Text(
                             text = title,
                             fontSize = 16.sp,
                             fontFamily = puhuiFamily,
                             fontWeight = FontWeight.Bold,
                             color = Color.White,
-                            modifier = Modifier.onGloballyPositioned {
-                                textHeight = with(localDensity) {
-                                    it.size.height.toDp()
+                            modifier = Modifier
+                                .onGloballyPositioned {
+                                    textHeight = with(localDensity) {
+                                        it.size.height.toDp()
+                                    }
                                 }
-                            }.align(Alignment.CenterVertically)
-                        )*/
+                                .align(Alignment.CenterHorizontally)
+                                .clickable(
+                                    onClick = {
+                                        onBack()
+                                    },
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null
+                                )
+                        )
+                    } else {
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.padding(start = 7.5f.dp, end = 7.5f.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.clickable(
+                                    onClick = {
+                                        onBack()
+                                    },
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null
+                                )
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.ArrowBackIos,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .height(16.dp)
+                                        .width(16.dp)
+                                        .align(Alignment.CenterVertically)
+                                        .offset(y = 0.9f.dp),
+                                    tint = Color.White
+                                )
+                                //Spacer(Modifier.width(2.dp))
+                                Text(
+                                    text = title,
+                                    fontSize = 16.sp,
+                                    fontFamily = puhuiFamily,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.White,
+                                    modifier = Modifier
+                                        .onGloballyPositioned {
+                                            textHeight = with(localDensity) {
+                                                it.size.height.toDp()
+                                            }
+                                        }
+                                        .align(Alignment.CenterVertically)
+                                )
+                            }
+                        }
                     }
+
                     Spacer(Modifier.height(6.dp))
                 }   //标题栏
                 content()
