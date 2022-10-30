@@ -12,6 +12,7 @@ import cn.spacexc.wearbili.activity.MainActivity
 import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.bangumi.BangumiTimeLineActivity
 import cn.spacexc.wearbili.activity.search.SearchActivity
+import cn.spacexc.wearbili.activity.video.VideoRankingActivity
 import cn.spacexc.wearbili.adapter.ButtonsAdapter
 import cn.spacexc.wearbili.dataclass.RoundButtonData
 import cn.spacexc.wearbili.listener.OnItemViewClickListener
@@ -28,7 +29,7 @@ class MenuActivity : AppCompatActivity() {
         RoundButtonData(R.drawable.mode_fan, "动态", "动态"),
         RoundButtonData(R.drawable.ic_baseline_search_24, "搜索", "搜索"),
         RoundButtonData(R.drawable.ic_baseline_search_24, "测试", "test"),
-        //RoundButtonData(R.drawable.ic_outline_local_fire_department_24, "热门"),
+        RoundButtonData(R.drawable.ic_outline_local_fire_department_24, "热门", "热门"),
         RoundButtonData(R.drawable.ic_baseline_movie_24, "番剧", "番剧"),
         //RoundButtonData(R.drawable.ic_outline_tv_24, "影视"),
         RoundButtonData(R.drawable.ic_outline_info_24, "关于", "关于")
@@ -92,6 +93,13 @@ class MenuActivity : AppCompatActivity() {
                         }
                         "关于" -> {
                             val intent = Intent(this@MenuActivity, AboutActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                            finish()
+                            overridePendingTransition(R.anim.activity_in_y, R.anim.activity_out_y)
+                        }
+                        "热门" -> {
+                            val intent = Intent(this@MenuActivity, VideoRankingActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                             startActivity(intent)
                             finish()
