@@ -1,7 +1,7 @@
 package cn.spacexc.wearbili.dataclass.bangumi
 
 data class EpisodeX(
-    val aid: Int,
+    val aid: Long,
     val badge: String,
     val badge_info: BadgeInfo,
     val badge_type: Int,
@@ -11,7 +11,7 @@ data class EpisodeX(
     val dimension: Dimension,
     val duration: Int,
     val from: String,
-    val id: Int,
+    val id: Long,
     val is_view_hide: Boolean,
     val link: String,
     val long_title: String,

@@ -68,7 +68,7 @@
                 app:srcCompat="@drawable/ic_baseline_play_circle_outline_24" />
 
             <ImageView
-                android:id="@+id/imageView4"
+                android:id="@+id/avatarIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_marginStart="4dp"
@@ -107,7 +107,7 @@
                 android:textSize="9sp"
                 app:layout_constraintBottom_toBottomOf="@+id/listPlayTimes"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageView4"
+                app:layout_constraintStart_toEndOf="@+id/avatarIcon"
                 app:layout_constraintTop_toTopOf="@+id/listPlayTimes" />
 
             <TextView

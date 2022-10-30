@@ -8,8 +8,8 @@ import androidx.lifecycle.lifecycleScope
 import cn.spacexc.wearbili.Application.Companion.TAG
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.MainActivity
+import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.user.LoginActivity
-import cn.spacexc.wearbili.activity.video.BangumiActivity
 import cn.spacexc.wearbili.dataclass.LeanCloudUserSearch
 import cn.spacexc.wearbili.manager.CookiesManager
 import cn.spacexc.wearbili.manager.LCManager

@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.Application.Companion.TAG
 import cn.spacexc.wearbili.R
+import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.image.PhotoViewActivity
 import cn.spacexc.wearbili.activity.settings.ChooseSettingsActivity
 import cn.spacexc.wearbili.activity.user.LoginActivity
@@ -388,7 +389,7 @@ class VideoInfoFragment : Fragment() {
                 MainScope().launch {
                     result.log()
                     if (code == 0) {
-                        if (result.data.season.season_id.isNotEmpty()) {
+                        if (result.data.season?.season_id?.isNotEmpty() == true) {
                             Intent(requireActivity(), BangumiActivity::class.java).apply {
                                 putExtra("id", result.data.season.season_id)
                                 putExtra("idType", ID_TYPE_SSID)

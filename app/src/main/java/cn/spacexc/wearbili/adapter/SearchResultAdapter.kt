@@ -67,7 +67,9 @@ class SearchResultAdapter(val context: Context) :
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
         val video: VideoSearch.SearchData.VideoSearchResult = getItem(position)
-        holder.listVideoTitle.text = Html.fromHtml(video.title)
+        holder.listVideoTitle.text = Html.fromHtml(
+            video.title.replace("<em class=\\\"keyword\\\">", "<bold>").replace("</em>", "</bold>")
+        )
         holder.listUpName.text = video.author
         holder.listVideoViews.text = video.play.toShortChinese()
         holder.cardView.setOnClickListener {
@@ -84,13 +86,10 @@ class SearchResultAdapter(val context: Context) :
             Glide.with(context).load("https:${video.pic}").skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .placeholder(R.drawable.placeholder).apply(options).into(holder.listCover)
-        } catch (e: OutOfMemoryError) {
+        } catch (_: OutOfMemoryError) {
 
         }
-        holder.itemView.addClickScale()
-
-
-        //GlideUtils.loadPicsFitWidth(Application.getContext(), "https:${video.pic}", R.drawable.placeholder, R.drawable.placeholder, holder.listCover)
+        holder.cardView.addClickScale()
     }
 
     class VideoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

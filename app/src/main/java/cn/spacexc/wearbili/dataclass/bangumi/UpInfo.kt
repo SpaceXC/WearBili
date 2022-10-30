@@ -5,7 +5,7 @@ data class UpInfo(
     val avatar_subscript_url: String,
     val follower: Int,
     val is_follow: Int,
-    val mid: Int,
+    val mid: Long,
     val nickname_color: String,
     val pendant: Pendant,
     val theme_type: Int,

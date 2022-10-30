@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cn.spacexc.wearbili.dataclass.bangumi.BangumiDetail
+import cn.spacexc.wearbili.dataclass.bangumi.timeline.BangumiTimeLine
 import cn.spacexc.wearbili.manager.BangumiManager
 import cn.spacexc.wearbili.manager.ID_TYPE_EPID
 import cn.spacexc.wearbili.utils.NetworkUtils
@@ -23,6 +24,9 @@ class BangumiViewModel : ViewModel() {
     private val _bangumi: MutableLiveData<BangumiDetail> = MutableLiveData()
     val bangumi: LiveData<BangumiDetail> = _bangumi
 
+    private val _timeLine: MutableLiveData<BangumiTimeLine> = MutableLiveData()
+    val timeLine: LiveData<BangumiTimeLine> = _timeLine
+
     fun getBangumi(id: String, idType: String = ID_TYPE_EPID) {
         BangumiManager.getBangumiDetail(
             id,
@@ -41,5 +45,22 @@ class BangumiViewModel : ViewModel() {
                 }
 
             })
+    }
+
+    fun getTimeLine() {
+        BangumiManager.getBangumiTimeLine(object : NetworkUtils.ResultCallback<BangumiTimeLine> {
+            override fun onSuccess(result: BangumiTimeLine, code: Int) {
+                MainScope().launch {
+                    _timeLine.value = result
+                }
+            }
+
+            override fun onFailed(e: Exception) {
+                MainScope().launch {
+                    ToastUtils.showText("网络异常")
+                }
+            }
+
+        })
     }
 }

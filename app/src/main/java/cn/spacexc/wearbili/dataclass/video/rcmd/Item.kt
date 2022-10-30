@@ -30,5 +30,6 @@ data class Item(
     val three_point_v2: List<ThreePointV2>,
     val title: String,
     val track_id: String,
-    val uri: String
+    val uri: String,
+    val badge: String?
 )

@@ -180,8 +180,9 @@
                         <ImageView
                             android:id="@+id/rotate"
                             android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            android:layout_marginEnd="12dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="6dp"
                             android:background="@drawable/background_grey"
                             android:paddingStart="8dp"
                             android:paddingTop="8dp"
@@ -189,24 +190,23 @@
                             android:paddingBottom="8dp"
                             app:layout_constraintBottom_toBottomOf="@+id/settingsButton"
                             app:layout_constraintDimensionRatio="1:1"
-                            app:layout_constraintEnd_toStartOf="@+id/settingsButton"
-                            app:layout_constraintTop_toTopOf="@+id/settingsButton"
+                            app:layout_constraintEnd_toEndOf="parent"
                             app:srcCompat="@drawable/screen_rotation" />
 
                         <ImageView
                             android:id="@+id/danmakuSwitch"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:layout_marginEnd="12dp"
+                            android:layout_marginEnd="8dp"
                             android:background="@drawable/background_pink"
                             android:paddingStart="8dp"
                             android:paddingTop="8dp"
                             android:paddingEnd="8dp"
                             android:paddingBottom="8dp"
-                            app:layout_constraintBottom_toBottomOf="@+id/settingsButton"
+                            app:layout_constraintBottom_toBottomOf="@+id/rotate"
                             app:layout_constraintDimensionRatio="1:1"
                             app:layout_constraintEnd_toStartOf="@+id/rotate"
-                            app:layout_constraintTop_toTopOf="@+id/settingsButton"
+                            app:layout_constraintTop_toTopOf="@+id/rotate"
                             app:srcCompat="@drawable/ic_danmaku" />
 
                         <TextView
@@ -226,6 +226,7 @@
                             android:text="选项"
                             android:textColor="#fff"
                             android:textSize="12sp"
+                            android:visibility="gone"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent" />
 

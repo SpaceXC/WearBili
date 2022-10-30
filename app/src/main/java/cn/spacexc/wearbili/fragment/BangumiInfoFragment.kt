@@ -7,13 +7,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.Movie
@@ -41,12 +40,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
 import cn.spacexc.wearbili.R
-import cn.spacexc.wearbili.activity.video.BangumiActivity
+import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.video.MinifyVideoPlayer
 import cn.spacexc.wearbili.activity.video.VideoPlayerActivity
-import cn.spacexc.wearbili.dataclass.RoundButtonData
 import cn.spacexc.wearbili.manager.SettingsManager
 import cn.spacexc.wearbili.ui.BilibiliPink
 import cn.spacexc.wearbili.ui.puhuiFamily
@@ -57,7 +54,7 @@ import coil.request.ImageRequest
 
 class BangumiInfoFragment : Fragment() {
     lateinit var activity: BangumiActivity
-    private val btnListUpperRow = MutableLiveData(
+    /*private val btnListUpperRow = MutableLiveData(
         mutableListOf(
             RoundButtonData(R.drawable.ic_baseline_play_circle_outline_24, "播放", "播放"),
             RoundButtonData(R.drawable.ic_outline_thumb_up_24, "点赞", "点赞"),
@@ -68,7 +65,7 @@ class BangumiInfoFragment : Fragment() {
             RoundButtonData(R.drawable.send_to_mobile, "手机观看", "手机观看"),
             RoundButtonData(R.drawable.cloud_download, "缓存", "缓存")
         )
-    )
+    )*/
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -92,6 +89,9 @@ class BangumiInfoFragment : Fragment() {
         val localDensity = LocalDensity.current
         var followTextHeight by remember {
             mutableStateOf(0.dp)
+        }
+        var descriptionMaxLines by remember {
+            mutableStateOf(3)
         }
         val state = rememberScrollState()
         Column(
@@ -132,7 +132,7 @@ class BangumiInfoFragment : Fragment() {
                         text = bangumi?.result?.title ?: "",
                         color = Color.White,
                         fontFamily = puhuiFamily,
-                        fontSize = 17.sp,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(2.dp))
@@ -176,13 +176,20 @@ class BangumiInfoFragment : Fragment() {
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = bangumi?.result?.evaluate ?: "",
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .animateContentSize(animationSpec = tween(durationMillis = 400))
+                    .clickable {
+                        descriptionMaxLines = if (descriptionMaxLines == 3) Int.MAX_VALUE else 3
+                    },
                 fontSize = 13.sp,
                 color = Color.White,
                 fontFamily = puhuiFamily,
-                maxLines = 3,
+                maxLines = descriptionMaxLines,
                 overflow = TextOverflow.Ellipsis
-            )   //简介
+            )
+
+            //简介
             Spacer(modifier = Modifier.height(4.dp))
             Column(modifier = Modifier.fillMaxWidth()) {
                 if (LocalConfiguration.current.isScreenRound) {
@@ -286,7 +293,8 @@ class BangumiInfoFragment : Fragment() {
                         )
                     }
                 } else {
-                    Row(modifier = Modifier.fillMaxWidth()) {
+                    //TODO 调整下
+                    /*Row(modifier = Modifier.fillMaxWidth()) {
                         Row {
                             var textHeight by remember {
                                 mutableStateOf(0.dp)
@@ -388,6 +396,105 @@ class BangumiInfoFragment : Fragment() {
                                     }
                             )
                         }
+                    }*/
+                    Row {
+                        var textHeight by remember {
+                            mutableStateOf(0.dp)
+                        }
+                        Icon(
+                            imageVector = Icons.Outlined.PlayCircle,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .alpha(0.6f)
+                                .size(textHeight), tint = Color.White
+                        )
+                        Spacer(modifier = Modifier.width(2.dp))
+                        Text(
+                            text = "${bangumi?.result?.stat?.views?.toShortChinese() ?: "0"}播放",
+                            fontSize = 12.sp,
+                            fontFamily = puhuiFamily,
+                            color = Color.White,
+                            modifier = Modifier
+                                .alpha(0.6f)
+                                .onGloballyPositioned {
+                                    textHeight = with(localDensity) { it.size.height.toDp() }
+                                }
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Row {
+                        var textHeight by remember {
+                            mutableStateOf(0.dp)
+                        }
+                        Icon(
+                            imageVector = Icons.Outlined.CheckCircle,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .alpha(0.6f)
+                                .size(textHeight), tint = Color.White
+                        )
+                        Spacer(modifier = Modifier.width(2.dp))
+                        Text(
+                            text = "${bangumi?.result?.stat?.favorites?.toShortChinese() ?: "0"}追番",
+                            fontSize = 12.sp,
+                            fontFamily = puhuiFamily,
+                            color = Color.White,
+                            modifier = Modifier
+                                .alpha(0.6f)
+                                .onGloballyPositioned {
+                                    textHeight = with(localDensity) { it.size.height.toDp() }
+                                }
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Row {
+                        var textHeight by remember {
+                            mutableStateOf(0.dp)
+                        }
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_danmaku),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .alpha(0.6f)
+                                .size(textHeight), tint = Color.White
+                        )
+                        Spacer(modifier = Modifier.width(2.dp))
+                        Text(
+                            text = "${bangumi?.result?.stat?.danmakus?.toShortChinese() ?: "0"}弹幕",
+                            fontSize = 12.sp,
+                            fontFamily = puhuiFamily,
+                            color = Color.White,
+                            modifier = Modifier
+                                .alpha(0.6f)
+                                .onGloballyPositioned {
+                                    textHeight = with(localDensity) { it.size.height.toDp() }
+                                }
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Row {
+                        var textHeight by remember {
+                            mutableStateOf(0.dp)
+                        }
+                        Icon(
+                            imageVector = Icons.Outlined.Movie,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .alpha(0.6f)
+                                .size(textHeight), tint = Color.White
+                        )
+                        Spacer(modifier = Modifier.width(2.dp))
+                        Text(
+                            text = bangumi?.result?.episodes?.get(0)?.bvid ?: "",
+                            fontSize = 12.sp,
+                            fontFamily = puhuiFamily,
+                            color = Color.White,
+                            modifier = Modifier
+                                .alpha(0.6f)
+                                .onGloballyPositioned {
+                                    textHeight = with(localDensity) { it.size.height.toDp() }
+                                }
+                        )
                     }
                 }
             }   //番剧流量信息
@@ -407,6 +514,7 @@ class BangumiInfoFragment : Fragment() {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .requiredSizeIn(maxHeight = 140.dp)
+                                .clip(RoundedCornerShape(10.dp))
                         ) {
                             bangumi?.result?.episodes?.forEachIndexed { index, episode ->
                                 item {
@@ -420,7 +528,15 @@ class BangumiInfoFragment : Fragment() {
                                         Column(
                                             modifier = Modifier
                                                 .clip(RoundedCornerShape(10.dp))
-                                                //.border(width = 0.1f.dp, color = Color(112, 112, 112))
+                                                .border(
+                                                    width = 0.1f.dp, color = Color(
+                                                        112,
+                                                        112,
+                                                        112,
+                                                        204
+                                                    ), shape = RoundedCornerShape(10.dp)
+                                                )
+
                                                 .background(color = Color(36, 36, 36, 199))
                                                 .padding(vertical = 12.dp, horizontal = 16.dp)
                                                 .fillMaxWidth(),
@@ -432,7 +548,8 @@ class BangumiInfoFragment : Fragment() {
                                                 fontFamily = puhuiFamily,
                                                 maxLines = 1,
                                                 overflow = TextOverflow.Ellipsis,
-                                                modifier = Modifier.alpha(0.76f)
+                                                modifier = Modifier.alpha(0.76f),
+                                                fontWeight = FontWeight.Medium
                                             )
                                         }
                                         Spacer(modifier = Modifier.height(6.dp))
@@ -492,7 +609,15 @@ class BangumiInfoFragment : Fragment() {
                                         Column(
                                             modifier = Modifier
                                                 .clip(RoundedCornerShape(10.dp))
-                                                //.border(width = 0.1f.dp, color = Color(112, 112, 112))
+                                                .border(
+                                                    width = 0.1f.dp, color = Color(
+                                                        112,
+                                                        112,
+                                                        112,
+                                                        204
+                                                    ), shape = RoundedCornerShape(10.dp)
+                                                )
+
                                                 .background(color = Color(36, 36, 36, 199))
                                                 .padding(vertical = 12.dp, horizontal = 16.dp)
                                                 .fillMaxWidth(),
@@ -504,7 +629,8 @@ class BangumiInfoFragment : Fragment() {
                                                 fontFamily = puhuiFamily,
                                                 maxLines = 1,
                                                 overflow = TextOverflow.Ellipsis,
-                                                modifier = Modifier.alpha(0.76f)
+                                                modifier = Modifier.alpha(0.76f),
+                                                fontWeight = FontWeight.Medium
                                             )
                                         }
                                         Spacer(modifier = Modifier.height(6.dp))
@@ -538,7 +664,7 @@ class BangumiInfoFragment : Fragment() {
         }
     }
 
-    fun playVideo(bvid: String, cid: Long, title: String) {
+    private fun playVideo(bvid: String, cid: Long, title: String) {
         when (SettingsManager.defPlayer()) {
             "builtinPlayer" -> {
                 val intent =

@@ -1,7 +1,6 @@
 package cn.spacexc.wearbili.activity.other
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -10,12 +9,14 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.MainActivity
+import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
+import cn.spacexc.wearbili.activity.bangumi.BangumiTimeLineActivity
 import cn.spacexc.wearbili.activity.search.SearchActivity
 import cn.spacexc.wearbili.adapter.ButtonsAdapter
 import cn.spacexc.wearbili.dataclass.RoundButtonData
 import cn.spacexc.wearbili.listener.OnItemViewClickListener
+import cn.spacexc.wearbili.manager.ID_TYPE_SSID
 import cn.spacexc.wearbili.utils.TimeUtils
-import cn.spacexc.wearbili.utils.ToastUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -28,7 +29,7 @@ class MenuActivity : AppCompatActivity() {
         RoundButtonData(R.drawable.ic_baseline_search_24, "搜索", "搜索"),
         RoundButtonData(R.drawable.ic_baseline_search_24, "测试", "test"),
         //RoundButtonData(R.drawable.ic_outline_local_fire_department_24, "热门"),
-        //RoundButtonData(R.drawable.ic_baseline_movie_24, "番剧"),
+        RoundButtonData(R.drawable.ic_baseline_movie_24, "番剧", "番剧"),
         //RoundButtonData(R.drawable.ic_outline_tv_24, "影视"),
         RoundButtonData(R.drawable.ic_outline_info_24, "关于", "关于")
     )
@@ -66,6 +67,16 @@ class MenuActivity : AppCompatActivity() {
                                 R.anim.activity_out_y
                             )
                         }
+                        "番剧" -> {
+                            Intent(this@MenuActivity, BangumiTimeLineActivity::class.java).apply {
+                                startActivity(this)
+                                finish()
+                                overridePendingTransition(
+                                    R.anim.activity_in_y,
+                                    R.anim.activity_out_y
+                                )
+                            }
+                        }
                         "搜索" -> {
                             val intent = Intent(
                                 this@MenuActivity,
@@ -87,7 +98,7 @@ class MenuActivity : AppCompatActivity() {
                             overridePendingTransition(R.anim.activity_in_y, R.anim.activity_out_y)
                         }
                         "测试" -> {
-                            val data: Uri =
+                            /*val data: Uri =
                                 Uri.parse("bilibili://video/428340116?player_height=1080&player_rotate=0&player_width=1920")
                             val intent = Intent(Intent.ACTION_VIEW, data)
                             //保证新启动的APP有单独的堆栈，如果希望新启动的APP和原有APP使用同一个堆栈则去掉该项
@@ -99,6 +110,12 @@ class MenuActivity : AppCompatActivity() {
                                 ToastUtils.makeText(
                                     "没有匹配的APP，请下载安装"
                                 ).show()
+                            }*/
+                            Intent(this@MenuActivity, BangumiActivity::class.java).apply {
+                                putExtra("id", "835")
+                                putExtra("idType", ID_TYPE_SSID)
+                                startActivity(this)
+                                finish()
                             }
                         }
                     }

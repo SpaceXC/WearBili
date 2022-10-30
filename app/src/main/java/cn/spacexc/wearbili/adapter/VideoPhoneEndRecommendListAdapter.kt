@@ -8,12 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
-import cn.spacexc.wearbili.activity.video.BangumiActivity
+import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.video.VideoActivity
 import cn.spacexc.wearbili.activity.video.VideoLongClickActivity
 import cn.spacexc.wearbili.dataclass.video.rcmd.Item
@@ -63,6 +64,7 @@ class VideoPhoneEndRecommendListAdapter(val context: Context) :
         holder.listVideoTitle.text = video.title
         holder.listUpName.text = video.args.up_name
         holder.listVideoViews.text = video.cover_left_text_1
+
         holder.cardView.addClickScale()
 
         if (video.goto == "av") {
@@ -80,6 +82,7 @@ class VideoPhoneEndRecommendListAdapter(val context: Context) :
                 context.startActivity(intent)
                 true
             }
+            holder.avatarIcon.isVisible = true
         }
         if (video.goto == "bangumi") {
             holder.cardView.setOnClickListener {
@@ -88,6 +91,8 @@ class VideoPhoneEndRecommendListAdapter(val context: Context) :
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 Application.getContext().startActivity(intent)
             }
+            holder.avatarIcon.isVisible = false
+            holder.listUpName.text = "  ${video.badge}" ?: ""
         }
         val roundedCorners = RoundedCorners(10)
         val options = RequestOptions.bitmapTransform(roundedCorners)
@@ -106,6 +111,7 @@ class VideoPhoneEndRecommendListAdapter(val context: Context) :
         var listUpName: TextView
         var listVideoViews: TextView
         var cardView: MaterialCardView
+        var avatarIcon = itemView.findViewById<ImageView>(R.id.avatarIcon)
 
         init {
             listCover = itemView.findViewById(R.id.listCover)

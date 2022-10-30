@@ -24,7 +24,10 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".activity.video.BangumiActivity"
+            android:name=".activity.bangumi.BangumiTimeLineActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.bangumi.BangumiActivity"
             android:exported="false" />
         <activity
             android:name=".activity.comment.EmojisActivity"

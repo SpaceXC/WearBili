@@ -52,7 +52,9 @@ class HistoryActivity : AppCompatActivity() {
                                         videoBvid = it.history.bvid ?: "",
                                         context = this@HistoryActivity,
                                         isBangumi = it.history.epid != 0,
-                                        epid = if (it.history.epid != 0) it.history.epid.toString() else ""
+                                        epid = if (it.history.epid != 0) it.history.epid.toString() else "",
+                                        badge = it.badge,
+                                        tagName = it.tag_name
                                     )
                                 }
                             }
@@ -71,13 +73,15 @@ class HistoryActivity : AppCompatActivity() {
                                 item {
                                     VideoCard(
                                         videoName = it.title,
-                                        views = if(it.progress != -1) "看到 ${it.progress.secondToTime()}" else "已看完",
+                                        views = if (it.progress != -1) "看到 ${it.progress.secondToTime()}" else "已看完",
                                         uploader = it.author_name,
-                                        coverUrl = if(it.cover.isNullOrEmpty()) it.covers[0] else it.cover,
+                                        coverUrl = if (it.cover.isNullOrEmpty()) it.covers[0] else it.cover,
                                         hasViews = it.history.business == "archive",
                                         clickable = it.history.business == "archive",
                                         videoBvid = it.history.bvid ?: "",
-                                        context = this@HistoryActivity
+                                        context = this@HistoryActivity,
+                                        badge = it.badge,
+                                        tagName = it.tag_name
                                     )
                                 }
                             }

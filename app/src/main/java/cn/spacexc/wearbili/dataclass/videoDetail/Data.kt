@@ -34,7 +34,7 @@ data class Data(
     val relates: List<Relate>,
     val req_user: ReqUser,
     val rights: Rights,
-    val season: Season,
+    val season: Season?,
     val share_subtitle: String,
     val short_link: String,
     val short_link_v2: String,

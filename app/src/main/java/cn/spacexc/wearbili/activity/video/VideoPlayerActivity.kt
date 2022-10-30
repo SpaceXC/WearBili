@@ -169,7 +169,7 @@ class VideoPlayerActivity : AppCompatActivity() {
                 binding.title.visibility = it
                 binding.rotate.visibility = it
                 binding.danmakuSwitch.visibility = it
-                binding.settingsButton.visibility = it
+                //binding.settingsButton.visibility = it
                 binding.videoTitle.requestFocus()
                 binding.watchStats?.isVisible = !(it == View.VISIBLE)
             }

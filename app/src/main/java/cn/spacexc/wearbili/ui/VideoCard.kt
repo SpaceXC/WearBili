@@ -26,7 +26,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cn.spacexc.wearbili.Application
-import cn.spacexc.wearbili.activity.video.BangumiActivity
+import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.video.VideoActivity
 import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
 import coil.compose.AsyncImage
@@ -51,6 +51,8 @@ object VideoUis {
         clickable: Boolean = false,
         isBangumi: Boolean = false,
         epid: String = "",
+        badge: String = "",
+        tagName: String = "",
         context: Context = Application.getContext()
     ) {
         var iconHeight by remember { mutableStateOf(0.dp) }
@@ -70,46 +72,74 @@ object VideoUis {
                 }
             }
         }) {
-            Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.height(6.dp))
             Column(
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
-                    .border(width = 0.1f.dp, color = Color(112, 112, 112, 70))
+                    .border(
+                        width = 0.1f.dp,
+                        color = Color(112, 112, 112, 70),
+                        shape = RoundedCornerShape(10.dp)
+                    )
                     .background(color = Color(36, 36, 36, 100))
                     .padding(start = 6.dp, end = 6.dp, top = 10.dp, bottom = 10.dp),
             ) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
-
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(modifier = Modifier
-                        .weight(0.8f)
-                        .fillMaxHeight()
-                        .align(Alignment.CenterVertically)) {
+                    Row(
+                        modifier = Modifier
+                            .weight(0.8f)
+                            .fillMaxHeight()
+                            .align(Alignment.CenterVertically)
+                    ) {
                         Spacer(Modifier.width(4.dp))
-                        AsyncImage(
-                            model = ImageRequest.Builder(LocalContext.current)
-                                .data(coverUrl)
-                                .crossfade(true)
-                                .build(),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .aspectRatio(1.6f, matchHeightConstraintsFirst = false)
-                                .align(Alignment.CenterVertically)
-                                .clip(
-                                    RoundedCornerShape(8.dp)
+                        Box(modifier = Modifier.align(Alignment.CenterVertically)) {
+                            AsyncImage(
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data(coverUrl)
+                                    .crossfade(true)
+                                    .build(),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .aspectRatio(1.6f, matchHeightConstraintsFirst = false)
+                                    //.align(Alignment.CenterVertically)
+                                    .clip(
+                                        RoundedCornerShape(8.dp)
+                                    )
+                                    .offset(y = (1f).dp),
+                                contentScale = ContentScale.Crop,
+                            )
+                            if (badge.isNotEmpty()) {
+                                Text(
+                                    text = badge,
+                                    color = Color.White,
+                                    fontSize = 10.sp,
+                                    modifier = Modifier
+                                        .padding(top = 4.dp, end = 4.dp)
+                                        .clip(
+                                            RoundedCornerShape(4.dp)
+                                        )
+                                        .background(
+                                            BilibiliPink
+                                        )
+                                        .padding(vertical = 2.dp, horizontal = 4.dp)
+                                        .align(Alignment.TopEnd)
                                 )
-                                .offset(y = (1f).dp),
-                            contentScale = ContentScale.Crop,
-                        )
+                            }
+
+                        }
+
                         Spacer(Modifier.width(8.dp))
                     }
-                    Row(modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .align(Alignment.CenterVertically)) {
+                    Row(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .align(Alignment.CenterVertically)
+                    ) {
                         Spacer(Modifier.width(8.dp))
                         Text(
                             text = videoName,
@@ -126,23 +156,32 @@ object VideoUis {
                 }
                 Spacer(Modifier.height(8.dp))
                 Row {
-                    Icon(
-                        imageVector = Icons.Outlined.Person,
-                        modifier = Modifier
-                            .alpha(0.5f)
-                            .width(iconHeight)
-                            .height(iconHeight),
-                        contentDescription = null,
-                        tint = Color.White
-                    )
-                    Spacer(Modifier.width(1.dp))
-                    Text(text = uploader, color = Color.White, modifier = Modifier
-                        .alpha(0.5f)
-                        .onGloballyPositioned {
-                            iconHeight = with(localDensity) {
-                                it.size.height.toDp()
-                            }
-                        }, fontFamily = puhuiFamily, fontSize = 9.sp, fontWeight = FontWeight.Medium)
+                    if (uploader.isNotEmpty()) {
+                        Icon(
+                            imageVector = Icons.Outlined.Person,
+                            modifier = Modifier
+                                .alpha(0.5f)
+                                .width(iconHeight)
+                                .height(iconHeight),
+                            contentDescription = null,
+                            tint = Color.White
+                        )
+                        Spacer(Modifier.width(1.dp))
+                        Text(
+                            text = uploader,
+                            color = Color.White,
+                            modifier = Modifier
+                                .alpha(0.5f)
+                                .onGloballyPositioned {
+                                    iconHeight = with(localDensity) {
+                                        it.size.height.toDp()
+                                    }
+                                },
+                            fontFamily = puhuiFamily,
+                            fontSize = 9.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
                     if (hasViews) {
                         Spacer(Modifier.width(6.dp))
                         Icon(

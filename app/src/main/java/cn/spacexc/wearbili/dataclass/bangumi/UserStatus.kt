@@ -7,6 +7,6 @@ data class UserStatus(
     val follow_status: Int,
     val login: Int,
     val pay: Int,
-    val pay_pack_paid: Int,
+    val pay_pack_paid: Long,
     val sponsor: Int
 )

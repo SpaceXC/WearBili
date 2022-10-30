@@ -1,6 +1,7 @@
 package cn.spacexc.wearbili.manager
 
 import cn.spacexc.wearbili.dataclass.bangumi.BangumiDetail
+import cn.spacexc.wearbili.dataclass.bangumi.timeline.BangumiTimeLine
 import cn.spacexc.wearbili.utils.NetworkUtils
 import com.google.gson.Gson
 import okhttp3.Call
@@ -35,6 +36,24 @@ object BangumiManager {
                     val result = Gson().fromJson(response.body?.string(), BangumiDetail::class.java)
                     callback.onSuccess(result)
                 }
+            }
+        )
+    }
+
+    fun getBangumiTimeLine(callback: NetworkUtils.ResultCallback<BangumiTimeLine>) {
+        NetworkUtils.getUrl(
+            "http://api.bilibili.com/pgc/web/timeline?types=1&before=1&after=1",
+            object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    callback.onFailed(e)
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val result =
+                        Gson().fromJson(response.body?.string(), BangumiTimeLine::class.java)
+                    callback.onSuccess(result)
+                }
+
             }
         )
     }
