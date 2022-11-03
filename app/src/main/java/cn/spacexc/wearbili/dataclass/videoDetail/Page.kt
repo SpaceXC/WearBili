@@ -1,7 +1,7 @@
 package cn.spacexc.wearbili.dataclass.videoDetail
 
 data class Page(
-    val cid: Int,
+    val cid: Long,
     val dimension: Dimension,
     val dm: Dm,
     val dmlink: String,

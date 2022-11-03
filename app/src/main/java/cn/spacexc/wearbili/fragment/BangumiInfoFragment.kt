@@ -31,7 +31,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -42,10 +41,13 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
+import cn.spacexc.wearbili.activity.image.PhotoViewActivity
 import cn.spacexc.wearbili.activity.video.MinifyVideoPlayer
 import cn.spacexc.wearbili.activity.video.VideoPlayerActivity
 import cn.spacexc.wearbili.manager.SettingsManager
+import cn.spacexc.wearbili.manager.isRound
 import cn.spacexc.wearbili.ui.BilibiliPink
+import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
 import cn.spacexc.wearbili.ui.puhuiFamily
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import cn.spacexc.wearbili.utils.ToastUtils
@@ -119,8 +121,15 @@ class BangumiInfoFragment : Fragment() {
                         .weight(2f)
                         //.fillMaxHeight()
                         .fillMaxSize()
-                        .clip(RoundedCornerShape(10.dp))
-                        .align(Alignment.CenterVertically), contentDescription = null
+                        .aspectRatio(0.75f, matchHeightConstraintsFirst = true)
+                        .align(Alignment.CenterVertically)
+                        .clickVfx {
+                            val intent =
+                                Intent(requireActivity(), PhotoViewActivity::class.java)
+                            intent.putExtra("imageUrl", bangumi?.result?.cover)
+                            startActivity(intent)
+                        }
+                        .clip(RoundedCornerShape(10.dp)), contentDescription = null
                 )   //番剧封面
                 Column(
                     modifier = Modifier
@@ -192,7 +201,7 @@ class BangumiInfoFragment : Fragment() {
             //简介
             Spacer(modifier = Modifier.height(4.dp))
             Column(modifier = Modifier.fillMaxWidth()) {
-                if (LocalConfiguration.current.isScreenRound) {
+                if (isRound()) {
                     Row {
                         var textHeight by remember {
                             mutableStateOf(0.dp)
@@ -513,12 +522,12 @@ class BangumiInfoFragment : Fragment() {
                         LazyColumn(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .requiredSizeIn(maxHeight = 140.dp)
                                 .clip(RoundedCornerShape(10.dp))
+                                .requiredSizeIn(maxHeight = 140.dp)
                         ) {
                             bangumi?.result?.episodes?.forEachIndexed { index, episode ->
                                 item {
-                                    Column(modifier = Modifier.clickable {
+                                    Column(modifier = Modifier.clickVfx {
                                         playVideo(
                                             bvid = episode.bvid,
                                             cid = episode.cid,
@@ -594,12 +603,13 @@ class BangumiInfoFragment : Fragment() {
                         LazyColumn(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .clip(RoundedCornerShape(10.dp))
                                 //.height(90.dp)
                                 .requiredSizeIn(maxHeight = 140.dp)
                         ) {
                             section.episodes.forEach { episode ->
                                 item {
-                                    Column(modifier = Modifier.clickable {
+                                    Column(modifier = Modifier.clickVfx {
                                         playVideo(
                                             bvid = episode.bvid,
                                             cid = episode.cid,
@@ -660,7 +670,7 @@ class BangumiInfoFragment : Fragment() {
                     }   //部分选集
                 }   //其他部分视频
             }
-            Spacer(modifier = Modifier.height((if (LocalConfiguration.current.isScreenRound) 50 else 10).dp))
+            Spacer(modifier = Modifier.height((if (isRound()) 50 else 10).dp))
         }
     }
 

@@ -24,6 +24,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.video.StarActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.video.VideoRankingActivity"
             android:exported="false" />
         <activity

@@ -11,10 +11,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.ScalingLazyColumn
 import cn.spacexc.wearbili.manager.SettingsManager
+import cn.spacexc.wearbili.manager.isRound
 import cn.spacexc.wearbili.ui.CirclesBackground.RegularBackgroundWithTitleAndBackArrow
 import cn.spacexc.wearbili.ui.VideoUis.VideoCard
 import cn.spacexc.wearbili.utils.TimeUtils.secondToTime
@@ -36,7 +36,7 @@ class HistoryActivity : AppCompatActivity() {
                     onRefresh = {
                         viewModel.getHistory(true)
                     },
-                    modifier = Modifier.padding(if (LocalConfiguration.current.isScreenRound) 8.dp else 0.dp)
+                    modifier = Modifier.padding(if (isRound()) 8.dp else 0.dp)
                 ){
                     if(SettingsManager.hasScrollVfx()){
                         ScalingLazyColumn(modifier = Modifier.fillMaxSize()) {
