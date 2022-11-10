@@ -815,7 +815,7 @@ class VideoInfoFragment : Fragment() {
     }
 
     fun isVideoLiked() {
-        VideoManager.isLiked(videoActivity.videoId!!, object : Callback {
+        /*VideoManager.isLiked(videoActivity.videoId!!, object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 MainScope().launch {
                     ToastUtils.makeText("网络异常").show()
@@ -851,7 +851,7 @@ class VideoInfoFragment : Fragment() {
                 }
             }
 
-        })
+        })*/
     }
 
     data class Like(

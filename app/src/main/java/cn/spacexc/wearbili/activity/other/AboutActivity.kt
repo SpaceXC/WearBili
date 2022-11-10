@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 class AboutActivity : AppCompatActivity() {
     private val firstList = listOf(
-        HorizontalButtonData(R.drawable.ic_outline_info_24, "Rel-AL 0.16.3", "版本号"),
+        HorizontalButtonData(R.drawable.ic_outline_info_24, "Rel-AL 0.16.4", "版本号"),
         HorizontalButtonData(R.drawable.ic_github, "Github", "查看我们的开源项目"),
     )
     private val secondList = listOf(
@@ -25,8 +25,8 @@ class AboutActivity : AppCompatActivity() {
         HorizontalButtonData(0, "uid426907991", "图标设计师"),
         HorizontalButtonData(0, "uid293793435", "API仓库Owner"),
         HorizontalButtonData(
-            R.drawable.akari,
-            "虚位以待",
+            R.drawable.akari,       //Rechrd Avatar
+            "虚位以待",     //Rechrd
             "UI/UA设计师"
         )      //Rechrd你无不无聊啊我还得多加一个逻辑我真的谢谢您嘞
     )

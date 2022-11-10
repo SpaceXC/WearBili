@@ -1,12 +1,15 @@
 package cn.spacexc.wearbili.fragment
 
-import android.content.ActivityNotFoundException
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
@@ -40,6 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.wear.compose.material.Icon
@@ -47,9 +51,14 @@ import androidx.wear.compose.material.Text
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.image.PhotoViewActivity
-import cn.spacexc.wearbili.activity.video.*
+import cn.spacexc.wearbili.activity.settings.ChooseSettingsActivity
+import cn.spacexc.wearbili.activity.video.PlayOnPhoneActivity
+import cn.spacexc.wearbili.activity.video.VideoActivity
+import cn.spacexc.wearbili.activity.video.ViewFullVideoPartsActivity
 import cn.spacexc.wearbili.dataclass.RoundButtonDataNew
+import cn.spacexc.wearbili.dataclass.videoDetail.VideoDetailInfo
 import cn.spacexc.wearbili.manager.SettingsManager
+import cn.spacexc.wearbili.ui.BilibiliPink
 import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
 import cn.spacexc.wearbili.ui.puhuiFamily
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
@@ -84,22 +93,30 @@ class VideoInformationFragment : Fragment() {
         return context?.let { ComposeView(it) }
     }
 
+    @OptIn(ExperimentalAnimationApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity = getActivity() as VideoActivity
         viewModel.getVideoInfo(activity.videoId)
+        viewModel.getIsLiked(activity.videoId)
+        viewModel.getIsCoined(activity.videoId)
+        viewModel.getIsFavorite(activity.videoId)
         viewModel.videoInfo.observe(
             viewLifecycleOwner
         ) {
+            activity.currentVideo = it.data
             viewModel.getFans(it.data.owner.mid)
             viewModel.getUploaderInfo(it.data.owner.mid)
         }
         (view as ComposeView).setContent {
-            var buttonItemHeight by remember { mutableStateOf(0.dp) }
+            //var buttonItemHeight by remember { mutableStateOf(0.dp) }
             val localDensity = LocalDensity.current
             val videoInfo by viewModel.videoInfo.observeAsState()
             val userFans by viewModel.uploaderFans.observeAsState()
             val uploaderInfo by viewModel.uploaderInfo.observeAsState()
+            val isLiked by viewModel.isLiked.observeAsState()
+            val isFavorite by viewModel.isFavorite.observeAsState()
+            val isCoined by viewModel.isCoined.observeAsState()
             var descriptionMaxLines by remember {
                 mutableStateOf(3)
             }
@@ -212,7 +229,19 @@ class VideoInformationFragment : Fragment() {
                     Spacer(modifier = Modifier.height(2.dp))
                     VideoInfoItem(
                         icon = Icons.Outlined.Movie,
-                        content = videoInfo?.data?.bvid ?: ""
+                        content = videoInfo?.data?.bvid ?: "",
+                        onLongClick = {
+                            val clipboardManager: ClipboardManager =
+                                ContextCompat.getSystemService(
+                                    requireContext(),
+                                    ClipboardManager::class.java
+                                ) as ClipboardManager
+                            val clip: ClipData =
+                                ClipData.newPlainText("wearbili bvid", videoInfo?.data?.bvid ?: "")
+                            clipboardManager.setPrimaryClip(clip)
+                            ToastUtils.makeText("已复制BV号")
+                                .show()
+                        }
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     VideoInfoItem(
@@ -278,10 +307,12 @@ class VideoInformationFragment : Fragment() {
                             videoInfo?.data?.pages?.forEachIndexed { index, page ->
                                 item {
                                     Column(modifier = Modifier.clickVfx {
-                                        playVideo(
-                                            bvid = videoInfo?.data?.bvid ?: "",
-                                            cid = page.cid,
-                                            title = "P${index + 1} ${page.part}"
+                                        SettingsManager.playVideo(
+                                            context = requireContext(),
+                                            bvid = videoInfo?.data?.bvid,
+                                            cid = videoInfo?.data?.cid,
+                                            title = videoInfo?.data?.title,
+                                            progress = videoInfo?.data?.history?.progress ?: 0
                                         )
                                     }) {
                                         Column(
@@ -344,9 +375,46 @@ class VideoInformationFragment : Fragment() {
                 ) {
                     btnListUpperRow.forEach { buttonItem ->
                         item {
-                            Column(modifier = Modifier
-                                .fillMaxWidth()
-                                .clickVfx {
+                            AnimatedContent(
+                                targetState = when (buttonItem.buttonName) {
+                                    "点赞" -> isLiked
+                                    "投币" -> isCoined
+                                    "收藏" -> isFavorite
+                                    else -> false
+                                }
+                            ) {
+                                RoundButton(
+                                    buttonItem = buttonItem,
+                                    videoInfo = videoInfo,
+                                    onLongClick = {
+                                        when (buttonItem.buttonName) {
+                                            "播放" -> {
+                                                Log.d(
+                                                    Application.TAG,
+                                                    "setOnLongClickListener: "
+                                                )
+                                                val intent =
+                                                    Intent(
+                                                        context,
+                                                        ChooseSettingsActivity::class.java
+                                                    )
+                                                val item =
+                                                    SettingsManager.getSettingByName("defaultPlayer")
+                                                intent.putExtra("item", item)
+                                                /*intent.putExtra("itemKey", item?.settingName)
+                                                intent.putExtra("itemName", item?.displayName)
+                                                intent.putExtra("defVal", item?.defString)*/
+                                                startActivity(intent)
+                                            }
+                                        }
+                                    }, tint =
+                                    when (buttonItem.buttonName) {
+                                        "点赞" -> if (isLiked == true) BilibiliPink else Color.White
+                                        "投币" -> if (isCoined == true) BilibiliPink else Color.White
+                                        "收藏" -> if (isFavorite == true) BilibiliPink else Color.White
+                                        else -> Color.White
+                                    }
+                                ) {
                                     when (buttonItem.buttonName) {
                                         "手机观看" -> {
                                             if (isAdded) {
@@ -362,14 +430,21 @@ class VideoInformationFragment : Fragment() {
                                             }
                                         }
                                         "点赞" -> {
-                                            /*likeVideo()*/
+                                            videoInfo?.let {
+                                                viewModel.likeVideo(
+                                                    it.data.bvid,
+                                                    isLiked ?: true
+                                                )
+                                            }
                                         }
                                         "播放" -> {
-                                            playVideo(
+                                            SettingsManager.playVideo(
+                                                context = requireContext(),
                                                 bvid = videoInfo?.data?.bvid,
                                                 cid = videoInfo?.data?.cid,
                                                 title = videoInfo?.data?.title,
-                                                progress = videoInfo?.data?.history?.progress ?: 0
+                                                progress = videoInfo?.data?.history?.progress
+                                                    ?: 0
                                             )
                                         }
                                         "稍后再看" -> {
@@ -378,6 +453,77 @@ class VideoInformationFragment : Fragment() {
                                             }
                                         }
                                     }
+                                }
+                            }
+
+
+                            /*Column(modifier = Modifier
+                                .fillMaxWidth()
+                                .pointerInput(
+                                    Unit
+                                ) {
+                                    detectTapGestures(onTap = {
+                                        when (buttonItem.buttonName) {
+                                            "手机观看" -> {
+                                                if (isAdded) {
+                                                    val intent = Intent(
+                                                        requireActivity(),
+                                                        PlayOnPhoneActivity::class.java
+                                                    )
+                                                    intent.putExtra(
+                                                        "qrCodeUrl",
+                                                        "https://www.bilibili.com/video/${activity.videoId}"
+                                                    )
+                                                    startActivity(intent)
+                                                }
+                                            }
+                                            "点赞" -> {
+                                                videoInfo?.let {
+                                                    viewModel.likeVideo(
+                                                        it.data.bvid,
+                                                        isLiked ?: true
+                                                    )
+                                                }
+                                            }
+                                            "播放" -> {
+                                                SettingsManager.playVideo(
+                                                    context = requireContext(),
+                                                    bvid = videoInfo?.data?.bvid,
+                                                    cid = videoInfo?.data?.cid,
+                                                    title = videoInfo?.data?.title,
+                                                    progress = videoInfo?.data?.history?.progress
+                                                        ?: 0
+                                                )
+                                            }
+                                            "稍后再看" -> {
+                                                videoInfo?.data?.bvid?.let { bvid ->
+                                                    viewModel.addToViewLater(bvid)
+                                                }
+                                            }
+                                        }
+                                    }, onLongPress = {
+                                        when (buttonItem.buttonName) {
+                                            "播放" -> {
+                                                Log.d(
+                                                    Application.TAG,
+                                                    "setOnLongClickListener: "
+                                                )
+                                                val intent =
+                                                    Intent(
+                                                        context,
+                                                        ChooseSettingsActivity::class.java
+                                                    )
+                                                val item =
+                                                    SettingsManager.getSettingByName("defaultPlayer")
+                                                intent.putExtra("item", item)
+                                                *//*intent.putExtra("itemKey", item?.settingName)
+                                                intent.putExtra("itemName", item?.displayName)
+                                                intent.putExtra("defVal", item?.defString)*//*
+                                                startActivity(intent)
+                                            }
+                                        }
+
+                                    })
                                 }
                                 .onGloballyPositioned {
                                     buttonItemHeight = with(localDensity) { it.size.height.toDp() }
@@ -405,7 +551,13 @@ class VideoInformationFragment : Fragment() {
                                         Icon(
                                             imageVector = buttonItem.icon,
                                             contentDescription = null,
-                                            modifier = Modifier.align(Alignment.Center)
+                                            modifier = Modifier.align(Alignment.Center),
+                                            tint = when (buttonItem.buttonName) {
+                                                "点赞" -> if (isLiked == true) BilibiliPink else Color.White
+                                                "投币" -> if (isCoined == true) BilibiliPink else Color.White
+                                                "收藏" -> if (isFavorite == true) BilibiliPink else Color.White
+                                                else -> Color.White
+                                            }
                                         )
                                     }
                                 }
@@ -419,7 +571,7 @@ class VideoInformationFragment : Fragment() {
                                     modifier = Modifier.align(Alignment.CenterHorizontally),
                                     maxLines = 1
                                 )
-                            }
+                            }*/
                         }
                     }
 
@@ -428,52 +580,71 @@ class VideoInformationFragment : Fragment() {
         }
     }
 
-    private fun playVideo(bvid: String?, cid: Long?, title: String?, progress: Long = 0) {
-        when (SettingsManager.defPlayer()) {
-            "builtinPlayer" -> {
-                val intent =
-                    Intent(requireActivity(), VideoPlayerActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                intent.putExtra("videoBvid", bvid)
-                intent.putExtra("videoCid", cid)
-                intent.putExtra("videoTitle", title)
-                intent.putExtra("progress", progress)
-                startActivity(intent)
+    @Composable
+    fun RoundButton(
+        buttonItem: RoundButtonDataNew,
+        videoInfo: VideoDetailInfo?,
+        onLongClick: () -> Unit,
+        tint: Color,
+        onClick: () -> Unit
+    ) {
+        val localDensity = LocalDensity.current
+        var buttonItemHeight by remember {
+            mutableStateOf(0.dp)
+        }
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .pointerInput(
+                Unit
+            ) {
+                detectTapGestures(onTap = {
+                    onClick()
+                }, onLongPress = {
+                    onLongClick()
+
+                })
             }
-            "minifyPlayer" -> {
-                val intent =
-                    Intent(requireActivity(), MinifyVideoPlayer::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                intent.putExtra("videoBvid", bvid)
-                intent.putExtra("videoCid", cid)
-                intent.putExtra("videoTitle", title)
-                startActivity(intent)
-            }
-            "microTvPlayer" -> {
-                try {
-                    val intent = Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse("wearbiliplayer://receive:8080/play?&bvid=$bvid&cid=$cid&aid=0")
+            .onGloballyPositioned {
+                buttonItemHeight = with(localDensity) { it.size.height.toDp() }
+            }, verticalArrangement = Arrangement.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
+                    .aspectRatio(1f)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f)
+                        .align(Alignment.Center)
+                        .clip(CircleShape)
+                        .border(
+                            width = 0.1.dp, color = Color(
+                                91, 92, 93, 204
+                            ), shape = CircleShape
+                        )
+                        .background(Color(41, 41, 41, 204))
+                ) {
+                    Icon(
+                        imageVector = buttonItem.icon,
+                        contentDescription = null,
+                        modifier = Modifier.align(Alignment.Center),
+                        tint = tint
                     )
-                    startActivity(intent)
-                } catch (e: ActivityNotFoundException) {
-                    ToastUtils.makeText("需要安装小电视播放器哦").show()
                 }
             }
-            "microTaiwan" -> {
-                ToastUtils.showText("敬请期待")
-            }
-            "other" -> {
-                try {
-                    val intent = Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse("wearbili-3rd://video/play?&bvid=$bvid&cid=$cid")
-                    )
-                    startActivity(intent)
-                } catch (e: ActivityNotFoundException) {
-                    ToastUtils.showText("没有找到其他播放器哦")
-                }
-            }
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = buttonItem.displayName,
+                color = Color.White,
+                fontWeight = FontWeight.Medium,
+                fontFamily = puhuiFamily,
+                fontSize = 12.sp,
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                maxLines = 1
+            )
         }
     }
 
@@ -482,7 +653,7 @@ class VideoInformationFragment : Fragment() {
         icon: ImageVector,
         content: String,
         onClick: () -> Unit = {},
-        onLongClick: () -> Unit = {}
+        onLongClick: () -> Unit = {},
     ) {
         val localDensity = LocalDensity.current
         Row(modifier = Modifier.pointerInput(Unit) {
@@ -509,7 +680,8 @@ class VideoInformationFragment : Fragment() {
                     .onGloballyPositioned {
                         textHeight =
                             with(localDensity) { it.size.height.toDp() }
-                    })
+                    }
+            )
         }
     }
 
@@ -518,7 +690,7 @@ class VideoInformationFragment : Fragment() {
         icon: Painter,
         content: String,
         onClick: () -> Unit = {},
-        onLongClick: () -> Unit = {}
+        onLongClick: () -> Unit = {},
     ) {
         val localDensity = LocalDensity.current
         Row(modifier = Modifier.pointerInput(Unit) {
@@ -545,7 +717,8 @@ class VideoInformationFragment : Fragment() {
                     .onGloballyPositioned {
                         textHeight =
                             with(localDensity) { it.size.height.toDp() }
-                    })
+                    }
+            )
         }
     }
 }

@@ -6,6 +6,10 @@ import androidx.lifecycle.ViewModel
 import cn.spacexc.wearbili.dataclass.SimplestUniversalDataClass
 import cn.spacexc.wearbili.dataclass.user.User
 import cn.spacexc.wearbili.dataclass.user.UserFans
+import cn.spacexc.wearbili.dataclass.video.state.CoinState
+import cn.spacexc.wearbili.dataclass.video.state.FavState
+import cn.spacexc.wearbili.dataclass.video.state.LikeState
+import cn.spacexc.wearbili.dataclass.video.state.result.LikeResult
 import cn.spacexc.wearbili.dataclass.videoDetail.VideoDetailInfo
 import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.manager.VideoManager
@@ -88,6 +92,77 @@ class VideoViewModel : ViewModel() {
                 MainScope().launch {
                     _uploaderFans.value =
                         Gson().fromJson(response.body?.string(), UserFans::class.java)
+                }
+            }
+
+        })
+    }
+
+    fun getIsLiked(bvid: String) {
+        VideoManager.isLiked(bvid, object : NetworkUtils.ResultCallback<LikeState> {
+            override fun onSuccess(result: LikeState, code: Int) {
+                MainScope().launch {
+                    isLiked.value = result.data == 1
+                }
+            }
+
+            override fun onFailed(e: Exception) {
+                MainScope().launch {
+                    ToastUtils.showText("网络异常")
+                }
+            }
+
+        })
+    }
+
+    fun getIsCoined(bvid: String) {
+        VideoManager.isCoined(bvid, object : NetworkUtils.ResultCallback<CoinState> {
+            override fun onSuccess(result: CoinState, code: Int) {
+                MainScope().launch {
+                    isCoined.value = result.data.multiply != 0
+                }
+            }
+
+            override fun onFailed(e: Exception) {
+                MainScope().launch {
+                    ToastUtils.showText("网络异常")
+                }
+            }
+
+        })
+    }
+
+    fun getIsFavorite(bvid: String) {
+        VideoManager.isFavorite(bvid, object : NetworkUtils.ResultCallback<FavState> {
+            override fun onSuccess(result: FavState, code: Int) {
+                MainScope().launch {
+                    isFavorite.value = result.data.favoured
+                }
+            }
+
+            override fun onFailed(e: Exception) {
+                MainScope().launch {
+                    ToastUtils.showText("网络异常")
+                }
+            }
+        })
+    }
+
+    fun likeVideo(bvid: String, isLike: Boolean) {
+        VideoManager.likeVideo(bvid, isLike, object : NetworkUtils.ResultCallback<LikeResult> {
+            override fun onSuccess(result: LikeResult, code: Int) {
+                if (code == 0) {
+                    MainScope().launch {
+                        //ToastUtils.showText("点赞成功")
+                        //isLiked.value = isLike
+
+                    }
+                }
+            }
+
+            override fun onFailed(e: Exception) {
+                MainScope().launch {
+                    ToastUtils.showText("网络异常")
                 }
             }
 
