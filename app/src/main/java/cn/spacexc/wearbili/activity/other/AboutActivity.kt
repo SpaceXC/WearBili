@@ -31,7 +31,9 @@ class AboutActivity : AppCompatActivity() {
         )      //Rechrd你无不无聊啊我还得多加一个逻辑我真的谢谢您嘞
                //pai233注：不做评价（
     )
-    private val thirdList = listOf(HorizontalButtonData(0, "uid198338518", "组织"))
+    private val thirdList = listOf(
+        HorizontalButtonData(0, "uid198338518", "组织"),
+        HorizontalButtonData(0, "uid1463193869", "是一个一个做穿戴开发的Team~"))
     private val forthList = listOf(HorizontalButtonData(R.drawable.ic_github, "SocialSisterYi/bilibili-API-collect", "API仓库"))
 
     override fun onCreate(savedInstanceState: Bundle?) {
