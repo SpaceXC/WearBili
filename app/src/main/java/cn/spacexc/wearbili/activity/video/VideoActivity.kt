@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 
 
 class VideoActivity : AppCompatActivity() {
-    private lateinit var binding : ActivityVideoBinding
+    private lateinit var binding: ActivityVideoBinding
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +66,27 @@ class VideoActivity : AppCompatActivity() {
     var currentVideo: cn.spacexc.wearbili.dataclass.videoDetail.Data? = null
     var isInitialized = false
 
-    fun getId() : String? {
+    val videoId: String
+        get() {
+            if (intent.getStringExtra("videoId").isNullOrEmpty()) {
+                return if (intent.data?.path.isNullOrBlank()) {
+                    intent.data?.getQueryParameter("bvid")!!
+                } else {
+                    VideoUtils.av2bv(
+                        "av${
+                            intent.data?.path?.replace(
+                                "/",
+                                ""
+                            )!!
+                        }"
+                    )
+                }
+            } else {
+                return intent.getStringExtra("videoId")!!
+            }
+        }
+
+    /*fun getId(): String {
         if (!intent.getStringExtra("videoId")
                 .isNullOrBlank()
         ) return intent.getStringExtra("videoId")
@@ -81,8 +101,8 @@ class VideoActivity : AppCompatActivity() {
         if (!intent.data?.getQueryParameter("bvid")
                 .isNullOrEmpty()
         ) return intent.data?.getQueryParameter("bvid")
-        return null
-    }
+        //return null
+    }*/
 
     fun setPage(page: Int) {
         binding.viewPager2.currentItem = page - 1

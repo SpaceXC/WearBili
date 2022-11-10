@@ -3,6 +3,10 @@ package cn.spacexc.wearbili.manager
 import android.util.Log
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.Application.Companion.TAG
+import cn.spacexc.wearbili.dataclass.video.state.CoinState
+import cn.spacexc.wearbili.dataclass.video.state.FavState
+import cn.spacexc.wearbili.dataclass.video.state.LikeState
+import cn.spacexc.wearbili.dataclass.video.state.result.LikeResult
 import cn.spacexc.wearbili.dataclass.videoDetail.VideoDetailInfo
 import cn.spacexc.wearbili.utils.EncryptUtils
 import cn.spacexc.wearbili.utils.LogUtils.log
@@ -25,7 +29,9 @@ import java.io.IOException
 object VideoManager {
     fun getRecommendVideo(callback: Callback) {
         val url =
-            if (UserManager.getAccessKey() != null) "http://app.bilibili.com/x/v2/feed/index?access_key=${UserManager.getAccessKey()}" else "http://app.bilibili.com/x/v2/feed/index"
+            if (UserManager.getAccessKey()
+                    .isNotEmpty()
+            ) "http://app.bilibili.com/x/v2/feed/index?access_key=${UserManager.getAccessKey()}" else "http://app.bilibili.com/x/v2/feed/index"
         Log.d(TAG, "getRecommendVideo: $url")
         NetworkUtils.getUrl(
             url,
@@ -133,10 +139,82 @@ object VideoManager {
         return true
     }
 
-    fun isLiked(bvid: String, callback: Callback) {
+    fun likeVideo(
+        bvid: String,
+        isLike: Boolean,
+        callback: NetworkUtils.ResultCallback<LikeResult>
+    ) {
+        val operation = when (isLike) {
+            true -> 2       //取消赞
+            false -> 1      //点赞
+        }
+        val body: RequestBody = FormBody.Builder()
+            .add("bvid", bvid)
+            .add("like", operation.toString())
+            .add("csrf", CookiesManager.getCsrfToken()!!)
+            .build()
+        NetworkUtils.postUrl(
+            "http://api.bilibili.com/x/web-interface/archive/like",
+            body,
+            object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    callback.onFailed(e)
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val result = Gson().fromJson(response.body?.string(), LikeResult::class.java)
+                    callback.onSuccess(result, result.code)
+                }
+
+            })
+    }
+
+    fun isLiked(bvid: String, callback: NetworkUtils.ResultCallback<LikeState>) {
         NetworkUtils.getUrl(
             "http://api.bilibili.com/x/web-interface/archive/has/like?bvid=$bvid",
-            callback
+            object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    callback.onFailed(e)
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val result = Gson().fromJson(response.body?.string(), LikeState::class.java)
+                    callback.onSuccess(result)
+                }
+
+            })
+    }
+
+    fun isCoined(bvid: String, callback: NetworkUtils.ResultCallback<CoinState>) {
+        NetworkUtils.getUrl(
+            "http://api.bilibili.com/x/web-interface/archive/coins?bvid=$bvid",
+            object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    callback.onFailed(e)
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val result = Gson().fromJson(response.body?.string(), CoinState::class.java)
+                    callback.onSuccess(result)
+                }
+
+            })
+    }
+
+    fun isFavorite(bvid: String, callback: NetworkUtils.ResultCallback<FavState>) {
+        NetworkUtils.getUrl(
+            "http://api.bilibili.com/x/v2/fav/video/favoured?aid=$bvid",
+            object : Callback {     //这接口就这么设计的我也不知道为啥bv和av都是aid（
+                override fun onFailure(call: Call, e: IOException) {
+                    callback.onFailed(e)
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val result = Gson().fromJson(response.body?.string(), FavState::class.java)
+                    callback.onSuccess(result)
+                }
+
+            }
         )
     }
 
@@ -170,4 +248,5 @@ object VideoManager {
 
         })
     }
+
 }

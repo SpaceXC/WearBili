@@ -1,9 +1,14 @@
 package cn.spacexc.wearbili.manager
 
+import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.other.SplashScreenActivity
+import cn.spacexc.wearbili.activity.video.MinifyVideoPlayer
+import cn.spacexc.wearbili.activity.video.VideoPlayerActivity
 import cn.spacexc.wearbili.dataclass.settings.ChooseItem
 import cn.spacexc.wearbili.dataclass.settings.SettingItem
 import cn.spacexc.wearbili.dataclass.settings.SettingType
@@ -53,7 +58,7 @@ object SettingsManager {
                 ChooseItem(
                     name = "microTaiwan",
                     displayName = "小抬腕API中转",
-                    icon = R.drawable.empty_placeholder,
+                    icon = R.drawable.xiaotaiwan_icon,
                     description = "可调用抬腕视频"
                 ),
                 ChooseItem(
@@ -133,4 +138,62 @@ object SettingsManager {
     fun isDebug(): Boolean = SharedPreferencesUtils.getBoolean("isDebugging", false)
     fun hasScrollVfx(): Boolean = SharedPreferencesUtils.getBoolean("hasScrollVfx", true)
     fun defPlayer(): String = SharedPreferencesUtils.getString("defaultPlayer", "builtinPlayer")
+
+
+    fun playVideo(context: Context, bvid: String?, cid: Long?, title: String?, progress: Long = 0) {
+        when (defPlayer()) {
+            "builtinPlayer" -> {
+                val intent =
+                    Intent(context, VideoPlayerActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                intent.putExtra("videoBvid", bvid)
+                intent.putExtra("videoCid", cid)
+                intent.putExtra("videoTitle", title)
+                intent.putExtra("progress", progress)
+                context.startActivity(intent)
+            }
+            "minifyPlayer" -> {
+                val intent =
+                    Intent(context, MinifyVideoPlayer::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                intent.putExtra("videoBvid", bvid)
+                intent.putExtra("videoCid", cid)
+                intent.putExtra("videoTitle", title)
+                context.startActivity(intent)
+            }
+            "microTvPlayer" -> {
+                try {
+                    val intent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("wearbiliplayer://receive:8080/play?&bvid=$bvid&cid=$cid&aid=0")
+                    )
+                    context.startActivity(intent)
+                } catch (e: ActivityNotFoundException) {
+                    ToastUtils.makeText("需要安装小电视播放器哦").show()
+                }
+            }
+            "microTaiwan" -> {
+                try {
+                    val action = Intent(Intent.ACTION_VIEW)
+                    val builder = StringBuilder()
+                    builder.append("xinxiangshicheng://apiconversation:8888/receive?aid=0&bvid=$bvid&cid=$cid")
+                    action.data = Uri.parse(builder.toString())
+                    context.startActivity(action)
+                } catch (_: ActivityNotFoundException) {
+                    ToastUtils.showText("请安装小抬腕中转API！")
+                }
+            }
+            "other" -> {
+                try {
+                    val intent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("wearbili-3rd://video/play?&bvid=$bvid&cid=$cid")
+                    )
+                    context.startActivity(intent)
+                } catch (e: ActivityNotFoundException) {
+                    ToastUtils.showText("没有找到其他播放器哦")
+                }
+            }
+        }
+    }
 }

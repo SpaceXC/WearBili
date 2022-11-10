@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -17,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
@@ -28,7 +30,7 @@ import androidx.compose.ui.unit.sp
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.video.VideoActivity
-import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
+import cn.spacexc.wearbili.activity.video.VideoLongClickActivity
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 
@@ -57,21 +59,31 @@ object VideoUis {
     ) {
         var iconHeight by remember { mutableStateOf(0.dp) }
         val localDensity = LocalDensity.current
-        Column(modifier = Modifier.clickVfx {
-            if (isBangumi && epid.isNotEmpty()) {
-                Intent(context, BangumiActivity::class.java).apply {
-                    putExtra("id", epid)
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    context.startActivity(this)
-                }
-            } else if (clickable && videoBvid.isNotEmpty()) {
-                Intent(context, VideoActivity::class.java).apply {
-                    putExtra("videoId", videoBvid)
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    context.startActivity(this)
-                }
-            }
-        }) {
+        Column(modifier = Modifier
+            .pointerInput(Unit) {
+                detectTapGestures(onLongPress = {
+                    if (videoBvid.isNotEmpty()) {
+                        val intent = Intent(context, VideoLongClickActivity::class.java)
+                        intent.putExtra("bvid", videoBvid)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        context.startActivity(intent)
+                    }
+                }, onTap = {
+                    if (isBangumi && epid.isNotEmpty()) {
+                        Intent(context, BangumiActivity::class.java).apply {
+                            putExtra("id", epid)
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            context.startActivity(this)
+                        }
+                    } else if (clickable && videoBvid.isNotEmpty()) {
+                        Intent(context, VideoActivity::class.java).apply {
+                            putExtra("videoId", videoBvid)
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            context.startActivity(this)
+                        }
+                    }
+                })
+            }) {
             Spacer(Modifier.height(6.dp))
             Column(
                 modifier = Modifier

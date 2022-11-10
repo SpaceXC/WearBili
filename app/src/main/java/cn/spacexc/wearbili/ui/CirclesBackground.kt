@@ -17,14 +17,15 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.wear.compose.material.TimeTextDefaults
 import cn.spacexc.wearbili.R
+import cn.spacexc.wearbili.manager.isRound
 
 /**
  * Created by Xiaochang on 2022/9/16.
@@ -96,6 +97,8 @@ object CirclesBackground {
         onBack: () -> Unit = {},
         content: @Composable () -> Unit
     ) {
+        val timeSource = TimeTextDefaults.timeSource("HH:mm")
+        val timeText = timeSource.currentTime
         var bottomWidth by remember { mutableStateOf(0.dp) }
         var topWidth by remember { mutableStateOf(0.dp) }
         var textHeight by remember { mutableStateOf(0.dp) }
@@ -150,7 +153,7 @@ object CirclesBackground {
             Column(Modifier.fillMaxSize()) {
                 Column(Modifier.fillMaxWidth()) {
                     Spacer(Modifier.height(6.dp))
-                    if (LocalConfiguration.current.isScreenRound) {
+                    if (isRound()) {
                         Text(
                             text = title,
                             fontSize = 16.sp,
@@ -211,6 +214,16 @@ object CirclesBackground {
                                             }
                                         }
                                         .align(Alignment.CenterVertically)
+                                )
+
+                                Spacer(modifier = Modifier.weight(1f))
+                                Text(
+                                    text = timeText,
+                                    fontSize = 16.sp,
+                                    fontFamily = googleSansFamily,
+                                    fontWeight = FontWeight.Medium,
+                                    color = Color.White,
+                                    modifier = Modifier.align(Alignment.CenterVertically)
                                 )
                             }
                         }

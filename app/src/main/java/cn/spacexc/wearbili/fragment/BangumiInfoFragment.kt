@@ -1,8 +1,6 @@
 package cn.spacexc.wearbili.fragment
 
-import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -31,7 +29,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -42,13 +39,13 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
-import cn.spacexc.wearbili.activity.video.MinifyVideoPlayer
-import cn.spacexc.wearbili.activity.video.VideoPlayerActivity
+import cn.spacexc.wearbili.activity.image.PhotoViewActivity
 import cn.spacexc.wearbili.manager.SettingsManager
+import cn.spacexc.wearbili.manager.isRound
 import cn.spacexc.wearbili.ui.BilibiliPink
+import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
 import cn.spacexc.wearbili.ui.puhuiFamily
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
-import cn.spacexc.wearbili.utils.ToastUtils
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 
@@ -119,8 +116,15 @@ class BangumiInfoFragment : Fragment() {
                         .weight(2f)
                         //.fillMaxHeight()
                         .fillMaxSize()
-                        .clip(RoundedCornerShape(10.dp))
-                        .align(Alignment.CenterVertically), contentDescription = null
+                        .aspectRatio(0.75f, matchHeightConstraintsFirst = true)
+                        .align(Alignment.CenterVertically)
+                        .clickVfx {
+                            val intent =
+                                Intent(requireActivity(), PhotoViewActivity::class.java)
+                            intent.putExtra("imageUrl", bangumi?.result?.cover)
+                            startActivity(intent)
+                        }
+                        .clip(RoundedCornerShape(10.dp)), contentDescription = null
                 )   //番剧封面
                 Column(
                     modifier = Modifier
@@ -192,7 +196,7 @@ class BangumiInfoFragment : Fragment() {
             //简介
             Spacer(modifier = Modifier.height(4.dp))
             Column(modifier = Modifier.fillMaxWidth()) {
-                if (LocalConfiguration.current.isScreenRound) {
+                if (isRound()) {
                     Row {
                         var textHeight by remember {
                             mutableStateOf(0.dp)
@@ -513,16 +517,17 @@ class BangumiInfoFragment : Fragment() {
                         LazyColumn(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .requiredSizeIn(maxHeight = 140.dp)
                                 .clip(RoundedCornerShape(10.dp))
+                                .requiredSizeIn(maxHeight = 140.dp)
                         ) {
                             bangumi?.result?.episodes?.forEachIndexed { index, episode ->
                                 item {
-                                    Column(modifier = Modifier.clickable {
-                                        playVideo(
+                                    Column(modifier = Modifier.clickVfx {
+                                        SettingsManager.playVideo(
+                                            context = requireContext(),
                                             bvid = episode.bvid,
                                             cid = episode.cid,
-                                            title = "EP${index + 1} ${if (episode.long_title.isNullOrEmpty()) episode.title else episode.long_title}"
+                                            title = "${episode.title} ${episode.long_title}"
                                         )
                                     }) {
                                         Column(
@@ -594,13 +599,15 @@ class BangumiInfoFragment : Fragment() {
                         LazyColumn(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .clip(RoundedCornerShape(10.dp))
                                 //.height(90.dp)
                                 .requiredSizeIn(maxHeight = 140.dp)
                         ) {
                             section.episodes.forEach { episode ->
                                 item {
-                                    Column(modifier = Modifier.clickable {
-                                        playVideo(
+                                    Column(modifier = Modifier.clickVfx {
+                                        SettingsManager.playVideo(
+                                            context = requireContext(),
                                             bvid = episode.bvid,
                                             cid = episode.cid,
                                             title = "${episode.title} ${episode.long_title}"
@@ -660,56 +667,7 @@ class BangumiInfoFragment : Fragment() {
                     }   //部分选集
                 }   //其他部分视频
             }
-            Spacer(modifier = Modifier.height((if (LocalConfiguration.current.isScreenRound) 50 else 10).dp))
-        }
-    }
-
-    private fun playVideo(bvid: String, cid: Long, title: String) {
-        when (SettingsManager.defPlayer()) {
-            "builtinPlayer" -> {
-                val intent =
-                    Intent(requireActivity(), VideoPlayerActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                intent.putExtra("videoBvid", bvid)
-                intent.putExtra("videoCid", cid)
-                intent.putExtra("videoTitle", title)
-                intent.putExtra("progress", 0)
-                startActivity(intent)
-            }
-            "minifyPlayer" -> {
-                val intent =
-                    Intent(requireActivity(), MinifyVideoPlayer::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                intent.putExtra("videoBvid", bvid)
-                intent.putExtra("videoCid", cid)
-                intent.putExtra("videoTitle", title)
-                startActivity(intent)
-            }
-            "microTvPlayer" -> {
-                try {
-                    val intent = Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse("wearbiliplayer://receive:8080/play?&bvid=$bvid&cid=$cid&aid=0")
-                    )
-                    startActivity(intent)
-                } catch (e: ActivityNotFoundException) {
-                    ToastUtils.makeText("需要安装小电视播放器哦").show()
-                }
-            }
-            "microTaiwan" -> {
-                ToastUtils.showText("敬请期待")
-            }
-            "other" -> {
-                try {
-                    val intent = Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse("wearbili-3rd://video/play?&bvid=$bvid&cid=$cid")
-                    )
-                    startActivity(intent)
-                } catch (e: ActivityNotFoundException) {
-                    ToastUtils.showText("没有找到其他播放器哦")
-                }
-            }
+            Spacer(modifier = Modifier.height((if (isRound()) 50 else 10).dp))
         }
     }
 }
