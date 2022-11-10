@@ -23,9 +23,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.wear.compose.material.TimeTextDefaults
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.manager.isRound
-import cn.spacexc.wearbili.utils.TimeUtils
 
 /**
  * Created by Xiaochang on 2022/9/16.
@@ -97,6 +97,8 @@ object CirclesBackground {
         onBack: () -> Unit = {},
         content: @Composable () -> Unit
     ) {
+        val timeSource = TimeTextDefaults.timeSource("HH:mm")
+        val timeText = timeSource.currentTime
         var bottomWidth by remember { mutableStateOf(0.dp) }
         var topWidth by remember { mutableStateOf(0.dp) }
         var textHeight by remember { mutableStateOf(0.dp) }
@@ -213,12 +215,13 @@ object CirclesBackground {
                                         }
                                         .align(Alignment.CenterVertically)
                                 )
+
                                 Spacer(modifier = Modifier.weight(1f))
                                 Text(
-                                    text = TimeUtils.getCurrentTime(),
+                                    text = timeText,
                                     fontSize = 16.sp,
                                     fontFamily = googleSansFamily,
-                                    fontWeight = FontWeight.Bold,
+                                    fontWeight = FontWeight.Medium,
                                     color = Color.White,
                                     modifier = Modifier.align(Alignment.CenterVertically)
                                 )
