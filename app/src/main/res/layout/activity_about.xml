@@ -82,7 +82,7 @@
                 android:textSize="16sp"
                 app:drawableStartCompat="@drawable/ic_baseline_arrow_back_ios_24" />
 
-            <TextView
+            <TextClock
                 android:id="@+id/timeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -91,9 +91,10 @@
                 android:layout_marginEnd="7.5dp"
                 android:layout_marginBottom="6dp"
                 android:fontFamily="@font/googlesans_medium"
-                android:text="12:00"
                 android:textColor="#fff"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:format12Hour="hh:mm"
+                android:format24Hour="HH:mm"/>
         </FrameLayout>
 
         <androidx.core.widget.NestedScrollView

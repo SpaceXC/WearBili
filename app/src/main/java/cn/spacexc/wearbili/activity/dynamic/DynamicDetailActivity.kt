@@ -24,13 +24,11 @@ import cn.spacexc.wearbili.dataclass.dynamic.dynamicvideo.card.VideoCard
 import cn.spacexc.wearbili.manager.DynamicManager
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
-import cn.spacexc.wearbili.utils.TimeUtils
 import cn.spacexc.wearbili.utils.TimeUtils.toDateStr
 import cn.spacexc.wearbili.utils.ToastUtils
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
@@ -55,12 +53,13 @@ class DynamicDetailActivity : AppCompatActivity() {
         binding.comments.layoutManager = LinearLayoutManager(this)
         binding.swipeRefreshLayout.isRefreshing = true
         getDynamicDetails(id.toString())
-        lifecycleScope.launch {
-            while (true) {
-                binding.timeText.text = TimeUtils.getCurrentTime()
-                delay(500)
-            }
-        }
+//        lifecycleScope.launch {
+//            while (true) {
+//                binding.timeText.text = TimeUtils.getCurrentTime()
+//                delay(500)
+//            }
+//        }
+//        pai233注：不想写了（（
         binding.pageName.setOnClickListener { finish() }
     }
 

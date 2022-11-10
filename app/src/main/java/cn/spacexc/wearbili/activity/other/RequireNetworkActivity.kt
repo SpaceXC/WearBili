@@ -26,12 +26,12 @@ class RequireNetworkActivity : AppCompatActivity() {
                     // Handle data from SecondActivity
                 }
             }
-        lifecycleScope.launch {
-            while (true) {
-                findViewById<TextView>(R.id.timeText).text = TimeUtils.getCurrentTime()
-                delay(500)
-            }
-        }
+//        lifecycleScope.launch {
+//            while (true) {
+//                findViewById<TextView>(R.id.timeText).text = TimeUtils.getCurrentTime()
+//                delay(500)
+//            }
+//        }
         findViewById<ConstraintLayout>(R.id.retry).setOnClickListener {
             val intent = Intent()
             setResult(RESULT_RETRY)

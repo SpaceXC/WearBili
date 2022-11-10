@@ -60,12 +60,12 @@ class BangumiActivity : AppCompatActivity() {
             }
 
         }))
-        lifecycleScope.launch {
-            while (true) {
-                binding.timeText.text = TimeUtils.getCurrentTime()
-                delay(500)
-            }
-        }
+//        lifecycleScope.launch {
+//            while (true) {
+//                binding.timeText.text = TimeUtils.getCurrentTime()
+//                delay(500)
+//            }
+//        }
         binding.pageName.setOnClickListener { finish() }
     }
 }

@@ -80,7 +80,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/timeText" />
 
-        <TextView
+        <TextClock
             android:id="@+id/timeText"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -88,12 +88,13 @@
             android:fontFamily="@font/googlesans_medium"
             android:gravity="center"
             android:paddingTop="1dp"
-            android:text="12:00"
             android:textColor="#fff"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:format12Hour="hh:mm"
+            android:format24Hour="HH:mm"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

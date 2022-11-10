@@ -25,13 +25,13 @@ class PlayOnPhoneActivity : AppCompatActivity() {
             .into(findViewById(R.id.qrImage2))
 
         findViewById<TextView>(R.id.pageName).setOnClickListener { finish() }
-        lifecycleScope.launch {
-            @SuppressLint("SimpleDateFormat") val sdf = SimpleDateFormat("HH:mm")
-            while (true) {
-                val date = sdf.format(Date())
-                findViewById<TextView>(R.id.timeText).text = date
-                delay(100)
-            }
-        }
+//        lifecycleScope.launch {
+//            @SuppressLint("SimpleDateFormat") val sdf = SimpleDateFormat("HH:mm")
+//            while (true) {
+//                val date = sdf.format(Date())
+//                findViewById<TextView>(R.id.timeText).text = date
+//                delay(100)
+//            }
+//        }
     }
 }

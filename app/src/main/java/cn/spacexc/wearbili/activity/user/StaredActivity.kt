@@ -37,12 +37,12 @@ class StaredActivity : AppCompatActivity() {
         binding.recyclerView.adapter = adapter
         binding.pageName.setOnClickListener { finish() }
         binding.swipeRefreshLayout.setOnRefreshListener { getStarFolder() }
-        lifecycleScope.launchWhenCreated {
-            while (true) {
-                binding.timeText.text = TimeUtils.getCurrentTime()
-                delay(500)
-            }
-        }
+//        lifecycleScope.launchWhenCreated {
+//            while (true) {
+//                binding.timeText.text = TimeUtils.getCurrentTime()
+//                delay(500)
+//            }
+//        }
         binding.swipeRefreshLayout.isRefreshing = true
         binding.cardView.addClickScale()
         getStarFolder()
