@@ -5,7 +5,8 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.clickable
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -28,6 +29,7 @@ import androidx.wear.compose.material.ScalingLazyColumn
 import cn.spacexc.wearbili.manager.ID_TYPE_SSID
 import cn.spacexc.wearbili.manager.SettingsManager
 import cn.spacexc.wearbili.ui.CirclesBackground
+import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
 import cn.spacexc.wearbili.ui.puhuiFamily
 import cn.spacexc.wearbili.viewmodel.BangumiViewModel
 import coil.compose.AsyncImage
@@ -92,7 +94,7 @@ class BangumiTimeLineActivity : AppCompatActivity() {
                             }
                             it.episodes.forEach { episode ->
                                 item {
-                                    Column(modifier = Modifier.clickable {
+                                    Column(modifier = Modifier.clickVfx {
                                         Intent(
                                             this@BangumiTimeLineActivity,
                                             BangumiActivity::class.java
@@ -112,8 +114,17 @@ class BangumiTimeLineActivity : AppCompatActivity() {
                                                     .weight(1f)
                                                     //.fillMaxHeight()
                                                     .fillMaxSize()
+                                                    .aspectRatio(
+                                                        0.75f,
+                                                        matchHeightConstraintsFirst = true
+                                                    )
                                                     .clip(RoundedCornerShape(10.dp))
-                                                    .align(Alignment.CenterVertically),
+                                                    .align(Alignment.CenterVertically)
+                                                    .animateContentSize(
+                                                        animationSpec = tween(
+                                                            durationMillis = 200
+                                                        )
+                                                    ),
                                                 contentDescription = null
                                             )   //番剧封面
                                             Column(
@@ -169,7 +180,7 @@ class BangumiTimeLineActivity : AppCompatActivity() {
                             }
                             it.episodes.forEach { episode ->
                                 item {
-                                    Column(modifier = Modifier.clickable {
+                                    Column(modifier = Modifier.clickVfx {
                                         Intent(
                                             this@BangumiTimeLineActivity,
                                             BangumiActivity::class.java
@@ -189,8 +200,17 @@ class BangumiTimeLineActivity : AppCompatActivity() {
                                                     .weight(1f)
                                                     //.fillMaxHeight()
                                                     .fillMaxSize()
+                                                    .aspectRatio(
+                                                        0.75f,
+                                                        matchHeightConstraintsFirst = true
+                                                    )
                                                     .clip(RoundedCornerShape(10.dp))
-                                                    .align(Alignment.CenterVertically),
+                                                    .align(Alignment.CenterVertically)
+                                                    .animateContentSize(
+                                                        animationSpec = tween(
+                                                            durationMillis = 200
+                                                        )
+                                                    ),
                                                 contentDescription = null
                                             )   //番剧封面
                                             Column(

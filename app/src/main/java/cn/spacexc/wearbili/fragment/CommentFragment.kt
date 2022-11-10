@@ -98,7 +98,6 @@ class CommentFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         if (!isAdded) return
         adapter = CommentAdapter(lifecycleScope, Application.context!!) {
-
             activityResultLauncher.launch(Intent(requireActivity(), PostActivity::class.java).apply {
                 putExtra(COMMENT_TYPE, COMMENT_TYPE_VIDEO)
                 putExtra("oid", (requireActivity() as VideoActivity).currentVideo?.aid)

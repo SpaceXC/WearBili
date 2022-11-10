@@ -7,7 +7,7 @@
         <deviceKey>
           <Key>
             <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\Administrator\.android\avd\Wear_OS_Square_API_28.avd" />
+            <value value="$USER_HOME$/.android/avd/Watch_2.12_API_30.avd" />
           </Key>
         </deviceKey>
       </Target>

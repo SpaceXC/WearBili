@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import cn.spacexc.wearbili.fragment.CommentFragment
 import cn.spacexc.wearbili.fragment.VideoInfoFragment
+import cn.spacexc.wearbili.fragment.VideoInformationFragment
 
 /**
  * Created by XC-Qan on 2022/6/12.
@@ -20,7 +21,7 @@ class VideoViewPagerAdapter(fragmentActivity: FragmentActivity) :
 
     override fun createFragment(position: Int): Fragment {
         return when(position){
-            0 -> VideoInfoFragment()
+            0 -> VideoInformationFragment()
             1 -> CommentFragment()
             else -> VideoInfoFragment()
         }
