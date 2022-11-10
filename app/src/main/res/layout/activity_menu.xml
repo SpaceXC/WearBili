@@ -58,7 +58,7 @@
                 android:fontFamily="@font/googlesans_medium"
                 android:gravity="center"
                 android:paddingTop="1dp"
-                android:format12Hour="h:mm a"
+                android:format12Hour="hh:mm"
                 android:format24Hour="HH:mm"
                 android:textColor="#fff"
                 android:textSize="16sp"

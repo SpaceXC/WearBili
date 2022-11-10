@@ -93,7 +93,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:format12Hour="h:mm a"
+            android:format12Hour="hh:mm"
             android:format24Hour="HH:mm"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
