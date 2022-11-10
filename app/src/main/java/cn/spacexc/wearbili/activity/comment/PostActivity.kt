@@ -30,12 +30,12 @@ class PostActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityPostBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        lifecycleScope.launch {
-            while (true){
-                binding.timeText.text = TimeUtils.getCurrentTime()
-                delay(500)
-            }
-        }
+//        lifecycleScope.launch {
+//            while (true){
+//                binding.timeText.text = TimeUtils.getCurrentTime()
+//                delay(500)
+//            }
+//        }
         binding.pageName.setOnClickListener { finish() }
         binding.enter.setOnClickListener {
             binding.input.setText("${binding.input.text}\n")

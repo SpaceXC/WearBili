@@ -44,12 +44,12 @@ class SearchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_search)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        lifecycleScope.launch {
-            while (true) {
-                binding.timeText.text = TimeUtils.getCurrentTime()
-                delay(500)
-            }
-        }
+//        lifecycleScope.launch {
+//            while (true) {
+//                binding.timeText.text = TimeUtils.getCurrentTime()
+//                delay(500)
+//            }
+//        }
         binding.pageName.setOnClickListener { finish() }
         binding.hotSearchRecyclerView.adapter = adapter
         val layoutManager = LinearLayoutManager(this)

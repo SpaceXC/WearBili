@@ -21,7 +21,7 @@ class ViewFullVideoPartsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_view_full_video_parts)
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         val pageName = findViewById<TextView>(R.id.pageName)
-        val timeText = findViewById<TextView>(R.id.timeText)
+//      val timeText = findViewById<TextView>(R.id.timeText)
         val data = Gson().fromJson(
             intent.getStringExtra("data"),
             cn.spacexc.wearbili.dataclass.videoDetail.Data.Pages::class.java
@@ -33,11 +33,11 @@ class ViewFullVideoPartsActivity : AppCompatActivity() {
             VideoPartsAdapter(intent.getStringExtra("bvid")!!).also { it.submitList(data.pages) }
         pageName.text = "查看全部 (${data.pages.size})"
         pageName.setOnClickListener { finish() }
-        lifecycleScope.launchWhenCreated {
-            while (true) {
-                timeText.text = TimeUtils.getCurrentTime()
-                delay(500)
-            }
-        }
+//        lifecycleScope.launchWhenCreated {
+//            while (true) {
+//                timeText.text = TimeUtils.getCurrentTime()
+//                delay(500)
+//            }
+//        }
     }
 }

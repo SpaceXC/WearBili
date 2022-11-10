@@ -16,12 +16,12 @@ class RequireRestartActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_require_restart)
-        lifecycleScope.launch {
-            while (true) {
-                findViewById<TextView>(R.id.timeText).text = TimeUtils.getCurrentTime()
-                delay(500)
-            }
-        }
+//        lifecycleScope.launch {
+//            while (true) {
+//                findViewById<TextView>(R.id.timeText).text = TimeUtils.getCurrentTime()
+//                delay(500)
+//            }
+//        }
         /**
          * From [CSDN](https://blog.csdn.net/lebulangzhen/article/details/108789777)
          */

@@ -28,12 +28,12 @@ class FollowListActivity : AppCompatActivity() {
         binding = ActivityFollowListBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.pageName.setOnClickListener { finish() }
-        lifecycleScope.launch {
-            while (true) {
-                binding.timeText.text = TimeUtils.getCurrentTime()
-                delay(500)
-            }
-        }
+//        lifecycleScope.launch {
+//            while (true) {
+//                binding.timeText.text = TimeUtils.getCurrentTime()
+//                delay(500)
+//            }
+//        }
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)

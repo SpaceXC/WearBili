@@ -16,12 +16,12 @@ class VideoCacheActivity : AppCompatActivity() {
         binding = ActivityVideoCacheBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.pageName.setOnClickListener { finish() }
-        lifecycleScope.launch {
-            while (true) {
-                binding.timeText.text = TimeUtils.getCurrentTime()
-                delay(1000)
-                Long
-            }
-        }
+//        lifecycleScope.launch {
+//            while (true) {
+//                binding.timeText.text = TimeUtils.getCurrentTime()
+//                delay(1000)
+//                Long
+//            }
+//        }
     }
 }

@@ -133,11 +133,11 @@ class MenuActivity : AppCompatActivity() {
             overridePendingTransition(R.anim.activity_in_y, R.anim.activity_out_y)
         }
 
-        lifecycleScope.launch {
-            while (true) {
-                findViewById<TextView>(R.id.timeText).text = TimeUtils.getCurrentTime()
-                delay(500)
-            }
-        }
+//        lifecycleScope.launch {
+//            while (true) {
+//                findViewById<TextView>(R.id.timeText).text = TimeUtils.getCurrentTime()
+//                delay(500)
+//            }
+//        }
     }
 }

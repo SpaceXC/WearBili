@@ -3,7 +3,6 @@ package cn.spacexc.wearbili.activity.other
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.R
@@ -11,9 +10,10 @@ import cn.spacexc.wearbili.adapter.HorizontalButtonAdapter
 import cn.spacexc.wearbili.adapter.UserHorizontalButtonAdapter
 import cn.spacexc.wearbili.dataclass.HorizontalButtonData
 import cn.spacexc.wearbili.listener.OnItemViewClickListener
-import cn.spacexc.wearbili.utils.TimeUtils
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+//import cn.spacexc.wearbili.utils.TimeUtils
+//import kotlinx.coroutines.delay
+//import kotlinx.coroutines.launch
+//import androidx.lifecycle.lifecycleScope
 
 class AboutActivity : AppCompatActivity() {
     private val firstList = listOf(
@@ -29,6 +29,7 @@ class AboutActivity : AppCompatActivity() {
             "虚位以待",
             "UI/UA设计师"
         )      //Rechrd你无不无聊啊我还得多加一个逻辑我真的谢谢您嘞
+               //pai233注：不做评价（
     )
     private val thirdList = listOf(HorizontalButtonData(0, "uid198338518", "组织"))
     private val forthList = listOf(HorizontalButtonData(R.drawable.ic_github, "SocialSisterYi/bilibili-API-collect", "API仓库"))
@@ -69,11 +70,12 @@ class AboutActivity : AppCompatActivity() {
         }).also { it.submitList(forthList) }
 
         findViewById<TextView>(R.id.pageName).setOnClickListener { finish() }
-        lifecycleScope.launch {
-            while (true) {
-                findViewById<TextView>(R.id.timeText).text = TimeUtils.getCurrentTime()
-                delay(500)
-            }
-        }
+//        lifecycleScope.launch {
+//            while (true) {
+//                findViewById<TextView>(R.id.timeText).text = TimeUtils.getCurrentTime()
+//                delay(500)
+//            }
+//        }
+//        pai233注：移除获取时间的协程，改为TextClock
     }
 }

@@ -26,11 +26,11 @@ class SettingsActivity : AppCompatActivity() {
         pageName = findViewById(R.id.pageName)
         val timeText = findViewById<TextView>(R.id.timeText)
         pageName.setOnClickListener { finish() }
-        lifecycleScope.launchWhenCreated {
-            while (true) {
-                timeText.text = TimeUtils.getCurrentTime()
-                delay(500)
-            }
-        }
+//        lifecycleScope.launchWhenCreated {
+//            while (true) {
+//                timeText.text = TimeUtils.getCurrentTime()
+//                delay(500)
+//            }
+//        }
     }
 }

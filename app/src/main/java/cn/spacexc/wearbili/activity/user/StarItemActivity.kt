@@ -33,12 +33,12 @@ class StarItemActivity : AppCompatActivity() {
         binding = ActivityStarItemBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.pageName.setOnClickListener { finish() }
-        lifecycleScope.launch {
-            while (true) {
-                binding.timeText.text = TimeUtils.getCurrentTime()
-                delay(500)
-            }
-        }
+//        lifecycleScope.launch {
+//            while (true) {
+//                binding.timeText.text = TimeUtils.getCurrentTime()
+//                delay(500)
+//            }
+//        }
         val folderId = intent.getLongExtra("folderId", 0L)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager =

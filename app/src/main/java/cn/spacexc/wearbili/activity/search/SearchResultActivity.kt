@@ -67,12 +67,12 @@ class SearchResultActivity : AppCompatActivity() {
             searchVideo()
         }
         binding.pageName.setOnClickListener { finish() }
-        lifecycleScope.launch {
-            while (true) {
-                binding.timeText.text = cn.spacexc.wearbili.utils.TimeUtils.getCurrentTime()
-                delay(500)
-            }
-        }
+//        lifecycleScope.launch {
+//            while (true) {
+//                binding.timeText.text = cn.spacexc.wearbili.utils.TimeUtils.getCurrentTime()
+//                delay(500)
+//            }
+//        }
         searchVideo()
     }
 

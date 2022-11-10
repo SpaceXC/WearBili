@@ -41,15 +41,15 @@ class WatchLaterActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout)
         pageName = findViewById(R.id.pageName)
-        val timeText = findViewById<TextView>(R.id.timeText)
+//      val timeText = findViewById<TextView>(R.id.timeText)
         pageName.text = "稍后再看"// (${data?.data?.size})"
         pageName.setOnClickListener { finish() }
-        lifecycleScope.launchWhenCreated {
-            while (true) {
-                timeText.text = TimeUtils.getCurrentTime()
-                delay(500)
-            }
-        }
+//        lifecycleScope.launchWhenCreated {
+//            while (true) {
+//                timeText.text = TimeUtils.getCurrentTime()
+//                delay(500)
+//            }
+//        }
         swipeRefreshLayout.setOnRefreshListener { getWatchLater() }
         swipeRefreshLayout.isRefreshing = true
         getWatchLater()

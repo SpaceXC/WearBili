@@ -39,23 +39,23 @@ class LoginActivityWithTV : AppCompatActivity() {
 
     lateinit var qrImageView: ImageView
     private lateinit var back: TextView
-    private lateinit var time: TextView
+//  private lateinit var time: TextView
     lateinit var scanStat: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         qrImageView = findViewById(R.id.qrImage)
         back = findViewById(R.id.pageName)
-        time = findViewById(R.id.timeText)
+//      time = findViewById(R.id.timeText)
         scanStat = findViewById(R.id.scanStat)
         qrImageView.setOnClickListener { refreshQrCode() }
         back.setOnClickListener { finish() }
-        lifecycleScope.launch {
-            while (true) {
-                time.text = TimeUtils.getCurrentTime()
-                delay(500)
-            }
-        }
+//        lifecycleScope.launch {
+//            while (true) {
+//                time.text = TimeUtils.getCurrentTime()
+//                delay(500)
+//            }
+//        }
         refreshQrCode()
     }
 

@@ -32,11 +32,11 @@ class QRCodeActivity : AppCompatActivity() {
             .into(findViewById(R.id.qrImage2))
 
         findViewById<TextView>(R.id.pageName).setOnClickListener { finish() }
-        lifecycleScope.launch {
-            while (true) {
-                findViewById<TextView>(R.id.timeText).text = TimeUtils.getCurrentTime()
-                delay(100)
-            }
-        }
+//        lifecycleScope.launch {
+//            while (true) {
+//                findViewById<TextView>(R.id.timeText).text = TimeUtils.getCurrentTime()
+//                delay(100)
+//            }
+//        }
     }
 }
