@@ -23,8 +23,7 @@ Azure App Center崩溃上报系统，在您设备上的任何崩溃及其日志�
 
 ## 使用
 
--
-在QQ内测群内/[App Center](https://install.appcenter.ms/users/xc-chan/apps/wearbili/distribution_groups/insider)获取安装包
+- 在QQ内测群内/[App Center](https://install.appcenter.ms/users/xc-chan/apps/wearbili/distribution_groups/insider)获取安装包
 - 利用您手头上的工具将安装包传输并安装到手表
 - **开发者没有帮您解决安装问题/帮您安装的义务**
 - **安装过程中遇到问题请善用互联网**
