@@ -33,7 +33,7 @@ class AboutActivity : AppCompatActivity() {
     )
     private val thirdList = listOf(
         HorizontalButtonData(0, "uid198338518", "组织"),
-        HorizontalButtonData(0, "uid1463193869", "是一个一个做穿戴开发的Team~"))
+        HorizontalButtonData(0, "uid1463193869", "一个做穿戴开发的团队"))
     private val forthList = listOf(HorizontalButtonData(R.drawable.ic_github, "SocialSisterYi/bilibili-API-collect", "API仓库"))
 
     override fun onCreate(savedInstanceState: Bundle?) {

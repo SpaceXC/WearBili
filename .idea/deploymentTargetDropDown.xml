@@ -7,12 +7,12 @@
         <deviceKey>
           <Key>
             <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="$USER_HOME$/.android/avd/Watch_2.12_API_30.avd" />
+            <value value="C:\Users\Administrator\.android\avd\Wear_OS_Square_API_28.avd" />
           </Key>
         </deviceKey>
       </Target>
     </targetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2022-11-10T13:35:06.244613Z" />
+    <timeTargetWasSelectedWithDropDown value="2022-11-11T05:02:41.428774300Z" />
     <targetsSelectedWithDialog>
       <Target>
         <type value="QUICK_BOOT_TARGET" />
