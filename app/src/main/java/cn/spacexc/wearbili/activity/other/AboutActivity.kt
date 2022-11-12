@@ -29,8 +29,8 @@ class AboutActivity : AppCompatActivity() {
             "虚位以待",     //Rechrd
             "UI/UA设计师"
         )      //Rechrd你无不无聊啊我还得多加一个逻辑我真的谢谢您嘞
-        //pai233注：不做评价（
-        //xc回复：不做评价还占个位置（
+               //pai233注：不做评价（
+               //xc回复：不做评价还占个位置（
     )
     private val thirdList = listOf(
         HorizontalButtonData(0, "uid198338518", "设计组织"),
