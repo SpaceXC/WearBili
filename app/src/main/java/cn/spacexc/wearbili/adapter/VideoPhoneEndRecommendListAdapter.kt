@@ -70,14 +70,14 @@ class VideoPhoneEndRecommendListAdapter(val context: Context) :
         if (video.goto == "av") {
             holder.cardView.setOnClickListener {
                 val intent = Intent(Application.getContext(), VideoActivity::class.java)
-                intent.putExtra("videoId", VideoUtils.av2bv("av${video.player_args.aid}"))
+                intent.putExtra("videoId", VideoUtils.av2bv("av${video.player_args?.aid}"))
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 Application.getContext().startActivity(intent)
 
             }
             holder.cardView.setOnLongClickListener {
                 val intent = Intent(context, VideoLongClickActivity::class.java)
-                intent.putExtra("bvid", VideoUtils.av2bv("av${video.player_args.aid}"))
+                intent.putExtra("bvid", VideoUtils.av2bv("av${video.player_args?.aid}"))
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)
                 true

@@ -17,7 +17,7 @@ import cn.spacexc.wearbili.listener.OnItemViewClickListener
 
 class AboutActivity : AppCompatActivity() {
     private val firstList = listOf(
-        HorizontalButtonData(R.drawable.ic_outline_info_24, "Rel-AL 0.16.4", "版本号"),
+        HorizontalButtonData(R.drawable.ic_outline_info_24, "Rel-AL 0.16.5", "版本号"),
         HorizontalButtonData(R.drawable.ic_github, "Github", "查看我们的开源项目"),
     )
     private val secondList = listOf(
@@ -29,11 +29,13 @@ class AboutActivity : AppCompatActivity() {
             "虚位以待",     //Rechrd
             "UI/UA设计师"
         )      //Rechrd你无不无聊啊我还得多加一个逻辑我真的谢谢您嘞
-               //pai233注：不做评价（
+        //pai233注：不做评价（
+        //xc回复：不做评价还占个位置（
     )
     private val thirdList = listOf(
-        HorizontalButtonData(0, "uid198338518", "组织"),
-        HorizontalButtonData(0, "uid1463193869", "是一个一个做穿戴开发的Team~"))
+        HorizontalButtonData(0, "uid198338518", "设计组织"),
+        HorizontalButtonData(0, "uid1463193869", "开发协力")
+    )
     private val forthList = listOf(HorizontalButtonData(R.drawable.ic_github, "SocialSisterYi/bilibili-API-collect", "API仓库"))
 
     override fun onCreate(savedInstanceState: Bundle?) {

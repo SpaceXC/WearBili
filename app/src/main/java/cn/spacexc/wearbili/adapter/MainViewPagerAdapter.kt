@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import cn.spacexc.wearbili.fragment.DynamicFragment
 import cn.spacexc.wearbili.fragment.ProfileFragment
-import cn.spacexc.wearbili.fragment.RecommendFragment
+import cn.spacexc.wearbili.fragment.RecommendVideoFragment
 
 /**
  * Created by XC-Qan on 2022/6/7.
@@ -24,7 +24,7 @@ class MainViewPagerAdapter(fragmentActivity: FragmentActivity) :
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> RecommendFragment()
+            0 -> RecommendVideoFragment()
             1 -> DynamicFragment()
             2 -> ProfileFragment()
             else -> ProfileFragment()

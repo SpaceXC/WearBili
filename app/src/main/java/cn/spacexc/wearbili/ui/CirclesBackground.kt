@@ -1,6 +1,5 @@
 package cn.spacexc.wearbili.ui
 
-import android.content.res.Configuration.UI_MODE_TYPE_WATCH
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -239,7 +238,7 @@ object CirclesBackground {
 
 }
 
-@Preview(uiMode = UI_MODE_TYPE_WATCH, showSystemUi = true)
+@Preview
 @Composable
 fun Preview() {
     CirclesBackground.RegularBackgroundWithNoTitle {

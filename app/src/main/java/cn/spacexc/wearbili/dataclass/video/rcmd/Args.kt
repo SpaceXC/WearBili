@@ -7,5 +7,5 @@ data class Args(
     val tid: Int?,
     val tname: String?,
     val up_id: Long,
-    val up_name: String
+    val up_name: String?
 )

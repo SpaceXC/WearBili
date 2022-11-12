@@ -22,7 +22,7 @@ data class Item(
     val idx: Int,
     val official_icon: Int?,
     val `param`: String,
-    val player_args: PlayerArgs,
+    val player_args: PlayerArgs?,
     val rcmd_reason: String?,
     val rcmd_reason_style: RcmdReasonStyle?,
     val talk_back: String?,

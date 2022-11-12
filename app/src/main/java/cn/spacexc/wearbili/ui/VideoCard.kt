@@ -168,6 +168,28 @@ object VideoUis {
                 }
                 Spacer(Modifier.height(8.dp))
                 Row {
+                    if (hasViews) {
+                        Spacer(Modifier.width(6.dp))
+                        Icon(
+                            imageVector = Icons.Outlined.PlayCircleOutline,
+                            modifier = Modifier
+                                .alpha(0.5f)
+                                .width(iconHeight)
+                                .height(iconHeight),
+                            contentDescription = null,
+                            tint = Color.White
+                        )
+                        Spacer(Modifier.width(1.dp))
+                        Text(
+                            text = views,
+                            color = Color.White,
+                            modifier = Modifier.alpha(0.5f),
+                            fontFamily = puhuiFamily,
+                            fontSize = 9.sp,
+                            fontWeight = FontWeight.Medium,
+                            maxLines = 1
+                        )
+                    }
                     if (uploader.isNotEmpty()) {
                         Icon(
                             imageVector = Icons.Outlined.Person,
@@ -191,28 +213,8 @@ object VideoUis {
                                 },
                             fontFamily = puhuiFamily,
                             fontSize = 9.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
-                    if (hasViews) {
-                        Spacer(Modifier.width(6.dp))
-                        Icon(
-                            imageVector = Icons.Outlined.PlayCircleOutline,
-                            modifier = Modifier
-                                .alpha(0.5f)
-                                .width(iconHeight)
-                                .height(iconHeight),
-                            contentDescription = null,
-                            tint = Color.White
-                        )
-                        Spacer(Modifier.width(1.dp))
-                        Text(
-                            text = views,
-                            color = Color.White,
-                            modifier = Modifier.alpha(0.5f),
-                            fontFamily = puhuiFamily,
-                            fontSize = 9.sp,
-                            fontWeight = FontWeight.Medium
+                            fontWeight = FontWeight.Medium,
+                            maxLines = 1
                         )
                     }
                 }
