@@ -61,7 +61,7 @@ class RecommendVideoFragment : Fragment() {
                             item {
                                 VideoUis.VideoCard(
                                     videoName = it.title,
-                                    views = it.cover_left_text_1 + "  " + (it.badge ?: ""),
+                                    views = it.cover_left_text_1,
                                     uploader = it.args.up_name ?: "",
                                     coverUrl = it.cover,
                                     hasViews = true,
@@ -69,7 +69,8 @@ class RecommendVideoFragment : Fragment() {
                                     videoBvid = if (it.player_args?.aid != null) VideoUtils.av2bv("av${it.player_args.aid}") else "",
                                     context = context!!,
                                     isBangumi = it.goto == "bangumi",
-                                    epid = it.param
+                                    epid = it.param,
+                                    badge = it.badge ?: ""
                                 )
                             }
                         }
@@ -89,7 +90,7 @@ class RecommendVideoFragment : Fragment() {
                             item {
                                 VideoUis.VideoCard(
                                     videoName = it.title,
-                                    views = it.cover_left_text_1 + (it.badge ?: ""),
+                                    views = it.cover_left_text_1,
                                     uploader = it.args.up_name ?: "",
                                     coverUrl = it.cover,
                                     hasViews = true,
@@ -97,7 +98,8 @@ class RecommendVideoFragment : Fragment() {
                                     videoBvid = if (it.player_args?.aid != null) VideoUtils.av2bv("av${it.player_args.aid}") else "",
                                     context = context!!,
                                     isBangumi = it.goto == "bangumi",
-                                    epid = it.param
+                                    epid = it.param,
+                                    badge = it.badge ?: ""
                                 )
                             }
                         }

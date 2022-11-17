@@ -15,6 +15,7 @@ import cn.spacexc.wearbili.manager.CookiesManager
 import cn.spacexc.wearbili.manager.LCManager
 import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.utils.NetworkUtils
+import cn.spacexc.wearbili.utils.SharedPreferencesUtils
 import cn.spacexc.wearbili.utils.ToastUtils
 import com.google.gson.Gson
 import kotlinx.coroutines.MainScope
@@ -29,30 +30,32 @@ class SplashScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
-
-        /*val intent =
-            Intent(this@SplashScreenActivity, BangumiActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        intent.putExtra("id", "42962")
-        intent.putExtra("idType", ID_TYPE_SSID)
-        startActivity(intent)
-        overridePendingTransition(
-            R.anim.activity_fade_in,
-            R.anim.activity_fade_out
-        )
-        finish()*/
-        NetworkUtils.getUrl("https://bilibili.com", object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                NetworkUtils.requireRetry { }
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                MainScope().launch {
-                    initApp()
+        if (!SharedPreferencesUtils.getBoolean("hasSetUp", false)) {
+            val intent =
+                Intent(this@SplashScreenActivity, WelcomeActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            //intent.putExtra("id", "42962")
+            //intent.putExtra("idType", ID_TYPE_SSID)
+            startActivity(intent)
+            overridePendingTransition(
+                R.anim.activity_fade_in,
+                R.anim.activity_fade_out
+            )
+            finish()
+        } else {
+            NetworkUtils.getUrl("https://bilibili.com", object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    NetworkUtils.requireRetry { }
                 }
-            }
 
-        })
+                override fun onResponse(call: Call, response: Response) {
+                    MainScope().launch {
+                        initApp()
+                    }
+                }
+
+            })
+        }
         //initApp()
 
         /*NetworkUtils.requireRetry {
