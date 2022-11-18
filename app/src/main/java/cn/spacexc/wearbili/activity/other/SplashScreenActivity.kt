@@ -81,7 +81,7 @@ class SplashScreenActivity : AppCompatActivity() {
         Log.d(TAG, "onCreate: ${UserManager.isLoggedIn()}")
         if (UserManager.isLoggedIn()) {
             lifecycleScope.launch {
-                Log.d(TAG, "onCreate: ${UserManager.getUid()!!}")
+//                Log.d(TAG, "onCreate: ${UserManager.getUid()!!}")
                 LCManager.isUserActivated(UserManager.getUid()!!, object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
                         MainScope().launch {

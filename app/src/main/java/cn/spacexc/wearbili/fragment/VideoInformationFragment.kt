@@ -50,6 +50,7 @@ import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
+import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.image.PhotoViewActivity
 import cn.spacexc.wearbili.activity.settings.ChooseSettingsActivity
 import cn.spacexc.wearbili.activity.video.PlayOnPhoneActivity
@@ -57,7 +58,9 @@ import cn.spacexc.wearbili.activity.video.VideoActivity
 import cn.spacexc.wearbili.activity.video.ViewFullVideoPartsActivity
 import cn.spacexc.wearbili.dataclass.RoundButtonDataNew
 import cn.spacexc.wearbili.dataclass.videoDetail.VideoDetailInfo
+import cn.spacexc.wearbili.manager.ID_TYPE_SSID
 import cn.spacexc.wearbili.manager.SettingsManager
+import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.ui.BilibiliPink
 import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
 import cn.spacexc.wearbili.ui.puhuiFamily
@@ -107,6 +110,19 @@ class VideoInformationFragment : Fragment() {
             activity.currentVideo = it.data
             viewModel.getFans(it.data.owner.mid)
             viewModel.getUploaderInfo(it.data.owner.mid)
+            VideoManager.uploadVideoViewingProgress(
+                it.data.bvid,
+                it.data.history?.cid ?: it.data.cid,
+                it.data.history?.progress?.toInt() ?: 0
+            )
+            if (it.data.season?.season_id?.isNotEmpty() == true) {
+                Intent(requireActivity(), BangumiActivity::class.java).apply {
+                    putExtra("id", it.data.season.season_id)
+                    putExtra("idType", ID_TYPE_SSID)
+                    startActivity(this)
+                    activity.finish()
+                }
+            }
         }
         (view as ComposeView).setContent {
             //var buttonItemHeight by remember { mutableStateOf(0.dp) }

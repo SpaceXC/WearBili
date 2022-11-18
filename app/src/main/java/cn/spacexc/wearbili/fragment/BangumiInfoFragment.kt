@@ -41,6 +41,7 @@ import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.image.PhotoViewActivity
 import cn.spacexc.wearbili.manager.SettingsManager
+import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.manager.isRound
 import cn.spacexc.wearbili.ui.BilibiliPink
 import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
@@ -75,6 +76,15 @@ class BangumiInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         activity = getActivity() as BangumiActivity
+        activity.viewModel.bangumi.observe(viewLifecycleOwner) {
+            if (it != null) {
+                VideoManager.uploadVideoViewingProgress(
+                    it.result.episodes[1].bvid,
+                    it.result.episodes[1].cid,
+                    0
+                )
+            }
+        }
         (view as ComposeView).setContent {
             MainUI()
         }

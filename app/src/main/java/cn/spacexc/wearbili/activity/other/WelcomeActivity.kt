@@ -1,6 +1,7 @@
 package cn.spacexc.wearbili.activity.other
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -26,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
@@ -61,6 +63,7 @@ class WelcomeActivity : AppCompatActivity() {
                     targetState = currentPage,
                     animationSpec = tween(durationMillis = 400)
                 ) { page ->
+
                     when (page) {
                         1 -> FirstPage()
                         2 -> SecondPage()
@@ -68,7 +71,10 @@ class WelcomeActivity : AppCompatActivity() {
                         4 -> ForthPage()
                         5 -> FifthPage()
                     }
+
+
                 }
+
                 /*AnimatedContent(targetState = currentPage, transitionSpec = {
                     // Compare the incoming number with the previous number.
                     if (targetState > initialState) {
@@ -157,6 +163,17 @@ class WelcomeActivity : AppCompatActivity() {
                     //fontWeight = FontWeight.Medium
                 )
             }
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "$APP_VERSION | ${Build.DEVICE}",
+                color = Color.White,
+                fontFamily = puhuiFamily,
+                fontSize = 11.sp,
+                modifier = Modifier
+                    .alpha(0.6f)
+                    .align(Alignment.CenterHorizontally),
+                textAlign = TextAlign.Center,
+            )
             if (isRound()) Spacer(modifier = Modifier.height(40.dp))
         }
     }
@@ -368,7 +385,7 @@ class WelcomeActivity : AppCompatActivity() {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "您已完成全部设置",
+                text = "搞定(≧∇≦)ﾉ",
                 color = Color.White,
                 fontFamily = puhuiFamily,
                 fontSize = 16.sp,

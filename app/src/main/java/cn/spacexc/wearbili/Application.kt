@@ -19,6 +19,11 @@ TERMS AND CONDITIONS FOR USE, REPRODUCTION, MODIFICATION, AND DISTRIBUTION
 
   3. Keep yourself alive and say no to suicide.
 */
+/* WearBili  Copyright (C) 2022  XC
+This program is licensed under GPL Licence v3.
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it under certain conditions.
+*/
 
 package cn.spacexc.wearbili
 

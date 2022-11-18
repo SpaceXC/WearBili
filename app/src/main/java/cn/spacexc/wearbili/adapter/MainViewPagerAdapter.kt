@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import cn.spacexc.wearbili.fragment.DynamicFragment
+import cn.spacexc.wearbili.fragment.DynamicListFragment
 import cn.spacexc.wearbili.fragment.ProfileFragment
 import cn.spacexc.wearbili.fragment.RecommendVideoFragment
 
@@ -19,14 +20,15 @@ class MainViewPagerAdapter(fragmentActivity: FragmentActivity) :
     FragmentStateAdapter(fragmentActivity) {
 
     override fun getItemCount(): Int {
-        return 3
+        return 4
     }
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> RecommendVideoFragment()
-            1 -> DynamicFragment()
-            2 -> ProfileFragment()
+            1 -> DynamicListFragment()
+            2 -> DynamicFragment()
+            3 -> ProfileFragment()
             else -> ProfileFragment()
         }
     }

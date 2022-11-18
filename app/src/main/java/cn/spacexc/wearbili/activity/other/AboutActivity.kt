@@ -10,14 +10,17 @@ import cn.spacexc.wearbili.adapter.HorizontalButtonAdapter
 import cn.spacexc.wearbili.adapter.UserHorizontalButtonAdapter
 import cn.spacexc.wearbili.dataclass.HorizontalButtonData
 import cn.spacexc.wearbili.listener.OnItemViewClickListener
+
 //import cn.spacexc.wearbili.utils.TimeUtils
 //import kotlinx.coroutines.delay
 //import kotlinx.coroutines.launch
 //import androidx.lifecycle.lifecycleScope
 
+const val APP_VERSION = "Rel-AL 0.16.7"
+
 class AboutActivity : AppCompatActivity() {
     private val firstList = listOf(
-        HorizontalButtonData(R.drawable.ic_outline_info_24, "Rel-AL 0.16.6", "版本号"),
+        HorizontalButtonData(R.drawable.ic_outline_info_24, APP_VERSION, "版本号"),
         HorizontalButtonData(R.drawable.ic_github, "Github", "查看我们的开源项目"),
     )
     private val secondList = listOf(
