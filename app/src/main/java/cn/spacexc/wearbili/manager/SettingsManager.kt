@@ -71,6 +71,16 @@ object SettingsManager {
         ),
         SettingItem(
             type = SettingType.TYPE_SWITCH,
+            settingName = "useNewDynamicList",
+            displayName = "新版动态",
+            description = "使用新版动态列表",
+            iconRes = R.drawable.mode_fan,
+            requireRestart = true,
+            defBool = false,
+            requireSave = true,
+        ),
+        SettingItem(
+            type = SettingType.TYPE_SWITCH,
             settingName = "hasScrollVfx",
             displayName = "滑动动效",
             description = "曲线列表边缘",
@@ -136,9 +146,13 @@ object SettingsManager {
     }
 
     fun isDebug(): Boolean = SharedPreferencesUtils.getBoolean("isDebugging", false)
-    fun hasScrollVfx(): Boolean = SharedPreferencesUtils.getBoolean("hasScrollVfx", true)
-    fun defPlayer(): String = SharedPreferencesUtils.getString("defaultPlayer", "builtinPlayer")
+    fun hasScrollVfx(): Boolean = SharedPreferencesUtils.getBoolean(
+        "hasScrollVfx",
+        Application.context?.resources?.configuration?.isScreenRound!!,
+    )
 
+    fun defPlayer(): String = SharedPreferencesUtils.getString("defaultPlayer", "builtinPlayer")
+    fun useNewDynamicList(): Boolean = SharedPreferencesUtils.getBoolean("useNewDynamicList", false)
 
     fun playVideo(context: Context, bvid: String?, cid: Long?, title: String?, progress: Long = 0) {
         when (defPlayer()) {

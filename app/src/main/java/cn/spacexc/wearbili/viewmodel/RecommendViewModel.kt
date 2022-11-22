@@ -1,8 +1,10 @@
 package cn.spacexc.wearbili.viewmodel
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.wear.compose.material.ScalingLazyListState
 import cn.spacexc.wearbili.dataclass.video.rcmd.Item
 import cn.spacexc.wearbili.dataclass.video.rcmd.RecommendVideo
 import cn.spacexc.wearbili.manager.VideoManager
@@ -24,13 +26,18 @@ import java.io.IOException
  */
 
 class RecommendViewModel : ViewModel() {
+    val lazyListState = LazyListState()
+    val scalingLazyListState = ScalingLazyListState()
+
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
     private val _videoList = MutableLiveData<List<Item>>()
     val videoList: LiveData<List<Item>> = _videoList
 
     fun getRecommendVideos(isRefresh: Boolean) {
-        _isRefreshing.value = true
+        MainScope().launch {
+            _isRefreshing.value = true
+        }
         VideoManager.getRecommendVideo(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 MainScope().launch {
@@ -54,7 +61,7 @@ class RecommendViewModel : ViewModel() {
                         } else {
                             _isRefreshing.value = false
                             ToastUtils.makeText(
-                                "加载失败"
+                                "${videos.code}: ${videos.message}"
                             ).show()
                         }
                     }

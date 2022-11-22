@@ -24,6 +24,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.other.ToDesignInfoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.other.OpenSourceActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.other.WelcomeActivity"
             android:exported="false" />
         <activity

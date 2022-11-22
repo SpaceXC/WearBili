@@ -6,16 +6,12 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.*
-import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import cn.spacexc.wearbili.adapter.BangumiViewPagerAdapter
 import cn.spacexc.wearbili.databinding.ActivityVideoBinding
 import cn.spacexc.wearbili.fragment.CommentFragment
 import cn.spacexc.wearbili.manager.ID_TYPE_EPID
-import cn.spacexc.wearbili.utils.TimeUtils
 import cn.spacexc.wearbili.viewmodel.BangumiViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 
 class BangumiActivity : AppCompatActivity() {
@@ -36,8 +32,8 @@ class BangumiActivity : AppCompatActivity() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 binding.pageName.text = (when (position) {
-                    0 -> "番剧详情"
-                    1 -> "单话评论"
+                    0 -> "剧集详情"
+                    1 -> "单集评论"
                     else -> ""
                 })
             }

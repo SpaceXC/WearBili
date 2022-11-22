@@ -6,18 +6,14 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.other.MenuActivity
 import cn.spacexc.wearbili.adapter.MainViewPagerAdapter
 import cn.spacexc.wearbili.databinding.ActivityMainBinding
-import cn.spacexc.wearbili.fragment.DynamicFragment
-import cn.spacexc.wearbili.fragment.RecommendFragment
+import cn.spacexc.wearbili.fragment.DynamicListFragment
+import cn.spacexc.wearbili.fragment.RecommendVideoFragment
 import cn.spacexc.wearbili.manager.UserManager
-import cn.spacexc.wearbili.utils.TimeUtils
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -90,12 +86,12 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.findFragmentByTag("f${binding.viewpager.currentItem}")
                 when (binding.viewpager.currentItem) {
                     0 -> {
-                        (fragment as RecommendFragment).apply {
+                        (fragment as RecommendVideoFragment).apply {
                             refresh()
                         }
                     }
                     1 -> {
-                        (fragment as DynamicFragment).apply {
+                        (fragment as DynamicListFragment).apply {
                             refresh()
                         }
                     }

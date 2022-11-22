@@ -77,10 +77,10 @@ class BangumiInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         activity = getActivity() as BangumiActivity
         activity.viewModel.bangumi.observe(viewLifecycleOwner) {
-            if (it != null) {
+            if (it.result.episodes.isNotEmpty()) {
                 VideoManager.uploadVideoViewingProgress(
-                    it.result.episodes[1].bvid,
-                    it.result.episodes[1].cid,
+                    it.result.episodes[0].bvid,
+                    it.result.episodes[0].cid,
                     0
                 )
             }

@@ -33,7 +33,7 @@ class RecommendVideoFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return ComposeView(context!!)
+        return ComposeView(requireContext())
     }
 
     //TODO : Memory Leak
@@ -56,7 +56,10 @@ class RecommendVideoFragment : Fragment() {
                 modifier = Modifier.padding(if (isRound()) 8.dp else 0.dp)
             ) {
                 if (SettingsManager.hasScrollVfx()) {
-                    ScalingLazyColumn(modifier = Modifier.fillMaxSize()) {
+                    ScalingLazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        state = viewModel.scalingLazyListState
+                    ) {
                         videoList?.forEach {
                             item {
                                 VideoUis.VideoCard(
@@ -67,7 +70,7 @@ class RecommendVideoFragment : Fragment() {
                                     hasViews = true,
                                     clickable = it.goto == "av" || it.goto == "bangumi",
                                     videoBvid = if (it.player_args?.aid != null) VideoUtils.av2bv("av${it.player_args.aid}") else "",
-                                    context = context!!,
+                                    context = requireContext(),
                                     isBangumi = it.goto == "bangumi",
                                     epid = it.param,
                                     badge = it.badge ?: ""
@@ -84,7 +87,7 @@ class RecommendVideoFragment : Fragment() {
                     LazyColumn(
                         modifier = Modifier
                             .padding(start = 8.dp, end = 8.dp)
-                            .fillMaxSize()
+                            .fillMaxSize(), state = viewModel.lazyListState
                     ) {
                         videoList?.forEach {
                             item {
@@ -96,7 +99,7 @@ class RecommendVideoFragment : Fragment() {
                                     hasViews = true,
                                     clickable = it.goto == "av" || it.goto == "bangumi",
                                     videoBvid = if (it.player_args?.aid != null) VideoUtils.av2bv("av${it.player_args.aid}") else "",
-                                    context = context!!,
+                                    context = requireContext(),
                                     isBangumi = it.goto == "bangumi",
                                     epid = it.param,
                                     badge = it.badge ?: ""

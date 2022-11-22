@@ -49,6 +49,7 @@ class SplashScreenActivity : AppCompatActivity() {
                 }
 
                 override fun onResponse(call: Call, response: Response) {
+                    response.close()
                     MainScope().launch {
                         initApp()
                     }

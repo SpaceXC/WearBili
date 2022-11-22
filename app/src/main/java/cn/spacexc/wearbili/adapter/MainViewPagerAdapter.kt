@@ -7,6 +7,7 @@ import cn.spacexc.wearbili.fragment.DynamicFragment
 import cn.spacexc.wearbili.fragment.DynamicListFragment
 import cn.spacexc.wearbili.fragment.ProfileFragment
 import cn.spacexc.wearbili.fragment.RecommendVideoFragment
+import cn.spacexc.wearbili.manager.SettingsManager
 
 /**
  * Created by XC-Qan on 2022/6/7.
@@ -26,9 +27,9 @@ class MainViewPagerAdapter(fragmentActivity: FragmentActivity) :
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> RecommendVideoFragment()
-            1 -> DynamicListFragment()
-            2 -> DynamicFragment()
-            3 -> ProfileFragment()
+            1 -> if (SettingsManager.useNewDynamicList()) DynamicListFragment() else DynamicFragment()
+            2 -> ProfileFragment()
+            //3 -> ProfileFragment()
             else -> ProfileFragment()
         }
     }

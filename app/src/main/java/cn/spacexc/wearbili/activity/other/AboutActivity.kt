@@ -1,5 +1,6 @@
 package cn.spacexc.wearbili.activity.other
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -16,19 +17,19 @@ import cn.spacexc.wearbili.listener.OnItemViewClickListener
 //import kotlinx.coroutines.launch
 //import androidx.lifecycle.lifecycleScope
 
-const val APP_VERSION = "Rel-AL 0.16.7"
+const val APP_VERSION = "Rel-AL 0.16.9"
 
 class AboutActivity : AppCompatActivity() {
     private val firstList = listOf(
         HorizontalButtonData(R.drawable.ic_outline_info_24, APP_VERSION, "版本号"),
-        HorizontalButtonData(R.drawable.ic_github, "Github", "查看我们的开源项目"),
+        HorizontalButtonData(R.drawable.ic_github, "开源信息", "查看我们的开源项目"),
     )
     private val secondList = listOf(
         HorizontalButtonData(0, "uid480816699", "开发者 项目发起人"),
         HorizontalButtonData(0, "uid426907991", "图标设计师"),
         HorizontalButtonData(0, "uid293793435", "API仓库Owner"),
         HorizontalButtonData(
-            R.drawable.akari,       //Rechrd Avatar
+            R.drawable.akari,       //Rechrd's Avatar
             "虚位以待",     //Rechrd
             "UI/UA设计师"
         )      //Rechrd你无不无聊啊我还得多加一个逻辑我真的谢谢您嘞
@@ -57,7 +58,11 @@ class AboutActivity : AppCompatActivity() {
 
         recyclerView1.adapter = HorizontalButtonAdapter(object : OnItemViewClickListener {
             override fun onClick(buttonName: String, viewHolder: RecyclerView.ViewHolder) {
-
+                if (buttonName == "开源信息") {
+                    Intent(this@AboutActivity, OpenSourceActivity::class.java).apply {
+                        startActivity(this)
+                    }
+                }
             }
 
             override fun onLongClick(buttonName: String, viewHolder: RecyclerView.ViewHolder) {
