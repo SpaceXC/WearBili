@@ -39,3 +39,6 @@ Azure App Center崩溃上报系统，在您设备上的任何崩溃及其日志�
 推荐内存：`2gb+`
 
 推荐储存：`512mb+`
+
+## 开源信息
+本项目采用[GPL-v3.0](https://www.gnu.org/licenses/quick-guide-gplv3.html)许可证开源，许可证详情见仓库[LICENSE文件](https://github.com/SpaceXC/WearBili/blob/master/LICENSE)
