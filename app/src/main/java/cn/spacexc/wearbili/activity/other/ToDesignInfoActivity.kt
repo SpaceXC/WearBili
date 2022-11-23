@@ -4,7 +4,8 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 
-/* WearBili  Copyright (C) 2022 XC
+/*
+WearBili  Copyright (C) 2022 XC
 This program comes with ABSOLUTELY NO WARRANTY.
 This is free software, and you are welcome to redistribute it under certain conditions.
 */

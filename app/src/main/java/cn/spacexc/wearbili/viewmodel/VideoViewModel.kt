@@ -1,5 +1,6 @@
 package cn.spacexc.wearbili.viewmodel
 
+import androidx.compose.foundation.ScrollState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -32,6 +33,8 @@ import java.io.IOException
  */
 
 class VideoViewModel : ViewModel() {
+    val scrollState = ScrollState(0)
+
     private val _videoInfo = MutableLiveData<VideoDetailInfo>()
     val videoInfo: LiveData<VideoDetailInfo> = _videoInfo
 

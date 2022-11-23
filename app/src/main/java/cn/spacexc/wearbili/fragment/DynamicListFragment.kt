@@ -57,8 +57,8 @@ class DynamicListFragment : Fragment() {
             if (UserManager.isLoggedIn()) {
                 SwipeRefresh(state = refreshState, onRefresh = { viewModel.getDynamic() }) {
                     LazyColumn(modifier = Modifier.fillMaxSize(), state = viewModel.lazyListState) {
-                        item {
-                            dynamicList?.forEach { card ->
+                        dynamicList?.forEach { card ->
+                            item {
                                 DynamicCard(
                                     posterAvatar = card.desc.user_profile.info.face,
                                     posterName = card.desc.user_profile.info.uname,

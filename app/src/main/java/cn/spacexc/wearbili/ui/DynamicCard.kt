@@ -112,7 +112,9 @@ fun DynamicCard(
                     color = posterNameColor,
                     fontFamily = puhuiFamily,
                     fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = postTime,
@@ -314,7 +316,8 @@ fun DynamicCard(
                             fontWeight = FontWeight.Bold,
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier
+                            modifier = Modifier,
+                            fontSize = 12.sp
                         )
                         Row {
                             var textHeight by remember {
@@ -445,7 +448,7 @@ fun ForwardShareDynamicCard(
                         text = posterName,
                         color = posterNameColor,
                         fontFamily = puhuiFamily,
-                        fontSize = 15.sp,
+                        fontSize = 13.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -469,7 +472,8 @@ fun ForwardShareDynamicCard(
                 Text(
                     text = newCard.item.description.ifNullOrEmpty { "分享图片" },
                     fontFamily = puhuiFamily,
-                    color = Color.White
+                    color = Color.White,
+                    fontSize = 12.sp
                 )
                 if (imageList.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(6.dp))
@@ -540,7 +544,8 @@ fun ForwardShareDynamicCard(
                 Text(
                     text = newCard.item.content,
                     fontFamily = puhuiFamily,
-                    color = Color.White
+                    color = Color.White,
+                    fontSize = 12.sp
                 )
             }
             is VideoCard -> {
@@ -551,7 +556,8 @@ fun ForwardShareDynamicCard(
                 Text(
                     text = newCard.dynamic.ifNullOrEmpty { "投稿视频" },
                     fontFamily = puhuiFamily,
-                    color = Color.White
+                    color = Color.White,
+                    fontSize = 12.sp
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 Box(
@@ -629,7 +635,8 @@ fun ForwardShareDynamicCard(
                             fontWeight = FontWeight.Bold,
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier
+                            modifier = Modifier,
+                            fontSize = 10.sp
                         )
                         Row {
                             var textHeight by remember {
@@ -688,7 +695,7 @@ fun ForwardShareDynamicCard(
                                 //.fillMaxSize()
                                 //.aspectRatio(0.75f, matchHeightConstraintsFirst = true)
                                 .align(Alignment.CenterVertically)
-                                .fillMaxWidth()
+                                .fillMaxSize()
                                 .animateContentSize()
                                 .clip(RoundedCornerShape(10.dp)), contentDescription = null
                         )   //番剧封面
@@ -697,7 +704,7 @@ fun ForwardShareDynamicCard(
                             text = newCard.index,
                             color = Color.White,
                             fontFamily = puhuiFamily,
-                            fontSize = 14.sp,
+                            fontSize = 13.sp,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.weight(1f)
                         )

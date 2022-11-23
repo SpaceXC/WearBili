@@ -136,12 +136,12 @@ class VideoInformationFragment : Fragment() {
             var descriptionMaxLines by remember {
                 mutableStateOf(3)
             }
-            val scrollState = rememberScrollState()
+            //val scrollState = rememberScrollState()
 
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(state = scrollState)
+                    .verticalScroll(state = viewModel.scrollState)
                     .padding(vertical = 8.dp, horizontal = 10.dp)
                     .animateContentSize()
             ) {
