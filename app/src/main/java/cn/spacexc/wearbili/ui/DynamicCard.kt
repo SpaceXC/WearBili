@@ -2,7 +2,6 @@ package cn.spacexc.wearbili.ui
 
 import android.content.Context
 import android.content.Intent
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -241,41 +240,40 @@ fun DynamicCard(
                     color = Color.White
                 )
                 Spacer(modifier = Modifier.height(6.dp))
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(10.dp))
-                        .pointerInput(Unit) {
-                            detectTapGestures(onLongPress = {
-                                if (newCard.aid != 0L) {
-                                    val intent = Intent(
-                                        context,
-                                        VideoLongClickActivity::class.java
-                                    )
-                                    intent.putExtra(
-                                        "bvid",
+                Box(modifier = Modifier
+                    .clip(RoundedCornerShape(10.dp))
+                    .pointerInput(Unit) {
+                        detectTapGestures(onLongPress = {
+                            if (newCard.aid != 0L) {
+                                val intent = Intent(
+                                    context,
+                                    VideoLongClickActivity::class.java
+                                )
+                                intent.putExtra(
+                                    "bvid",
+                                    VideoUtils.av2bv("av${newCard.aid}")
+                                )
+                                intent.flags =
+                                    Intent.FLAG_ACTIVITY_NEW_TASK
+                                context?.startActivity(intent)
+                            }
+                        }, onTap = {
+                            if (newCard.aid != 0L) {
+                                Intent(
+                                    context,
+                                    VideoActivity::class.java
+                                ).apply {
+                                    putExtra(
+                                        "videoId",
                                         VideoUtils.av2bv("av${newCard.aid}")
                                     )
-                                    intent.flags =
+                                    flags =
                                         Intent.FLAG_ACTIVITY_NEW_TASK
-                                    context?.startActivity(intent)
+                                    context?.startActivity(this)
                                 }
-                            }, onTap = {
-                                if (newCard.aid != 0L) {
-                                    Intent(
-                                        context,
-                                        VideoActivity::class.java
-                                    ).apply {
-                                        putExtra(
-                                            "videoId",
-                                            VideoUtils.av2bv("av${newCard.aid}")
-                                        )
-                                        flags =
-                                            Intent.FLAG_ACTIVITY_NEW_TASK
-                                        context?.startActivity(this)
-                                    }
-                                }
-                            })
-                        }) {
+                            }
+                        })
+                    }) {
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
                             .data(newCard.pic).crossfade(true).placeholder(R.drawable.placeholder)
@@ -362,33 +360,83 @@ fun DynamicCard(
                         context?.startActivity(this)
                     }
                 }) {
+                    var infoHeight by remember {
+                        mutableStateOf(0.dp)
+                    }
                     Spacer(modifier = Modifier.height(4.dp))
-                    Row(modifier = Modifier.fillMaxWidth()) {
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(10.dp))
+                    ) {
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
-                                .data(newCard.cover)
-                                .crossfade(true)
+                                .data(newCard.cover).crossfade(true)
+                                .placeholder(R.drawable.placeholder)
                                 .build(),
-                            modifier = Modifier
-                                .weight(1f)
-                                //.fillMaxHeight()
-                                //.fillMaxSize()
-                                //.aspectRatio(0.75f, matchHeightConstraintsFirst = true)
-                                .align(Alignment.CenterVertically)
-                                .fillMaxWidth()
-                                .animateContentSize()
-                                .clip(RoundedCornerShape(10.dp)), contentDescription = null
-                        )   //番剧封面
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = newCard.index,
-                            color = Color.White,
-                            fontFamily = puhuiFamily,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.weight(1f)
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxWidth()
                         )
-                    }   //剧集基本信息
+                        Surface(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(
+                                    Brush.verticalGradient(
+                                        listOf(
+                                            Color.Transparent,
+                                            Color(0, 0, 0, 204)
+                                        )
+                                    )
+                                )
+                                .fillMaxWidth()
+                                .height(infoHeight)
+                                .align(Alignment.BottomCenter),
+                            color = Color.Transparent,
+                            content = {})   //阴影
+                        Column(
+                            modifier = Modifier
+                                .align(Alignment.BottomStart)
+                                .onGloballyPositioned {
+                                    infoHeight = with(localDensity) {
+                                        it.size.height
+                                            .toDp()
+                                    }
+                                }
+                                .padding(6.dp)) {
+                            Text(
+                                text = newCard.index_title,
+                                color = Color.White,
+                                fontFamily = puhuiFamily,
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier,
+                                fontSize = 12.sp
+                            )
+                            Row {
+                                var textHeight by remember {
+                                    mutableStateOf(0.dp)
+                                }
+                                Icon(
+                                    imageVector = Icons.Outlined.PlayCircle,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(textHeight),
+                                    tint = Color.White
+                                )
+                                Text(
+                                    text = newCard.play_count.toShortChinese(),
+                                    color = Color.White,
+                                    fontFamily = puhuiFamily,
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.onGloballyPositioned {
+                                        with(localDensity) {
+                                            textHeight =
+                                                it.size.height.toDp()
+                                        }
+                                    })
+                            }
+                        }
+                    }
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
@@ -682,33 +730,83 @@ fun ForwardShareDynamicCard(
                         context?.startActivity(this)
                     }
                 }) {
+                    var infoHeight by remember {
+                        mutableStateOf(0.dp)
+                    }
                     Spacer(modifier = Modifier.height(4.dp))
-                    Row(modifier = Modifier.fillMaxWidth()) {
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(10.dp))
+                    ) {
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
-                                .data(newCard.cover)
-                                .crossfade(true)
+                                .data(newCard.cover).crossfade(true)
+                                .placeholder(R.drawable.placeholder)
                                 .build(),
-                            modifier = Modifier
-                                .weight(1f)
-                                //.fillMaxHeight()
-                                //.fillMaxSize()
-                                //.aspectRatio(0.75f, matchHeightConstraintsFirst = true)
-                                .align(Alignment.CenterVertically)
-                                .fillMaxSize()
-                                .animateContentSize()
-                                .clip(RoundedCornerShape(10.dp)), contentDescription = null
-                        )   //番剧封面
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = newCard.index,
-                            color = Color.White,
-                            fontFamily = puhuiFamily,
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.weight(1f)
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxWidth()
                         )
-                    }   //剧集基本信息
+                        Surface(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(
+                                    Brush.verticalGradient(
+                                        listOf(
+                                            Color.Transparent,
+                                            Color(0, 0, 0, 204)
+                                        )
+                                    )
+                                )
+                                .fillMaxWidth()
+                                .height(infoHeight)
+                                .align(Alignment.BottomCenter),
+                            color = Color.Transparent,
+                            content = {})   //阴影
+                        Column(
+                            modifier = Modifier
+                                .align(Alignment.BottomStart)
+                                .onGloballyPositioned {
+                                    infoHeight = with(localDensity) {
+                                        it.size.height
+                                            .toDp()
+                                    }
+                                }
+                                .padding(6.dp)) {
+                            Text(
+                                text = newCard.index_title,
+                                color = Color.White,
+                                fontFamily = puhuiFamily,
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier,
+                                fontSize = 10.sp
+                            )
+                            Row {
+                                var textHeight by remember {
+                                    mutableStateOf(0.dp)
+                                }
+                                Icon(
+                                    imageVector = Icons.Outlined.PlayCircle,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(textHeight),
+                                    tint = Color.White
+                                )
+                                Text(
+                                    text = newCard.play_count.toShortChinese(),
+                                    color = Color.White,
+                                    fontFamily = puhuiFamily,
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.onGloballyPositioned {
+                                        with(localDensity) {
+                                            textHeight =
+                                                it.size.height.toDp()
+                                        }
+                                    })
+                            }
+                        }
+                    }
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
