@@ -4,6 +4,18 @@
 
 WearBili是由个人开发者XCちゃん开发的，运行在手表上的第三方哔哩哔哩客户端。软件全部免费，无任何商业行为。开发结束后会提供给所有人使用。
 
+Proudly using Kotlin Language
+
+<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/Kotlin_icon.png" alt="Kotlin logo." width=80 height=80>
+
+And IntelliJ IDEA
+
+<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/IntelliJ_IDEA.png" alt="IntelliJ IDEA logo." width=50%>
+
+By JetBrains
+
+<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" alt="JetBrains Logo (Main) logo." width=100 height=100>
+
 ## 关于公测
 
 软件目前处在公测阶段，所有人可以下载并自由使用。此阶段的应用已经初具雏形，大部分功能较为稳定，基本具备向公众开放的条件。同时，应用还有诸多不完善之处，如性能问题，功能缺失等。下载此应用意味着，您自愿接受此应用的[使用条款](#)
