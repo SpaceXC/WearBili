@@ -1,6 +1,7 @@
 package cn.spacexc.wearbili.activity.dynamic
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Html
@@ -12,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.spacexc.wearbili.Application
+import cn.spacexc.wearbili.activity.user.SpaceProfileActivity
 import cn.spacexc.wearbili.adapter.*
 import cn.spacexc.wearbili.databinding.ActivityDynamicDetailBinding
 import cn.spacexc.wearbili.dataclass.CommentContentData
@@ -26,6 +28,7 @@ import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import cn.spacexc.wearbili.utils.TimeUtils.toDateStr
 import cn.spacexc.wearbili.utils.ToastUtils
+import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import kotlinx.coroutines.MainScope
@@ -78,6 +81,20 @@ class DynamicDetailActivity : AppCompatActivity() {
                 val result = Gson().fromJson(str, Detail::class.java)
                 val card = DynamicManager.dynamicProcessor(result.data.card)!!
                 MainScope().launch {
+                    binding.dynamicUsername.addClickScale()
+                    binding.dynamicAvatar.addClickScale()
+                    binding.dynamicUsername.setOnClickListener {
+                        Intent(this@DynamicDetailActivity, SpaceProfileActivity::class.java).apply {
+                            putExtra("userMid", result.data.card.desc.uid)
+                            startActivity(this)
+                        }
+                    }
+                    binding.dynamicAvatar.setOnClickListener {
+                        Intent(this@DynamicDetailActivity, SpaceProfileActivity::class.java).apply {
+                            putExtra("userMid", result.data.card.desc.uid)
+                            startActivity(this)
+                        }
+                    }
                     binding.dynamicUsername.text = card.desc.user_profile.info.uname
                     binding.dynamicPubDate.text =
                         (card.desc.timestamp * 1000).toDateStr("MM-dd HH:mm")

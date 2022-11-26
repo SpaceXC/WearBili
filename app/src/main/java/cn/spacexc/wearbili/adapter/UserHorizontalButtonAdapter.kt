@@ -2,6 +2,7 @@ package cn.spacexc.wearbili.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.R
+import cn.spacexc.wearbili.activity.user.SpaceProfileActivity
 import cn.spacexc.wearbili.dataclass.HorizontalButtonData
 import cn.spacexc.wearbili.dataclass.user.User
 import cn.spacexc.wearbili.manager.UserManager
@@ -67,8 +69,17 @@ class UserHorizontalButtonAdapter(val context: Context) :
         @SuppressLint("RecyclerView") position: Int
     ) {
         if (getItem(position).mainText.contains("uid")) {
+            val mid = (getItem(position).mainText.replace("uid", "")).toLong()
+            holder.itemView.setOnClickListener {
+                Intent(context, SpaceProfileActivity::class.java).apply {
+                    putExtra("userMid", mid)
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    context.startActivity(this)
+                }
+            }
+            holder.itemView.addClickScale()
             UserManager.getUserById(
-                (getItem(position).mainText.replace("uid", "")).toLong(),
+                mid,
                 object : okhttp3.Callback {
                     override fun onFailure(call: Call, e: IOException) {
                         holder.icon.setImageResource(R.drawable.default_avatar)
@@ -108,8 +119,7 @@ class UserHorizontalButtonAdapter(val context: Context) :
 
             }
         }
-        holder.itemView.setOnClickListener { }
-        holder.itemView.addClickScale()
+
     }
 
     class ButtonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

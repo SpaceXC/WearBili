@@ -53,6 +53,7 @@ import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.image.PhotoViewActivity
 import cn.spacexc.wearbili.activity.settings.ChooseSettingsActivity
+import cn.spacexc.wearbili.activity.user.SpaceProfileActivity
 import cn.spacexc.wearbili.activity.video.PlayOnPhoneActivity
 import cn.spacexc.wearbili.activity.video.VideoActivity
 import cn.spacexc.wearbili.activity.video.ViewFullVideoPartsActivity
@@ -175,6 +176,12 @@ class VideoInformationFragment : Fragment() {
                 Spacer(modifier = Modifier.height(6.dp))
                 Row(
                     modifier = Modifier
+                        .clickVfx {
+                            Intent(requireActivity(), SpaceProfileActivity::class.java).apply {
+                                putExtra("userMid", uploaderInfo?.data?.mid)
+                                startActivity(this)
+                            }
+                        }
                         .clip(
                             RoundedCornerShape(10.dp)
                         )
@@ -186,6 +193,7 @@ class VideoInformationFragment : Fragment() {
                         )
                         .padding(vertical = 10.dp, horizontal = 8.dp)
                         .fillMaxWidth()
+
                 ) {
                     var infoHeight by remember {
                         mutableStateOf(0.dp)
@@ -205,7 +213,6 @@ class VideoInformationFragment : Fragment() {
                     Column(
                         modifier = Modifier
                             .fillMaxHeight()
-                            //.fillMaxWidth()
                             .onGloballyPositioned {
                                 infoHeight = with(localDensity) {
                                     it.size.height.toDp()

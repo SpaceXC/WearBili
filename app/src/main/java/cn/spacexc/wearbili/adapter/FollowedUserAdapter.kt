@@ -1,6 +1,7 @@
 package cn.spacexc.wearbili.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -10,10 +11,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
+import cn.spacexc.wearbili.activity.user.SpaceProfileActivity
 import cn.spacexc.wearbili.dataclass.follow.FollowGroupUserItem
 import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.utils.ToastUtils
+import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -67,6 +71,15 @@ class FollowedUserAdapter(private val context: Context) :
         holder.isFollowed.text = "已关注"
         holder.isFollowed.setOnClickListener {
             followUser(isFollowed, user.mid, holder)
+        }
+        holder.username.addClickScale()
+        holder.avatar.addClickScale()
+        holder.username.setOnClickListener {
+            Intent(Application.context, SpaceProfileActivity::class.java).apply {
+                putExtra("userMid", user.mid)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                Application.context?.startActivity(this)
+            }
         }
     }
 

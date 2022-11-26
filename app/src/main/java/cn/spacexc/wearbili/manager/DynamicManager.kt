@@ -63,7 +63,7 @@ import java.io.IOException
  *
  *   ————XC 2022.11.22
  *
- * api来源（省的我找不到了）：
+ * api来源（省的我找不到了）：https://github.com/SocialSisterYi/bilibili-API-collect/issues/109
  *
  * 大爱易姐！
  *
@@ -72,6 +72,8 @@ import java.io.IOException
 
 object DynamicManager {
     var lastDynamicId: Long = 0
+
+    var lastSpaceDynamicId: Long = 0
 
     /**
      * 1 - 转发
@@ -156,6 +158,80 @@ object DynamicManager {
 
                 }
 
+            }
+        )
+    }
+
+    fun getSpaceDynamics(mid: Long, callback: DynamicResponseCallback) {
+        if (!UserManager.isLoggedIn()) return
+        val url =
+            "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?host_uid=$mid&type=$type"
+        url.debugToast("动态请求")
+        NetworkUtils.getUrl(
+            url,
+            object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    callback.onFailed(call, e)
+                    e.debugToast("网络错误")
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    try {
+                        val str = response.body?.string().log()
+                        MainScope().launch {
+                            str?.debugToast("动态返回数据")
+                            var code = 0
+                            val tempList = dynamicListProcessor(str) {
+                                code = it
+                            }
+                            tempList.debugToast("动态列表")
+                            //Log.d(TAG, "onResponse: $tempList")
+                            if (tempList.isNotEmpty()) {
+                                lastSpaceDynamicId = tempList[tempList.size - 1].desc.dynamic_id
+                                lastSpaceDynamicId.debugToast("")
+                                callback.onSuccess(tempList, code)
+                            } else {
+                                callback.onSuccess(emptyList(), code)
+                            }
+                        }
+
+                    } catch (e: Exception) {
+                        //TODO Ignored
+                        e.printStackTrace()
+                        MainScope().launch {
+                            e.debugToast("数据处理错误")
+                        }
+                        callback.onFailed(call, e)
+                    }
+
+                }
+
+            })
+
+    }
+
+    fun getMoreSpaceDynamic(mid: Long, callback: DynamicResponseCallback) {
+        NetworkUtils.getUrl("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?host_uid=$mid&type=$type&offset_dynamic_id=$lastSpaceDynamicId",
+            object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    callback.onFailed(call, e)
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    try {
+                        var code = 0
+                        val tempList = dynamicListProcessor(response.body?.string()) {
+                            code = it
+                        }
+                        //Log.d(TAG, "onResponse: $tempList")
+                        lastSpaceDynamicId = tempList[tempList.size - 1].desc.dynamic_id
+                        callback.onSuccess(tempList, code)
+                    } catch (e: Exception) {
+                        Log.e(TAG, "onResponse: ${e.cause}", e)
+                        e.printStackTrace()
+                    }
+
+                }
             }
         )
     }

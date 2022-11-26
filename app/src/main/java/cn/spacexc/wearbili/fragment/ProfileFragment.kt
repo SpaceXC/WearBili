@@ -15,10 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.settings.SettingsActivity
-import cn.spacexc.wearbili.activity.user.FollowListActivity
-import cn.spacexc.wearbili.activity.user.HistoryActivity
-import cn.spacexc.wearbili.activity.user.LoginActivity
-import cn.spacexc.wearbili.activity.user.StaredActivity
+import cn.spacexc.wearbili.activity.user.*
 import cn.spacexc.wearbili.activity.video.VideoCacheActivity
 import cn.spacexc.wearbili.activity.video.WatchLaterActivity
 import cn.spacexc.wearbili.adapter.ButtonsAdapter
@@ -29,6 +26,7 @@ import cn.spacexc.wearbili.listener.OnItemViewClickListener
 import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import cn.spacexc.wearbili.utils.ToastUtils
+import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import kotlinx.coroutines.MainScope
@@ -239,6 +237,13 @@ class ProfileFragment : Fragment() {
                             binding.pendant.setImageResource(R.drawable.empty_placeholder)
                         }
                         binding.usernameText.text = user.data.name
+                        binding.usernameText.addClickScale()
+                        binding.usernameText.setOnClickListener {
+                            Intent(requireContext(), SpaceProfileActivity::class.java).apply {
+                                putExtra("userMid", user.data.mid)
+                                startActivity(this)
+                            }
+                        }
                         binding.fansText.text = user.data.follower.toShortChinese()
                         binding.coinsText.text = user.data.coins.toString()
                         //binding.uidText.text = "UID ${user.data.mid}"

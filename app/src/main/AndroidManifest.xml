@@ -24,6 +24,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.user.SpaceProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.other.ToDesignInfoActivity"
             android:exported="false" />
         <activity
