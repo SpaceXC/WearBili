@@ -214,7 +214,8 @@ fun DynamicCard(
                                             .clip(
                                                 RoundedCornerShape(6.dp)
                                             )
-                                    }, contentScale = ContentScale.Crop
+                                    },
+                                    contentScale = if (imageList.size == 1) ContentScale.FillBounds else ContentScale.Crop
                                 )
                             }
                         }
@@ -580,7 +581,8 @@ fun ForwardShareDynamicCard(
                                             .clip(
                                                 RoundedCornerShape(6.dp)
                                             )
-                                    }, contentScale = ContentScale.Crop
+                                    },
+                                    contentScale = if (imageList.size == 1) ContentScale.FillBounds else ContentScale.Crop
                                 )
                             }
                         }
