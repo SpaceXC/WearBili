@@ -94,6 +94,7 @@ class SpaceProfileActivity : AppCompatActivity() {
                         state = collapsingState,
                         modifier = Modifier.fillMaxSize(),
                         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
+                        toolbarModifier = Modifier.verticalScroll(rememberScrollState()),
                         toolbar = {
                             Spacer(
                                 modifier = Modifier
@@ -168,7 +169,7 @@ class SpaceProfileActivity : AppCompatActivity() {
                                             .fillMaxWidth()
                                     ) {
                                         var maxLines by remember {
-                                            mutableStateOf(2)
+                                            mutableStateOf(1)
                                         }
                                         Text(
                                             text = user?.data?.name ?: "加载中",
@@ -190,8 +191,8 @@ class SpaceProfileActivity : AppCompatActivity() {
                                                         )
                                                     )
                                                     .clickable {
-                                                        if (maxLines == 2) maxLines =
-                                                            Int.MAX_VALUE else maxLines = 2
+                                                        maxLines =
+                                                            if (maxLines == 1) Int.MAX_VALUE else 1
                                                     },
                                                 maxLines = maxLines,
                                                 fontFamily = puhuiFamily,

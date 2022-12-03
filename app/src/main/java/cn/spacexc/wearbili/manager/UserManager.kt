@@ -226,7 +226,7 @@ object UserManager {
         callback: NetworkUtils.ResultCallback<UserSpaceVideo>
     ) {
         NetworkUtils.getUrl(
-            "https://api.bilibili.com/x/space/arc/search?mid=$mid&pn=$page&ps=20&order=pubdate&index=1&order_avoided=true&jsonp=jsonp",
+            "https://api.bilibili.com/x/space/arc/search?mid=$mid&pn=$page&ps=20&order=pubdate&order_avoided=true&jsonp=jsonp".log(),
             object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     callback.onFailed(e)

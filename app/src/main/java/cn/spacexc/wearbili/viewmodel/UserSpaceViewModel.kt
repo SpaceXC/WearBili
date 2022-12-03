@@ -9,6 +9,7 @@ import cn.spacexc.wearbili.dataclass.user.spacevideo.UserSpaceVideo
 import cn.spacexc.wearbili.dataclass.user.spacevideo.Vlist
 import cn.spacexc.wearbili.manager.DynamicManager
 import cn.spacexc.wearbili.manager.UserManager
+import cn.spacexc.wearbili.utils.LogUtils.log
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.ToastUtils
 import com.google.gson.Gson
@@ -73,10 +74,12 @@ class UserSpaceViewModel : ViewModel() {
             page,
             object : NetworkUtils.ResultCallback<UserSpaceVideo> {
                 override fun onSuccess(result: UserSpaceVideo, code: Int) {
+                    result.log()
                     MainScope().launch {
                         _isRefreshing.value = false
-                        if (isRefresh) _videos.value = result.data.list.vlist else _videos.value =
-                            _videos.value?.plus(result.data.list.vlist)
+                        if (isRefresh) _videos.value =
+                            result.data.list.vlist ?: emptyList() else _videos.value =
+                            _videos.value?.plus(result.data.list.vlist ?: emptyList())
                     }
                 }
 
