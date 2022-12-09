@@ -54,6 +54,7 @@ import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.image.PhotoViewActivity
 import cn.spacexc.wearbili.activity.settings.ChooseSettingsActivity
 import cn.spacexc.wearbili.activity.user.SpaceProfileActivity
+import cn.spacexc.wearbili.activity.video.NewVideoCacheActivity
 import cn.spacexc.wearbili.activity.video.PlayOnPhoneActivity
 import cn.spacexc.wearbili.activity.video.VideoActivity
 import cn.spacexc.wearbili.activity.video.ViewFullVideoPartsActivity
@@ -473,6 +474,24 @@ class VideoInformationFragment : Fragment() {
                                         "稍后再看" -> {
                                             videoInfo?.data?.bvid?.let { bvid ->
                                                 viewModel.addToViewLater(bvid)
+                                            }
+                                        }
+                                        "缓存" -> {
+                                            Intent(
+                                                requireActivity(),
+                                                NewVideoCacheActivity::class.java
+                                            ).apply {
+                                                putExtra("bvid", videoInfo?.data?.bvid ?: "")
+                                                putExtra("cid", videoInfo?.data?.cid ?: 0)
+                                                putExtra(
+                                                    "data",
+                                                    Gson().toJson(videoInfo?.data?.pages?.let {
+                                                        cn.spacexc.wearbili.dataclass.videoDetail.Data.Pages(
+                                                            it
+                                                        )
+                                                    })
+                                                )
+                                                startActivity(this)
                                             }
                                         }
                                     }

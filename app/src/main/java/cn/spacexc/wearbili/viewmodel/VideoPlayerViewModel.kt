@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.Application.Companion.TAG
+import cn.spacexc.wearbili.utils.ExoPlayerUtils
 import cn.spacexc.wearbili.utils.TimeUtils.secondToTime
 import cn.spacexc.wearbili.utils.ToastUtils
 import com.google.android.exoplayer2.ExoPlayer
@@ -19,12 +20,15 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.upstream.HttpDataSource
+import com.google.android.exoplayer2.upstream.cache.CacheDataSource
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import master.flame.danmaku.ui.widget.DanmakuView
 import kotlin.collections.set
+
 
 /**
  * Created by XC-Qan on 2022/6/18.
@@ -45,6 +49,7 @@ enum class PlayerStatus {
 @SuppressLint("StaticFieldLeak")
 class VideoPlayerViewModel : ViewModel() {
     private var httpDataSourceFactory = DefaultHttpDataSource.Factory()
+    private var cacheDataSourceFactory: DataSource.Factory
 
     var mediaPlayer: ExoPlayer
 
@@ -57,6 +62,11 @@ class VideoPlayerViewModel : ViewModel() {
         headers["User-Agent"] = "Mozilla/5.0 BiliDroid/*.*.* (bbcallen@gmail.com)"
         headers["Referer"] = "https://bilibili.com/"
         val dataSource: HttpDataSource = httpDataSourceFactory.createDataSource()
+        cacheDataSourceFactory = CacheDataSource.Factory()
+            .setCache(ExoPlayerUtils.getInstance(Application.context!!).getCache())
+            .setUpstreamDataSourceFactory(httpDataSourceFactory)
+            .setCacheWriteDataSinkFactory(null) // Disable writing.
+
         dataSource.setRequestProperty(
             "User-Agent",
             "Mozilla/5.0 BiliDroid/*.*.* (bbcallen@gmail.com)"
@@ -115,6 +125,7 @@ class VideoPlayerViewModel : ViewModel() {
                 .createMediaSource(MediaItem.fromUri(uri))
             setMediaSource(mediaSource)
             addListener(object : Player.Listener {
+                @SuppressLint("SetTextI18n")
                 override fun onPlaybackStateChanged(playbackState: Int) {
                     when (playbackState) {
                         ExoPlayer.STATE_IDLE -> {
@@ -153,6 +164,70 @@ class VideoPlayerViewModel : ViewModel() {
                             this@VideoPlayerViewModel.isPlaying = true
                             updatePlayerProgress()
 
+                        }
+
+                        ExoPlayer.STATE_ENDED -> {
+                            _playerStatus.value = PlayerStatus.COMPLETED
+                            danmakuView.pause()
+                            this@VideoPlayerViewModel.isPlaying = false
+                        }
+
+                        else -> {
+
+                        }
+                    }
+                    Log.d(Application.getTag(), "changed state to $playbackState")
+                }
+
+            })
+            prepare()
+        }
+    }
+
+    fun loadVideo(mediaItem: MediaItem) {
+        mediaPlayer.apply {
+            _playerStatus.value = PlayerStatus.NOT_READY
+            val mediaSource: MediaSource = ProgressiveMediaSource.Factory(cacheDataSourceFactory)
+                .createMediaSource(mediaItem)
+            setMediaSource(mediaSource)
+            addListener(object : Player.Listener {
+                @SuppressLint("SetTextI18n")
+                override fun onPlaybackStateChanged(playbackState: Int) {
+                    when (playbackState) {
+                        ExoPlayer.STATE_IDLE -> {
+                            //_playerStatus.value = PlayerStatus.NOT_READY
+                            //_progressBarVisibility.value = View.VISIBLE
+                        }
+
+                        ExoPlayer.STATE_BUFFERING -> {
+                            _isLoadingPanelVisible.value = true
+                            //danmakuView.pause()
+                            statTextView.text = "${statTextView.text}\n缓冲中"
+                            this@VideoPlayerViewModel.isPlaying = false
+                        }
+
+                        ExoPlayer.STATE_READY -> {
+                            _videoResolution.value = Pair(videoSize.width, videoSize.height)
+                            _bufferPercent.value = bufferedPercentage
+                            play()
+                            danmakuView.start(mediaPlayer.currentPosition)
+                            _isLoadingPanelVisible.value = false
+                            _playerStatus.value = PlayerStatus.PLAYING
+                            statTextView.text = "${statTextView.text}\n加载完成"
+                            if (_isVideoLoaded.value == false && progress != 0L) {
+                                mediaPlayer.seekTo(progress)
+                                ToastUtils.showText("已为您定位到${(progress / 1000).secondToTime()}")
+                            }
+                            _isVideoLoaded.value = true
+                            this@VideoPlayerViewModel.isPlaying = true
+                            Log.d(
+                                Application.getTag(),
+                                "onPlaybackStateChanged: MediaPlayerCurrent : ${mediaPlayer.currentPosition}"
+                            )
+                            //danmakuView.seekTo(mediaPlayer.currentPosition)
+                            onSeekCompleteListener.onSeek(mediaPlayer.currentPosition)
+                            this@VideoPlayerViewModel.isPlaying = true
+                            updatePlayerProgress()
                         }
 
                         ExoPlayer.STATE_ENDED -> {

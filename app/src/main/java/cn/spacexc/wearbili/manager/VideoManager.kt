@@ -170,6 +170,7 @@ object VideoManager {
     }
 
     fun isLiked(bvid: String, callback: NetworkUtils.ResultCallback<LikeState>) {
+        if (!UserManager.isLoggedIn()) return
         NetworkUtils.getUrl(
             "http://api.bilibili.com/x/web-interface/archive/has/like?bvid=$bvid",
             object : Callback {
@@ -186,6 +187,7 @@ object VideoManager {
     }
 
     fun isCoined(bvid: String, callback: NetworkUtils.ResultCallback<CoinState>) {
+        if (!UserManager.isLoggedIn()) return
         NetworkUtils.getUrl(
             "http://api.bilibili.com/x/web-interface/archive/coins?bvid=$bvid",
             object : Callback {
@@ -202,6 +204,7 @@ object VideoManager {
     }
 
     fun isFavorite(bvid: String, callback: NetworkUtils.ResultCallback<FavState>) {
+        if (!UserManager.isLoggedIn()) return
         NetworkUtils.getUrl(
             "http://api.bilibili.com/x/v2/fav/video/favoured?aid=$bvid",
             object : Callback {     //这接口就这么设计的我也不知道为啥bv和av都是aid（

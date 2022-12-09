@@ -4,22 +4,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.MainActivity
-import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.bangumi.BangumiTimeLineActivity
 import cn.spacexc.wearbili.activity.search.SearchActivity
+import cn.spacexc.wearbili.activity.video.VideoCacheActivity
 import cn.spacexc.wearbili.activity.video.VideoRankingActivity
 import cn.spacexc.wearbili.adapter.ButtonsAdapter
 import cn.spacexc.wearbili.dataclass.RoundButtonData
 import cn.spacexc.wearbili.listener.OnItemViewClickListener
-import cn.spacexc.wearbili.manager.ID_TYPE_SSID
-import cn.spacexc.wearbili.utils.TimeUtils
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 
 class MenuActivity : AppCompatActivity() {
@@ -119,12 +114,13 @@ class MenuActivity : AppCompatActivity() {
                                     "没有匹配的APP，请下载安装"
                                 ).show()
                             }*/
-                            Intent(this@MenuActivity, BangumiActivity::class.java).apply {
+                            /*Intent(this@MenuActivity, BangumiActivity::class.java).apply {
                                 putExtra("id", "835")
                                 putExtra("idType", ID_TYPE_SSID)
                                 startActivity(this)
                                 finish()
-                            }
+                            }*/
+                            startActivity(Intent(this@MenuActivity, VideoCacheActivity::class.java))
                         }
                     }
                 }

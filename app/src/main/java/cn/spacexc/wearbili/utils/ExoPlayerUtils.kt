@@ -7,7 +7,10 @@ import android.os.Build
 import androidx.core.content.ContextCompat.getSystemService
 import com.google.android.exoplayer2.database.DatabaseProvider
 import com.google.android.exoplayer2.database.StandaloneDatabaseProvider
+import com.google.android.exoplayer2.offline.Download
+import com.google.android.exoplayer2.offline.DownloadIndex
 import com.google.android.exoplayer2.offline.DownloadManager
+import com.google.android.exoplayer2.offline.DownloadManager.Listener
 import com.google.android.exoplayer2.scheduler.Requirements
 import com.google.android.exoplayer2.ui.DownloadNotificationHelper
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
@@ -27,17 +30,24 @@ import java.util.concurrent.Executor
  * 给！爷！写！注！释！
  */
 
-object ExoPlayerUtils {
-    const val DOWNLOAD_NOTIFICATION_CHANNEL_ID = "WearBiliChannelID"
+const val DOWNLOAD_NOTIFICATION_CHANNEL_ID = "WearBiliChannelID"
 
-    private lateinit var downloadManager: DownloadManager
-    private lateinit var databaseProvider: DatabaseProvider
-    private lateinit var downloadCache: Cache
-    private lateinit var dataSourceFactory: HttpDataSource.Factory
-    private lateinit var downloadExecutor: Executor
-    private lateinit var requirements: Requirements
+class ExoPlayerUtils(context: Context) {
 
-    fun getDownloadManager(context: Context): DownloadManager {
+    private var downloadManager: DownloadManager
+    private var databaseProvider: DatabaseProvider
+    private var downloadCache: Cache
+    private var dataSourceFactory: HttpDataSource.Factory
+    private var downloadExecutor: Executor
+    private var requirements: Requirements
+    private var downloadIndex: DownloadIndex
+
+
+    fun getDownloadManager(): DownloadManager {
+        return downloadManager
+    }
+
+    init {
         databaseProvider = StandaloneDatabaseProvider(context)
 
         downloadCache = SimpleCache(
@@ -46,8 +56,15 @@ object ExoPlayerUtils {
             databaseProvider
         )
 
-// Create a factory for reading the data from the network.
+        // Create a factory for reading the data from the network.
         dataSourceFactory = DefaultHttpDataSource.Factory()
+
+        dataSourceFactory.setDefaultRequestProperties(
+            HashMap<String, String>().apply {
+                this["User-Agent"] = "Mozilla/5.0 BiliDroid/*.*.* (bbcallen@gmail.com)"
+                this["Referer"] = "https://bilibili.com/"
+            }
+        )
 
         downloadExecutor = Executor { obj: Runnable -> obj.run() }
 
@@ -60,15 +77,25 @@ object ExoPlayerUtils {
             dataSourceFactory,
             downloadExecutor
         )
+        downloadIndex = downloadManager.downloadIndex
+        downloadManager.addListener(object : Listener {
+            override fun onDownloadChanged(
+                downloadManager: DownloadManager,
+                download: Download,
+                finalException: Exception?
+            ) {
+                super.onDownloadChanged(downloadManager, download, finalException)
+
+            }
+        })
         requirements = Requirements(Requirements.NETWORK)
         downloadManager.requirements = requirements
         downloadManager.maxParallelDownloads = 3
-        return downloadManager
     }
 
     @Synchronized
     private fun getDownloadDirectory(context: Context): File? {
-        var downloadDirectory = context.getExternalFilesDir( /* type= */null)
+        var downloadDirectory = context.getExternalFilesDir(null)
         if (downloadDirectory == null) {
             downloadDirectory = context.filesDir
         }
@@ -83,7 +110,7 @@ object ExoPlayerUtils {
         return DownloadNotificationHelper(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID)
     }
 
-    fun createNotificationChannelId(context: Context) {
+    private fun createNotificationChannelId(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create the NotificationChannel
             val name = "WearBili缓存服务"
@@ -98,5 +125,28 @@ object ExoPlayerUtils {
             notificationManager.createNotificationChannel(mChannel)
         }
 
+    }
+
+    fun getCache(): Cache {
+        return downloadCache
+    }
+
+    fun getDownloadedVideos(): List<Download> {
+        val list = mutableListOf<Download>()
+        val downloads = downloadIndex.getDownloads()
+        downloads.moveToFirst()
+        while (downloads.moveToNext()) {
+            list.add(downloads.download)
+            //downloadManager.downloadIndex.getDownloads().moveToNext()
+        }
+        return list
+    }
+
+    companion object {
+        var instance: ExoPlayerUtils? = null
+        fun getInstance(context: Context): ExoPlayerUtils {
+            if (instance == null) instance = ExoPlayerUtils(context)
+            return instance!!
+        }
     }
 }

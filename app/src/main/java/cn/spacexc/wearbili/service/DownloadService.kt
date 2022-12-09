@@ -16,10 +16,13 @@
 package cn.spacexc.wearbili.service
 
 import android.app.Notification
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import cn.spacexc.wearbili.R
+import cn.spacexc.wearbili.activity.video.VideoCacheActivity
+import cn.spacexc.wearbili.utils.DOWNLOAD_NOTIFICATION_CHANNEL_ID
 import cn.spacexc.wearbili.utils.ExoPlayerUtils
-import cn.spacexc.wearbili.utils.ExoPlayerUtils.DOWNLOAD_NOTIFICATION_CHANNEL_ID
 import com.google.android.exoplayer2.offline.Download
 import com.google.android.exoplayer2.offline.DownloadManager
 import com.google.android.exoplayer2.offline.DownloadService
@@ -35,16 +38,16 @@ class DownloadService : DownloadService(
     FOREGROUND_NOTIFICATION_ID,
     DEFAULT_FOREGROUND_NOTIFICATION_UPDATE_INTERVAL,
     DOWNLOAD_NOTIFICATION_CHANNEL_ID,
-    R.string.exo_download_notification_channel_name,  /* channelDescriptionResourceId= */
+    R.string.exo_download_notification_channel_name,
     0
 ) {
     override fun getDownloadManager(): DownloadManager {
         // This will only happen once, because getDownloadManager is guaranteed to be called only once
         // in the life cycle of the process.
         val downloadManager: DownloadManager =
-            ExoPlayerUtils.getDownloadManager( /* context= */this)
+            ExoPlayerUtils.getInstance(this).getDownloadManager( /* context= */)
         val downloadNotificationHelper: DownloadNotificationHelper =
-            ExoPlayerUtils.getDownloadNotificationHelper( /* context= */this)
+            ExoPlayerUtils.getInstance(this).getDownloadNotificationHelper( /* context= */this)
         downloadManager.addListener(
             TerminalStateNotificationHelper(
                 this, downloadNotificationHelper, FOREGROUND_NOTIFICATION_ID + 1
@@ -53,18 +56,24 @@ class DownloadService : DownloadService(
         return downloadManager
     }
 
-    override fun getScheduler(): Scheduler? {
-        return if (Util.SDK_INT >= 21) PlatformScheduler(this, JOB_ID) else null
+    override fun getScheduler(): Scheduler {
+        //return if (Util.SDK_INT >= 21) PlatformScheduler(this, JOB_ID) else null
+        return PlatformScheduler(this, JOB_ID)
     }
 
     override fun getForegroundNotification(
         downloads: List<Download>, notMetRequirements: @RequirementFlags Int
     ): Notification {
-        return ExoPlayerUtils.getDownloadNotificationHelper( /* context= */this)
-            .buildProgressNotification( /* context= */
+        return ExoPlayerUtils.getInstance(this).getDownloadNotificationHelper(this)
+            .buildProgressNotification(
                 this,
-                R.drawable.cloud_download,  /* contentIntent= */
-                null,  /* message= */
+                R.drawable.cloud_download,
+                PendingIntent.getActivity(
+                    this,
+                    0,
+                    Intent(this, VideoCacheActivity::class.java),
+                    PendingIntent.FLAG_IMMUTABLE
+                ),
                 null,
                 downloads,
                 notMetRequirements
@@ -92,7 +101,7 @@ class DownloadService : DownloadService(
                 Download.STATE_COMPLETED -> {
                     notificationHelper.buildDownloadCompletedNotification(
                         context,
-                        R.drawable.ic_baseline_done_24,  /* contentIntent= */
+                        R.drawable.ic_baseline_done_24,
                         null,
                         Util.fromUtf8Bytes(download.request.data)
                     )
@@ -100,7 +109,7 @@ class DownloadService : DownloadService(
                 Download.STATE_FAILED -> {
                     notificationHelper.buildDownloadFailedNotification(
                         context,
-                        R.drawable.ic_baseline_done_24,  /* contentIntent= */
+                        R.drawable.ic_baseline_done_24,
                         null,
                         Util.fromUtf8Bytes(download.request.data)
                     )

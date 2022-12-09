@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-parcelize'
-
+    id 'kotlin-kapt'
 }
 
 android {
@@ -13,7 +13,7 @@ android {
         minSdk 25
         targetSdk 33
         versionCode 1
-        versionName "Rel-AL 0.17.2"
+        versionName "Rel-AL 0.18.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -107,5 +107,4 @@ dependencies {
     implementation "com.google.accompanist:accompanist-pager:0.27.0"
 
     implementation "me.onebone:toolbar-compose:2.3.5"
-
 }

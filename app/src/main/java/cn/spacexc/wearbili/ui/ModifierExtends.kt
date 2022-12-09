@@ -1,6 +1,7 @@
 package cn.spacexc.wearbili.ui
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -27,7 +28,10 @@ object ModifierExtends {
         onClick: () -> Unit,
     ): Modifier = composed {
         val isPressed by interactionSource.collectIsPressedAsState()
-        val sizePercent by animateFloatAsState(targetValue = if (isPressed) 0.9f else 1f)
+        val sizePercent by animateFloatAsState(
+            targetValue = if (isPressed) 0.9f else 1f,
+            animationSpec = tween(durationMillis = 150)
+        )
         scale(sizePercent).clickable(
             indication = null, interactionSource = interactionSource, onClick = onClick
         )
@@ -41,7 +45,10 @@ object ModifierExtends {
         var isPressed by remember {
             mutableStateOf(false)
         }
-        val sizePercent by animateFloatAsState(targetValue = if (isPressed) 0.9f else 1f)
+        val sizePercent by animateFloatAsState(
+            targetValue = if (isPressed) 0.9f else 1f,
+            animationSpec = tween(durationMillis = 150)
+        )
         scale(sizePercent).pointerInput(Unit) {
             detectTapGestures(
                 onTap = { onClick() },

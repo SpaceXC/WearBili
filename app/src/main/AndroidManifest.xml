@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".Application"
@@ -23,6 +24,9 @@
         android:theme="@style/Theme.WearBili"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".activity.video.NewVideoCacheActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.user.SpaceProfileActivity"
             android:exported="false" />
@@ -195,7 +199,6 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.exoplayer.downloadService.action.RESTART" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </service>

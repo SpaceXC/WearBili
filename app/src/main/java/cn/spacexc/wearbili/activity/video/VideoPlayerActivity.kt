@@ -26,6 +26,7 @@ import cn.spacexc.wearbili.dataclass.OnlineInfos
 import cn.spacexc.wearbili.dataclass.VideoStreamsFlv
 import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.manager.VideoManager
+import cn.spacexc.wearbili.utils.ExoPlayerUtils
 import cn.spacexc.wearbili.utils.TimeUtils
 import cn.spacexc.wearbili.utils.TimeUtils.secondToTime
 import cn.spacexc.wearbili.utils.ToastUtils
@@ -89,39 +90,45 @@ class VideoPlayerActivity : AppCompatActivity() {
         binding = ActivityVideoPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         //val video: VideoInfoData? = intent.getParcelableExtra("videoData")
-        val videoBvid = intent.getStringExtra("videoBvid")!!
+        val videoBvid = intent.getStringExtra("videoBvid")
         val videoCid = intent.getLongExtra("videoCid", 0)
-        val videoTitle = intent.getStringExtra("videoTitle")
+        val cacheId = intent.getStringExtra("videoCid")
+        val videoTitle = intent.getStringExtra("videoTitle") ?: ""
+        val isCache = intent.getBooleanExtra("isCache", false)
 
         val progress = intent.getLongExtra("progress", 0L) * 1000
         viewModel.progress = progress
 
         binding.videoTitle.text = videoTitle
         Log.d(Application.getTag(), "onCreate: BVID:$videoBvid, CID: $videoCid")
-        lifecycleScope.launch {
-            VideoManager.getOnlineCount(videoBvid, videoCid, object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-
-                }
-
-                @SuppressLint("SetTextI18n")
-                override fun onResponse(call: Call, response: Response) {
-                    MainScope().launch {
-                        val info = Gson().fromJson(
-                            response.body?.string(),
-                            OnlineInfos::class.java
-                        )
-                        binding.onlineCount.text = "${info.data?.total}人在看"
+        videoBvid?.let {
+            lifecycleScope.launch {
+                VideoManager.getOnlineCount(videoBvid, videoCid, object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
 
                     }
+
+                    @SuppressLint("SetTextI18n")
+                    override fun onResponse(call: Call, response: Response) {
+                        MainScope().launch {
+                            val info = Gson().fromJson(
+                                response.body?.string(),
+                                OnlineInfos::class.java
+                            )
+                            binding.onlineCount.text = "${info.data?.total}人在看"
+
+                        }
+                    }
+
+                })
+
+                while (true) {
+                    binding.watchStats?.text =
+                        "电量$BatteryN% 温度${BatteryT * 0.1}°C ${TimeUtils.getCurrentTime()}"
+                    delay(500)
                 }
-
-            })
-
-            while (true) {
-                binding.watchStats?.text = "电量$BatteryN% 温度${BatteryT * 0.1}°C ${TimeUtils.getCurrentTime()}"
-                delay(500)
             }
+
         }
 
 
@@ -193,15 +200,20 @@ class VideoPlayerActivity : AppCompatActivity() {
         }
         viewModel.onSeekCompleteListener = object : OnSeekCompleteListener {
             override fun onSeek(progress: Long) {
-                VideoManager.uploadVideoViewingProgress(
-                    videoBvid,
-                    videoCid,
-                    (progress / 1000).toInt()
-                )
+                videoBvid?.let {
+                    VideoManager.uploadVideoViewingProgress(
+                        videoBvid,
+                        videoCid,
+                        (progress / 1000).toInt()
+                    )
+                }
             }
 
         }
-        uploadVideoViewingProgress(videoBvid, videoCid)
+        videoBvid?.let {
+            uploadVideoViewingProgress(videoBvid, videoCid)
+
+        }
         //-----------Layout视图监听区域⬇️️-----------
         /*binding.surfaceView.holder.addCallback(object :
             SurfaceHolder.Callback {     //surfaceview监听
@@ -348,95 +360,123 @@ class VideoPlayerActivity : AppCompatActivity() {
         val loader: ILoader =
             DanmakuLoaderFactory.create(DanmakuLoaderFactory.TAG_BILI)       //设置解析b站xml弹幕
 
-        VideoManager.getDanmaku(videoCid, object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                MainScope().launch {
-                    ToastUtils.makeText(
-                        "加载弹幕失败！"
-                    ).show()
-                    binding.loadingStatText.text = "${binding.loadingStatText.text}\n弹幕加载失败"
 
+        if (isCache) {
+            Thread {
+                val download = ExoPlayerUtils.getInstance(Application.context!!)
+                    .getDownloadManager().downloadIndex.getDownload(cacheId ?: "")
+                if (download != null) {
+                    MainScope().launch {
+                        binding.loadingStatText.text =
+                            "${binding.loadingStatText.text}\n视频正在加载中...马上就好！"
+                        viewModel.loadVideo(download.request.toMediaItem())
+                    }
+                } else {
+                    MainScope().launch {
+                        binding.loadingStatText.text =
+                            "${binding.loadingStatText.text}\n视频加载失败：无视频源(可能是缓存消失了?)"
+                    }
                 }
-            }
+            }.start()
 
-            override fun onResponse(call: Call, response: Response) {
-                try {
-                    //val responseIs = response.body?.byteStream()
-                    //val str = String(decompress(responseIs.readBytes()).inputStream()!!)
-                    //Log.d(Application.getTag(), "onResponse: ${response.body?.string()}")
-                    val danmakuIs: ByteArray? = decompress(response.body?.bytes()!!)
-                    loader.load(danmakuIs!!.inputStream())
-                    Log.d(Application.getTag(), "onResponse: ${String(danmakuIs)}")
-                } catch (e: IllegalDataException) {
-                    e.printStackTrace()
+        } else {
+            VideoManager.getDanmaku(videoCid, object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
                     MainScope().launch {
                         ToastUtils.makeText(
                             "加载弹幕失败！"
                         ).show()
                         binding.loadingStatText.text = "${binding.loadingStatText.text}\n弹幕加载失败"
 
-
                     }
                 }
-                val danmukuParser = BiliDanmukuParser()
-                val dataSource: IDataSource<*> = loader.dataSource
-                danmukuParser.load(dataSource)
 
-                binding.danmakuView.setCallback(object : DrawHandler.Callback {
-                    override fun updateTimer(timer: DanmakuTimer?) {
-
-                    }
-
-                    override fun drawingFinished() {
-
-                    }
-
-                    override fun prepared() {
-                        //-----------弹幕相关区域⬆️️️️-----------
-
-                        //-----------视频相关区域⬇️-----------
+                override fun onResponse(call: Call, response: Response) {
+                    try {
+                        //val responseIs = response.body?.byteStream()
+                        //val str = String(decompress(responseIs.readBytes()).inputStream()!!)
+                        //Log.d(Application.getTag(), "onResponse: ${response.body?.string()}")
+                        val danmakuIs: ByteArray? = decompress(response.body?.bytes()!!)
+                        loader.load(danmakuIs!!.inputStream())
+                        Log.d(Application.getTag(), "onResponse: ${String(danmakuIs)}")
+                    } catch (e: IllegalDataException) {
+                        e.printStackTrace()
                         MainScope().launch {
-                            binding.loadingStatText.text =
-                                "${binding.loadingStatText.text}\n视频正在加载中...马上就好！"
+                            ToastUtils.makeText(
+                                "加载弹幕失败！"
+                            ).show()
+                            binding.loadingStatText.text = "${binding.loadingStatText.text}\n弹幕加载失败"
 
 
                         }
-
-                        VideoManager.getVideoUrl(videoBvid, videoCid, object : Callback {
-                            override fun onFailure(call: Call, e: IOException) {
-                                MainScope().launch {
-                                    ToastUtils.makeText(
-                                        "加载视频失败！"
-                                    ).show()
-                                    binding.loadingStatText.text =
-                                        "${binding.loadingStatText.text}\n视频加载失败"
-
-
-                                }
-                            }
-
-                            override fun onResponse(call: Call, response: Response) {
-                                val responseString = response.body?.string()
-                                MainScope().launch {
-                                    val videoUrls: VideoStreamsFlv = Gson().fromJson(
-                                        responseString,
-                                        VideoStreamsFlv::class.java
-                                    )        //创建视频数据对象
-                                    this@VideoPlayerActivity.runOnUiThread {
-                                        viewModel.loadVideo(videoUrls.data.durl[0].url)
-                                    }
-                                }
-                            }
-
-                        })
-
-                        //-----------视频相关区域⬆️️️-----------
                     }
-                })
-                binding.danmakuView.prepare(danmukuParser, danmakuContext)      //准备弹幕
-                binding.danmakuView.enableDanmakuDrawingCache(true)
-            }
-        })
+                    val danmukuParser = BiliDanmukuParser()
+                    val dataSource: IDataSource<*> = loader.dataSource
+                    danmukuParser.load(dataSource)
+
+                    binding.danmakuView.setCallback(object : DrawHandler.Callback {
+                        override fun updateTimer(timer: DanmakuTimer?) {
+
+                        }
+
+                        override fun drawingFinished() {
+
+                        }
+
+                        override fun prepared() {
+                            //-----------弹幕相关区域⬆️️️️-----------
+
+                            //-----------视频相关区域⬇️-----------
+                            MainScope().launch {
+                                binding.loadingStatText.text =
+                                    "${binding.loadingStatText.text}\n视频正在加载中...马上就好！"
+
+
+                            }
+
+
+                            binding.loadingStatText.text =
+                                "${binding.loadingStatText.text}\n视频正在加载中...马上就好！"
+                            videoBvid?.let {
+                                VideoManager.getVideoUrl(videoBvid, videoCid, object : Callback {
+                                    override fun onFailure(call: Call, e: IOException) {
+                                        MainScope().launch {
+                                            ToastUtils.makeText(
+                                                "加载视频失败！"
+                                            ).show()
+                                            binding.loadingStatText.text =
+                                                "${binding.loadingStatText.text}\n视频加载失败"
+
+
+                                        }
+                                    }
+
+                                    override fun onResponse(call: Call, response: Response) {
+                                        val responseString = response.body?.string()
+                                        MainScope().launch {
+                                            val videoUrls: VideoStreamsFlv = Gson().fromJson(
+                                                responseString,
+                                                VideoStreamsFlv::class.java
+                                            )        //创建视频数据对象
+                                            this@VideoPlayerActivity.runOnUiThread {
+                                                viewModel.loadVideo(videoUrls.data.durl[0].url)
+                                            }
+                                        }
+                                    }
+
+                                })
+
+                            }
+
+                            //-----------视频相关区域⬆️️️-----------
+                        }
+                    })
+                    binding.danmakuView.prepare(danmukuParser, danmakuContext)      //准备弹幕
+                    binding.danmakuView.enableDanmakuDrawingCache(true)
+                }
+            })
+
+        }
 
 
     }
@@ -506,7 +546,8 @@ class VideoPlayerActivity : AppCompatActivity() {
                     BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE -> BatteryTemp = "电池电压过高"
                     BatteryManager.BATTERY_HEALTH_OVERHEAT -> BatteryTemp = "电池过热"
                 }
-                binding.watchStats?.text = "电量$BatteryN% 温度${BatteryT * 0.1}°C ${TimeUtils.getCurrentTime()}"
+                binding.watchStats?.text =
+                    "电量$BatteryN% 温度${BatteryT * 0.1}°C ${TimeUtils.getCurrentTime()}"
             }
         }
     }

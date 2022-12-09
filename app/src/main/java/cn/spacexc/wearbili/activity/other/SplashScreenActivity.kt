@@ -30,6 +30,18 @@ class SplashScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
+        /*val downloadRequest: DownloadRequest = DownloadRequest.Builder("BV1MJ411Q7zC", Uri.parse("https://upos-sz-mirrorcos.bilivideo.com/upgcxcode/33/46/132454633/132454633-1-208.mp4?e=ig8euxZM2rNcNbhanWdVhwdlhzuHhwdVhoNvNC8BqJIzNbfqXBvEqxTEto8BTrNvN0GvT90W5JZMkX_YN0MvXg8gNEV4NC8xNEV4N03eN0B5tZlqNxTEto8BTrNvNeZVuJ10Kj_g2UB02J0mN0B5tZlqNCNEto8BTrNvNC7MTX502C8f2jmMQJ6mqF2fka1mqx6gqj0eN0B599M=&uipk=5&nbs=1&deadline=1670509693&gen=playurlv2&os=cosbv&oi=1972173940&trid=03be433d5aa144d2bd910bb47d91cf7eu&mid=0&platform=pc&upsig=8b26eb614f784f506172bea4d8714dc5&uparams=e,uipk,nbs,deadline,gen,os,oi,trid,mid,platform&bvc=vod&nettype=0&orderid=0,3&buvid=&build=0&agrr=0&bw=380872&logo=80000000")).build()
+        downloadRequest.toMediaItem()
+        DownloadService.sendAddDownload(
+            Application.context!!,
+            cn.spacexc.wearbili.service.DownloadService::class.java,
+            downloadRequest,
+            false
+        )*/
+
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
+
         if (!SharedPreferencesUtils.getBoolean("hasSetUp", false)) {
             val intent =
                 Intent(this@SplashScreenActivity, WelcomeActivity::class.java)
