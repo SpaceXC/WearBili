@@ -21,7 +21,7 @@ class MainViewPagerAdapter(fragmentActivity: FragmentActivity) :
     FragmentStateAdapter(fragmentActivity) {
 
     override fun getItemCount(): Int {
-        return 4
+        return 3
     }
 
     override fun createFragment(position: Int): Fragment {

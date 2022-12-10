@@ -119,6 +119,7 @@ class VideoViewModel : ViewModel() {
     }
 
     fun getIsCoined(bvid: String) {
+        if (!UserManager.isLoggedIn()) return
         VideoManager.isCoined(bvid, object : NetworkUtils.ResultCallback<CoinState> {
             override fun onSuccess(result: CoinState, code: Int) {
                 MainScope().launch {

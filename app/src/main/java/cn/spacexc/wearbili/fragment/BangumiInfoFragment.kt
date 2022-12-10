@@ -16,9 +16,6 @@ import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.Movie
 import androidx.compose.material.icons.outlined.PlayCircle
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -37,6 +34,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
+import androidx.wear.compose.material.Icon
+import androidx.wear.compose.material.Text
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.image.PhotoViewActivity
@@ -575,7 +574,7 @@ class BangumiInfoFragment : Fragment() {
                             }
                         }   //部分选集
                         if ((bangumi?.result?.episodes?.size ?: 0) > 3) {
-                            Surface(
+                            Box(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(10.dp))
                                     .background(
@@ -589,8 +588,7 @@ class BangumiInfoFragment : Fragment() {
                                     .fillMaxWidth()
                                     .height(50.dp)
                                     .align(Alignment.BottomCenter),
-                                color = Color.Transparent,
-                                content = {})   //阴影
+                            )   //阴影
                         }
                     }   //部分选集
                 }
@@ -656,7 +654,7 @@ class BangumiInfoFragment : Fragment() {
                             }
                         }   //部分选集
                         if (section.episodes.size > 3) {
-                            Surface(
+                            Box(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(10.dp))
                                     .background(
@@ -670,8 +668,7 @@ class BangumiInfoFragment : Fragment() {
                                     .fillMaxWidth()
                                     .height(50.dp)
                                     .align(Alignment.BottomCenter),
-                                color = Color.Transparent,
-                                content = {})   //阴影
+                            )   //阴影
                         }
 
                     }   //部分选集

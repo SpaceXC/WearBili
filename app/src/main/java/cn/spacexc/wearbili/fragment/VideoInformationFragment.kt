@@ -22,7 +22,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -355,7 +354,7 @@ class VideoInformationFragment : Fragment() {
                                                 .padding(vertical = 12.dp, horizontal = 16.dp)
                                                 .fillMaxWidth(),
                                         ) {
-                                            androidx.compose.material3.Text(
+                                            Text(
                                                 text = "P${index + 1} ${page.part}",
                                                 color = Color.White,
                                                 fontSize = 16.sp,
@@ -372,7 +371,7 @@ class VideoInformationFragment : Fragment() {
                             }
                         }   //部分选集
                         if ((videoInfo?.data?.pages?.size ?: 0) > 3) {
-                            Surface(
+                            Box(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(10.dp))
                                     .background(
@@ -386,8 +385,7 @@ class VideoInformationFragment : Fragment() {
                                     .fillMaxWidth()
                                     .height(50.dp)
                                     .align(Alignment.BottomCenter),
-                                color = Color.Transparent,
-                                content = {})   //阴影
+                            )   //阴影
                         }
                     }   //部分选集
                 }
@@ -483,6 +481,7 @@ class VideoInformationFragment : Fragment() {
                                             ).apply {
                                                 putExtra("bvid", videoInfo?.data?.bvid ?: "")
                                                 putExtra("cid", videoInfo?.data?.cid ?: 0)
+                                                putExtra("title", videoInfo?.data?.title)
                                                 putExtra(
                                                     "data",
                                                     Gson().toJson(videoInfo?.data?.pages?.let {
@@ -713,7 +712,7 @@ class VideoInformationFragment : Fragment() {
                 tint = Color.White
             )
             Spacer(modifier = Modifier.width(2.dp))
-            androidx.compose.material3.Text(text = content,
+            Text(text = content,
                 fontSize = 12.sp,
                 fontFamily = puhuiFamily,
                 color = Color.White,
@@ -750,7 +749,7 @@ class VideoInformationFragment : Fragment() {
                 tint = Color.White
             )
             Spacer(modifier = Modifier.width(2.dp))
-            androidx.compose.material3.Text(text = content,
+            Text(text = content,
                 fontSize = 12.sp,
                 fontFamily = puhuiFamily,
                 color = Color.White,

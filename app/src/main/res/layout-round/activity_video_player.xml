@@ -119,7 +119,7 @@
                         android:id="@+id/title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#90000000"
+                        android:background="@drawable/dark_elevation_reverse"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
@@ -140,45 +140,45 @@
                             app:layout_constraintTop_toBottomOf="@+id/videoTitle" />
 
                         <ImageView
-                                android:id="@+id/back"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:adjustViewBounds="true"
-                                android:visibility="gone"
-                                app:layout_constraintBottom_toTopOf="@+id/videoTitle"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:srcCompat="@drawable/ic_baseline_arrow_back_ios_24"/>
+                            android:id="@+id/back"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toTopOf="@+id/videoTitle"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/ic_baseline_arrow_back_ios_24" />
 
                         <cn.spacexc.wearbili.customview.MarqueeTextView
-                                android:id="@+id/videoTitle"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="20dp"
-                                android:ellipsize="marquee"
-                                android:focusable="true"
-                                android:focusableInTouchMode="true"
-                                android:fontFamily="@font/puhui_bold"
-                                android:gravity="center"
-                                android:singleLine="true"
-                                android:textColor="#fff"
-                                android:textSize="15sp"
-                                app:layout_constraintEnd_toStartOf="@+id/guideline60"
-                                app:layout_constraintHorizontal_bias="0.0"
-                                app:layout_constraintStart_toStartOf="@+id/guideline58"
-                                app:layout_constraintTop_toTopOf="parent"
-                                tools:ignore="SpeakableTextPresentCheck"/>
+                            android:id="@+id/videoTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:ellipsize="marquee"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:fontFamily="@font/puhui_bold"
+                            android:gravity="center"
+                            android:singleLine="true"
+                            android:textColor="#fff"
+                            android:textSize="15sp"
+                            app:layout_constraintEnd_toStartOf="@+id/guideline60"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="@+id/guideline58"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="SpeakableTextPresentCheck" />
 
                         <androidx.constraintlayout.widget.Guideline
-                                android:id="@+id/guideline58"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                app:layout_constraintGuide_percent="0.15"/>
+                            android:id="@+id/guideline58"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:layout_constraintGuide_percent="0.15" />
 
                         <androidx.constraintlayout.widget.Guideline
-                                android:id="@+id/guideline60"
+                            android:id="@+id/guideline60"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
@@ -189,7 +189,7 @@
                         android:id="@+id/controller"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#90000000"
+                        android:background="@drawable/dark_elevation"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent">

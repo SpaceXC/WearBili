@@ -11,8 +11,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.Text
+import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -23,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.wear.compose.material.Text
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.ui.BilibiliPink
 import cn.spacexc.wearbili.ui.CirclesBackground
@@ -47,6 +47,7 @@ class VideoCacheActivity : AppCompatActivity() {
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(8.dp)
                 ) {
+
                     videos?.forEach {
                         item {
                             Column(modifier = Modifier) {
@@ -110,7 +111,16 @@ class VideoCacheActivity : AppCompatActivity() {
                                         .fillMaxWidth(),
                                 ) {
                                     Text(
-                                        text = it.request.id,
+                                        text = it.request.id.split("///")[1],
+                                        color = Color.White,
+                                        fontSize = 16.sp,
+                                        fontFamily = puhuiFamily,
+                                        overflow = TextOverflow.Ellipsis,
+                                        modifier = Modifier.alpha(0.76f),
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Text(
+                                        text = it.request.id.split("///")[2],
                                         color = Color.White,
                                         fontSize = 16.sp,
                                         fontFamily = puhuiFamily,
@@ -165,11 +175,12 @@ class VideoCacheActivity : AppCompatActivity() {
                                         modifier = Modifier.alpha(0.76f),
                                         fontWeight = FontWeight.Bold
                                     )
+
                                     LinearProgressIndicator(
                                         progress = it.percentDownloaded / 100f,
                                         modifier = Modifier.fillMaxWidth(),
                                         color = BilibiliPink,
-                                        trackColor = Color(
+                                        backgroundColor = Color(
                                             254,
                                             103,
                                             154,

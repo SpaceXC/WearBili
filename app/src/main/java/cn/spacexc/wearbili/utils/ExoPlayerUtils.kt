@@ -134,7 +134,7 @@ class ExoPlayerUtils(context: Context) {
     fun getDownloadedVideos(): List<Download> {
         val list = mutableListOf<Download>()
         val downloads = downloadIndex.getDownloads()
-        downloads.moveToFirst()
+        downloads.moveToPosition(-1)
         while (downloads.moveToNext()) {
             list.add(downloads.download)
             //downloadManager.downloadIndex.getDownloads().moveToNext()

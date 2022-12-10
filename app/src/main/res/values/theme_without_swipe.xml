@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.WearBili.SwipeDisabled" parent="Theme.WearBili">
+        <item name="android:windowSwipeToDismiss">false</item>
+    </style>
+</resources>

@@ -31,10 +31,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import cn.spacexc.wearbili.manager.UserManager
+import cn.spacexc.wearbili.utils.LogUtils.log
 import cn.spacexc.wearbili.utils.ToastUtils
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
+import java.io.File
 
 
 /**
@@ -86,6 +88,7 @@ class Application : android.app.Application() {
                     "\n"
         )
         context = this
+        File("${this.cacheDir}/downloadedDanmakus/").mkdir().log("dirCreated")
         AppCenter.start(
             this, "0365b962-2310-4b53-ba45-d92d84171f57",
             Analytics::class.java, Crashes::class.java

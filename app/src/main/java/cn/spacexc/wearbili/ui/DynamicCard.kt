@@ -12,7 +12,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.PlayCircle
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -282,7 +281,7 @@ fun DynamicCard(
                         contentDescription = null,
                         modifier = Modifier.fillMaxWidth()
                     )
-                    Surface(
+                    Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(10.dp))
                             .background(
@@ -296,8 +295,7 @@ fun DynamicCard(
                             .fillMaxWidth()
                             .height(infoHeight)
                             .align(Alignment.BottomCenter),
-                        color = Color.Transparent,
-                        content = {})   //阴影
+                    )   //阴影
                     Column(
                         modifier = Modifier
                             .align(Alignment.BottomStart)
@@ -377,7 +375,7 @@ fun DynamicCard(
                             contentDescription = null,
                             modifier = Modifier.fillMaxWidth()
                         )
-                        Surface(
+                        Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(10.dp))
                                 .background(
@@ -391,8 +389,7 @@ fun DynamicCard(
                                 .fillMaxWidth()
                                 .height(infoHeight)
                                 .align(Alignment.BottomCenter),
-                            color = Color.Transparent,
-                            content = {})   //阴影
+                        )   //阴影
                         Column(
                             modifier = Modifier
                                 .align(Alignment.BottomStart)
@@ -652,7 +649,7 @@ fun ForwardShareDynamicCard(
                         contentDescription = null,
                         modifier = Modifier.fillMaxWidth()
                     )
-                    Surface(
+                    Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(10.dp))
                             .background(
@@ -666,8 +663,7 @@ fun ForwardShareDynamicCard(
                             .fillMaxWidth()
                             .height(infoHeight)
                             .align(Alignment.BottomCenter),
-                        color = Color.Transparent,
-                        content = {})   //阴影
+                    )   //阴影
                     Column(
                         modifier = Modifier
                             .align(Alignment.BottomStart)
@@ -748,7 +744,7 @@ fun ForwardShareDynamicCard(
                             contentDescription = null,
                             modifier = Modifier.fillMaxWidth()
                         )
-                        Surface(
+                        Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(10.dp))
                                 .background(
@@ -762,8 +758,7 @@ fun ForwardShareDynamicCard(
                                 .fillMaxWidth()
                                 .height(infoHeight)
                                 .align(Alignment.BottomCenter),
-                            color = Color.Transparent,
-                            content = {})   //阴影
+                        )   //阴影
                         Column(
                             modifier = Modifier
                                 .align(Alignment.BottomStart)

@@ -17,8 +17,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -33,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.ui.*
@@ -89,7 +88,9 @@ class SpaceProfileActivity : AppCompatActivity() {
             CirclesBackground.RegularBackgroundWithTitleAndBackArrow(
                 title = "个人空间", onBack = { finish() }
             ) {
-                Surface(modifier = Modifier.fillMaxSize(), color = Color.Transparent) {
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Transparent)) {
                     CollapsingToolbarScaffold(
                         state = collapsingState,
                         modifier = Modifier.fillMaxSize(),

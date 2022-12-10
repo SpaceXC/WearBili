@@ -10,7 +10,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
@@ -19,6 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.wear.compose.material.Text
+import androidx.work.*
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.dataclass.VideoStreamsFlv
 import cn.spacexc.wearbili.manager.VideoManager
@@ -27,6 +28,7 @@ import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
 import cn.spacexc.wearbili.ui.puhuiFamily
 import cn.spacexc.wearbili.utils.ToastUtils
 import cn.spacexc.wearbili.viewmodel.VideoCacheViewModel
+import cn.spacexc.wearbili.worker.DanmakuDownloadWorker
 import com.google.android.exoplayer2.offline.DownloadRequest
 import com.google.android.exoplayer2.offline.DownloadService
 import com.google.gson.Gson
@@ -57,7 +59,7 @@ class NewVideoCacheActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val bvid = intent.getStringExtra("bvid") ?: ""
-        val cid = intent.getLongExtra("cid", 0)
+        val videoTitle = intent.getStringExtra("title") ?: ""
         setContent {
             val data = Gson().fromJson(
                 intent.getStringExtra("data"),
@@ -77,7 +79,12 @@ class NewVideoCacheActivity : AppCompatActivity() {
                                 Column(
                                     modifier = Modifier
                                         .clickVfx {
-                                            downloadVideo(bvid, page.cid)
+                                            downloadVideo(
+                                                videoTitle,
+                                                "P${index.plus(1)} ${page.part}",
+                                                bvid,
+                                                page.cid
+                                            )
                                         }
                                         .clip(RoundedCornerShape(10.dp))
                                         .border(
@@ -93,7 +100,7 @@ class NewVideoCacheActivity : AppCompatActivity() {
                                         .fillMaxWidth(),
                                 ) {
                                     Text(
-                                        text = "P$index ${page.part}",
+                                        text = "P${index.plus(1)} ${page.part}",
                                         color = Color.White,
                                         fontSize = 16.sp,
                                         fontFamily = puhuiFamily,
@@ -111,7 +118,7 @@ class NewVideoCacheActivity : AppCompatActivity() {
         }
     }
 
-    private fun downloadVideo(bvid: String, cid: Long) {
+    private fun downloadVideo(title: String, partName: String, bvid: String, cid: Long) {
         VideoManager.getVideoUrl(bvid, cid, object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 MainScope().launch {
@@ -122,7 +129,10 @@ class NewVideoCacheActivity : AppCompatActivity() {
             override fun onResponse(call: Call, response: Response) {
                 val result = Gson().fromJson(response.body?.string(), VideoStreamsFlv::class.java)
                 val downloadRequest =
-                    DownloadRequest.Builder(cid.toString(), Uri.parse(result.data.durl[0].url))
+                    DownloadRequest.Builder(
+                        "$cid///$title///$partName",
+                        Uri.parse(result.data.durl[0].url)
+                    )
                         .build()
                 DownloadService.sendAddDownload(
                     Application.context!!,
@@ -130,6 +140,17 @@ class NewVideoCacheActivity : AppCompatActivity() {
                     downloadRequest,
                     false
                 )
+                val danmakuDownloadWorkRequest = OneTimeWorkRequestBuilder<DanmakuDownloadWorker>()
+                    .setInputData(
+                        workDataOf(
+                            "cid" to cid.toString()
+                        )
+                    )
+                    .setConstraints(
+                        Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+                    )
+                    .build()
+                WorkManager.getInstance(Application.context!!).enqueue(danmakuDownloadWorkRequest)
                 MainScope().launch {
                     ToastUtils.showText("已添加到下载队列")
                     finish()

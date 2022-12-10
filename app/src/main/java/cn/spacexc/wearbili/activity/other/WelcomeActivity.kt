@@ -434,6 +434,7 @@ class WelcomeActivity : AppCompatActivity() {
     fun Button(onClick: () -> Unit, text: String) {
         Column(
             modifier = Modifier
+                .clickVfx { onClick() }
                 .clip(RoundedCornerShape(10.dp))
                 /*.border(
                     width = 0.1f.dp,
@@ -442,8 +443,7 @@ class WelcomeActivity : AppCompatActivity() {
                 )*/
                 .background(color = Color(36, 36, 36, 128))
                 .fillMaxWidth()
-                .padding(vertical = 12.dp, horizontal = 6.dp)
-                .clickVfx { onClick() },
+                .padding(vertical = 12.dp, horizontal = 6.dp),
             horizontalAlignment = Alignment.CenterHorizontally
             //.padding(start = 6.dp, end = 6.dp, top = 10.dp, bottom = 10.dp),
         ) {

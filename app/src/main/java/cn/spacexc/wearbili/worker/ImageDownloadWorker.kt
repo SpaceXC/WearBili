@@ -1,0 +1,95 @@
+package cn.spacexc.wearbili.worker
+
+import android.content.Context
+import android.util.Log
+import androidx.work.Worker
+import androidx.work.WorkerParameters
+import androidx.work.workDataOf
+import cn.spacexc.wearbili.Application.Companion.TAG
+import cn.spacexc.wearbili.utils.NetworkUtils
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.util.zip.Inflater
+
+/* 
+WearBili Copyright (C) 2022 XC
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it under certain conditions.
+*/
+
+/*
+ * Created by XC on 2022/12/10.
+ * I'm very cute so please be nice to my code!
+ * 给！爷！写！注！释！
+ * 给！爷！写！注！释！
+ * 给！爷！写！注！释！
+ */
+
+class ImageDownloadWorker(
+    private val context: Context,
+    private val workerParams: WorkerParameters
+) : Worker(
+    context,
+    workerParams
+) {
+    override fun doWork(): Result {
+        return try {
+            Log.d(TAG, "doWork: 我开始下载封面文件咯")
+            val url = workerParams.inputData.getString("coverUrl")
+            if (url != null) {
+                val response = NetworkUtils.getUrlWithoutCallback(url)
+                Log.d(TAG, "doWork: 我请求到网络文件咯")
+                val file = File(
+                    "${context.filesDir.path}${File.pathSeparator}downloadedDanmakus${File.pathSeparator}${
+                        workerParams.inputData.getString("cid")
+                    }.xml"
+                )
+                file.createNewFile()
+                val outputStream = FileOutputStream(file, false)
+                val danmakuIs: ByteArray? = decompress(response.body?.bytes()!!)
+                outputStream.write(danmakuIs)
+                outputStream.flush()
+                Log.d(TAG, "doWork: 我把封面内容写入文件咯${file.path}")
+                Result.success(workDataOf("danmakuPath" to file.path))
+            } else {
+                Result.failure()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Result.failure()
+        }
+    }
+
+    /**
+     *  解压弹幕数据
+     *  From CSDN
+     */
+    fun decompress(data: ByteArray?): ByteArray? {
+        var output: ByteArray?
+        val decompresser = Inflater(true)
+        decompresser.reset()
+        decompresser.setInput(data)
+        val o = data?.size?.let { ByteArrayOutputStream(it) }
+        try {
+            val buf = ByteArray(1024)
+            while (!decompresser.finished()) {
+                val i = decompresser.inflate(buf)
+                o?.write(buf, 0, i)
+            }
+            output = o?.toByteArray()
+        } catch (e: Exception) {
+            output = data
+            e.printStackTrace()
+        } finally {
+            try {
+                o?.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+        decompresser.end()
+        return output
+    }
+}

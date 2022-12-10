@@ -39,8 +39,9 @@ class SplashScreenActivity : AppCompatActivity() {
             false
         )*/
 
-        startActivity(Intent(this, MainActivity::class.java))
-        finish()
+        /*startActivity(Intent(this, MainActivity::class.java))
+        finish()*/
+
 
         if (!SharedPreferencesUtils.getBoolean("hasSetUp", false)) {
             val intent =
@@ -69,6 +70,7 @@ class SplashScreenActivity : AppCompatActivity() {
 
             })
         }
+
         //initApp()
 
         /*NetworkUtils.requireRetry {
