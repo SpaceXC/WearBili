@@ -133,13 +133,17 @@ class ExoPlayerUtils(context: Context) {
 
     fun getDownloadedVideos(): List<Download> {
         val list = mutableListOf<Download>()
-        val downloads = downloadIndex.getDownloads()
+        val downloads = downloadIndex.getDownloads(Download.STATE_COMPLETED, Download.STATE_FAILED)
         downloads.moveToPosition(-1)
         while (downloads.moveToNext()) {
             list.add(downloads.download)
             //downloadManager.downloadIndex.getDownloads().moveToNext()
         }
         return list
+    }
+
+    fun getDownloadingVideos(): List<Download> {
+        return downloadManager.currentDownloads
     }
 
     companion object {

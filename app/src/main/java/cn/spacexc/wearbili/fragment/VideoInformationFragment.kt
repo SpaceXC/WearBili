@@ -482,6 +482,7 @@ class VideoInformationFragment : Fragment() {
                                                 putExtra("bvid", videoInfo?.data?.bvid ?: "")
                                                 putExtra("cid", videoInfo?.data?.cid ?: 0)
                                                 putExtra("title", videoInfo?.data?.title)
+                                                putExtra("coverUrl", videoInfo?.data?.pic)
                                                 putExtra(
                                                     "data",
                                                     Gson().toJson(videoInfo?.data?.pages?.let {

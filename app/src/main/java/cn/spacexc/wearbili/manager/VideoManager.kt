@@ -29,9 +29,11 @@ import java.io.IOException
 object VideoManager {
     fun getRecommendVideo(callback: Callback) {
         val url =
-            if (UserManager.getAccessKey()
+            if (UserManager.getAccessKey().log("accessKey")
                     .isNotEmpty()
-            ) "http://app.bilibili.com/x/v2/feed/index?access_key=${UserManager.getAccessKey()}" else "http://app.bilibili.com/x/v2/feed/index"
+            ) "http://app.bilibili.com/x/v2/feed/index?access_key=${
+                UserManager.getAccessKey().log("accessKey")
+            }" else "http://app.bilibili.com/x/v2/feed/index"
         Log.d(TAG, "getRecommendVideo: $url")
         NetworkUtils.getUrl(
             url,

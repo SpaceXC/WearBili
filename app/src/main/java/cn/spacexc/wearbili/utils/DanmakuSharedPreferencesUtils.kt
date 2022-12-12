@@ -10,6 +10,8 @@ import cn.spacexc.wearbili.Application
  * 给！爷！写！注！释！
  * 给！爷！写！注！释！
  */
+//FIXME 给爷换成数据库！（谁教你这么用shp的.jpg
+
 object DanmakuSharedPreferencesUtils {
     private const val PREFS_NAME = "cn.spacexc.wearbili.sharedpreferences.danmaku"
     private val preferences =

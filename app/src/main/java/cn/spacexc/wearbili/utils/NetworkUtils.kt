@@ -58,6 +58,8 @@ object NetworkUtils {
             .url(url)
             .get()
             .header("User-Agent", USER_AGENT)
+            .header("x-bili-aurora-zone", "sh001")
+            .header("x-bili-aurora-eid", "UlMFQVcABlAH")
             .build()
         clientWithoutRedirect.newCall(request).enqueue(callback)
     }
@@ -67,6 +69,8 @@ object NetworkUtils {
             .url(url)
             .get()
             .header("User-Agent", USER_AGENT)
+            .header("x-bili-aurora-zone", "sh001")
+            .header("x-bili-aurora-eid", "UlMFQVcABlAH")
             .build()
         client.newCall(request).enqueue(callback)
     }
@@ -92,6 +96,8 @@ object NetworkUtils {
             .url(url)
             .get()
             .header("User-Agent", USER_AGENT)
+            .header("x-bili-aurora-zone", "sh001")
+            .header("x-bili-aurora-eid", "UlMFQVcABlAH")
             .build()
         return client.newCall(request).execute()
     }
@@ -101,6 +107,8 @@ object NetworkUtils {
             .url(url)
             .post(body)
             .header("User-Agent", USER_AGENT)
+            .header("x-bili-aurora-zone", "sh001")
+            .header("x-bili-aurora-eid", "UlMFQVcABlAH")
             .build()
         client.newCall(request).enqueue(callback)
 
@@ -111,6 +119,8 @@ object NetworkUtils {
             .url(url)
             .post(FormBody.Builder().build())
             .header("User-Agent", USER_AGENT)
+            .header("x-bili-aurora-zone", "sh001")
+            .header("x-bili-aurora-eid", "UlMFQVcABlAH")
             .build()
         client.newCall(request).enqueue(callback)
     }

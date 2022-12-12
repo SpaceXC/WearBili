@@ -18,7 +18,7 @@ import okhttp3.Cookie
 object CookiesManager {
     fun getCookies(): List<Cookie> {
         val cookieString = SharedPreferencesUtils.getString("cookies", "")
-        if (cookieString.isNullOrEmpty()) return emptyList()
+        if (cookieString.isEmpty()) return emptyList()
 
         val tempCookies = Gson().fromJson(cookieString, Cookies::class.java)
         return tempCookies.cookies

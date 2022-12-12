@@ -380,59 +380,78 @@ class VideoPlayerActivity : AppCompatActivity() {
                             ?.let { File(it) }
                         val inputStream = FileInputStream(file)
                         loader.load(inputStream)
-                    } catch (e: IllegalDataException) {
+
+                        val danmukuParser = BiliDanmukuParser()
+                        val dataSource: IDataSource<*> = loader.dataSource
+                        danmukuParser.load(dataSource)
+
+                        binding.danmakuView.setCallback(object : DrawHandler.Callback {
+                            override fun updateTimer(timer: DanmakuTimer?) {
+
+                            }
+
+                            override fun drawingFinished() {
+
+                            }
+
+                            override fun prepared() {
+                                //-----------弹幕相关区域⬆️️️️-----------
+
+                                //-----------视频相关区域⬇️-----------
+                                MainScope().launch {
+                                    binding.loadingStatText.text =
+                                        "${binding.loadingStatText.text}\n正在查找视频缓存源"
+                                }
+                                val download = ExoPlayerUtils.getInstance(Application.context!!)
+                                    .getDownloadManager().downloadIndex.getDownload(cacheId ?: "")
+                                if (download != null) {
+                                    MainScope().launch {
+                                        binding.loadingStatText.text =
+                                            "${binding.loadingStatText.text}\n视频正在加载中...马上就好！"
+                                        viewModel.loadVideo(download.request.toMediaItem())
+                                    }
+                                } else {
+                                    MainScope().launch {
+                                        binding.loadingStatText.text =
+                                            "${binding.loadingStatText.text}\n视频加载失败：无视频源(可能是缓存消失了?)"
+                                    }
+                                }
+
+                                //-----------视频相关区域⬆️️️-----------
+                            }
+                        })
+                        binding.danmakuView.prepare(danmukuParser, danmakuContext)      //准备弹幕
+                        binding.danmakuView.enableDanmakuDrawingCache(true)
+
+                    } catch (e: IOException) {
                         e.printStackTrace()
                         MainScope().launch {
                             ToastUtils.makeText(
                                 "加载弹幕失败！"
                             ).show()
                             binding.loadingStatText.text = "${binding.loadingStatText.text}\n弹幕加载失败"
-
-
                         }
-                    }
-
-                    val danmukuParser = BiliDanmukuParser()
-                    val dataSource: IDataSource<*> = loader.dataSource
-                    danmukuParser.load(dataSource)
-
-                    binding.danmakuView.setCallback(object : DrawHandler.Callback {
-                        override fun updateTimer(timer: DanmakuTimer?) {
-
+                        MainScope().launch {
+                            binding.loadingStatText.text =
+                                "${binding.loadingStatText.text}\n正在查找视频缓存源"
                         }
-
-                        override fun drawingFinished() {
-
-                        }
-
-                        override fun prepared() {
-                            //-----------弹幕相关区域⬆️️️️-----------
-
-                            //-----------视频相关区域⬇️-----------
+                        val download = ExoPlayerUtils.getInstance(Application.context!!)
+                            .getDownloadManager().downloadIndex.getDownload(cacheId ?: "")
+                        if (download != null) {
                             MainScope().launch {
                                 binding.loadingStatText.text =
-                                    "${binding.loadingStatText.text}\n正在查找视频缓存源"
+                                    "${binding.loadingStatText.text}\n视频正在加载中...马上就好！"
+                                viewModel.loadVideo(download.request.toMediaItem())
                             }
-                            val download = ExoPlayerUtils.getInstance(Application.context!!)
-                                .getDownloadManager().downloadIndex.getDownload(cacheId ?: "")
-                            if (download != null) {
-                                MainScope().launch {
-                                    binding.loadingStatText.text =
-                                        "${binding.loadingStatText.text}\n视频正在加载中...马上就好！"
-                                    viewModel.loadVideo(download.request.toMediaItem())
-                                }
-                            } else {
-                                MainScope().launch {
-                                    binding.loadingStatText.text =
-                                        "${binding.loadingStatText.text}\n视频加载失败：无视频源(可能是缓存消失了?)"
-                                }
+                        } else {
+                            MainScope().launch {
+                                binding.loadingStatText.text =
+                                    "${binding.loadingStatText.text}\n视频加载失败：无视频源(可能是缓存消失了?)"
                             }
-
-                            //-----------视频相关区域⬆️️️-----------
                         }
-                    })
-                    binding.danmakuView.prepare(danmukuParser, danmakuContext)      //准备弹幕
-                    binding.danmakuView.enableDanmakuDrawingCache(true)
+
+                    }
+
                 } else {
                     MainScope().launch {
                         binding.loadingStatText.text =

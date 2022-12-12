@@ -29,6 +29,7 @@ import cn.spacexc.wearbili.ui.puhuiFamily
 import cn.spacexc.wearbili.utils.ToastUtils
 import cn.spacexc.wearbili.viewmodel.VideoCacheViewModel
 import cn.spacexc.wearbili.worker.DanmakuDownloadWorker
+import cn.spacexc.wearbili.worker.ImageDownloadWorker
 import com.google.android.exoplayer2.offline.DownloadRequest
 import com.google.android.exoplayer2.offline.DownloadService
 import com.google.gson.Gson
@@ -60,6 +61,7 @@ class NewVideoCacheActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val bvid = intent.getStringExtra("bvid") ?: ""
         val videoTitle = intent.getStringExtra("title") ?: ""
+        val coverUrl = intent.getStringExtra("coverUrl") ?: ""
         setContent {
             val data = Gson().fromJson(
                 intent.getStringExtra("data"),
@@ -80,6 +82,7 @@ class NewVideoCacheActivity : AppCompatActivity() {
                                     modifier = Modifier
                                         .clickVfx {
                                             downloadVideo(
+                                                coverUrl,
                                                 videoTitle,
                                                 "P${index.plus(1)} ${page.part}",
                                                 bvid,
@@ -118,7 +121,13 @@ class NewVideoCacheActivity : AppCompatActivity() {
         }
     }
 
-    private fun downloadVideo(title: String, partName: String, bvid: String, cid: Long) {
+    private fun downloadVideo(
+        coverUrl: String,
+        title: String,
+        partName: String,
+        bvid: String,
+        cid: Long
+    ) {
         VideoManager.getVideoUrl(bvid, cid, object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 MainScope().launch {
@@ -151,6 +160,19 @@ class NewVideoCacheActivity : AppCompatActivity() {
                     )
                     .build()
                 WorkManager.getInstance(Application.context!!).enqueue(danmakuDownloadWorkRequest)
+
+                val coverPicDownloadWorker = OneTimeWorkRequestBuilder<ImageDownloadWorker>()
+                    .setInputData(
+                        workDataOf(
+                            "cid" to cid.toString(),
+                            "coverUrl" to coverUrl
+                        )
+                    )
+                    .setConstraints(
+                        Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+                    )
+                    .build()
+                WorkManager.getInstance(Application.context!!).enqueue(coverPicDownloadWorker)
                 MainScope().launch {
                     ToastUtils.showText("已添加到下载队列")
                     finish()

@@ -6,12 +6,11 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import cn.spacexc.wearbili.Application.Companion.TAG
+import cn.spacexc.wearbili.utils.CoverSharedPreferencesUtils
+import cn.spacexc.wearbili.utils.LogUtils.log
 import cn.spacexc.wearbili.utils.NetworkUtils
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
-import java.util.zip.Inflater
 
 /* 
 WearBili Copyright (C) 2022 XC
@@ -37,59 +36,28 @@ class ImageDownloadWorker(
     override fun doWork(): Result {
         return try {
             Log.d(TAG, "doWork: 我开始下载封面文件咯")
-            val url = workerParams.inputData.getString("coverUrl")
-            if (url != null) {
-                val response = NetworkUtils.getUrlWithoutCallback(url)
-                Log.d(TAG, "doWork: 我请求到网络文件咯")
-                val file = File(
-                    "${context.filesDir.path}${File.pathSeparator}downloadedDanmakus${File.pathSeparator}${
-                        workerParams.inputData.getString("cid")
-                    }.xml"
-                )
-                file.createNewFile()
-                val outputStream = FileOutputStream(file, false)
-                val danmakuIs: ByteArray? = decompress(response.body?.bytes()!!)
-                outputStream.write(danmakuIs)
-                outputStream.flush()
-                Log.d(TAG, "doWork: 我把封面内容写入文件咯${file.path}")
-                Result.success(workDataOf("danmakuPath" to file.path))
-            } else {
-                Result.failure()
-            }
+            val response = NetworkUtils.getUrlWithoutCallback(
+                workerParams.inputData.getString("coverUrl") ?: ""
+            )
+            Log.d(TAG, "doWork: 我请求到网络文件咯")
+            //File(context.filesDir, "downloadedContent/${workerParams.inputData.getString("cid")}")
+            val dir = File(context.filesDir, "downloadedCoverPictures/")
+            dir.mkdir()
+            val file = File(dir, "${workerParams.inputData.getString("cid")}.jpg")
+            file.path.log("filePath")
+            val outputStream = FileOutputStream(file, false)
+            val picIs: ByteArray? = response.body?.bytes()!!
+            outputStream.write(picIs)
+            outputStream.flush()
+            Log.d(TAG, "doWork: 我把封面内容写入文件咯${file.path}")
+            CoverSharedPreferencesUtils.saveUrl(
+                workerParams.inputData.getString("cid") ?: "",
+                file.path
+            )
+            Result.success(workDataOf("picPath" to file.path))
         } catch (e: Exception) {
             e.printStackTrace()
             Result.failure()
         }
-    }
-
-    /**
-     *  解压弹幕数据
-     *  From CSDN
-     */
-    fun decompress(data: ByteArray?): ByteArray? {
-        var output: ByteArray?
-        val decompresser = Inflater(true)
-        decompresser.reset()
-        decompresser.setInput(data)
-        val o = data?.size?.let { ByteArrayOutputStream(it) }
-        try {
-            val buf = ByteArray(1024)
-            while (!decompresser.finished()) {
-                val i = decompresser.inflate(buf)
-                o?.write(buf, 0, i)
-            }
-            output = o?.toByteArray()
-        } catch (e: Exception) {
-            output = data
-            e.printStackTrace()
-        } finally {
-            try {
-                o?.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
-        decompresser.end()
-        return output
     }
 }

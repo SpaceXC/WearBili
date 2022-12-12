@@ -3,7 +3,6 @@ package cn.spacexc.wearbili.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import cn.spacexc.wearbili.utils.ExoPlayerUtils
 import com.google.android.exoplayer2.offline.Download
 import kotlinx.coroutines.MainScope
@@ -20,31 +19,29 @@ import kotlinx.coroutines.launch
 
 class DownloadVideoInfoViewModel(application: Application) : AndroidViewModel(application) {
     val downloads = MutableLiveData<List<Download>>()
+    val downloadings = MutableLiveData<List<Download>>()
 
     init {
-        getAllDownloads()
+        getDownloads()
     }
 
-    private fun getAllDownloads() {
+
+    private fun getDownloads() {
         Thread {
             while (true) {
-                val result = ExoPlayerUtils.getInstance(cn.spacexc.wearbili.Application.context!!)
-                    .getDownloadedVideos()
+                val downloadsList =
+                    ExoPlayerUtils.getInstance(cn.spacexc.wearbili.Application.context!!)
+                        .getDownloadedVideos()
+                val downloadingsList =
+                    ExoPlayerUtils.getInstance(cn.spacexc.wearbili.Application.context!!)
+                        .getDownloadingVideos()
                 MainScope().launch {
-                    downloads.value = result
+                    downloads.value = downloadsList
+                    downloadings.value = downloadingsList
+
                 }
                 Thread.sleep(600)
             }
         }.start()
-    }
-
-    fun getDownload() {
-        viewModelScope.launch {
-            val result = ExoPlayerUtils.getInstance(cn.spacexc.wearbili.Application.context!!)
-                .getDownloadedVideos()
-            MainScope().launch {
-                downloads.value = result
-            }
-        }
     }
 }

@@ -189,13 +189,6 @@ object UserManager {
     fun getAccessKey(): String = SharedPreferencesUtils.getString("accessKey", "")
 
     fun getUserSpaceDetail(mid: Long) {
-        /*val baseUrl = "https://app.bilibili.com/x/v2/space"
-        val params: String =
-            "access_key=${getAccessKey()}&appkey=${ConfigurationManager.configurations["appKey"]}&build=${ConfigurationManager.configurations["build"]}&ps=20&mobi_app=${ConfigurationManager.configurations["mobi_app"]}&plat=0&platform=${ConfigurationManager.configurations["platform"]}&ts=${(System.currentTimeMillis() / 1000).toInt()}&vmid=$mid"
-        val sign: String = EncryptUtils.getAppSign(EncryptUtils.AppSignType.TYPE_COMMON, params)
-        val url = "$baseUrl?$params&sign=$sign"
-        url.log()*/
-
         val baseUrl = "http://app.bilibili.com/x/v2/space"
         val params =
             "access_key=${getAccessKey()}&appkey=${ConfigurationManager.configurations["appKey"]}&build=${ConfigurationManager.configurations["build"]}&mobi_app=${ConfigurationManager.configurations["mobi_app"]}&platform=${ConfigurationManager.configurations["platform"]}&ps=20&ts=" + (System.currentTimeMillis() / 1000).toInt() + "&vmid=" + mid

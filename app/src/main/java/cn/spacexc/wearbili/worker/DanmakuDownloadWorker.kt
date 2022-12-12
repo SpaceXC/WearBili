@@ -46,7 +46,7 @@ class DanmakuDownloadWorker(
             )
             Log.d(TAG, "doWork: 我请求到网络文件咯")
             //File(context.filesDir, "downloadedContent/${workerParams.inputData.getString("cid")}")
-            val dir = File(context.codeCacheDir, "downloadedDanmakus/")
+            val dir = File(context.filesDir, "downloadedDanmakus/")
             dir.mkdir()
             val file = File(dir, "${workerParams.inputData.getString("cid")}.xml")
             file.path.log("filePath")
