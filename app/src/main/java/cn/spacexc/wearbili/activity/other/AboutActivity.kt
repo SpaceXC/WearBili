@@ -17,7 +17,7 @@ import cn.spacexc.wearbili.listener.OnItemViewClickListener
 //import kotlinx.coroutines.launch
 //import androidx.lifecycle.lifecycleScope
 
-const val APP_VERSION = "Rel-AL 0.18.9"
+const val APP_VERSION = "Rel-AL 0.18.10"
 
 class AboutActivity : AppCompatActivity() {
     private val firstList = listOf(

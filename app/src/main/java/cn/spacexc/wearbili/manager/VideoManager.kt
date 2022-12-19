@@ -27,13 +27,16 @@ import java.io.IOException
  */
 
 object VideoManager {
+    /**
+     * 叔叔真的好爱玩这几个接口啊...
+     * 改了好多遍了
+     */
     fun getRecommendVideo(callback: Callback) {
         val url =
             if (UserManager.getAccessKey().log("accessKey")
                     .isNotEmpty()
-            ) "http://app.bilibili.com/x/v2/feed/index?access_key=${
-                UserManager.getAccessKey().log("accessKey")
-            }" else "http://app.bilibili.com/x/v2/feed/index"
+            ) "http://app.bilibili.com/x/v2/feed/index?access_key=${UserManager.getAccessKey()}&actionKey=appkey&appkey=27eb53fc9058f8c3&build=70000100&c_locale=zh-Hans_CN&column=1&disable_rcmd=0&flush=0&fnval=976&fnver=0&force_host=0&fourk=1&guidance=1&https_url_req=0&login_event=2&pull=1&qn=32&recsys_mode=0&s_locale=zh-Hans_CH&screen_window_type=0"
+            else "http://app.bilibili.com/x/v2/feed/index?column=1"
         Log.d(TAG, "getRecommendVideo: $url")
         NetworkUtils.getUrl(
             url,

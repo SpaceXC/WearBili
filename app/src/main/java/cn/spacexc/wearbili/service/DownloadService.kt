@@ -16,11 +16,8 @@
 package cn.spacexc.wearbili.service
 
 import android.app.Notification
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import cn.spacexc.wearbili.R
-import cn.spacexc.wearbili.activity.video.VideoCacheActivity
 import cn.spacexc.wearbili.utils.DOWNLOAD_NOTIFICATION_CHANNEL_ID
 import cn.spacexc.wearbili.utils.ExoPlayerUtils
 import com.google.android.exoplayer2.offline.Download
@@ -68,12 +65,12 @@ class DownloadService : DownloadService(
             .buildProgressNotification(
                 this,
                 R.drawable.cloud_download,
-                PendingIntent.getActivity(
+                /*PendingIntent.getActivity(
                     this,
                     0,
                     Intent(this, VideoCacheActivity::class.java),
                     PendingIntent.FLAG_IMMUTABLE
-                ),
+                )*/null,
                 null,
                 downloads,
                 notMetRequirements

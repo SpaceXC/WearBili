@@ -3,6 +3,7 @@ package cn.spacexc.wearbili.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import cn.spacexc.wearbili.dataclass.BaseData
 import cn.spacexc.wearbili.dataclass.dynamic.Card
 import cn.spacexc.wearbili.dataclass.user.User
 import cn.spacexc.wearbili.dataclass.user.spacevideo.UserSpaceVideo
@@ -47,6 +48,9 @@ class UserSpaceViewModel : ViewModel() {
 
     private val _isRefreshing = MutableLiveData(false)
     val isRefreshing: LiveData<Boolean> = _isRefreshing
+
+    private val _isFollowed = MutableLiveData(false)
+    val isFollowed: LiveData<Boolean> = _isFollowed
 
     var videoPage = 1
 
@@ -131,5 +135,79 @@ class UserSpaceViewModel : ViewModel() {
             }
 
         })
+    }
+
+    fun followUser(mid: Long) {
+        UserManager.subscribeUser(mid, 11, object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                MainScope().launch {
+                    ToastUtils.showText("网络异常")
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                try {
+                    val result = Gson().fromJson(response.body?.string(), BaseData::class.java)
+                    if (result.code == 0) {
+                        MainScope().launch {
+                            ToastUtils.showText("关注成功")
+                            _isFollowed.value = true
+                        }
+                    }
+                } catch (e: Exception) {
+                    MainScope().launch {
+                        ToastUtils.showText("关注失败")
+                    }
+                }
+            }
+
+        })
+    }
+
+    fun unfollowUser(mid: Long) {
+        UserManager.deSubscribeUser(mid, 11, object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                MainScope().launch {
+                    ToastUtils.showText("网络异常")
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                try {
+                    val result = Gson().fromJson(response.body?.string(), BaseData::class.java)
+                    if (result.code == 0) {
+                        MainScope().launch {
+                            ToastUtils.showText("取关成功")
+                            _isFollowed.value = false
+                        }
+                    }
+                } catch (e: Exception) {
+                    MainScope().launch {
+                        ToastUtils.showText("取关失败")
+                    }
+                }
+            }
+
+        })
+    }
+
+    fun checkSubscribe(mid: Long) {
+        if (UserManager.isLoggedIn()) {
+            UserManager.getUserById(mid, object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    MainScope().launch {
+                        ToastUtils.showText("网络异常")
+                    }
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val user = Gson().fromJson(response.body?.string(), User::class.java)
+                    MainScope().launch {
+                        _isFollowed.value = user.data.is_followed
+                    }
+                }
+
+            })
+        }
     }
 }

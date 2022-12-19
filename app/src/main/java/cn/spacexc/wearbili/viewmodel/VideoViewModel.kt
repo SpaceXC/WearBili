@@ -177,8 +177,6 @@ class VideoViewModel : ViewModel() {
         VideoManager.addToView(bvid, object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 MainScope().launch {
-
-
                     ToastUtils.makeText(
                         "网络异常"
                     ).show()

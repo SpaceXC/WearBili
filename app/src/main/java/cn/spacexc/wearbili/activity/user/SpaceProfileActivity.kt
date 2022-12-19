@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
@@ -17,6 +19,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -35,6 +38,7 @@ import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.ui.*
+import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import cn.spacexc.wearbili.utils.TimeUtils.toDateStr
 import cn.spacexc.wearbili.utils.ifNullOrEmpty
@@ -67,13 +71,14 @@ This is free software, and you are welcome to redistribute it under certain cond
 class SpaceProfileActivity : AppCompatActivity() {
     val viewModel: UserSpaceViewModel by viewModels()
 
-    @OptIn(ExperimentalPagerApi::class)
+    @OptIn(ExperimentalPagerApi::class, ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val userMid = intent.getLongExtra("userMid", 0)
         viewModel.getUser(userMid)
         viewModel.getVideos(userMid, true)
         viewModel.getDynamic(userMid)
+        viewModel.checkSubscribe(userMid)
         setContent {
             val localDensity = LocalDensity.current
             val user by viewModel.user.observeAsState()
@@ -85,12 +90,23 @@ class SpaceProfileActivity : AppCompatActivity() {
             val userVideos by viewModel.videos.observeAsState()
             val dynamicList by viewModel.dynamicCardList.observeAsState()
             val scope = rememberCoroutineScope()
+            val isSubscribed by viewModel.isFollowed.observeAsState()
+            val followButtonColor by animateColorAsState(
+                targetValue = if (isSubscribed == true) Color(
+                    63,
+                    63,
+                    63,
+                    255
+                ) else BilibiliPink, animationSpec = tween(durationMillis = 400)
+            )
             CirclesBackground.RegularBackgroundWithTitleAndBackArrow(
                 title = "个人空间", onBack = { finish() }
             ) {
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Transparent)) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Transparent)
+                ) {
                     CollapsingToolbarScaffold(
                         state = collapsingState,
                         modifier = Modifier.fillMaxSize(),
@@ -204,10 +220,16 @@ class SpaceProfileActivity : AppCompatActivity() {
                                         Spacer(modifier = Modifier.height(2.dp))
                                         Row(
                                             modifier = Modifier
+                                                .clickVfx {
+                                                    if (isSubscribed == true) viewModel.unfollowUser(
+                                                        userMid
+                                                    ) else viewModel.followUser(userMid)
+                                                }
                                                 .clip(
                                                     RoundedCornerShape(360.dp)
                                                 )
-                                                .background(BilibiliPink)
+
+                                                .background(followButtonColor)
                                                 .padding(
                                                     start = 10.dp,
                                                     end = 13.dp,
@@ -219,23 +241,44 @@ class SpaceProfileActivity : AppCompatActivity() {
                                             var buttonTextHeight by remember {
                                                 mutableStateOf(0.dp)
                                             }
-                                            Icon(
-                                                imageVector = Icons.Default.Add,
-                                                contentDescription = null,
-                                                tint = Color.White,
-                                                modifier = Modifier.size(buttonTextHeight)
-                                            )
+                                            Crossfade(
+                                                targetState = isSubscribed,
+                                                animationSpec = tween(durationMillis = 400)
+                                            ) {
+                                                if (it == true) {
+                                                    Icon(
+                                                        imageVector = Icons.Default.Done,
+                                                        contentDescription = null,
+                                                        tint = Color.White,
+                                                        modifier = Modifier.size(buttonTextHeight)
+                                                    )
+                                                } else {
+                                                    Icon(
+                                                        imageVector = Icons.Default.Add,
+                                                        contentDescription = null,
+                                                        tint = Color.White,
+                                                        modifier = Modifier.size(buttonTextHeight)
+                                                    )
+                                                }
+                                            }
+
                                             Spacer(modifier = Modifier.width(4.dp))
                                             Text(
-                                                text = "关注",
+                                                text = if (isSubscribed == true) "已关注" else "关注",
                                                 color = Color.White,
                                                 fontFamily = puhuiFamily,
                                                 fontWeight = FontWeight.Medium,
-                                                modifier = Modifier.onGloballyPositioned {
-                                                    buttonTextHeight = with(localDensity) {
-                                                        it.size.height.toDp()
-                                                    }
-                                                }, fontSize = 12.sp
+                                                modifier = Modifier
+                                                    .animateContentSize(
+                                                        animationSpec = tween(
+                                                            durationMillis = 400
+                                                        )
+                                                    )
+                                                    .onGloballyPositioned {
+                                                        buttonTextHeight = with(localDensity) {
+                                                            it.size.height.toDp()
+                                                        }
+                                                    }, fontSize = 12.sp
                                             )
                                         }
                                     }

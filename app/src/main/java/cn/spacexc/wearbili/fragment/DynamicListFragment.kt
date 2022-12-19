@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
@@ -81,24 +82,23 @@ class DynamicListFragment : Fragment() {
                     }
                 }
             } else {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 24.dp, horizontal = 16.dp)
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.empty),
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "你还没有登录啊 (ﾟДﾟ*)ﾉ",
-                            color = Color.White,
-                            fontFamily = puhuiFamily
-                        )
-                    }
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(vertical = 12.dp, horizontal = 16.dp),
+                    horizontalAlignment = CenterHorizontally
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.empty),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "你还没有登录啊 (ﾟДﾟ*)ﾉ",
+                        color = Color.White,
+                        fontFamily = puhuiFamily
+                    )
                 }
             }
         }

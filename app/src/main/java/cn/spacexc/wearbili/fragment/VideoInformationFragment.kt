@@ -390,6 +390,7 @@ class VideoInformationFragment : Fragment() {
                     }   //部分选集
                 }
                 Spacer(modifier = Modifier.height(8.dp))
+
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(3), modifier = Modifier
                         .fillMaxWidth()

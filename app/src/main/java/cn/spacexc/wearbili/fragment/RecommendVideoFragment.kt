@@ -19,7 +19,6 @@ import androidx.wear.compose.material.ScalingLazyColumn
 import cn.spacexc.wearbili.manager.SettingsManager
 import cn.spacexc.wearbili.manager.isRound
 import cn.spacexc.wearbili.ui.VideoUis
-import cn.spacexc.wearbili.utils.VideoUtils
 import cn.spacexc.wearbili.viewmodel.RecommendViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -69,7 +68,7 @@ class RecommendVideoFragment : Fragment() {
                                     coverUrl = it.cover,
                                     hasViews = true,
                                     clickable = it.goto == "av" || it.goto == "bangumi",
-                                    videoBvid = if (it.player_args?.aid != null) VideoUtils.av2bv("av${it.player_args.aid}") else "",
+                                    videoBvid = it.bvid,
                                     context = requireContext(),
                                     isBangumi = it.goto == "bangumi",
                                     epid = it.param,
@@ -90,21 +89,22 @@ class RecommendVideoFragment : Fragment() {
                             .fillMaxSize(), state = viewModel.lazyListState
                     ) {
                         videoList?.forEach {
-                            item {
-                                VideoUis.VideoCard(
-                                    videoName = it.title,
-                                    views = it.cover_left_text_1,
-                                    uploader = it.args.up_name ?: "",
-                                    coverUrl = it.cover,
-                                    hasViews = true,
-                                    clickable = it.goto == "av" || it.goto == "bangumi",
-                                    videoBvid = if (it.player_args?.aid != null) VideoUtils.av2bv("av${it.player_args.aid}") else "",
-                                    context = requireContext(),
-                                    isBangumi = it.goto == "bangumi",
-                                    epid = it.param,
-                                    badge = it.badge ?: ""
-                                )
-                            }
+                            if (it.card_goto == "av")
+                                item {
+                                    VideoUis.VideoCard(
+                                        videoName = it.title,
+                                        views = it.cover_left_text_1,
+                                        uploader = it.args.up_name ?: "",
+                                        coverUrl = it.cover,
+                                        hasViews = true,
+                                        clickable = it.goto == "av" || it.goto == "bangumi",
+                                        videoBvid = it.bvid,
+                                        context = requireContext(),
+                                        isBangumi = it.goto == "bangumi",
+                                        epid = it.param,
+                                        badge = it.badge ?: ""
+                                    )
+                                }
                         }
                         item {
                             LaunchedEffect(Unit) {

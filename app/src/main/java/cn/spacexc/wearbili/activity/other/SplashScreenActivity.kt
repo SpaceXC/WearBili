@@ -2,22 +2,12 @@ package cn.spacexc.wearbili.activity.other
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import cn.spacexc.wearbili.Application.Companion.TAG
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.MainActivity
-import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.user.LoginActivity
-import cn.spacexc.wearbili.dataclass.LeanCloudUserSearch
-import cn.spacexc.wearbili.manager.CookiesManager
-import cn.spacexc.wearbili.manager.LCManager
-import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.SharedPreferencesUtils
-import cn.spacexc.wearbili.utils.ToastUtils
-import com.google.gson.Gson
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import okhttp3.Call
@@ -64,7 +54,11 @@ class SplashScreenActivity : AppCompatActivity() {
                 override fun onResponse(call: Call, response: Response) {
                     response.close()
                     MainScope().launch {
-                        initApp()
+                        val intent = Intent(this@SplashScreenActivity, MainActivity::class.java)
+                        //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out)
+                        finish()
                     }
                 }
 
@@ -78,8 +72,19 @@ class SplashScreenActivity : AppCompatActivity() {
         }*/
     }
 
+    @Deprecated(message = "以后没有登录验证辣！！！")
     fun initApp() {
-        val canSkip = false
+        val intent = Intent(this@SplashScreenActivity, LoginActivity::class.java)
+        //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out)
+        finish()
+
+        return
+        //呜呼呼以后没有账号验证咯！！！ohhhhhh
+
+
+        /*val canSkip = false
         if (canSkip) {
             val intent =
                 Intent(this@SplashScreenActivity, BangumiActivity::class.java)
@@ -101,7 +106,7 @@ class SplashScreenActivity : AppCompatActivity() {
                     override fun onFailure(call: Call, e: IOException) {
                         MainScope().launch {
                             ToastUtils.makeText("网络异常").show()
-                            /*val intent = Intent(
+                            *//*val intent = Intent(
                                 this@SplashScreenActivity,
                                 SplashScreenActivity::class.java
                             )
@@ -111,7 +116,7 @@ class SplashScreenActivity : AppCompatActivity() {
                                 R.anim.activity_fade_in,
                                 R.anim.activity_fade_out
                             )
-                            finish()*/
+                            finish()*//*
                             NetworkUtils.requireRetry {
                                 initApp()
                             }
@@ -145,7 +150,7 @@ class SplashScreenActivity : AppCompatActivity() {
                                     override fun onFailure(call: Call, e: IOException) {
                                         MainScope().launch {
                                             ToastUtils.makeText("网络异常").show()
-                                            /*val intent = Intent(
+                                            *//*val intent = Intent(
                                                 this@SplashScreenActivity,
                                                 SplashScreenActivity::class.java
                                             )
@@ -155,7 +160,7 @@ class SplashScreenActivity : AppCompatActivity() {
                                                 R.anim.activity_fade_in,
                                                 R.anim.activity_fade_out
                                             )
-                                            finish()*/
+                                            finish()*//*
                                             NetworkUtils.requireRetry {
                                                 initApp()
                                             }
@@ -196,6 +201,6 @@ class SplashScreenActivity : AppCompatActivity() {
             startActivity(intent)
             overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out)
             finish()
-        }
+        }*/
     }
 }

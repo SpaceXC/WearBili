@@ -12,6 +12,7 @@ import cn.spacexc.wearbili.utils.EncryptUtils
 import cn.spacexc.wearbili.utils.LogUtils.log
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.SharedPreferencesUtils
+import cn.spacexc.wearbili.utils.ToastUtils
 import com.google.gson.Gson
 import okhttp3.*
 import java.io.IOException
@@ -47,13 +48,17 @@ object UserManager {
     }
 
     fun subscribeUser(mid: Long, followSource: Int, callback: Callback) {
-        val body: RequestBody = FormBody.Builder()
-            .add("fid", mid.toString())
-            .add("act", "1")
-            .add("re_src", followSource.toString())
-            .add("csrf", CookiesManager.getCookieByName("bili_jct")!!)
-            .build()
-        NetworkUtils.postUrl("https://api.bilibili.com/x/relation/modify", body, callback)
+        if (UserManager.isLoggedIn()) {
+            val body: RequestBody = FormBody.Builder()
+                .add("fid", mid.toString())
+                .add("act", "1")
+                .add("re_src", followSource.toString())
+                .add("csrf", CookiesManager.getCookieByName("bili_jct")!!)
+                .build()
+            NetworkUtils.postUrl("https://api.bilibili.com/x/relation/modify", body, callback)
+        } else {
+            ToastUtils.showText("你还没有登录哦")
+        }
     }
 
     fun deSubscribeUser(mid: Long, followSource: Int, callback: Callback) {
