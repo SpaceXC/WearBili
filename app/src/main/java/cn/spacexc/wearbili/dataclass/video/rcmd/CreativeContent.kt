@@ -6,5 +6,5 @@ data class CreativeContent(
     val image_url: String,
     val title: String,
     val url: String,
-    val video_id: Int
+    val video_id: Long
 )

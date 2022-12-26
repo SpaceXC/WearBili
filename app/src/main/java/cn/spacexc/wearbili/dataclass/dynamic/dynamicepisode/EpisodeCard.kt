@@ -1,11 +1,11 @@
 package cn.spacexc.wearbili.dataclass.dynamic.dynamicepisode
 
 data class EpisodeCard(
-    val aid: Int,
+    val aid: Long,
     val apiSeasonInfo: ApiSeasonInfo,
     val bullet_count: Int,
     val cover: String,
-    val episode_id: Int,
+    val episode_id: Long,
     val index: String,
     val index_title: String,
     val new_desc: String,

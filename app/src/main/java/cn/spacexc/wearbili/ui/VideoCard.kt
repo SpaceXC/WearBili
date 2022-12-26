@@ -31,6 +31,7 @@ import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.video.VideoActivity
 import cn.spacexc.wearbili.activity.video.VideoLongClickActivity
+import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 
@@ -50,7 +51,7 @@ object VideoUis {
         coverUrl: String,
         hasViews: Boolean = true,
         videoBvid: String = "",
-        clickable: Boolean = false,
+        clickable: Boolean = true,
         isBangumi: Boolean = false,
         epid: String = "",
         badge: String = "",
@@ -222,5 +223,83 @@ object VideoUis {
             Spacer(Modifier.height(4.dp))
         }
 
+    }
+
+    @Composable
+    fun BangumiCard(
+        bangumiName: String,
+        cover: String,
+        areaInfo: String,
+        description: String,
+        id: String,
+        idType: String,
+        context: Context = Application.getContext()
+    ) {
+        Column(
+            modifier = Modifier
+                .clip(RoundedCornerShape(10.dp))
+                .clickVfx {
+                    Intent(
+                        context,
+                        BangumiActivity::class.java
+                    ).apply {
+                        putExtra("id", id)
+                        putExtra("idType", idType)
+                        context.startActivity(this)
+                    }
+                }
+                .border(
+                    width = 0.1f.dp,
+                    color = Color(112, 112, 112, 70),
+                    shape = RoundedCornerShape(10.dp)
+                )
+                .background(color = Color(36, 36, 36, 100))
+                .padding(start = 6.dp, end = 6.dp, top = 10.dp, bottom = 10.dp),
+        ) {
+            Row(modifier = Modifier.fillMaxWidth()) {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(cover)
+                        .crossfade(true)
+                        .build(),
+                    modifier = Modifier
+                        .weight(2f)
+                        //.fillMaxHeight()
+                        .fillMaxSize()
+                        .aspectRatio(0.75f, matchHeightConstraintsFirst = true)
+                        .align(Alignment.CenterVertically)
+                        .clip(RoundedCornerShape(10.dp)), contentDescription = null
+                )   //番剧封面
+                Column(
+                    modifier = Modifier
+                        .weight(3f)
+                        .fillMaxWidth()
+                        .padding(start = 8.dp)
+                ) {
+                    Text(
+                        text = bangumiName,
+                        color = Color.White,
+                        fontFamily = puhuiFamily,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = areaInfo,
+                        fontFamily = puhuiFamily,
+                        color = Color.Gray, fontSize = 12.sp
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = description,
+                        fontFamily = puhuiFamily,
+                        color = Color.Gray, fontSize = 12.sp,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                }   //番剧信息
+            }
+        }
     }
 }

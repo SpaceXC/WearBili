@@ -5,10 +5,10 @@ data class Emote(
     val attr: Int,
     val flags: Flags,
     val gif_url: String,
-    val id: Int,
+    val id: Long,
     val meta: Meta,
     val mtime: Int,
-    val package_id: Int,
+    val package_id: Long,
     val text: String,
     val type: Int,
     val url: String

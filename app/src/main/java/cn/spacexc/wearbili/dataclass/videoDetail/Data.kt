@@ -2,7 +2,7 @@ package cn.spacexc.wearbili.dataclass.videoDetail
 
 data class Data(
     val activity_url: String,
-    val aid: Int,
+    val aid: Long,
     val bvid: String,
     val cid: Long,
     val cm_config: CmConfig,
@@ -22,7 +22,7 @@ data class Data(
     val history: History?,
     val label: Label,
     val like_custom: LikeCustom,
-    val mission_id: Int,
+    val mission_id: Long,
     val owner: Owner,
     val owner_ext: OwnerExt,
     val pages: List<Page>,
@@ -42,7 +42,7 @@ data class Data(
     val state: Int,
     val t_icon: TIcon,
     val tag: List<Tag>,
-    val tid: Int,
+    val tid: Long,
     val title: String,
     val tname: String,
     val videos: Int

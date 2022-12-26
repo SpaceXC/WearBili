@@ -157,7 +157,7 @@ object NetworkUtils {
 
     interface ResultCallback<T> {
         fun onSuccess(result: T, code: Int = 0)
-        fun onFailed(e: Exception)
+        fun onFailed(e: Exception?)
     }
 }
 

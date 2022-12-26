@@ -1,7 +1,7 @@
 package cn.spacexc.wearbili.dataclass.video
 
 data class StatX(
-    val aid: Int,
+    val aid: Long,
     val argue_msg: String,
     val coin: Int,
     val danmaku: Int,

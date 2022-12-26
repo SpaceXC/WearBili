@@ -1,7 +1,7 @@
 package cn.spacexc.wearbili.dataclass.video
 
 data class Arc(
-    val aid: Int,
+    val aid: Long,
     val author: AuthorX,
     val copyright: Int,
     val ctime: Int,
@@ -18,7 +18,7 @@ data class Arc(
     val stat: StatX,
     val state: Int,
     val title: String,
-    val type_id: Int,
+    val type_id: Long,
     val type_name: String,
     val videos: Int
 )

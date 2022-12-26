@@ -26,6 +26,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.search.SearchResultActivityNew"
+            android:exported="false" />
+        <activity
             android:name=".activity.video.NewVideoCacheActivity"
             android:exported="false" />
         <activity

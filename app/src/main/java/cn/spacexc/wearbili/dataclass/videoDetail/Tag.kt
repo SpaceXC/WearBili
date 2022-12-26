@@ -8,7 +8,7 @@ data class Tag(
     val is_activity: Int,
     val liked: Int,
     val likes: Int,
-    val tag_id: Int,
+    val tag_id: Long,
     val tag_name: String,
     val tag_type: String,
     val uri: String

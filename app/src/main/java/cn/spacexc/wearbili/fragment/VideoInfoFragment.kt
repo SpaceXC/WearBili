@@ -384,7 +384,7 @@ class VideoInfoFragment : Fragment() {
     private fun getInfo() {
         if (!isAdded) return
         val id = videoActivity.videoId
-        VideoManager.getVideoInfo(id!!, object : NetworkUtils.ResultCallback<VideoDetailInfo> {
+        VideoManager.getVideoInfo(id, object : NetworkUtils.ResultCallback<VideoDetailInfo> {
             override fun onSuccess(result: VideoDetailInfo, code: Int) {
                 MainScope().launch {
                     result.log()
@@ -572,13 +572,12 @@ class VideoInfoFragment : Fragment() {
                 }
             }
 
-            override fun onFailed(e: Exception) {
+            override fun onFailed(e: Exception?) {
                 MainScope().launch {
                     ToastUtils.makeText("网络异常")
-                    e.stackTrace.debugToast()
+                    e?.stackTrace?.debugToast()
                 }
             }
-
         })
     }
 

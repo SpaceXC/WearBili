@@ -107,7 +107,7 @@ object UserManager {
         NetworkUtils.getUrl("https://api.bilibili.com/x/relation/tags", callback)
     }
 
-    fun getFollowedUserByGroup(groupId: Int, page: Int, callback: Callback) {
+    fun getFollowedUserByGroup(groupId: Long, page: Int, callback: Callback) {
         NetworkUtils.getUrl(
             "https://api.bilibili.com/x/relation/tag?tagid=$groupId&pn=$page",
             callback

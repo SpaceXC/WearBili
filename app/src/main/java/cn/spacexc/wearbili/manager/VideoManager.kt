@@ -3,6 +3,7 @@ package cn.spacexc.wearbili.manager
 import android.util.Log
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.Application.Companion.TAG
+import cn.spacexc.wearbili.dataclass.search.Search
 import cn.spacexc.wearbili.dataclass.video.state.CoinState
 import cn.spacexc.wearbili.dataclass.video.state.FavState
 import cn.spacexc.wearbili.dataclass.video.state.LikeState
@@ -15,6 +16,9 @@ import cn.spacexc.wearbili.utils.ToastUtils
 import cn.spacexc.wearbili.utils.ToastUtils.debugToastWithGeneric
 import cn.spacexc.wearbili.utils.VideoUtils
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import okhttp3.*
 import java.io.IOException
 
@@ -257,4 +261,34 @@ object VideoManager {
         })
     }
 
+    fun searchVideoAll(keyword: String, page: Int, callback: NetworkUtils.ResultCallback<Search>) {
+        NetworkUtils.getUrl(
+            "https://api.bilibili.com/x/web-interface/search/all/v2?page=$page&single_column=0&keyword=$keyword",
+            object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    callback.onFailed(e)
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val str = response.body?.string()
+                    try {
+                        val result = Gson().fromJson(str, Search::class.java)
+                        if (result.code == 0) {
+                            callback.onSuccess(result)
+                        } else {
+                            callback.onFailed(null)
+                            MainScope().launch {
+                                ToastUtils.showText("${result.code}: ${result.message}")
+                                ToastUtils.debugToast(str.log() ?: "")
+                            }
+                        }
+                    } catch (e: JsonSyntaxException) {
+                        MainScope().launch {
+                            ToastUtils.showText("请求错误")
+                            ToastUtils.debugToast(str.log() ?: "")
+                        }
+                    }
+                }
+            })
+    }
 }

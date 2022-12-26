@@ -1,8 +1,10 @@
 package cn.spacexc.wearbili.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import cn.spacexc.wearbili.Application.Companion.TAG
 import cn.spacexc.wearbili.dataclass.history.History
 import cn.spacexc.wearbili.dataclass.history.HistoryObject
 import cn.spacexc.wearbili.manager.UserManager
@@ -37,7 +39,11 @@ class HistoryViewModel : ViewModel() {
                     if (result.code == 0) {
                         if (isRefresh) _historyList.value = result.data.list
                         else _historyList.value = _historyList.value?.plus(result.data.list)
-                        viewAtTimeStamp = result.data.list.last().view_at
+                        Log.d(TAG, "onSuccess: $result")
+                        try {
+                            viewAtTimeStamp = result.data.list.last().view_at
+                        } catch (_: java.util.NoSuchElementException) {
+                        }
                         isRefreshing.value = false
                     }
                     else{
@@ -46,10 +52,9 @@ class HistoryViewModel : ViewModel() {
                 }
             }
 
-            override fun onFailed(e: Exception) {
+            override fun onFailed(e: Exception?) {
                 MainScope().launch {
                     isRefreshing.value = false
-
                 }
             }
 

@@ -1,7 +1,7 @@
 package cn.spacexc.wearbili.dataclass.watchlater
 
 data class Stat(
-    val aid: Int,
+    val aid: Long,
     val coin: Int,
     val danmaku: Int,
     val dislike: Int,

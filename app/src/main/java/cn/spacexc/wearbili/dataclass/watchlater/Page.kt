@@ -1,7 +1,7 @@
 package cn.spacexc.wearbili.dataclass.watchlater
 
 data class Page(
-    val cid: Int,
+    val cid: Long,
     val dimension: Dimension,
     val duration: Int,
     val from: String,

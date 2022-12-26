@@ -31,7 +31,7 @@ object GlideUtils {
     fun loadPicsFitWidth(
         context: Context,
         imageUrl: String?,
-        erroImageId: Int,
+        errorImageId: Int,
         placeImageId: Int,
         imageView: ImageView
     ) {
@@ -78,7 +78,7 @@ object GlideUtils {
                 ): Boolean {
                     return false
                 }
-            }).fitCenter().placeholder(placeImageId).error(erroImageId)
+            }).fitCenter().placeholder(placeImageId).error(errorImageId)
             .into(imageView)
     }
 

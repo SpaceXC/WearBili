@@ -6,5 +6,5 @@ data class UserNameplate(
     val image_small: String,
     val level: String,
     val name: String,
-    val nid: Int
+    val nid: Long
 )

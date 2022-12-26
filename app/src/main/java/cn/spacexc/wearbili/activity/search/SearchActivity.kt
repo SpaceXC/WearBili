@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
@@ -16,12 +15,10 @@ import cn.spacexc.wearbili.databinding.ActivitySearchBinding
 import cn.spacexc.wearbili.dataclass.DefaultSearchContent
 import cn.spacexc.wearbili.dataclass.HotSearch
 import cn.spacexc.wearbili.manager.SearchManager
-import cn.spacexc.wearbili.utils.TimeUtils
 import cn.spacexc.wearbili.utils.ToastUtils
 import cn.spacexc.wearbili.utils.VideoUtils
 import com.google.gson.Gson
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
@@ -93,7 +90,8 @@ class SearchActivity : AppCompatActivity() {
                         defaultContent = result.data.show_name
                         defaultType = result.data.goto_type
                         defaultVideoAv = result.data.goto_value
-                    } catch (e: Exception) { }
+                    } catch (_: Exception) {
+                    }
                 }
 
             }
@@ -150,7 +148,7 @@ class SearchActivity : AppCompatActivity() {
                     startActivity(intent)
                     return
                 } else {
-                    val intent = Intent(this@SearchActivity, SearchResultActivity::class.java)
+                    val intent = Intent(this@SearchActivity, SearchResultActivityNew::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     intent.putExtra("keyword", defaultContent)
                     startActivity(intent)
@@ -172,7 +170,7 @@ class SearchActivity : AppCompatActivity() {
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
         } else {
-            val intent = Intent(this@SearchActivity, SearchResultActivity::class.java)
+            val intent = Intent(this@SearchActivity, SearchResultActivityNew::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             intent.putExtra("keyword", keyword)
             startActivity(intent)

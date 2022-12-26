@@ -1,7 +1,7 @@
 package cn.spacexc.wearbili.dataclass.video.rcmd
 
 data class Reason(
-    val id: Int,
+    val id: Long,
     val name: String,
     val toast: String
 )

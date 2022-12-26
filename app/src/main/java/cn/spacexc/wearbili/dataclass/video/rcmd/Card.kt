@@ -4,7 +4,7 @@ data class Card(
     val ad_tag: String,
     val ad_tag_style: AdTagStyle,
     val adver: Adver,
-    val adver_account_id: Int,
+    val adver_account_id: Long,
     val adver_logo: String,
     val adver_mid: Long,
     val adver_name: String,

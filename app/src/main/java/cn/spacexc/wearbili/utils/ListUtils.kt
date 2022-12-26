@@ -29,7 +29,11 @@ package cn.spacexc.wearbili.utils
 }*/
 
 object ListUtils {
-    @Deprecated("这个傻逼方法卵用没有", ReplaceWith("CookiesManager.unionCookies()"), DeprecationLevel.WARNING)
+    @Deprecated(
+        "这个傻逼方法卵用没有",
+        ReplaceWith("CookiesManager.unionCookies()"),
+        DeprecationLevel.WARNING
+    )
     fun <T> MutableList<T>.addListToAnother(secondList: List<T>) {
         for (node in this) {
             for (node2 in secondList) {
@@ -39,4 +43,8 @@ object ListUtils {
             }
         }
     }
+}
+
+fun <T> List<T>?.ifEmpty(value: T): List<T> {
+    return if (this.isNullOrEmpty()) emptyList() else this
 }

@@ -14,7 +14,7 @@ data class Card(
     val comment: Int,
     val dynamic_id: Long,
     val dynamic_id_str: String,
-    val inner_id: Int,
+    val inner_id: Long,
     val is_liked: Int,
     val like: Int,
     val orig_dy_id: Long,

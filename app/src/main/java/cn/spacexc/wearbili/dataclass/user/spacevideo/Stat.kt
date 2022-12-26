@@ -6,7 +6,7 @@ data class Stat(
     val favorite: Int,
     val like: Int,
     val reply: Int,
-    val season_id: Int,
+    val season_id: Long,
     val share: Int,
     val view: Int
 )

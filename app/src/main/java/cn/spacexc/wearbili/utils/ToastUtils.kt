@@ -18,15 +18,15 @@ import cn.spacexc.wearbili.manager.SettingsManager.isDebug
  */
 
 object ToastUtils {
-    private const val ContentID: Int = R.id.toastTextView
-    private const val LayoutID: Int = R.layout.layout_toast_test
+    private const val ContentId: Int = R.id.toastTextView
+    private const val LayoutId: Int = R.layout.layout_toast_test
     fun makeText(content: String): Toast {
         val toast = Toast(Application.getContext())
         val view: View =
-            LayoutInflater.from(Application.getContext()).inflate(LayoutID, null, false)
+            LayoutInflater.from(Application.getContext()).inflate(LayoutId, null, false)
         toast.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.CENTER_VERTICAL, 0, 0)
         toast.duration = Toast.LENGTH_SHORT
-        val text: TextView = view.findViewById(ContentID)
+        val text: TextView = view.findViewById(ContentId)
         toast.view = view
         text.text = content
         return toast
@@ -35,10 +35,10 @@ object ToastUtils {
     fun showText(content: String) {
         val toast = Toast(Application.getContext())
         val view: View =
-            LayoutInflater.from(Application.getContext()).inflate(LayoutID, null, false)
+            LayoutInflater.from(Application.getContext()).inflate(LayoutId, null, false)
         toast.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.CENTER_VERTICAL, 0, 0)
         toast.duration = Toast.LENGTH_SHORT
-        val text: TextView = view.findViewById(ContentID)
+        val text: TextView = view.findViewById(ContentId)
         toast.view = view
         text.text = content
         toast.show()
@@ -48,10 +48,10 @@ object ToastUtils {
         if (isDebug()) {
             val toast = Toast(Application.getContext())
             val view: View =
-                LayoutInflater.from(Application.getContext()).inflate(LayoutID, null, false)
+                LayoutInflater.from(Application.getContext()).inflate(LayoutId, null, false)
             toast.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.CENTER_VERTICAL, 0, 0)
             toast.duration = Toast.LENGTH_SHORT
-            val text: TextView = view.findViewById(ContentID)
+            val text: TextView = view.findViewById(ContentId)
             toast.view = view
             text.text = content
             toast.show()

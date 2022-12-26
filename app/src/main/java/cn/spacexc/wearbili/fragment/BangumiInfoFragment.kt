@@ -498,7 +498,9 @@ class BangumiInfoFragment : Fragment() {
                         )
                         Spacer(modifier = Modifier.width(2.dp))
                         Text(
-                            text = bangumi?.result?.episodes?.get(0)?.bvid ?: "",
+                            text = if (bangumi?.result?.episodes.isNullOrEmpty()) "" else bangumi?.result?.episodes?.get(
+                                0
+                            )?.bvid ?: "",
                             fontSize = 12.sp,
                             fontFamily = puhuiFamily,
                             color = Color.White,

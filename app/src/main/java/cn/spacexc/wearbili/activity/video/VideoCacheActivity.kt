@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -143,6 +145,10 @@ class VideoCacheActivity : AppCompatActivity() {
     ) {
         var iconHeight by remember { mutableStateOf(0.dp) }
         val localDensity = LocalDensity.current
+        val progressVal by animateFloatAsState(
+            targetValue = progress.toFloat() / 100,
+            animationSpec = tween(durationMillis = 300)
+        )
         Column(modifier = Modifier
             .pointerInput(Unit) {
                 detectTapGestures(onLongPress = {
@@ -350,7 +356,7 @@ class VideoCacheActivity : AppCompatActivity() {
                         )
                         Spacer(modifier = Modifier.height(2.dp))
                         LinearProgressIndicator(
-                            progress = progress / 100f,
+                            progress = progressVal,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(360.dp)),
@@ -369,26 +375,29 @@ class VideoCacheActivity : AppCompatActivity() {
         }
     }
 
-    fun byteConverter(videoSize: Long, danmakuUri: String, coverUri: String): String {
+    /**
+     *  懒得自己写一个了
+     *  上CSDN🇰🇷的
+     */
+    private fun byteConverter(videoSize: Long, danmakuUri: String, coverUri: String): String {
         try {
             val danmakuFile = File(danmakuUri)
             val picFile = File(coverUri)
             val bytes = danmakuFile.length() + picFile.length() + videoSize
             //获取到的size为：1705230
-            val GB = 1024 * 1024 * 1024 //定义GB的计算常量
-            val MB = 1024 * 1024 //定义MB的计算常量
-            val KB = 1024 //定义KB的计算常量
+            val sizeGB = 1024 * 1024 * 1024 //定义GB的计算常量
+            val sizeMB = 1024 * 1024 //定义MB的计算常量
+            val sizeKB = 1024 //定义KB的计算常量
             val df = DecimalFormat("0.00") //格式化小数
-            var resultSize = ""
-            resultSize = if (bytes / GB >= 1) {
+            val resultSize: String = if (bytes / sizeGB >= 1) {
                 //如果当前Byte的值大于等于1GB
-                df.format(bytes / GB.toFloat()) + "GB"
-            } else if (bytes / MB >= 1) {
+                df.format(bytes / sizeGB.toFloat()) + "GB"
+            } else if (bytes / sizeMB >= 1) {
                 //如果当前Byte的值大于等于1MB
-                df.format(bytes / MB.toFloat()) + "MB"
-            } else if (bytes / KB >= 1) {
+                df.format(bytes / sizeMB.toFloat()) + "MB"
+            } else if (bytes / sizeKB >= 1) {
                 //如果当前Byte的值大于等于1KB
-                df.format(bytes / KB.toFloat()) + "KB"
+                df.format(bytes / sizeKB.toFloat()) + "KB"
             } else {
                 bytes.toString() + "B   "
             }

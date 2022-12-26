@@ -4,7 +4,7 @@ data class Item(
     val at_control: String,
     val category: String,
     val description: String?,
-    val id: Int,
+    val id: Long,
     val is_fav: Int,
     val pictures: List<Picture>,
     val pictures_count: Int,

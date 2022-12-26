@@ -51,8 +51,8 @@ class HistoryActivity : AppCompatActivity() {
                                         clickable = it.history.business == "archive",
                                         videoBvid = it.history.bvid ?: "",
                                         context = this@HistoryActivity,
-                                        isBangumi = it.history.epid != 0,
-                                        epid = if (it.history.epid != 0) it.history.epid.toString() else "",
+                                        isBangumi = it.history.epid != 0L,
+                                        epid = if (it.history.epid != 0L) it.history.epid.toString() else "",
                                         badge = it.badge,
                                         tagName = it.tag_name
                                     )

@@ -9,7 +9,7 @@ data class Media(
     val ctime: Int,
     val duration: Int,
     val fav_time: Int,
-    val id: Int,
+    val id: Long,
     val intro: String,
     val link: String,
     val ogv: Any?,

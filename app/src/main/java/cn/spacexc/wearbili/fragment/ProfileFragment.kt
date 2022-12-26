@@ -139,6 +139,11 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        refreshLogin()
+    }
+
     private fun refreshLogin() {
         Log.d(Application.getTag(), "refreshLogin: ")
         Glide

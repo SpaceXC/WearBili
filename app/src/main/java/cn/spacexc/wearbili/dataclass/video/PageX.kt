@@ -1,7 +1,7 @@
 package cn.spacexc.wearbili.dataclass.video
 
 data class PageX(
-    val cid: Int,
+    val cid: Long,
     val dimension: Dimension,
     val duration: Int,
     val from: String,

@@ -38,7 +38,7 @@ data class Pendant(
     var image_enhance: String?,
     val image_enhance_frame: String,
     val name: String,
-    val pid: Int
+    val pid: Long
 )
 
 data class VIP(
@@ -146,7 +146,7 @@ data class VideoSearch(
     var code: Int,
     var message: String,
     var ttl: Int,
-    var data: SearchData?
+    var data: SearchData
 ) {
     data class SearchData(
         var seid: String,
@@ -177,7 +177,7 @@ data class VideoSearch(
         )
         data class VideoSearchResult(
             var type: String,
-            var id: Int,
+            var id: Long,
             var author: String,
             var mid: Long,
             var typeid: String,
@@ -324,7 +324,7 @@ data class CommentContentData(
         )
 
         data class Pendant(
-            var pid: Int,
+            var pid: Long,
             var name: String,
             var image: String,
             var expire: Int,
@@ -333,7 +333,7 @@ data class CommentContentData(
         )
 
         data class Nameplate(
-            var nid: Int,
+            var nid: Long,
             var name: String,
             var image: String,
             var image_small: String,
@@ -446,7 +446,7 @@ data class CommentContentData(
             )
 
             data class Pendant(
-                var pid: Int,
+                var pid: Long,
                 var name: String,
                 var image: String,
                 var expire: Int,
@@ -455,7 +455,7 @@ data class CommentContentData(
             )
 
             data class Nameplate(
-                var nid: Int,
+                var nid: Long,
                 var name: String,
                 var image: String,
                 var image_small: String,
@@ -493,7 +493,7 @@ data class CommentContentData(
                 var cardbg_with_focus: Any
             ) {
                 data class Pendant(
-                    var id: Int,
+                    var id: Long,
                     var name: String,
                     var image: String,
                     var jump_url: String,
@@ -589,10 +589,10 @@ data class CommentContentData(
 data class VideoRecommendItem(
     val av_feature: String,
     val bvid: String?,
-    val cid: Int,
+    val cid: Long,
     val duration: Int,
     val goto: String,
-    val id: Int,
+    val id: Long,
     val is_followed: Int,
     val ogv_info: Any?,
     val owner: VideoRecommendOwner,
@@ -684,12 +684,12 @@ data class Audio(
     val bandwidth: Int,
     val baseUrl: String,
     val base_url: String,
-    val codecid: Int,
+    val codecid: Long,
     val codecs: String,
     val frameRate: String,
     val frame_rate: String,
     val height: Int,
-    val id: Int,
+    val id: Long,
     val mimeType: String,
     val mime_type: String,
     val sar: String,
@@ -714,7 +714,7 @@ data class Data(
     val seek_type: String,
     val support_formats: List<SupportFormat>,
     val timelength: Int,
-    val video_codecid: Int
+    val video_codecid: Long
 )
 
 data class Video(
@@ -724,12 +724,12 @@ data class Video(
     val bandwidth: Int,
     val baseUrl: String,
     val base_url: String,
-    val codecid: Int,
+    val codecid: Long,
     val codecs: String,
     val frameRate: String,
     val frame_rate: String,
     val height: Int,
-    val id: Int,
+    val id: Long,
     val mimeType: String,
     val mime_type: String,
     val sar: String,
@@ -814,14 +814,14 @@ data class HotSearch(
 data class HotSearchData(
     val goto_type: Int,
     val goto_value: String,
-    val hot_id: Int,
+    val hot_id: Long,
     val icon: String,
-    val id: Int,
+    val id: Long,
     val keyword: String,
     val name_type: String,
     val pos: Int,
     val res: List<Any>,
-    val resource_id: Int,
+    val resource_id: Long,
     val show_name: String,
     val status: String,
     val word_type: Int
@@ -849,9 +849,9 @@ data class RecommendVideoByVideo(
 )
 
 data class RecommendVideoByVideoData(
-    val aid: Int,
+    val aid: Long,
     val bvid: String,
-    val cid: Int,
+    val cid: Long,
     val copyright: Int,
     val ctime: Int,
     val desc: String,
@@ -859,20 +859,20 @@ data class RecommendVideoByVideoData(
     val `dynamic`: String,
     val first_frame: String?,
     val is_ogv: Boolean,
-    val mission_id: Int?,
+    val mission_id: Long?,
     val ogv_info: Any?,
     val owner: Owner,
     val pic: String,
     val pubdate: Int,
     val rcmd_reason: String,
     val rights: RecommendVideoByVideoRights,
-    val season_id: Int?,
+    val season_id: Long?,
     val season_type: Int,
     val short_link: String,
     val short_link_v2: String,
     val stat: RecommendVideoByVideoStat,
     val state: Int,
-    val tid: Int,
+    val tid: Long,
     val title: String,
     val tname: String,
     val up_from_v2: Int?,
@@ -897,7 +897,7 @@ data class RecommendVideoByVideoRights(
 )
 
 data class RecommendVideoByVideoStat(
-    val aid: Int,
+    val aid: Long,
     val coin: Int,
     val danmaku: Int,
     val dislike: Int,
@@ -974,11 +974,11 @@ data class QrCodeLoginStat(
 
 data class EmoteObject(
     val attr: Int,
-    val id: Int,
+    val id: Long,
     val jump_title: String,
     val meta: Meta,
     val mtime: Int,
-    val package_id: Int,
+    val package_id: Long,
     val state: Int,
     val text: String,
     val type: Int,

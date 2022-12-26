@@ -6,6 +6,6 @@ data class Cm(
     val index: Int,
     val is_ad_loc: Boolean,
     val request_id: String,
-    val rsc_id: Int,
-    val src_id: Int
+    val rsc_id: Long,
+    val src_id: Long
 )

@@ -12,7 +12,7 @@ data class HistoryObject(
     val history: HistoryX,
     val is_fav: Int,
     val is_finish: Int,
-    val kid: Int,
+    val kid: Long,
     val live_status: Int,
     val long_title: String,
     val new_desc: String,

@@ -1,8 +1,8 @@
 package cn.spacexc.wearbili.dataclass.video.rcmd
 
 data class PlayerArgs(
-    val aid: Int?,
-    val cid: Int,
+    val aid: Long?,
+    val cid: Long,
     val duration: Int,
     val type: String
 )

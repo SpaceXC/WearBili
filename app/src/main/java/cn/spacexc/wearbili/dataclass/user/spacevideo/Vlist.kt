@@ -1,7 +1,7 @@
 package cn.spacexc.wearbili.dataclass.user.spacevideo
 
 data class Vlist(
-    val aid: Int,
+    val aid: Long,
     val attribute: Int,
     val author: String,
     val bvid: String,
@@ -17,12 +17,12 @@ data class Vlist(
     val is_union_video: Int,
     val length: String,
     val meta: Meta?,
-    val mid: Int,
+    val mid: Long,
     val pic: String,
     val play: Int,
     val review: Int,
     val subtitle: String,
     val title: String,
-    val typeid: Int,
+    val typeid: Long,
     val video_review: Int
 )

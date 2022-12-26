@@ -8,7 +8,7 @@ data class StatXX(
     val like: Int,
     val now_rank: Int,
     val reply: Int,
-    val season_id: Int,
+    val season_id: Long,
     val share: Int,
     val view: Int
 )

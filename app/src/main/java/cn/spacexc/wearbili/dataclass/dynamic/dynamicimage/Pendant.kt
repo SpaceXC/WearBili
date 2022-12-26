@@ -6,5 +6,5 @@ data class Pendant(
     val image_enhance: String,
     val image_enhance_frame: String,
     val name: String,
-    val pid: Int
+    val pid: Long
 )
