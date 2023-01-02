@@ -80,6 +80,30 @@ object SettingsManager {
             requireSave = true,
         ),
         SettingItem(
+            type = SettingType.TYPE_CHOOSE,
+            settingName = "recommendSource",
+            displayName = "推荐源",
+            description = "首页推荐来源",
+            iconRes = R.drawable.play_arrow,
+            requireSave = true,
+            requireRestart = true,
+            defString = "app",
+            chooseItems = listOf(
+                ChooseItem(
+                    name = "app",
+                    displayName = "App首页",
+                    icon = R.drawable.phone_iphone,
+                    description = "手机App首页"
+                ),
+                ChooseItem(
+                    name = "web",
+                    displayName = "Web首页",
+                    icon = R.drawable.computer,
+                    description = "Web端推荐"
+                )
+            )
+        ),
+        SettingItem(
             type = SettingType.TYPE_SWITCH,
             settingName = "hasScrollVfx",
             displayName = "滑动动效",
@@ -127,7 +151,7 @@ object SettingsManager {
                         }
                     }
 
-                    override fun onFailed(e: Exception) {
+                    override fun onFailed(e: Exception?) {
                         MainScope().launch {
                             ToastUtils.showText("网络异常")
                         }
@@ -150,6 +174,8 @@ object SettingsManager {
         "hasScrollVfx",
         Application.context?.resources?.configuration?.isScreenRound!!,
     )
+
+    fun getRecommendSource(): String = SharedPreferencesUtils.getString("recommendSource", "app")
 
     fun defPlayer(): String = SharedPreferencesUtils.getString("defaultPlayer", "builtinPlayer")
     fun useNewDynamicList(): Boolean = SharedPreferencesUtils.getBoolean("useNewDynamicList", false)

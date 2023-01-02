@@ -50,7 +50,6 @@ class ProfileFragment : Fragment() {
         RoundButtonData(R.drawable.ic_round_star_border_24, "个人收藏", "个人收藏"),
         RoundButtonData(R.drawable.chat_bubble, "我的消息", "我的消息"),
         RoundButtonData(R.drawable.cloud_download, "离线缓存", "离线缓存"),
-        //RoundButtonData(R.drawable.ic_outline_settings_24, "应用设置", "应用设置")
     )
 
     override fun onCreateView(

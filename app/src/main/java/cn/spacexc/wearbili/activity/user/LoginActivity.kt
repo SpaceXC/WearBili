@@ -14,7 +14,10 @@ import cn.spacexc.wearbili.activity.other.SplashScreenActivity
 import cn.spacexc.wearbili.dataclass.LoginQrCode
 import cn.spacexc.wearbili.dataclass.QrCodeLoginStat
 import cn.spacexc.wearbili.manager.UserManager
-import cn.spacexc.wearbili.utils.*
+import cn.spacexc.wearbili.utils.NetworkUtils
+import cn.spacexc.wearbili.utils.QRCodeUtil
+import cn.spacexc.wearbili.utils.SharedPreferencesUtils
+import cn.spacexc.wearbili.utils.ToastUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.gson.Gson
@@ -156,7 +159,7 @@ class LoginActivity : AppCompatActivity() {
                                                                 }
                                                             }
 
-                                                            override fun onFailed(e: Exception) {
+                                                            override fun onFailed(e: Exception?) {
                                                                 MainScope().launch {
                                                                     ToastUtils.showText("登录失败！$e")
                                                                 }

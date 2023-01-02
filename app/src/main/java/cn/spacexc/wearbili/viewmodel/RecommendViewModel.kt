@@ -5,9 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.wear.compose.material.ScalingLazyListState
-import cn.spacexc.wearbili.dataclass.video.rcmd.Item
-import cn.spacexc.wearbili.dataclass.video.rcmd.RecommendVideo
+import cn.spacexc.wearbili.dataclass.video.rcmd.app.Item
+import cn.spacexc.wearbili.dataclass.video.rcmd.app.RecommendVideo
+import cn.spacexc.wearbili.dataclass.video.rcmd.web.WebRecommendVideo
 import cn.spacexc.wearbili.manager.VideoManager
+import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.ToastUtils
 import com.google.gson.Gson
 import kotlinx.coroutines.MainScope
@@ -31,10 +33,16 @@ class RecommendViewModel : ViewModel() {
 
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
-    private val _videoList = MutableLiveData<List<Item>>()
-    val videoList: LiveData<List<Item>> = _videoList
 
-    fun getRecommendVideos(isRefresh: Boolean) {
+    private val _appVideoList = MutableLiveData<List<Item>>()
+    val appVideoList: LiveData<List<Item>> = _appVideoList
+
+    private val _webVideoList =
+        MutableLiveData<List<cn.spacexc.wearbili.dataclass.video.rcmd.web.Item>>()
+    val webVideoList: LiveData<List<cn.spacexc.wearbili.dataclass.video.rcmd.web.Item>> =
+        _webVideoList
+
+    fun getAppRecommendVideos(isRefresh: Boolean) {
         MainScope().launch {
             _isRefreshing.value = true
         }
@@ -52,8 +60,8 @@ class RecommendViewModel : ViewModel() {
                     val videos = Gson().fromJson(str, RecommendVideo::class.java)
                     MainScope().launch {
                         if (videos.code == 0) {
-                            if (isRefresh) _videoList.value = videos.data.items
-                            else _videoList.value = _videoList.value?.plus(videos.data.items)
+                            if (isRefresh) _appVideoList.value = videos.data.items
+                            else _appVideoList.value = _appVideoList.value?.plus(videos.data.items)
                             if (isRefresh) ToastUtils.makeText(
                                 "小电视推荐了一批新内容"
                             ).show()
@@ -75,6 +83,31 @@ class RecommendViewModel : ViewModel() {
 
                 }
             }
+        })
+    }
+
+    fun getWebRecommendVideos(isRefresh: Boolean) {
+        MainScope().launch {
+            _isRefreshing.value = true
+        }
+        VideoManager.getWebRecommend(object : NetworkUtils.ResultCallback<WebRecommendVideo> {
+            override fun onSuccess(result: WebRecommendVideo, code: Int) {
+                MainScope().launch {
+                    if (isRefresh) {
+                        _webVideoList.value = result.data.item
+                    } else {
+                        _webVideoList.value = _webVideoList.value?.plus(result.data.item)
+                    }
+                    _isRefreshing.value = false
+                }
+            }
+
+            override fun onFailed(e: Exception?) {
+                MainScope().launch {
+                    ToastUtils.showText("网络异常")
+                }
+            }
+
         })
     }
 }

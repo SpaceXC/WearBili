@@ -165,7 +165,9 @@ object DynamicManager {
     fun getSpaceDynamics(mid: Long, callback: DynamicResponseCallback) {
         if (!UserManager.isLoggedIn()) return
         val url =
-            "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?host_uid=$mid&type=$type"
+            "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?host_uid=$mid&type=$type".log(
+                "space dynamic url"
+            )
         url.debugToast("动态请求")
         NetworkUtils.getUrl(
             url,

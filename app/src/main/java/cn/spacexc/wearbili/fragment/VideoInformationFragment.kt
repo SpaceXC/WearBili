@@ -81,10 +81,10 @@ class VideoInformationFragment : Fragment() {
 
     private val btnListUpperRow = listOf(
         RoundButtonDataNew(Icons.Outlined.PlayCircle, "播放", "播放"),
-        RoundButtonDataNew(Icons.Outlined.ThumbUp, "点赞", "点赞"),
-        RoundButtonDataNew(Icons.Outlined.MonetizationOn, "投币", "投币"),
-        RoundButtonDataNew(Icons.Outlined.StarBorder, "收藏", "收藏"),
-        RoundButtonDataNew(Icons.Outlined.ThumbDown, "点踩", "点踩"),
+        //RoundButtonDataNew(Icons.Outlined.ThumbUp, "点赞", "点赞"),
+        //RoundButtonDataNew(Icons.Outlined.MonetizationOn, "投币", "投币"),
+        //RoundButtonDataNew(Icons.Outlined.StarBorder, "收藏", "收藏"),
+        //RoundButtonDataNew(Icons.Outlined.ThumbDown, "点踩", "点踩"),
         RoundButtonDataNew(Icons.Outlined.History, "稍后再看", "稍后再看"),
         RoundButtonDataNew(Icons.Outlined.SendToMobile, "手机观看", "手机观看"),
         RoundButtonDataNew(Icons.Outlined.CloudDownload, "缓存", "缓存")

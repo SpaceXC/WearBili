@@ -13,8 +13,8 @@ import androidx.wear.widget.WearableLinearLayoutManager
 import cn.spacexc.wearbili.Application.Companion.TAG
 import cn.spacexc.wearbili.adapter.VideoPhoneEndRecommendListAdapter
 import cn.spacexc.wearbili.databinding.FragmentRecommendBinding
-import cn.spacexc.wearbili.dataclass.video.rcmd.Item
-import cn.spacexc.wearbili.dataclass.video.rcmd.RecommendVideo
+import cn.spacexc.wearbili.dataclass.video.rcmd.app.Item
+import cn.spacexc.wearbili.dataclass.video.rcmd.app.RecommendVideo
 import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.utils.ToastUtils
 import cn.spacexc.wearbili.utils.WearableLayoutManagerCallback

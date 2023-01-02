@@ -87,7 +87,7 @@ class UserSpaceViewModel : ViewModel() {
                     }
                 }
 
-                override fun onFailed(e: Exception) {
+                override fun onFailed(e: Exception?) {
                     MainScope().launch {
                         _isRefreshing.value = false
                         ToastUtils.showText("网络异常")

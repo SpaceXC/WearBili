@@ -11,8 +11,10 @@ import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.other.MenuActivity
 import cn.spacexc.wearbili.adapter.MainViewPagerAdapter
 import cn.spacexc.wearbili.databinding.ActivityMainBinding
+import cn.spacexc.wearbili.fragment.DynamicFragment
 import cn.spacexc.wearbili.fragment.DynamicListFragment
 import cn.spacexc.wearbili.fragment.RecommendVideoFragment
+import cn.spacexc.wearbili.manager.SettingsManager
 import cn.spacexc.wearbili.manager.UserManager
 
 class MainActivity : AppCompatActivity() {
@@ -91,8 +93,14 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     1 -> {
-                        (fragment as DynamicListFragment).apply {
-                            refresh()
+                        if (SettingsManager.useNewDynamicList()) {
+                            (fragment as DynamicListFragment).apply {
+                                refresh()
+                            }
+                        } else {
+                            (fragment as DynamicFragment).apply {
+                                refresh()
+                            }
                         }
                     }
                 }

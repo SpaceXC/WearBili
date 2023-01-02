@@ -56,7 +56,7 @@ class VideoViewModel : ViewModel() {
                 }
             }
 
-            override fun onFailed(e: Exception) {
+            override fun onFailed(e: Exception?) {
                 MainScope().launch {
                     ToastUtils.showText("网络异常")
                 }
@@ -109,7 +109,7 @@ class VideoViewModel : ViewModel() {
                 }
             }
 
-            override fun onFailed(e: Exception) {
+            override fun onFailed(e: Exception?) {
                 MainScope().launch {
                     ToastUtils.showText("网络异常")
                 }
@@ -127,7 +127,7 @@ class VideoViewModel : ViewModel() {
                 }
             }
 
-            override fun onFailed(e: Exception) {
+            override fun onFailed(e: Exception?) {
                 MainScope().launch {
                     ToastUtils.showText("网络异常")
                 }
@@ -144,7 +144,7 @@ class VideoViewModel : ViewModel() {
                 }
             }
 
-            override fun onFailed(e: Exception) {
+            override fun onFailed(e: Exception?) {
                 MainScope().launch {
                     ToastUtils.showText("网络异常")
                 }
@@ -164,7 +164,7 @@ class VideoViewModel : ViewModel() {
                 }
             }
 
-            override fun onFailed(e: Exception) {
+            override fun onFailed(e: Exception?) {
                 MainScope().launch {
                     ToastUtils.showText("网络异常")
                 }

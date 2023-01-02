@@ -19,6 +19,7 @@ import androidx.wear.compose.material.ScalingLazyColumn
 import cn.spacexc.wearbili.manager.SettingsManager
 import cn.spacexc.wearbili.manager.isRound
 import cn.spacexc.wearbili.ui.VideoUis
+import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import cn.spacexc.wearbili.viewmodel.RecommendViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -44,13 +45,18 @@ class RecommendVideoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (view as ComposeView).setContent {
-            val videoList by viewModel.videoList.observeAsState()
+            val appVideoList by viewModel.appVideoList.observeAsState()
+            val webVideoList by viewModel.webVideoList.observeAsState()
             val isRefreshing by viewModel.isRefreshing.observeAsState()
             val refreshState = rememberSwipeRefreshState(isRefreshing ?: false)
             SwipeRefresh(
                 state = refreshState,
                 onRefresh = {
-                    viewModel.getRecommendVideos(true)
+                    when (SettingsManager.getRecommendSource()) {
+                        "app" -> viewModel.getAppRecommendVideos(true)
+                        "web" -> viewModel.getWebRecommendVideos(true)
+                    }
+
                 },
                 modifier = Modifier.padding(if (isRound()) 8.dp else 0.dp)
             ) {
@@ -59,26 +65,55 @@ class RecommendVideoFragment : Fragment() {
                         modifier = Modifier.fillMaxSize(),
                         state = viewModel.scalingLazyListState
                     ) {
-                        videoList?.forEach {
-                            item {
-                                VideoUis.VideoCard(
-                                    videoName = it.title,
-                                    views = it.cover_left_text_1,
-                                    uploader = it.args.up_name ?: "",
-                                    coverUrl = it.cover,
-                                    hasViews = true,
-                                    clickable = it.goto == "av" || it.goto == "bangumi",
-                                    videoBvid = it.bvid,
-                                    context = requireContext(),
-                                    isBangumi = it.goto == "bangumi",
-                                    epid = it.param,
-                                    badge = it.badge ?: ""
-                                )
+                        when (SettingsManager.getRecommendSource()) {
+                            "app" -> {
+                                appVideoList?.forEach {
+                                    if (it.goto == "av" || it.goto == "bangumi") {
+                                        item {
+                                            VideoUis.VideoCard(
+                                                videoName = it.title,
+                                                views = it.cover_left_text_1,
+                                                uploader = it.args.up_name ?: "",
+                                                coverUrl = it.cover,
+                                                hasViews = true,
+                                                clickable = it.goto == "av" || it.goto == "bangumi",
+                                                videoBvid = it.bvid,
+                                                context = requireContext(),
+                                                isBangumi = it.goto == "bangumi",
+                                                epid = it.param,
+                                                badge = it.badge ?: ""
+                                            )
+                                        }
+                                    }
+                                }
+                                item {
+                                    LaunchedEffect(Unit) {
+                                        viewModel.getAppRecommendVideos(false)
+                                    }
+                                }
                             }
-                        }
-                        item {
-                            LaunchedEffect(Unit) {
-                                viewModel.getRecommendVideos(false)
+                            "web" -> {
+                                webVideoList?.forEach {
+                                    if (it.goto == "av") {
+                                        item {
+                                            VideoUis.VideoCard(
+                                                videoName = it.title,
+                                                uploader = it.owner?.name ?: "",
+                                                views = it.stat?.view?.toShortChinese() ?: "",
+                                                coverUrl = it.pic,
+                                                hasViews = true,
+                                                clickable = true,
+                                                videoBvid = it.bvid,
+                                                context = requireContext(),
+                                            )
+                                        }
+                                    }
+                                }
+                                item {
+                                    LaunchedEffect(Unit) {
+                                        viewModel.getWebRecommendVideos(false)
+                                    }
+                                }
                             }
                         }
                     }
@@ -88,27 +123,55 @@ class RecommendVideoFragment : Fragment() {
                             .padding(start = 8.dp, end = 8.dp)
                             .fillMaxSize(), state = viewModel.lazyListState
                     ) {
-                        videoList?.forEach {
-                            if (it.card_goto == "av")
-                                item {
-                                    VideoUis.VideoCard(
-                                        videoName = it.title,
-                                        views = it.cover_left_text_1,
-                                        uploader = it.args.up_name ?: "",
-                                        coverUrl = it.cover,
-                                        hasViews = true,
-                                        clickable = it.goto == "av" || it.goto == "bangumi",
-                                        videoBvid = it.bvid,
-                                        context = requireContext(),
-                                        isBangumi = it.goto == "bangumi",
-                                        epid = it.param,
-                                        badge = it.badge ?: ""
-                                    )
+                        when (SettingsManager.getRecommendSource()) {
+                            "app" -> {
+                                appVideoList?.forEach {
+                                    if (it.goto == "av" || it.goto == "bangumi") {
+                                        item {
+                                            VideoUis.VideoCard(
+                                                videoName = it.title,
+                                                views = it.cover_left_text_1,
+                                                uploader = it.args.up_name ?: "",
+                                                coverUrl = it.cover,
+                                                hasViews = true,
+                                                clickable = it.goto == "av" || it.goto == "bangumi",
+                                                videoBvid = it.bvid,
+                                                context = requireContext(),
+                                                isBangumi = it.goto == "bangumi",
+                                                epid = it.param,
+                                                badge = it.badge ?: ""
+                                            )
+                                        }
+                                    }
                                 }
-                        }
-                        item {
-                            LaunchedEffect(Unit) {
-                                viewModel.getRecommendVideos(false)
+                                item {
+                                    LaunchedEffect(Unit) {
+                                        viewModel.getAppRecommendVideos(false)
+                                    }
+                                }
+                            }
+                            "web" -> {
+                                webVideoList?.forEach {
+                                    if (it.goto == "av") {
+                                        item {
+                                            VideoUis.VideoCard(
+                                                videoName = it.title,
+                                                uploader = it.owner?.name ?: "",
+                                                views = it.stat?.view?.toShortChinese() ?: "",
+                                                coverUrl = it.pic,
+                                                hasViews = true,
+                                                clickable = true,
+                                                videoBvid = it.bvid,
+                                                context = requireContext(),
+                                            )
+                                        }
+                                    }
+                                }
+                                item {
+                                    LaunchedEffect(Unit) {
+                                        viewModel.getWebRecommendVideos(false)
+                                    }
+                                }
                             }
                         }
                     }
@@ -119,12 +182,25 @@ class RecommendVideoFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        if (viewModel.videoList.value.isNullOrEmpty()) {
-            viewModel.getRecommendVideos(true)
+        when (SettingsManager.getRecommendSource()) {
+            "app" -> {
+                if (viewModel.appVideoList.value.isNullOrEmpty()) {
+                    viewModel.getAppRecommendVideos(true)
+                }
+            }
+            "web" -> {
+                if (viewModel.webVideoList.value.isNullOrEmpty()) {
+                    viewModel.getWebRecommendVideos(true)
+                }
+            }
         }
+
     }
 
     fun refresh() {
-        viewModel.getRecommendVideos(true)
+        when (SettingsManager.getRecommendSource()) {
+            "app" -> viewModel.getAppRecommendVideos(true)
+            "web" -> viewModel.getWebRecommendVideos(true)
+        }
     }
 }

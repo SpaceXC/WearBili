@@ -14,11 +14,16 @@ import android.view.View
 object ViewUtils {
     /**
      * 添加点击缩放效果
-     * From https://blog.csdn.net/lgz0921/article/details/119353183
-     * MODIFIED BY XC
+     *
+     * From [https://blog.csdn.net/lgz0921/article/details/119353183](https://blog.csdn.net/lgz0921/article/details/119353183)
+     *
+     * @author lgz0921, XC
+     *
+     * @param scale 缩小的倍数
+     * @param alpha 缩小后的alpha值
+     * @param duration 缩小动画的时间/ms
      */
     @SuppressLint("ClickableViewAccessibility")
-    // 参数为：缩小比例、缩小的变化时间
     fun View.addClickScale(scale: Float = 0.9f, alpha: Float = 0.8f, duration: Long = 150) {
         this.setOnTouchListener { _, event ->
             when (event.action) {

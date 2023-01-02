@@ -20,7 +20,9 @@ class ChooseSettingsActivity : AppCompatActivity() {
         val item = (intent.getParcelableExtra<SettingItem>("item"))!!
         val adapter = ChooseSettingsAdapter(
             item.settingName,
-            item.defString
+            item.defString,
+            item.requireRestart,
+            this
         )
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)

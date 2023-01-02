@@ -1,5 +1,7 @@
 package cn.spacexc.wearbili.adapter
 
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +12,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.R
+import cn.spacexc.wearbili.activity.settings.RequireRestartActivity
 import cn.spacexc.wearbili.dataclass.settings.ChooseItem
 import cn.spacexc.wearbili.utils.SharedPreferencesUtils
 import cn.spacexc.wearbili.utils.ToastUtils
@@ -23,7 +26,12 @@ import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
  * 给！爷！写！注！释！
  */
 
-class ChooseSettingsAdapter(private val key: String, private val defVal: String) :
+class ChooseSettingsAdapter(
+    private val key: String,
+    private val defVal: String,
+    private val requiresRestart: Boolean = false,
+    private val context: Context
+) :
     ListAdapter<ChooseItem, ChooseSettingsAdapter.ChooseSettingItemViewHolder>(object :
         DiffUtil.ItemCallback<ChooseItem>() {
         override fun areItemsTheSame(oldItem: ChooseItem, newItem: ChooseItem): Boolean {
@@ -60,6 +68,12 @@ class ChooseSettingsAdapter(private val key: String, private val defVal: String)
                 ToastUtils.debugToast("${key}: ${item.name}")
                 notifyItemChanged(prevSelectedItem)
                 prevSelectedItem = position
+            }
+            if (requiresRestart) {
+                Intent(context, RequireRestartActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    context.startActivity(this)
+                }
             }
         }
         holder.itemView.setOnClickListener {

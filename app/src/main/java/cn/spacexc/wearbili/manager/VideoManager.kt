@@ -4,6 +4,7 @@ import android.util.Log
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.Application.Companion.TAG
 import cn.spacexc.wearbili.dataclass.search.Search
+import cn.spacexc.wearbili.dataclass.video.rcmd.web.WebRecommendVideo
 import cn.spacexc.wearbili.dataclass.video.state.CoinState
 import cn.spacexc.wearbili.dataclass.video.state.FavState
 import cn.spacexc.wearbili.dataclass.video.state.LikeState
@@ -289,6 +290,39 @@ object VideoManager {
                         }
                     }
                 }
-            })
+            }
+        )
+    }
+
+    fun getWebRecommend(callback: NetworkUtils.ResultCallback<WebRecommendVideo>) {
+        NetworkUtils.getUrl(
+            "https://api.bilibili.com/x/web-interface/wbi/index/top/feed/rcmd?feed_version=V8&fresh_idx_1h=2&fetch_row=1&fresh_idx=2&brush=0&homepage_ver=1&ps=10",
+            object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    callback.onFailed(e)
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val str = response.body?.string()
+                    try {
+                        val result = Gson().fromJson(str, WebRecommendVideo::class.java)
+                        if (result.code == 0) {
+                            callback.onSuccess(result)
+                        } else {
+                            callback.onFailed(null)
+                            MainScope().launch {
+                                ToastUtils.showText("${result.code}: ${result.message}")
+                                ToastUtils.debugToast(str.log() ?: "")
+                            }
+                        }
+                    } catch (e: JsonSyntaxException) {
+                        MainScope().launch {
+                            ToastUtils.showText("请求错误")
+                            ToastUtils.debugToast(str.log() ?: "")
+                        }
+                    }
+                }
+            }
+        )
     }
 }

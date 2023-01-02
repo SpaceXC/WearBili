@@ -129,7 +129,7 @@ object VideoUis {
                                 Text(
                                     text = badge,
                                     color = Color.White,
-                                    fontSize = 10.sp,
+                                    fontSize = 8.sp,
                                     modifier = Modifier
                                         .padding(top = 4.dp, end = 4.dp)
                                         .clip(
@@ -158,7 +158,7 @@ object VideoUis {
                             text = videoName,
                             fontFamily = puhuiFamily,
                             fontWeight = FontWeight.Medium,
-                            fontSize = 12.sp,
+                            fontSize = 10.sp,
                             color = Color.White,
                             maxLines = 3,
                             modifier = Modifier.align(Alignment.CenterVertically),
@@ -186,7 +186,7 @@ object VideoUis {
                             color = Color.White,
                             modifier = Modifier.alpha(0.5f),
                             fontFamily = puhuiFamily,
-                            fontSize = 9.sp,
+                            fontSize = 7.sp,
                             fontWeight = FontWeight.Medium,
                             maxLines = 1
                         )
@@ -213,7 +213,7 @@ object VideoUis {
                                     }
                                 },
                             fontFamily = puhuiFamily,
-                            fontSize = 9.sp,
+                            fontSize = 7.sp,
                             fontWeight = FontWeight.Medium,
                             maxLines = 1
                         )

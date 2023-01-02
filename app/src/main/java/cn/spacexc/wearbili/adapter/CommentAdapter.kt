@@ -2,6 +2,7 @@ package cn.spacexc.wearbili.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.text.Html
 import android.text.Spanned
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
+import cn.spacexc.wearbili.activity.user.SpaceProfileActivity
 import cn.spacexc.wearbili.dataclass.CommentContentData
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
@@ -91,6 +93,22 @@ class CommentAdapter(
         //println(itemCount)
         if (holder is VideoCommentViewHolder) {
             val comment = getItem(position)
+            holder.avatar.addClickScale()
+            holder.avatar.setOnClickListener {
+                Intent(context, SpaceProfileActivity::class.java).apply {
+                    putExtra("userMid", comment.member?.mid)
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    context.startActivity(this)
+                }
+            }
+            holder.userName.addClickScale()
+            holder.userName.setOnClickListener {
+                Intent(context, SpaceProfileActivity::class.java).apply {
+                    putExtra("userMid", comment.member?.mid)
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    context.startActivity(this)
+                }
+            }
             holder.userName.text = comment.member!!.uname
             holder.upLiked.isVisible = comment.up_action.like
             if (comment.replies != null) {

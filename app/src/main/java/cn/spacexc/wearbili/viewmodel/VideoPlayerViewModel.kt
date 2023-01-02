@@ -6,9 +6,9 @@ import android.util.Log
 import android.view.View
 import android.widget.SeekBar
 import android.widget.TextView
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.Application.Companion.TAG
@@ -47,7 +47,7 @@ enum class PlayerStatus {
 }
 
 @SuppressLint("StaticFieldLeak")
-class VideoPlayerViewModel : ViewModel() {
+class VideoPlayerViewModel(application: android.app.Application) : AndroidViewModel(application) {
     private var httpDataSourceFactory = DefaultHttpDataSource.Factory()
     private var cacheDataSourceFactory: DataSource.Factory
 
@@ -74,7 +74,7 @@ class VideoPlayerViewModel : ViewModel() {
         dataSource.setRequestProperty("Referer", "https://bilibili.com/")
         httpDataSourceFactory.setDefaultRequestProperties(headers)
             .setDefaultRequestProperties(headers)
-        mediaPlayer = ExoPlayer.Builder(Application.getContext())
+        mediaPlayer = ExoPlayer.Builder(application)
             .build()
     }
 

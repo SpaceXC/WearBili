@@ -17,7 +17,7 @@ import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.video.VideoActivity
 import cn.spacexc.wearbili.activity.video.VideoLongClickActivity
-import cn.spacexc.wearbili.dataclass.video.rcmd.Item
+import cn.spacexc.wearbili.dataclass.video.rcmd.app.Item
 import cn.spacexc.wearbili.utils.VideoUtils
 import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
 import com.bumptech.glide.Glide
