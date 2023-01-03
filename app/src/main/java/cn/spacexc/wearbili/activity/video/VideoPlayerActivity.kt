@@ -24,13 +24,11 @@ import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.databinding.ActivityVideoPlayerBinding
 import cn.spacexc.wearbili.dataclass.OnlineInfos
 import cn.spacexc.wearbili.dataclass.VideoStreamsFlv
+import cn.spacexc.wearbili.dataclass.subtitle.Subtitle
 import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.manager.VideoManager
-import cn.spacexc.wearbili.utils.DanmakuSharedPreferencesUtils
-import cn.spacexc.wearbili.utils.ExoPlayerUtils
-import cn.spacexc.wearbili.utils.TimeUtils
+import cn.spacexc.wearbili.utils.*
 import cn.spacexc.wearbili.utils.TimeUtils.secondToTime
-import cn.spacexc.wearbili.utils.ToastUtils
 import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
 import cn.spacexc.wearbili.viewmodel.OnSeekCompleteListener
 import cn.spacexc.wearbili.viewmodel.PlayerStatus
@@ -97,6 +95,7 @@ class VideoPlayerActivity : AppCompatActivity() {
         val videoCid = intent.getLongExtra("videoCid", 0)
         val cacheId = intent.getStringExtra("videoCid")
         val videoTitle = intent.getStringExtra("videoTitle") ?: ""
+        val subtitleUrl = intent.getStringExtra("subtitleUrl")
         val isCache = intent.getBooleanExtra("isCache", false)
 
         val progress = intent.getLongExtra("progress", 0L) * 1000
@@ -168,6 +167,13 @@ class VideoPlayerActivity : AppCompatActivity() {
                 isLoadingPanelShowed = it
             }
 
+            currentSubtitle.observe(this@VideoPlayerActivity) {
+                binding.subtitleText.text = it
+            }
+            subtitleVisibility.observe(this@VideoPlayerActivity) {
+                binding.subtitleText.isVisible = it
+            }
+
             videoResolution.observe(this@VideoPlayerActivity) {
                 binding.progress.max = mediaPlayer.duration.toInt()
             }
@@ -177,7 +183,7 @@ class VideoPlayerActivity : AppCompatActivity() {
             }
             //播放控制器显示/消失"
             controllerVisibility.observe(this@VideoPlayerActivity) {
-                binding.controller.visibility = it
+                binding.controller.isVisible = it == View.VISIBLE
                 binding.title.visibility = it
                 binding.rotate.visibility = it
                 binding.danmakuSwitch.visibility = it
@@ -477,7 +483,6 @@ class VideoPlayerActivity : AppCompatActivity() {
                     }
                 }
             }.start()
-
         } else {
             VideoManager.getDanmaku(videoCid, object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
@@ -549,13 +554,49 @@ class VideoPlayerActivity : AppCompatActivity() {
 
                                     override fun onResponse(call: Call, response: Response) {
                                         val responseString = response.body?.string()
-                                        MainScope().launch {
-                                            val videoUrls: VideoStreamsFlv = Gson().fromJson(
-                                                responseString,
-                                                VideoStreamsFlv::class.java
-                                            )        //创建视频数据对象
-                                            this@VideoPlayerActivity.runOnUiThread {
-                                                viewModel.loadVideo(videoUrls.data.durl[0].url)
+                                        val videoUrls: VideoStreamsFlv = Gson().fromJson(
+                                            responseString,
+                                            VideoStreamsFlv::class.java
+                                        )        //创建视频数据对象
+                                        if (subtitleUrl != null) {
+                                            MainScope().launch {
+                                                binding.loadingStatText.text =
+                                                    "${binding.loadingStatText.text}\n找到字幕，正在加载字幕"
+                                            }
+                                            NetworkUtils.getUrl(subtitleUrl, object : Callback {
+                                                override fun onFailure(call: Call, e: IOException) {
+                                                    MainScope().launch {
+                                                        binding.loadingStatText.text =
+                                                            "${binding.loadingStatText.text}\n字幕加载失败"
+                                                    }
+                                                }
+
+                                                override fun onResponse(
+                                                    call: Call,
+                                                    response: Response
+                                                ) {
+                                                    val result = Gson().fromJson(
+                                                        response.body?.string(),
+                                                        Subtitle::class.java
+                                                    )
+                                                    MainScope().launch {
+                                                        viewModel.subtitle = result
+                                                        binding.loadingStatText.text =
+                                                            "${binding.loadingStatText.text}\n字幕加载成功"
+                                                        this@VideoPlayerActivity.runOnUiThread {
+                                                            viewModel.loadVideo(videoUrls.data.durl[0].url)
+                                                        }
+
+                                                    }
+                                                }
+
+                                            })
+                                        } else {
+                                            MainScope().launch {
+                                                this@VideoPlayerActivity.runOnUiThread {
+                                                    viewModel.loadVideo(videoUrls.data.durl[0].url)
+                                                }
+
                                             }
                                         }
                                     }
@@ -570,10 +611,7 @@ class VideoPlayerActivity : AppCompatActivity() {
                     binding.danmakuView.enableDanmakuDrawingCache(true)
                 }
             })
-
         }
-
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -180,7 +180,14 @@ object SettingsManager {
     fun defPlayer(): String = SharedPreferencesUtils.getString("defaultPlayer", "builtinPlayer")
     fun useNewDynamicList(): Boolean = SharedPreferencesUtils.getBoolean("useNewDynamicList", false)
 
-    fun playVideo(context: Context, bvid: String?, cid: Long?, title: String?, progress: Long = 0) {
+    fun playVideo(
+        context: Context,
+        bvid: String?,
+        cid: Long?,
+        title: String?,
+        progress: Long = 0,
+        subtitleUrl: String?
+    ) {
         when (defPlayer()) {
             "builtinPlayer" -> {
                 val intent =
@@ -190,6 +197,7 @@ object SettingsManager {
                 intent.putExtra("videoCid", cid)
                 intent.putExtra("videoTitle", title)
                 intent.putExtra("progress", progress)
+                intent.putExtra("subtitleUrl", subtitleUrl)
                 context.startActivity(intent)
             }
             "minifyPlayer" -> {

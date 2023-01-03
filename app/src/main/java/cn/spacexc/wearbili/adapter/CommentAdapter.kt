@@ -135,7 +135,7 @@ class CommentAdapter(
             comment.content?.emote?.forEach {
                 comment.content?.message = comment.content?.message?.replace(
                     it.key,
-                    "<img src=\"${it.value.url.replace("http", "https")}\"/>"
+                    "<img src=\"${it.value.url}\"/>"
                 )!!
             }
             comment.content?.message?.replace("\\n", "<br>")
@@ -155,7 +155,7 @@ class CommentAdapter(
             holder.likes.text = comment.like.toShortChinese()
             holder.isUp.isVisible = comment.member?.mid == uploaderMid
             Glide.with(Application.getContext())
-                .load(comment.member!!.avatar.replace("http", "https"))
+                .load(comment.member!!.avatar)
                 .circleCrop()
                 .into(holder.avatar)
         }

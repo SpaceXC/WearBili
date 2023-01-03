@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cn.spacexc.wearbili.dataclass.SimplestUniversalDataClass
+import cn.spacexc.wearbili.dataclass.subtitle.get.SubtitleInfo
 import cn.spacexc.wearbili.dataclass.user.User
 import cn.spacexc.wearbili.dataclass.user.UserFans
 import cn.spacexc.wearbili.dataclass.video.state.CoinState
@@ -41,6 +42,9 @@ class VideoViewModel : ViewModel() {
     private val _uploaderFans = MutableLiveData<UserFans>()
     val uploaderFans: LiveData<UserFans> = _uploaderFans
 
+    private val _subtitle = MutableLiveData<SubtitleInfo>()
+    val subtitle: LiveData<SubtitleInfo> = _subtitle
+
     private val _uploaderInfo = MutableLiveData<User>()
     val uploaderInfo: LiveData<User> = _uploaderInfo
 
@@ -59,6 +63,24 @@ class VideoViewModel : ViewModel() {
             override fun onFailed(e: Exception?) {
                 MainScope().launch {
                     ToastUtils.showText("网络异常")
+                }
+            }
+
+        })
+    }
+
+    fun getSubtitle(bvid: String) {
+        VideoManager.getVideoById(bvid, object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                MainScope().launch {
+                    ToastUtils.showText("网络异常")
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val result = Gson().fromJson(response.body?.string(), SubtitleInfo::class.java)
+                MainScope().launch {
+                    _subtitle.value = result
                 }
             }
 

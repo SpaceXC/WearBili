@@ -88,7 +88,7 @@ object VideoManager {
 
     fun getCommentsByLikes(aid: Long, page: Int, callback: Callback) {
         NetworkUtils.getUrl(
-            "https://api.bilibili.com/x/v2/reply/main?type=1&oid=$aid&sort=1&next=$page",
+            "https://api.bilibili.com/x/v2/reply/main?type=1&oid=$aid&sort=1&next=$page".log(),
             callback
         )
     }
@@ -248,7 +248,7 @@ object VideoManager {
         val sign: String = EncryptUtils.getAppSign(EncryptUtils.AppSignType.TYPE_COMMON, params)
         val url = "$baseUrl?$params&sign=$sign"
         url.log()
-        NetworkUtils.getUrl(url, object : Callback {
+        NetworkUtils.getUrl(url.log(), object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 callback.onFailed(e)
             }

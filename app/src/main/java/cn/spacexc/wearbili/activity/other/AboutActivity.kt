@@ -17,7 +17,7 @@ import cn.spacexc.wearbili.listener.OnItemViewClickListener
 //import kotlinx.coroutines.launch
 //import androidx.lifecycle.lifecycleScope
 
-const val APP_VERSION = "Rel-AL 0.19.0"
+const val APP_VERSION = "Rel-AL 0.20.0"
 
 class AboutActivity : AppCompatActivity() {
     private val firstList = listOf(
@@ -33,14 +33,17 @@ class AboutActivity : AppCompatActivity() {
             "虚位以待",     //Rechrd
             "UI/UA设计师"
         )      //Rechrd你无不无聊啊我还得多加一个逻辑我真的谢谢您嘞
-               //pai233注：不做评价（
-               //xc回复：不做评价还占个位置（
+        //pai233注：不做评价（
+        //xc回复：不做评价还占个位置（
     )
     private val thirdList = listOf(
         HorizontalButtonData(0, "uid198338518", "设计组织"),
         HorizontalButtonData(0, "uid1463193869", "开发协力")
     )
-    private val forthList = listOf(HorizontalButtonData(R.drawable.ic_github, "SocialSisterYi/bilibili-API-collect", "API仓库"))
+    private val forthList = listOf(
+        HorizontalButtonData(R.drawable.ic_github, "bilibili-API-collect", "Owner: SocialSisterYi"),
+        HorizontalButtonData(R.drawable.ic_github, "bilimiao2", "Owner: 10miaomiao")
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

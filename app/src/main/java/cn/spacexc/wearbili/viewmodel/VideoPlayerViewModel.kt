@@ -12,7 +12,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.Application.Companion.TAG
+import cn.spacexc.wearbili.dataclass.subtitle.Subtitle
 import cn.spacexc.wearbili.utils.ExoPlayerUtils
+import cn.spacexc.wearbili.utils.LogUtils.log
 import cn.spacexc.wearbili.utils.TimeUtils.secondToTime
 import cn.spacexc.wearbili.utils.ToastUtils
 import com.google.android.exoplayer2.ExoPlayer
@@ -24,6 +26,7 @@ import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.upstream.HttpDataSource
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import master.flame.danmaku.ui.widget.DanmakuView
@@ -111,6 +114,12 @@ class VideoPlayerViewModel(application: android.app.Application) : AndroidViewMo
     private val _playerStatus = MutableLiveData(PlayerStatus.NOT_READY)
     val playerStat: LiveData<PlayerStatus> = _playerStatus
 
+    var subtitle: Subtitle? = null
+    private var subtitleIndex = 0
+    private val _subtitleVisibility = MutableLiveData(false)
+    val subtitleVisibility: LiveData<Boolean> = _subtitleVisibility
+    private val _currentSubtitle = MutableLiveData("")
+    val currentSubtitle: LiveData<String> = _currentSubtitle
 
     var isPlaying: Boolean = false
 
@@ -125,6 +134,14 @@ class VideoPlayerViewModel(application: android.app.Application) : AndroidViewMo
                 .createMediaSource(MediaItem.fromUri(uri))
             setMediaSource(mediaSource)
             addListener(object : Player.Listener {
+                override fun onIsPlayingChanged(isPlaying: Boolean) {
+                    super.onIsPlayingChanged(isPlaying)
+                    if (isPlaying) {
+                        setBottomSubtitleText(mediaPlayer.currentPosition / 1000)
+                        updateSubtitle()
+                    }
+                }
+
                 @SuppressLint("SetTextI18n")
                 override fun onPlaybackStateChanged(playbackState: Int) {
                     when (playbackState) {
@@ -153,6 +170,9 @@ class VideoPlayerViewModel(application: android.app.Application) : AndroidViewMo
                                 mediaPlayer.seekTo(progress)
                                 ToastUtils.showText("已为您定位到${(progress / 1000).secondToTime()}")
                             }
+                            /*setBottomSubtitleText(mediaPlayer.currentPosition / 1000)
+                            updatePlayerProgress()*/
+                            setBottomSubtitleText(mediaPlayer.currentPosition / 1000)
                             _isVideoLoaded.value = true
                             this@VideoPlayerViewModel.isPlaying = true
                             Log.d(
@@ -218,6 +238,7 @@ class VideoPlayerViewModel(application: android.app.Application) : AndroidViewMo
                                 mediaPlayer.seekTo(progress)
                                 ToastUtils.showText("已为您定位到${(progress / 1000).secondToTime()}")
                             }
+                            setBottomSubtitleText(mediaPlayer.currentPosition / 1000)
                             _isVideoLoaded.value = true
                             this@VideoPlayerViewModel.isPlaying = true
                             Log.d(
@@ -245,6 +266,87 @@ class VideoPlayerViewModel(application: android.app.Application) : AndroidViewMo
 
             })
             prepare()
+        }
+    }
+
+    /**
+     * Copied and modified from bilimiao2
+     * @author 10miaomiao, XC
+     */
+    private fun setBottomSubtitleText(currentTime: Long) {
+        subtitle?.let { subtitle ->
+            val body = subtitle.body
+            // 读取上一次索引位置，顺便检查是否在范围内
+            var index = if (subtitleIndex < 0) {
+                0
+            } else if (subtitleIndex < body.size) {
+                subtitleIndex
+            } else {
+                body.size - 1
+            }
+            //Log.d(TAG, "setBottomSubtitleText: $index")
+            while (index in subtitle.body.indices) {
+                val item = body[index].log() // 索引位置字幕信息
+                if (item.from > currentTime) {
+                    // 字幕开始时间大于当前时间
+                    if (index != 0 && currentTime > body[index - 1].to) {
+                        // 上一个字幕结束时间小于当前时间
+                        MainScope().launch {
+                            _subtitleVisibility.value = false
+                        }
+                        break
+                    } else {
+                        index--
+                    }
+                } else if (item.to < currentTime) {
+                    // 字幕结束时间小于当前时间
+                    index++
+                } else {
+                    subtitleIndex = index // 保存当前索引
+                    MainScope().launch {
+                        _subtitleVisibility.value = true
+                        _currentSubtitle.value = item.content // 设置字幕内容
+                    }
+                    //Log.d(TAG, "setBottomSubtitleText: ${item.content}")
+                    break
+                }
+            }
+
+        }
+    }
+
+    private fun updateSubtitle() {
+        subtitle?.let { subtitle ->
+            viewModelScope.launch {
+                while (mediaPlayer.isPlaying) {
+                    val index = if (subtitleIndex < 0) {
+                        0
+                    } else if (subtitleIndex < subtitle.body.size) {
+                        subtitleIndex
+                    } else {
+                        subtitle.body.size - 1
+                    }
+                    val currentSubtitle = subtitle.body[index]
+                    while (currentSubtitle.from > (mediaPlayer.currentPosition.toDouble() / 1000)) {
+                        delay(5)
+                        continue
+                    }
+                    while (mediaPlayer.currentPosition.toDouble() / 1000 in currentSubtitle.from..currentSubtitle.to) {
+                        if (_subtitleVisibility.value != true) {
+                            _subtitleVisibility.value = true
+                        }
+                        if (_currentSubtitle.value.isNullOrEmpty() || _currentSubtitle.value != currentSubtitle.content) {
+                            _currentSubtitle.value = currentSubtitle.content
+                        }
+                        delay(10)
+                        continue
+                    }
+                    subtitleIndex++
+                    _subtitleVisibility.value = false
+                    _currentSubtitle.value = ""
+                    delay(10)
+                }
+            }
         }
     }
 
@@ -311,12 +413,6 @@ class VideoPlayerViewModel(application: android.app.Application) : AndroidViewMo
     fun playerSeekTo(position: Int) {
         danmakuView.pause()
         mediaPlayer.seekTo(position.toLong())
-        isPlaying = false
-    }
-
-    fun playerSeekTo(position: Long) {
-        danmakuView.pause()
-        mediaPlayer.seekTo(position)
         isPlaying = false
     }
 

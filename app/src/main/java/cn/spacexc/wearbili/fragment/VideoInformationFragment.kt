@@ -58,7 +58,6 @@ import cn.spacexc.wearbili.activity.video.PlayOnPhoneActivity
 import cn.spacexc.wearbili.activity.video.VideoActivity
 import cn.spacexc.wearbili.activity.video.ViewFullVideoPartsActivity
 import cn.spacexc.wearbili.dataclass.RoundButtonDataNew
-import cn.spacexc.wearbili.dataclass.videoDetail.VideoDetailInfo
 import cn.spacexc.wearbili.manager.ID_TYPE_SSID
 import cn.spacexc.wearbili.manager.SettingsManager
 import cn.spacexc.wearbili.manager.VideoManager
@@ -105,6 +104,7 @@ class VideoInformationFragment : Fragment() {
         viewModel.getIsLiked(activity.videoId)
         viewModel.getIsCoined(activity.videoId)
         viewModel.getIsFavorite(activity.videoId)
+        viewModel.getSubtitle(activity.videoId)
         viewModel.videoInfo.observe(
             viewLifecycleOwner
         ) {
@@ -335,7 +335,8 @@ class VideoInformationFragment : Fragment() {
                                             bvid = videoInfo?.data?.bvid,
                                             cid = videoInfo?.data?.cid,
                                             title = videoInfo?.data?.title,
-                                            progress = videoInfo?.data?.history?.progress ?: 0
+                                            progress = videoInfo?.data?.history?.progress ?: 0,
+                                            subtitleUrl = null
                                         )
                                     }) {
                                         Column(
@@ -408,7 +409,7 @@ class VideoInformationFragment : Fragment() {
                             ) {
                                 RoundButton(
                                     buttonItem = buttonItem,
-                                    videoInfo = videoInfo,
+                                    //videoInfo = videoInfo,
                                     onLongClick = {
                                         when (buttonItem.buttonName) {
                                             "播放" -> {
@@ -467,7 +468,10 @@ class VideoInformationFragment : Fragment() {
                                                 cid = videoInfo?.data?.cid,
                                                 title = videoInfo?.data?.title,
                                                 progress = videoInfo?.data?.history?.progress
-                                                    ?: 0
+                                                    ?: 0,
+                                                subtitleUrl = viewModel.subtitle.value?.data?.subtitle?.list?.get(
+                                                    0
+                                                )?.subtitleUrl
                                             )
                                         }
                                         "稍后再看" -> {
@@ -626,7 +630,7 @@ class VideoInformationFragment : Fragment() {
     @Composable
     fun RoundButton(
         buttonItem: RoundButtonDataNew,
-        videoInfo: VideoDetailInfo?,
+        //videoInfo: VideoDetailInfo?,
         onLongClick: () -> Unit,
         tint: Color,
         onClick: () -> Unit

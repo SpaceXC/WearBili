@@ -29,6 +29,8 @@ This is free software, and you are welcome to redistribute it under certain cond
  * 给！爷！写！注！释！
  */
 
+//其实本来确实应该和图片下载的合并一下的，但是我懒得抽离方法了，先将就用吧，后续在做专门的文件下载
+//反正这个没有多线程下载什么的也不是很适合下载大文件
 class DanmakuDownloadWorker(
     private val context: Context,
     private val workerParams: WorkerParameters

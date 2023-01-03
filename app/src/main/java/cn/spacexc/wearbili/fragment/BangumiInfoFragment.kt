@@ -538,7 +538,8 @@ class BangumiInfoFragment : Fragment() {
                                             context = requireContext(),
                                             bvid = episode.bvid,
                                             cid = episode.cid,
-                                            title = "${episode.title} ${episode.long_title}"
+                                            title = "${episode.title} ${episode.long_title}",
+                                            subtitleUrl = null
                                         )
                                     }) {
                                         Column(
@@ -620,7 +621,8 @@ class BangumiInfoFragment : Fragment() {
                                             context = requireContext(),
                                             bvid = episode.bvid,
                                             cid = episode.cid,
-                                            title = "${episode.title} ${episode.long_title}"
+                                            title = "${episode.title} ${episode.long_title}",
+                                            subtitleUrl = null
                                         )
                                     }) {
                                         Column(
