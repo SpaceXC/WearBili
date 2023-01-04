@@ -469,7 +469,7 @@ class VideoInformationFragment : Fragment() {
                                                 title = videoInfo?.data?.title,
                                                 progress = videoInfo?.data?.history?.progress
                                                     ?: 0,
-                                                subtitleUrl = viewModel.subtitle.value?.data?.subtitle?.list?.get(
+                                                subtitleUrl = if (viewModel.subtitle.value?.data?.subtitle?.list.isNullOrEmpty()) null else viewModel.subtitle.value?.data?.subtitle?.list?.get(
                                                     0
                                                 )?.subtitleUrl
                                             )

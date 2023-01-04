@@ -1,6 +1,7 @@
 package cn.spacexc.wearbili.activity.other
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -11,13 +12,15 @@ import cn.spacexc.wearbili.adapter.HorizontalButtonAdapter
 import cn.spacexc.wearbili.adapter.UserHorizontalButtonAdapter
 import cn.spacexc.wearbili.dataclass.HorizontalButtonData
 import cn.spacexc.wearbili.listener.OnItemViewClickListener
+import cn.spacexc.wearbili.utils.ToastUtils
+
 
 //import cn.spacexc.wearbili.utils.TimeUtils
 //import kotlinx.coroutines.delay
 //import kotlinx.coroutines.launch
 //import androidx.lifecycle.lifecycleScope
 
-const val APP_VERSION = "Rel-AL 0.20.0"
+const val APP_VERSION = "Rel-AL 0.20.2"
 
 class AboutActivity : AppCompatActivity() {
     private val firstList = listOf(
@@ -41,8 +44,8 @@ class AboutActivity : AppCompatActivity() {
         HorizontalButtonData(0, "uid1463193869", "开发协力")
     )
     private val forthList = listOf(
-        HorizontalButtonData(R.drawable.ic_github, "bilibili-API-collect", "Owner: SocialSisterYi"),
-        HorizontalButtonData(R.drawable.ic_github, "bilimiao2", "Owner: 10miaomiao")
+        HorizontalButtonData(R.drawable.ic_github, "bilibili-API-collect", "SocialSisterYi"),
+        HorizontalButtonData(R.drawable.ic_github, "bilimiao2", "10miaomiao")
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,7 +79,20 @@ class AboutActivity : AppCompatActivity() {
         recyclerView3.adapter = UserHorizontalButtonAdapter(this).also { it.submitList(thirdList) }
         recyclerView4.adapter = HorizontalButtonAdapter(object : OnItemViewClickListener {
             override fun onClick(buttonName: String, viewHolder: RecyclerView.ViewHolder) {
-
+                val repoName = when (buttonName) {
+                    "bilibili-API-collect" -> "SocialSisterYi/bilibili-API-collect"
+                    "bilimiao2" -> "10miaomiao/bilimiao2"
+                    else -> ""
+                }
+                val data: Uri = Uri.parse("weargit://repository/$repoName")
+                val intent = Intent(Intent.ACTION_VIEW, data)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                try {
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    ToastUtils.showText("没有安装WearGit")
+                }
             }
 
             override fun onLongClick(buttonName: String, viewHolder: RecyclerView.ViewHolder) {

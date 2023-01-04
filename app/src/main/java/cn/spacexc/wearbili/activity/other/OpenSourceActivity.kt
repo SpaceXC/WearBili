@@ -1,5 +1,7 @@
 package cn.spacexc.wearbili.activity.other
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -25,7 +27,9 @@ import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
 import cn.spacexc.wearbili.manager.isRound
 import cn.spacexc.wearbili.ui.CirclesBackground
+import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
 import cn.spacexc.wearbili.ui.googleSansFamily
+import cn.spacexc.wearbili.utils.ToastUtils
 
 /*
 WearBili  Copyright (C) 2022 XC
@@ -47,7 +51,10 @@ class OpenSourceActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            CirclesBackground.RegularBackgroundWithTitleAndBackArrow(title = "Open Source") {
+            CirclesBackground.RegularBackgroundWithTitleAndBackArrow(
+                title = "开源项目",
+                onBack = ::finish
+            ) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -68,7 +75,18 @@ class OpenSourceActivity : AppCompatActivity() {
                     Text(
                         text = "Repository Address: https://github.com/SpaceXC/WearBili",
                         fontFamily = googleSansFamily,
-                        color = Color.White
+                        color = Color.White,
+                        modifier = Modifier.clickVfx {
+                            val data: Uri = Uri.parse("weargit://repository/SpaceXC/WearBili")
+                            val intent = Intent(Intent.ACTION_VIEW, data)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            try {
+                                startActivity(intent)
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                                ToastUtils.showText("没有安装WearGit")
+                            }
+                        }
                     )
                     Text(
                         text = "License",
