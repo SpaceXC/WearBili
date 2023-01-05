@@ -373,18 +373,29 @@ class VideoPlayerActivity : AppCompatActivity() {
 
         if (isCache) {
             Thread {
-                val any = if (DanmakuSharedPreferencesUtils.contains(
+                var danmakuFile: File? = null
+                var subtitleFile: File? = null
+                if (DanmakuSharedPreferencesUtils.contains(
                         cacheId?.split("///")?.get(0) ?: ""
                     )
                 ) {
+                    danmakuFile = DanmakuSharedPreferencesUtils.getUrl(
+                        cid = cacheId?.split("///")
+                            ?.get(0)
+                            ?: ""
+                    )?.let { File(it) }
+                }
+                if (SubtitleSharedPreferencesUtils.contains(cacheId?.split("///")?.get(0) ?: "")) {
+                    subtitleFile = SubtitleSharedPreferencesUtils.getUrl(
+                        cid = cacheId?.split("///")
+                            ?.get(0)
+                            ?: ""
+                    )
+                        ?.let { File(it) }
+                }
+                if (danmakuFile != null) {
                     try {
-                        val file = DanmakuSharedPreferencesUtils.getUrl(
-                            cid = cacheId?.split("///")
-                                ?.get(0)
-                                ?: ""
-                        )
-                            ?.let { File(it) }
-                        val inputStream = FileInputStream(file)
+                        val inputStream = FileInputStream(danmakuFile)
                         loader.load(inputStream)
 
                         val danmukuParser = BiliDanmukuParser()
@@ -412,6 +423,28 @@ class VideoPlayerActivity : AppCompatActivity() {
                                     .getDownloadManager().downloadIndex.getDownload(cacheId ?: "")
                                 if (download != null) {
                                     MainScope().launch {
+                                        if (subtitleFile != null) {
+                                            binding.loadingStatText.text =
+                                                "${binding.loadingStatText.text}\n找到字幕，正在加载字幕"
+                                            try {
+                                                val subtitleInputStream = subtitleFile.inputStream()
+                                                val subtitleString =
+                                                    String(subtitleInputStream.readBytes())
+                                                val subtitleObject = Gson().fromJson(
+                                                    subtitleString,
+                                                    Subtitle::class.java
+                                                )
+                                                viewModel.subtitle = subtitleObject
+                                                binding.loadingStatText.text =
+                                                    "${binding.loadingStatText.text}\n字幕加载成功"
+                                            } catch (e: Exception) {
+                                                binding.loadingStatText.text =
+                                                    "${binding.loadingStatText.text}\n字幕加载失败"
+                                            }
+                                        } else {
+                                            binding.loadingStatText.text =
+                                                "${binding.loadingStatText.text}\n没有已缓存的字幕"
+                                        }
                                         binding.loadingStatText.text =
                                             "${binding.loadingStatText.text}\n视频正在加载中...马上就好！"
                                         viewModel.loadVideo(download.request.toMediaItem())
@@ -445,6 +478,25 @@ class VideoPlayerActivity : AppCompatActivity() {
                             .getDownloadManager().downloadIndex.getDownload(cacheId ?: "")
                         if (download != null) {
                             MainScope().launch {
+                                if (subtitleFile != null) {
+                                    binding.loadingStatText.text =
+                                        "${binding.loadingStatText.text}\n找到字幕，正在加载字幕"
+                                    try {
+                                        val subtitleInputStream = subtitleFile.inputStream()
+                                        val subtitleString = String(subtitleInputStream.readBytes())
+                                        val subtitleObject =
+                                            Gson().fromJson(subtitleString, Subtitle::class.java)
+                                        viewModel.subtitle = subtitleObject
+                                        binding.loadingStatText.text =
+                                            "${binding.loadingStatText.text}\n字幕加载成功"
+                                    } catch (e: Exception) {
+                                        binding.loadingStatText.text =
+                                            "${binding.loadingStatText.text}\n字幕加载失败"
+                                    }
+                                } else {
+                                    binding.loadingStatText.text =
+                                        "${binding.loadingStatText.text}\n没有已缓存的字幕"
+                                }
                                 binding.loadingStatText.text =
                                     "${binding.loadingStatText.text}\n视频正在加载中...马上就好！"
                                 viewModel.loadVideo(download.request.toMediaItem())
@@ -457,7 +509,6 @@ class VideoPlayerActivity : AppCompatActivity() {
                         }
 
                     }
-
                 } else {
                     MainScope().launch {
                         binding.loadingStatText.text =

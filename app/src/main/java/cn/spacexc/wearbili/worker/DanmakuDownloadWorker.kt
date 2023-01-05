@@ -72,7 +72,7 @@ class DanmakuDownloadWorker(
      *  解压弹幕数据
      *  From CSDN
      */
-    fun decompress(data: ByteArray?): ByteArray? {
+    private fun decompress(data: ByteArray?): ByteArray? {
         var output: ByteArray?
         val decompresser = Inflater(true)
         decompresser.reset()

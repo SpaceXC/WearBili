@@ -1,5 +1,7 @@
 package cn.spacexc.wearbili.activity.other
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -23,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
 import cn.spacexc.wearbili.manager.isRound
@@ -84,7 +87,19 @@ class OpenSourceActivity : AppCompatActivity() {
                                 startActivity(intent)
                             } catch (e: Exception) {
                                 e.printStackTrace()
-                                ToastUtils.showText("没有安装WearGit")
+                                val clipboardManager: ClipboardManager =
+                                    ContextCompat.getSystemService(
+                                        this@OpenSourceActivity,
+                                        ClipboardManager::class.java
+                                    ) as ClipboardManager
+                                val clip: ClipData =
+                                    ClipData.newPlainText(
+                                        "repository",
+                                        "https://github.com/SpaceXC/WearBili"
+                                    )
+                                clipboardManager.setPrimaryClip(clip)
+                                ToastUtils.makeText("没有安装WearGit, 已复制仓库链接")
+                                    .show()
                             }
                         }
                     )

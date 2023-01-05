@@ -46,7 +46,7 @@ enum class PlayerStatus {
     PAUSED,
     COMPLETED,
     NOT_READY,
-    Seeking
+    //Seeking
 }
 
 @SuppressLint("StaticFieldLeak")
@@ -170,9 +170,8 @@ class VideoPlayerViewModel(application: android.app.Application) : AndroidViewMo
                                 mediaPlayer.seekTo(progress)
                                 ToastUtils.showText("已为您定位到${(progress / 1000).secondToTime()}")
                             }
-                            /*setBottomSubtitleText(mediaPlayer.currentPosition / 1000)
-                            updatePlayerProgress()*/
                             setBottomSubtitleText(mediaPlayer.currentPosition / 1000)
+
                             _isVideoLoaded.value = true
                             this@VideoPlayerViewModel.isPlaying = true
                             Log.d(
@@ -211,6 +210,14 @@ class VideoPlayerViewModel(application: android.app.Application) : AndroidViewMo
                 .createMediaSource(mediaItem)
             setMediaSource(mediaSource)
             addListener(object : Player.Listener {
+                override fun onIsPlayingChanged(isPlaying: Boolean) {
+                    super.onIsPlayingChanged(isPlaying)
+                    if (isPlaying) {
+                        setBottomSubtitleText(mediaPlayer.currentPosition / 1000)
+                        updateSubtitle()
+                    }
+                }
+
                 @SuppressLint("SetTextI18n")
                 override fun onPlaybackStateChanged(playbackState: Int) {
                     when (playbackState) {
@@ -239,6 +246,7 @@ class VideoPlayerViewModel(application: android.app.Application) : AndroidViewMo
                                 ToastUtils.showText("已为您定位到${(progress / 1000).secondToTime()}")
                             }
                             setBottomSubtitleText(mediaPlayer.currentPosition / 1000)
+
                             _isVideoLoaded.value = true
                             this@VideoPlayerViewModel.isPlaying = true
                             Log.d(
@@ -284,7 +292,6 @@ class VideoPlayerViewModel(application: android.app.Application) : AndroidViewMo
             } else {
                 body.size - 1
             }
-            //Log.d(TAG, "setBottomSubtitleText: $index")
             while (index in subtitle.body.indices) {
                 val item = body[index].log() // 索引位置字幕信息
                 if (item.from > currentTime) {
@@ -307,7 +314,6 @@ class VideoPlayerViewModel(application: android.app.Application) : AndroidViewMo
                         _subtitleVisibility.value = true
                         _currentSubtitle.value = item.content // 设置字幕内容
                     }
-                    //Log.d(TAG, "setBottomSubtitleText: ${item.content}")
                     break
                 }
             }

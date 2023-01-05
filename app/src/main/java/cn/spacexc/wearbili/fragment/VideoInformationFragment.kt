@@ -392,6 +392,46 @@ class VideoInformationFragment : Fragment() {
                 }
                 Spacer(modifier = Modifier.height(8.dp))
 
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        RoundButton(
+                            buttonItem = RoundButtonDataNew(
+                                Icons.Outlined.PlayCircle,
+                                "播放",
+                                "播放"
+                            ), onLongClick = {
+                                Log.d(
+                                    Application.TAG,
+                                    "setOnLongClickListener: "
+                                )
+                                val intent =
+                                    Intent(
+                                        context,
+                                        ChooseSettingsActivity::class.java
+                                    )
+                                val item =
+                                    SettingsManager.getSettingByName("defaultPlayer")
+                                intent.putExtra("item", item)
+                                /*intent.putExtra("itemKey", item?.settingName)
+                                intent.putExtra("itemName", item?.displayName)
+                                intent.putExtra("defVal", item?.defString)*/
+                                startActivity(intent)
+                            }, tint = if (isLiked == true) BilibiliPink else Color.White
+                        ) {
+                            SettingsManager.playVideo(
+                                context = requireContext(),
+                                bvid = videoInfo?.data?.bvid,
+                                cid = videoInfo?.data?.cid,
+                                title = videoInfo?.data?.title,
+                                progress = videoInfo?.data?.history?.progress
+                                    ?: 0,
+                                subtitleUrl = if (viewModel.subtitle.value?.data?.subtitle?.list.isNullOrEmpty()) null else viewModel.subtitle.value?.data?.subtitle?.list?.get(
+                                    0
+                                )?.subtitleUrl
+                            )
+                        }
+                    }
+                }
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(3), modifier = Modifier
                         .fillMaxWidth()
@@ -488,6 +528,12 @@ class VideoInformationFragment : Fragment() {
                                                 putExtra("cid", videoInfo?.data?.cid ?: 0)
                                                 putExtra("title", videoInfo?.data?.title)
                                                 putExtra("coverUrl", videoInfo?.data?.pic)
+                                                putExtra(
+                                                    "subtitleUrl",
+                                                    viewModel.subtitle.value?.data?.subtitle?.list?.get(
+                                                        0
+                                                    )?.subtitleUrl
+                                                )
                                                 putExtra(
                                                     "data",
                                                     Gson().toJson(videoInfo?.data?.pages?.let {
@@ -633,27 +679,29 @@ class VideoInformationFragment : Fragment() {
         //videoInfo: VideoDetailInfo?,
         onLongClick: () -> Unit,
         tint: Color,
-        onClick: () -> Unit
+        modifier: Modifier = Modifier,
+        onClick: () -> Unit,
     ) {
         val localDensity = LocalDensity.current
         var buttonItemHeight by remember {
             mutableStateOf(0.dp)
         }
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .pointerInput(
-                Unit
-            ) {
-                detectTapGestures(onTap = {
-                    onClick()
-                }, onLongPress = {
-                    onLongClick()
+        Column(
+            modifier = modifier
+                //.fillMaxWidth()
+                .pointerInput(
+                    Unit
+                ) {
+                    detectTapGestures(onTap = {
+                        onClick()
+                    }, onLongPress = {
+                        onLongClick()
 
-                })
-            }
-            .onGloballyPositioned {
-                buttonItemHeight = with(localDensity) { it.size.height.toDp() }
-            }, verticalArrangement = Arrangement.Center
+                    })
+                }
+                .onGloballyPositioned {
+                    buttonItemHeight = with(localDensity) { it.size.height.toDp() }
+                }, verticalArrangement = Arrangement.Center
         ) {
             Box(
                 modifier = Modifier

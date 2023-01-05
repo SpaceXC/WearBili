@@ -30,6 +30,7 @@ import cn.spacexc.wearbili.utils.ToastUtils
 import cn.spacexc.wearbili.viewmodel.VideoCacheViewModel
 import cn.spacexc.wearbili.worker.DanmakuDownloadWorker
 import cn.spacexc.wearbili.worker.ImageDownloadWorker
+import cn.spacexc.wearbili.worker.SubtitleDownloadWorker
 import com.google.android.exoplayer2.offline.DownloadRequest
 import com.google.android.exoplayer2.offline.DownloadService
 import com.google.gson.Gson
@@ -62,6 +63,7 @@ class NewVideoCacheActivity : AppCompatActivity() {
         val bvid = intent.getStringExtra("bvid") ?: ""
         val videoTitle = intent.getStringExtra("title") ?: ""
         val coverUrl = intent.getStringExtra("coverUrl") ?: ""
+        val subtitleUrl = intent.getStringExtra("subtitleUrl") ?: ""
         setContent {
             val data = Gson().fromJson(
                 intent.getStringExtra("data"),
@@ -86,7 +88,8 @@ class NewVideoCacheActivity : AppCompatActivity() {
                                                 videoTitle,
                                                 "P${index.plus(1)} ${page.part}",
                                                 bvid,
-                                                page.cid
+                                                page.cid,
+                                                subtitleUrl
                                             )
                                         }
                                         .clip(RoundedCornerShape(10.dp))
@@ -126,7 +129,8 @@ class NewVideoCacheActivity : AppCompatActivity() {
         title: String,
         partName: String,
         bvid: String,
-        cid: Long
+        cid: Long,
+        subtitleUrl: String
     ) {
         VideoManager.getVideoUrl(bvid, cid, object : Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -173,6 +177,18 @@ class NewVideoCacheActivity : AppCompatActivity() {
                     )
                     .build()
                 WorkManager.getInstance(Application.context!!).enqueue(coverPicDownloadWorker)
+
+                val subtitleDownloadWorker = OneTimeWorkRequestBuilder<SubtitleDownloadWorker>()
+                    .setInputData(
+                        workDataOf(
+                            "fileUrl" to subtitleUrl,
+                            "fileName" to "subtitle_$cid.json",
+                            "filePath" to "subtitle/",
+                            "cid" to cid.toString()
+                        )
+                    )
+                    .build()
+                WorkManager.getInstance(Application.context!!).enqueue(subtitleDownloadWorker)
                 MainScope().launch {
                     ToastUtils.showText("已添加到下载队列")
                     finish()

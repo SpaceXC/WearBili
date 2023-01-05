@@ -1,10 +1,13 @@
 package cn.spacexc.wearbili.activity.other
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.R
@@ -91,7 +94,16 @@ class AboutActivity : AppCompatActivity() {
                     startActivity(intent)
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    ToastUtils.showText("没有安装WearGit")
+                    val clipboardManager: ClipboardManager =
+                        ContextCompat.getSystemService(
+                            this@AboutActivity,
+                            ClipboardManager::class.java
+                        ) as ClipboardManager
+                    val clip: ClipData =
+                        ClipData.newPlainText("repository", "https://github.com/$repoName")
+                    clipboardManager.setPrimaryClip(clip)
+                    ToastUtils.makeText("没有安装WearGit, 已复制仓库链接")
+                        .show()
                 }
             }
 
