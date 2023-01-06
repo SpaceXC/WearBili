@@ -179,7 +179,8 @@ class VideoViewModel : ViewModel() {
             override fun onSuccess(result: LikeResult, code: Int) {
                 if (code == 0) {
                     MainScope().launch {
-                        //ToastUtils.showText("点赞成功")
+                        isLiked.value = !(isLiked.value ?: false)
+                        ToastUtils.showText(if (isLiked.value == true) "点赞成功" else "取消成功")
                         //isLiked.value = isLike
 
                     }

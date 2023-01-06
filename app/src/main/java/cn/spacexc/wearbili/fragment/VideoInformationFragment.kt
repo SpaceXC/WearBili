@@ -8,16 +8,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -137,6 +135,9 @@ class VideoInformationFragment : Fragment() {
             var descriptionMaxLines by remember {
                 mutableStateOf(3)
             }
+            val likeColor by animateColorAsState(targetValue = if (isLiked == true) BilibiliPink else Color.White)
+            val coinColor by animateColorAsState(targetValue = if (isCoined == true) BilibiliPink else Color.White)
+            val favColor by animateColorAsState(targetValue = if (isFavorite == true) BilibiliPink else Color.White)
             //val scrollState = rememberScrollState()
 
             Column(
@@ -416,7 +417,7 @@ class VideoInformationFragment : Fragment() {
                                 intent.putExtra("itemName", item?.displayName)
                                 intent.putExtra("defVal", item?.defString)*/
                                 startActivity(intent)
-                            }, tint = if (isLiked == true) BilibiliPink else Color.White
+                            }, tint = Color.White, modifier = Modifier.weight(1f)
                         ) {
                             SettingsManager.playVideo(
                                 context = requireContext(),
@@ -430,244 +431,110 @@ class VideoInformationFragment : Fragment() {
                                 )?.subtitleUrl
                             )
                         }
-                    }
-                }
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(3), modifier = Modifier
-                        .fillMaxWidth()
-                        .requiredSizeIn(maxHeight = 4000.dp)
-                ) {
-                    btnListUpperRow.forEach { buttonItem ->
-                        item {
-                            AnimatedContent(
-                                targetState = when (buttonItem.buttonName) {
-                                    "点赞" -> isLiked
-                                    "投币" -> isCoined
-                                    "收藏" -> isFavorite
-                                    else -> false
-                                }
-                            ) {
-                                RoundButton(
-                                    buttonItem = buttonItem,
-                                    //videoInfo = videoInfo,
-                                    onLongClick = {
-                                        when (buttonItem.buttonName) {
-                                            "播放" -> {
-                                                Log.d(
-                                                    Application.TAG,
-                                                    "setOnLongClickListener: "
-                                                )
-                                                val intent =
-                                                    Intent(
-                                                        context,
-                                                        ChooseSettingsActivity::class.java
-                                                    )
-                                                val item =
-                                                    SettingsManager.getSettingByName("defaultPlayer")
-                                                intent.putExtra("item", item)
-                                                /*intent.putExtra("itemKey", item?.settingName)
-                                                intent.putExtra("itemName", item?.displayName)
-                                                intent.putExtra("defVal", item?.defString)*/
-                                                startActivity(intent)
-                                            }
-                                        }
-                                    }, tint =
-                                    when (buttonItem.buttonName) {
-                                        "点赞" -> if (isLiked == true) BilibiliPink else Color.White
-                                        "投币" -> if (isCoined == true) BilibiliPink else Color.White
-                                        "收藏" -> if (isFavorite == true) BilibiliPink else Color.White
-                                        else -> Color.White
-                                    }
-                                ) {
-                                    when (buttonItem.buttonName) {
-                                        "手机观看" -> {
-                                            if (isAdded) {
-                                                val intent = Intent(
-                                                    requireActivity(),
-                                                    PlayOnPhoneActivity::class.java
-                                                )
-                                                intent.putExtra(
-                                                    "qrCodeUrl",
-                                                    "https://www.bilibili.com/video/${activity.videoId}"
-                                                )
-                                                startActivity(intent)
-                                            }
-                                        }
-                                        "点赞" -> {
-                                            videoInfo?.let {
-                                                viewModel.likeVideo(
-                                                    it.data.bvid,
-                                                    isLiked ?: true
-                                                )
-                                            }
-                                        }
-                                        "播放" -> {
-                                            SettingsManager.playVideo(
-                                                context = requireContext(),
-                                                bvid = videoInfo?.data?.bvid,
-                                                cid = videoInfo?.data?.cid,
-                                                title = videoInfo?.data?.title,
-                                                progress = videoInfo?.data?.history?.progress
-                                                    ?: 0,
-                                                subtitleUrl = if (viewModel.subtitle.value?.data?.subtitle?.list.isNullOrEmpty()) null else viewModel.subtitle.value?.data?.subtitle?.list?.get(
-                                                    0
-                                                )?.subtitleUrl
-                                            )
-                                        }
-                                        "稍后再看" -> {
-                                            videoInfo?.data?.bvid?.let { bvid ->
-                                                viewModel.addToViewLater(bvid)
-                                            }
-                                        }
-                                        "缓存" -> {
-                                            Intent(
-                                                requireActivity(),
-                                                NewVideoCacheActivity::class.java
-                                            ).apply {
-                                                putExtra("bvid", videoInfo?.data?.bvid ?: "")
-                                                putExtra("cid", videoInfo?.data?.cid ?: 0)
-                                                putExtra("title", videoInfo?.data?.title)
-                                                putExtra("coverUrl", videoInfo?.data?.pic)
-                                                putExtra(
-                                                    "subtitleUrl",
-                                                    viewModel.subtitle.value?.data?.subtitle?.list?.get(
-                                                        0
-                                                    )?.subtitleUrl
-                                                )
-                                                putExtra(
-                                                    "data",
-                                                    Gson().toJson(videoInfo?.data?.pages?.let {
-                                                        cn.spacexc.wearbili.dataclass.videoDetail.Data.Pages(
-                                                            it
-                                                        )
-                                                    })
-                                                )
-                                                startActivity(this)
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-
-                            /*Column(modifier = Modifier
-                                .fillMaxWidth()
-                                .pointerInput(
-                                    Unit
-                                ) {
-                                    detectTapGestures(onTap = {
-                                        when (buttonItem.buttonName) {
-                                            "手机观看" -> {
-                                                if (isAdded) {
-                                                    val intent = Intent(
-                                                        requireActivity(),
-                                                        PlayOnPhoneActivity::class.java
-                                                    )
-                                                    intent.putExtra(
-                                                        "qrCodeUrl",
-                                                        "https://www.bilibili.com/video/${activity.videoId}"
-                                                    )
-                                                    startActivity(intent)
-                                                }
-                                            }
-                                            "点赞" -> {
-                                                videoInfo?.let {
-                                                    viewModel.likeVideo(
-                                                        it.data.bvid,
-                                                        isLiked ?: true
-                                                    )
-                                                }
-                                            }
-                                            "播放" -> {
-                                                SettingsManager.playVideo(
-                                                    context = requireContext(),
-                                                    bvid = videoInfo?.data?.bvid,
-                                                    cid = videoInfo?.data?.cid,
-                                                    title = videoInfo?.data?.title,
-                                                    progress = videoInfo?.data?.history?.progress
-                                                        ?: 0
-                                                )
-                                            }
-                                            "稍后再看" -> {
-                                                videoInfo?.data?.bvid?.let { bvid ->
-                                                    viewModel.addToViewLater(bvid)
-                                                }
-                                            }
-                                        }
-                                    }, onLongPress = {
-                                        when (buttonItem.buttonName) {
-                                            "播放" -> {
-                                                Log.d(
-                                                    Application.TAG,
-                                                    "setOnLongClickListener: "
-                                                )
-                                                val intent =
-                                                    Intent(
-                                                        context,
-                                                        ChooseSettingsActivity::class.java
-                                                    )
-                                                val item =
-                                                    SettingsManager.getSettingByName("defaultPlayer")
-                                                intent.putExtra("item", item)
-                                                *//*intent.putExtra("itemKey", item?.settingName)
-                                                intent.putExtra("itemName", item?.displayName)
-                                                intent.putExtra("defVal", item?.defString)*//*
-                                                startActivity(intent)
-                                            }
-                                        }
-
-                                    })
-                                }
-                                .onGloballyPositioned {
-                                    buttonItemHeight = with(localDensity) { it.size.height.toDp() }
-                                }, verticalArrangement = Arrangement.Center
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .padding(8.dp)
-                                        .fillMaxWidth()
-                                        .aspectRatio(1f)
-                                ) {
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .aspectRatio(1f)
-                                            .align(Alignment.Center)
-                                            .clip(CircleShape)
-                                            .border(
-                                                width = 0.1.dp, color = Color(
-                                                    91, 92, 93, 204
-                                                ), shape = CircleShape
-                                            )
-                                            .background(Color(41, 41, 41, 204))
-                                    ) {
-                                        Icon(
-                                            imageVector = buttonItem.icon,
-                                            contentDescription = null,
-                                            modifier = Modifier.align(Alignment.Center),
-                                            tint = when (buttonItem.buttonName) {
-                                                "点赞" -> if (isLiked == true) BilibiliPink else Color.White
-                                                "投币" -> if (isCoined == true) BilibiliPink else Color.White
-                                                "收藏" -> if (isFavorite == true) BilibiliPink else Color.White
-                                                else -> Color.White
-                                            }
-                                        )
-                                    }
-                                }
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = buttonItem.displayName,
-                                    color = Color.White,
-                                    fontWeight = FontWeight.Medium,
-                                    fontFamily = puhuiFamily,
-                                    fontSize = 12.sp,
-                                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                                    maxLines = 1
+                        RoundButton(
+                            buttonItem = RoundButtonDataNew(
+                                Icons.Outlined.ThumbUp,
+                                "点赞",
+                                "点赞"
+                            ), onLongClick = { }, tint = likeColor, modifier = Modifier.weight(1f)
+                        ) {
+                            videoInfo?.let {
+                                viewModel.likeVideo(
+                                    it.data.bvid,
+                                    isLiked ?: true
                                 )
-                            }*/
+                            }
+                        }
+                        RoundButton(
+                            buttonItem = RoundButtonDataNew(
+                                Icons.Outlined.MonetizationOn,
+                                "投币",
+                                "投币"
+                            ), onLongClick = { }, tint = coinColor, modifier = Modifier.weight(1f)
+                        ) {
+
                         }
                     }
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        RoundButton(
+                            buttonItem = RoundButtonDataNew(
+                                Icons.Outlined.StarBorder,
+                                "收藏",
+                                "收藏"
+                            ), onLongClick = { }, tint = favColor, modifier = Modifier.weight(1f)
+                        ) {
 
+                        }
+                        RoundButton(
+                            buttonItem = RoundButtonDataNew(
+                                Icons.Outlined.History,
+                                "稍后再看",
+                                "稍后再看"
+                            ), onLongClick = { }, tint = Color.White, modifier = Modifier.weight(1f)
+                        ) {
+                            videoInfo?.data?.bvid?.let { bvid ->
+                                viewModel.addToViewLater(bvid)
+                            }
+                        }
+                        RoundButton(
+                            buttonItem = RoundButtonDataNew(
+                                Icons.Outlined.SendToMobile,
+                                "手机观看",
+                                "手机观看"
+                            ),
+                            onLongClick = { /*TODO*/ },
+                            tint = Color.White,
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            if (isAdded) {
+                                val intent = Intent(
+                                    requireActivity(),
+                                    PlayOnPhoneActivity::class.java
+                                )
+                                intent.putExtra(
+                                    "qrCodeUrl",
+                                    "https://www.bilibili.com/video/${activity.videoId}"
+                                )
+                                startActivity(intent)
+                            }
+                        }
+                    }
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        RoundButton(
+                            buttonItem = RoundButtonDataNew(
+                                Icons.Outlined.CloudDownload,
+                                "缓存",
+                                "缓存"
+                            ), onLongClick = { }, tint = Color.White, modifier = Modifier.weight(1f)
+                        ) {
+                            Intent(
+                                requireActivity(),
+                                NewVideoCacheActivity::class.java
+                            ).apply {
+                                putExtra("bvid", videoInfo?.data?.bvid ?: "")
+                                putExtra("cid", videoInfo?.data?.cid ?: 0)
+                                putExtra("title", videoInfo?.data?.title)
+                                putExtra("coverUrl", videoInfo?.data?.pic)
+                                putExtra(
+                                    "subtitleUrl",
+                                    viewModel.subtitle.value?.data?.subtitle?.list?.get(
+                                        0
+                                    )?.subtitleUrl
+                                )
+                                putExtra(
+                                    "data",
+                                    Gson().toJson(videoInfo?.data?.pages?.let {
+                                        cn.spacexc.wearbili.dataclass.videoDetail.Data.Pages(
+                                            it
+                                        )
+                                    })
+                                )
+                                startActivity(this)
+                            }
+                        }
+                        Spacer(modifier = Modifier.weight(1f))
+                        Spacer(modifier = Modifier.weight(1f))
+                    }
                 }
             }
         }

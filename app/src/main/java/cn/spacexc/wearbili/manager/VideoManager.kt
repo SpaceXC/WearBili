@@ -154,6 +154,10 @@ object VideoManager {
         isLike: Boolean,
         callback: NetworkUtils.ResultCallback<LikeResult>
     ) {
+        if (!UserManager.isLoggedIn()) {
+            ToastUtils.showText("你还没有登录捏")
+            return
+        }
         val operation = when (isLike) {
             true -> 2       //取消赞
             false -> 1      //点赞
@@ -176,7 +180,8 @@ object VideoManager {
                     callback.onSuccess(result, result.code)
                 }
 
-            })
+            }
+        )
     }
 
     fun isLiked(bvid: String, callback: NetworkUtils.ResultCallback<LikeState>) {
@@ -243,7 +248,7 @@ object VideoManager {
 
     fun getVideoInfo(bvid: String, callback: NetworkUtils.ResultCallback<VideoDetailInfo>) {
         val baseUrl = "https://app.bilibili.com/x/v2/view"
-        val params: String =
+        val params =
             "access_key=${UserManager.getAccessKey()}&appkey=${ConfigurationManager.configurations["appKey"]}&build=${ConfigurationManager.configurations["build"]}&bvid=$bvid&mobi_app=${ConfigurationManager.configurations["mobi_app"]}&plat=0&platform=${ConfigurationManager.configurations["platform"]}&ts=${(System.currentTimeMillis() / 1000).toInt()}"
         val sign: String = EncryptUtils.getAppSign(EncryptUtils.AppSignType.TYPE_COMMON, params)
         val url = "$baseUrl?$params&sign=$sign"

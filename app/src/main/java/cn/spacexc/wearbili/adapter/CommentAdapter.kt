@@ -242,7 +242,7 @@ class CommentHotRepliesAdapter(
         reply.content?.emote?.forEach {
             reply.content?.message = reply.content?.message?.replace(
                 it.key,
-                "<img src=\"${it.value.url.replace("http", "https")}\"/>"
+                "<img src=\"${it.value.url}\"/>"
             )!!
         }
 

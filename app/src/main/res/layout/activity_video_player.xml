@@ -67,7 +67,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        android:backgroundTint="#50000000"
+                        android:background="#80000000"
                         android:fontFamily="@font/puhui_medium"
                         android:paddingStart="4dp"
                         android:paddingTop="2dp"

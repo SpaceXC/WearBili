@@ -68,18 +68,18 @@ class RecommendVideoFragment : Fragment() {
                         when (SettingsManager.getRecommendSource()) {
                             "app" -> {
                                 appVideoList?.forEach {
-                                    if (it.goto == "av" || it.goto == "bangumi") {
+                                    if (it.goto == "av"/* || it.goto == "bangumi"*/) {
                                         item {
                                             VideoUis.VideoCard(
                                                 videoName = it.title,
-                                                views = it.cover_left_text_1,
+                                                views = it.cover_left_text_2 ?: "",
                                                 uploader = it.args.up_name ?: "",
-                                                coverUrl = it.cover,
+                                                coverUrl = it.cover ?: "",
                                                 hasViews = true,
-                                                clickable = it.goto == "av" || it.goto == "bangumi",
+                                                clickable = true, //it.goto == "av" || it.goto == "bangumi",
                                                 videoBvid = it.bvid,
                                                 context = requireContext(),
-                                                isBangumi = it.goto == "bangumi",
+                                                isBangumi = false, //it.goto == "bangumi",
                                                 epid = it.param,
                                                 badge = it.badge ?: ""
                                             )
@@ -126,21 +126,22 @@ class RecommendVideoFragment : Fragment() {
                         when (SettingsManager.getRecommendSource()) {
                             "app" -> {
                                 appVideoList?.forEach {
-                                    if (it.goto == "av" || it.goto == "bangumi") {
+                                    if (it.goto == "av") {
                                         item {
                                             VideoUis.VideoCard(
                                                 videoName = it.title,
-                                                views = it.cover_left_text_1,
+                                                views = it.cover_left_text_2 ?: "",
                                                 uploader = it.args.up_name ?: "",
-                                                coverUrl = it.cover,
+                                                coverUrl = it.cover ?: "",
                                                 hasViews = true,
-                                                clickable = it.goto == "av" || it.goto == "bangumi",
+                                                clickable = true,   //it.goto == "av" || it.goto == "bangumi",
                                                 videoBvid = it.bvid,
                                                 context = requireContext(),
-                                                isBangumi = it.goto == "bangumi",
+                                                isBangumi = false,  //it.goto == "bangumi",
                                                 epid = it.param,
-                                                badge = it.badge ?: ""
-                                            )
+                                                badge = it.cover_badge ?: "",
+
+                                                )
                                         }
                                     }
                                 }

@@ -31,6 +31,8 @@ import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.video.VideoActivity
 import cn.spacexc.wearbili.activity.video.VideoLongClickActivity
+import cn.spacexc.wearbili.manager.ID_TYPE_EPID
+import cn.spacexc.wearbili.manager.ID_TYPE_SSID
 import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -54,6 +56,7 @@ object VideoUis {
         clickable: Boolean = true,
         isBangumi: Boolean = false,
         epid: String = "",
+        ssid: String = "",
         badge: String = "",
         tagName: String = "",
         context: Context = Application.getContext()
@@ -72,7 +75,13 @@ object VideoUis {
                 }, onTap = {
                     if (isBangumi && epid.isNotEmpty()) {
                         Intent(context, BangumiActivity::class.java).apply {
-                            putExtra("id", epid)
+                            if (epid.isNotEmpty()) {
+                                putExtra("id", epid)
+                                putExtra("idType", ID_TYPE_EPID)
+                            } else {
+                                putExtra("id", ssid)
+                                putExtra("idType", ID_TYPE_SSID)
+                            }
                             flags = Intent.FLAG_ACTIVITY_NEW_TASK
                             context.startActivity(this)
                         }
