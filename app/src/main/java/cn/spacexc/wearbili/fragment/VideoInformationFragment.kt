@@ -8,16 +8,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
@@ -51,13 +53,11 @@ import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.image.PhotoViewActivity
 import cn.spacexc.wearbili.activity.settings.ChooseSettingsActivity
 import cn.spacexc.wearbili.activity.user.SpaceProfileActivity
-import cn.spacexc.wearbili.activity.video.NewVideoCacheActivity
-import cn.spacexc.wearbili.activity.video.PlayOnPhoneActivity
-import cn.spacexc.wearbili.activity.video.VideoActivity
-import cn.spacexc.wearbili.activity.video.ViewFullVideoPartsActivity
+import cn.spacexc.wearbili.activity.video.*
 import cn.spacexc.wearbili.dataclass.RoundButtonDataNew
 import cn.spacexc.wearbili.manager.ID_TYPE_SSID
 import cn.spacexc.wearbili.manager.SettingsManager
+import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.ui.BilibiliPink
 import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
@@ -94,14 +94,17 @@ class VideoInformationFragment : Fragment() {
         return context?.let { ComposeView(it) }
     }
 
-    @OptIn(ExperimentalAnimationApi::class)
+    override fun onResume() {
+        super.onResume()
+        viewModel.getIsLiked(activity.videoId)
+        viewModel.getIsCoined(activity.videoId)
+        viewModel.getIsFavorite(activity.videoId)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity = getActivity() as VideoActivity
         viewModel.getVideoInfo(activity.videoId)
-        viewModel.getIsLiked(activity.videoId)
-        viewModel.getIsCoined(activity.videoId)
-        viewModel.getIsFavorite(activity.videoId)
         viewModel.getSubtitle(activity.videoId)
         viewModel.videoInfo.observe(
             viewLifecycleOwner
@@ -463,7 +466,15 @@ class VideoInformationFragment : Fragment() {
                                 "收藏"
                             ), onLongClick = { }, tint = favColor, modifier = Modifier.weight(1f)
                         ) {
-
+                            if (UserManager.isLoggedIn()) {
+                                startActivity(
+                                    Intent(
+                                        requireContext(),
+                                        FavoriteFolderActivity::class.java
+                                    ).apply { putExtra("aid", videoInfo?.data?.aid) })
+                            } else {
+                                ToastUtils.showText("你还没有登录捏")
+                            }
                         }
                         RoundButton(
                             buttonItem = RoundButtonDataNew(

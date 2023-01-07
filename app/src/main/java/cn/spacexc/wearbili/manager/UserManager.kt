@@ -6,6 +6,7 @@ import cn.spacexc.wearbili.Application.Companion.TAG
 import cn.spacexc.wearbili.dataclass.BaseData
 import cn.spacexc.wearbili.dataclass.HashSalt
 import cn.spacexc.wearbili.dataclass.history.History
+import cn.spacexc.wearbili.dataclass.star.result.FavoriteResult
 import cn.spacexc.wearbili.dataclass.user.AccessKeyGetter
 import cn.spacexc.wearbili.dataclass.user.spacevideo.UserSpaceVideo
 import cn.spacexc.wearbili.utils.EncryptUtils
@@ -14,6 +15,9 @@ import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.SharedPreferencesUtils
 import cn.spacexc.wearbili.utils.ToastUtils
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import okhttp3.*
 import java.io.IOException
 
@@ -89,9 +93,9 @@ object UserManager {
         NetworkUtils.getUrl("http://api.bilibili.com/x/v3/fav/folder/info?media_id=$id", callback)
     }
 
-    fun getStarFolderList(callback: Callback) {
+    fun getStarFolderList(callback: Callback, aid: Long = 0L) {
         NetworkUtils.getUrl(
-            "https://api.bilibili.com/x/v3/fav/folder/created/list-all?up_mid=${getUid()}&jsonp=jsonp",
+            "https://api.bilibili.com/x/v3/fav/folder/created/list-all?up_mid=${getUid()}&jsonp=jsonp${if (aid != 0L) "&type=2&rid=$aid" else ""}",
             callback
         )
     }
@@ -235,6 +239,54 @@ object UserManager {
                         Gson().fromJson(response.body?.string(), UserSpaceVideo::class.java)
                     callback.onSuccess(result)
                 }
-            })
+            }
+        )
+    }
+
+    fun addOrRemoveVideoToFavorite(
+        aid: Long,
+        idsToAdd: List<Long>,
+        idsToDelete: List<Long>,
+        callback: NetworkUtils.ResultCallback<FavoriteResult>
+    ) {
+        val bodyBuilder = FormBody.Builder().add("rid", aid.toString()).add("type", "2")
+            .add("csrf", CookiesManager.getCsrfToken() ?: "")
+        if (idsToAdd.isNotEmpty()) {
+            bodyBuilder.add("add_media_ids", idsToAdd.joinToString(separator = ","))
+        }
+        if (idsToDelete.isNotEmpty()) {
+            bodyBuilder.add("del_media_ids", idsToDelete.joinToString(separator = ",").log())
+        }
+        val body = bodyBuilder.build()
+        NetworkUtils.postUrl(
+            "http://api.bilibili.com/x/v3/fav/resource/deal",
+            body,
+            object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    callback.onFailed(e)
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val str = response.body?.string()
+                    try {
+                        val result = Gson().fromJson(str, FavoriteResult::class.java)
+                        if (result.code == 0) {
+                            callback.onSuccess(result)
+                        } else {
+                            callback.onFailed(null)
+                            MainScope().launch {
+                                ToastUtils.showText("${result.code}: ${result.message}")
+                                ToastUtils.debugToast(str.log() ?: "")
+                            }
+                        }
+                    } catch (e: JsonSyntaxException) {
+                        MainScope().launch {
+                            ToastUtils.showText("请求错误")
+                            ToastUtils.debugToast(str.log() ?: "")
+                        }
+                    }
+                }
+            }
+        )
     }
 }

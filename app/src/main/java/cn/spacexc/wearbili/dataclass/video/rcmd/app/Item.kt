@@ -5,7 +5,7 @@ data class Item(
     val args: Args,
     val can_play: Int,
     val card_goto: String,
-    val bvid: String,
+    val bvid: String?,
     val card_type: String,
     val cover: String?,
     val cover_left_1_content_description: String,

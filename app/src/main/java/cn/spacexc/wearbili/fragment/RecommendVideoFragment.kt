@@ -20,6 +20,7 @@ import cn.spacexc.wearbili.manager.SettingsManager
 import cn.spacexc.wearbili.manager.isRound
 import cn.spacexc.wearbili.ui.VideoUis
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
+import cn.spacexc.wearbili.utils.VideoUtils
 import cn.spacexc.wearbili.viewmodel.RecommendViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -56,7 +57,6 @@ class RecommendVideoFragment : Fragment() {
                         "app" -> viewModel.getAppRecommendVideos(true)
                         "web" -> viewModel.getWebRecommendVideos(true)
                     }
-
                 },
                 modifier = Modifier.padding(if (isRound()) 8.dp else 0.dp)
             ) {
@@ -77,7 +77,8 @@ class RecommendVideoFragment : Fragment() {
                                                 coverUrl = it.cover ?: "",
                                                 hasViews = true,
                                                 clickable = true, //it.goto == "av" || it.goto == "bangumi",
-                                                videoBvid = it.bvid,
+                                                videoBvid = it.bvid
+                                                    ?: VideoUtils.av2bv("av${it.param}"),
                                                 context = requireContext(),
                                                 isBangumi = false, //it.goto == "bangumi",
                                                 epid = it.param,
@@ -135,13 +136,13 @@ class RecommendVideoFragment : Fragment() {
                                                 coverUrl = it.cover ?: "",
                                                 hasViews = true,
                                                 clickable = true,   //it.goto == "av" || it.goto == "bangumi",
-                                                videoBvid = it.bvid,
+                                                videoBvid = it.bvid
+                                                    ?: VideoUtils.av2bv("av${it.param}"),
                                                 context = requireContext(),
                                                 isBangumi = false,  //it.goto == "bangumi",
                                                 epid = it.param,
                                                 badge = it.cover_badge ?: "",
-
-                                                )
+                                            )
                                         }
                                     }
                                 }
