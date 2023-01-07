@@ -61,9 +61,11 @@ class BangumiTimeLineActivity : AppCompatActivity() {
         setContent {
             val lazyState = rememberLazyListState()
             val timeline by viewModel.timeLine.observeAsState()
-            CirclesBackground.RegularBackgroundWithTitleAndBackArrow(title = "新番时间表", onBack = {
-                finish()
-            }) {
+            CirclesBackground.RegularBackgroundWithTitleAndBackArrow(
+                title = "新番时间表",
+                onBack = ::finish,
+                isLoading = timeline == null
+            ) {
                 if (SettingsManager.hasScrollVfx()) {
                     ScalingLazyColumn(
                         contentPadding = PaddingValues(

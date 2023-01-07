@@ -26,6 +26,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.video.CoinActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.video.FavoriteFolderActivity"
             android:exported="false" />
         <activity
@@ -60,9 +63,6 @@
             android:exported="false" />
         <activity
             android:name=".activity.comment.EmojisActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.user.PersonalSpaceActivity"
             android:exported="false" />
         <activity android:name="androidx.wear.activity.ConfirmationActivity" />
         <activity

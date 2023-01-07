@@ -52,6 +52,8 @@ class VideoViewModel : ViewModel() {
     val isCoined = MutableLiveData(false)
     val isFavorite = MutableLiveData(false)
 
+    var coinCount = 0
+
     fun getVideoInfo(bvid: String) {
         VideoManager.getVideoInfo(bvid, object : NetworkUtils.ResultCallback<VideoDetailInfo> {
             override fun onSuccess(result: VideoDetailInfo, code: Int) {
@@ -144,6 +146,7 @@ class VideoViewModel : ViewModel() {
         if (!UserManager.isLoggedIn()) return
         VideoManager.isCoined(bvid, object : NetworkUtils.ResultCallback<CoinState> {
             override fun onSuccess(result: CoinState, code: Int) {
+                coinCount = result.data.multiply
                 MainScope().launch {
                     isCoined.value = result.data.multiply != 0
                 }

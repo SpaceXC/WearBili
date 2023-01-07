@@ -289,4 +289,38 @@ object UserManager {
             }
         )
     }
+
+    fun coinVideo(count: Int, aid: Long, callback: NetworkUtils.ResultCallback<BaseData>) {
+        val body = FormBody.Builder()
+            .add("access_key", getAccessKey())
+            .add("aid", aid.toString())
+            .add("multiply", count.toString())
+            .build()
+        NetworkUtils.postUrl("http://app.bilibili.com/x/v2/view/coin/add", body, object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                callback.onFailed(e)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val str = response.body?.string()
+                try {
+                    val result = Gson().fromJson(str, BaseData::class.java)
+                    if (result.code == 0) {
+                        callback.onSuccess(result)
+                    } else {
+                        callback.onFailed(null)
+                        MainScope().launch {
+                            ToastUtils.showText("${result.code}: ${result.message}")
+                            ToastUtils.debugToast(str.log() ?: "")
+                        }
+                    }
+                } catch (e: JsonSyntaxException) {
+                    MainScope().launch {
+                        ToastUtils.showText("请求错误")
+                        ToastUtils.debugToast(str.log() ?: "")
+                    }
+                }
+            }
+        })
+    }
 }

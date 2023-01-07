@@ -50,16 +50,18 @@ class SearchResultActivityNew : AppCompatActivity() {
         val keyword = getKeyword() ?: ""
         viewModel.searchVideo(keyword, true)
         setContent {
+            val searchedUser by viewModel.searchedUser
+            val searchedMediaFt by viewModel.searchedMediaFt
+            val searchedVideo by viewModel.searchedVideo
             CirclesBackground.RegularBackgroundWithTitleAndBackArrow(
                 title = "搜索结果",
-                onBack = ::finish
+                onBack = ::finish,
+                isLoading = searchedUser.isEmpty() && searchedMediaFt.isEmpty() && searchedVideo.isEmpty()
             ) {
                 val isRefreshing by viewModel.isRefreshing.observeAsState()
                 val refreshState = rememberSwipeRefreshState(isRefreshing = isRefreshing ?: false)
                 //val searchData by viewModel.searchedVideosData.observeAsState()
-                val searchedUser by viewModel.searchedUser
-                val searchedMediaFt by viewModel.searchedMediaFt
-                val searchedVideo by viewModel.searchedVideo
+
                 SwipeRefresh(
                     state = refreshState,
                     refreshTriggerDistance = 40.dp,

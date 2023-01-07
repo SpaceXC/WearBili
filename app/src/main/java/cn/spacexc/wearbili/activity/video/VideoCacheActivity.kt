@@ -7,13 +7,14 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.LinearProgressIndicator
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Schedule
@@ -34,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.wear.compose.material.ExperimentalWearMaterialApi
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
 import cn.spacexc.wearbili.R
@@ -42,11 +44,13 @@ import cn.spacexc.wearbili.ui.CirclesBackground
 import cn.spacexc.wearbili.ui.puhuiFamily
 import cn.spacexc.wearbili.utils.CoverSharedPreferencesUtils
 import cn.spacexc.wearbili.utils.DanmakuSharedPreferencesUtils
+import cn.spacexc.wearbili.utils.SubtitleSharedPreferencesUtils
 import cn.spacexc.wearbili.utils.TimeUtils.toDateStr
 import cn.spacexc.wearbili.viewmodel.DownloadVideoInfoViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.google.android.exoplayer2.offline.Download
+import com.google.android.exoplayer2.offline.DownloadService
 import java.io.File
 import java.io.IOException
 import java.text.DecimalFormat
@@ -54,15 +58,19 @@ import java.text.DecimalFormat
 class VideoCacheActivity : AppCompatActivity() {
     val viewModel by viewModels<DownloadVideoInfoViewModel>()
 
+    @OptIn(
+        ExperimentalFoundationApi::class, ExperimentalWearMaterialApi::class,
+        ExperimentalMaterialApi::class
+    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val downloads by viewModel.downloads.observeAsState()
+            val downloadings by viewModel.downloadings.observeAsState()
             CirclesBackground.RegularBackgroundWithTitleAndBackArrow(
                 title = "离线缓存",
                 onBack = ::finish
             ) {
-                val downloads by viewModel.downloads.observeAsState()
-                val downloadings by viewModel.downloadings.observeAsState()
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(
@@ -83,19 +91,27 @@ class VideoCacheActivity : AppCompatActivity() {
                             )
                         }
                         downloadings?.forEach {
-                            item {
-                                CacheCard(
-                                    cover = CoverSharedPreferencesUtils.getUrl(
-                                        it.request.id.split("///")[0]
-                                    ) ?: "",
-                                    title = it.request.id.split("///")[1],
-                                    partName = it.request.id.split("///")[2],
-                                    time = it.startTimeMs.toDateStr(),
-                                    cacheId = it.request.id,
-                                    state = it.state,
-                                    progress = it.percentDownloaded.toInt(),
-                                    downloadedSize = it.bytesDownloaded
-                                )
+                            item(key = it.request.id) {
+                                val state = rememberDismissState()
+                                SwipeToDismiss(
+                                    state = state,
+                                    background = {},
+                                    directions = setOf(/*DismissDirection.EndToStart*/)
+                                ) {
+                                    CacheCard(
+                                        cover = CoverSharedPreferencesUtils.getUrl(
+                                            it.request.id.split("///")[0]
+                                        ) ?: "",
+                                        title = it.request.id.split("///")[1],
+                                        partName = it.request.id.split("///")[2],
+                                        time = it.startTimeMs.toDateStr(),
+                                        cacheId = it.request.id,
+                                        state = it.state,
+                                        progress = it.percentDownloaded.toInt(),
+                                        downloadedSize = it.bytesDownloaded,
+                                        modifier = Modifier.animateItemPlacement()
+                                    )
+                                }
                             }
                         }
                     }
@@ -110,19 +126,47 @@ class VideoCacheActivity : AppCompatActivity() {
                             )
                         }
                         downloads?.asReversed()?.forEach {
-                            item {
-                                CacheCard(
-                                    cover = CoverSharedPreferencesUtils.getUrl(
-                                        it.request.id.split("///")[0]
-                                    ) ?: "",
-                                    title = it.request.id.split("///")[1],
-                                    partName = it.request.id.split("///")[2],
-                                    time = it.startTimeMs.toDateStr(),
-                                    cacheId = it.request.id,
-                                    state = it.state,
-                                    progress = it.percentDownloaded.toInt(),
-                                    downloadedSize = it.bytesDownloaded
-                                )
+                            item(key = it.request.id) {
+                                val state = rememberDismissState()
+                                if (state.isDismissed(DismissDirection.EndToStart)) {
+                                    val cid = it.request.id.split("///")[0]
+                                    DownloadService.sendRemoveDownload(
+                                        application,
+                                        cn.spacexc.wearbili.service.DownloadService::class.java,
+                                        it.request.id,
+                                        false
+                                    )
+                                    if (DanmakuSharedPreferencesUtils.contains(cid)) {
+                                        File(DanmakuSharedPreferencesUtils.getUrl(cid)!!).delete()
+                                    }
+                                    if (CoverSharedPreferencesUtils.contains(cid)) {
+                                        File(CoverSharedPreferencesUtils.getUrl(cid)!!).delete()
+                                    }
+                                    if (SubtitleSharedPreferencesUtils.contains(cid)) {
+                                        File(SubtitleSharedPreferencesUtils.getUrl(cid)!!).delete()
+                                    }
+                                }
+                                SwipeToDismiss(state = state, background = {
+
+                                }, dismissThresholds = { direction ->
+                                    FractionalThreshold(if (direction == DismissDirection.EndToStart) 0.25f else 0.5f)
+                                }, directions = setOf(DismissDirection.EndToStart)) {
+                                    Box(modifier = Modifier.animateItemPlacement()) {
+                                        CacheCard(
+                                            cover = CoverSharedPreferencesUtils.getUrl(
+                                                it.request.id.split("///")[0]
+                                            ) ?: "",
+                                            title = it.request.id.split("///")[1],
+                                            partName = it.request.id.split("///")[2],
+                                            time = it.startTimeMs.toDateStr(),
+                                            cacheId = it.request.id,
+                                            state = it.state,
+                                            progress = it.percentDownloaded.toInt(),
+                                            downloadedSize = it.bytesDownloaded,
+                                            //modifier = Modifier.animateItemPlacement()
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
@@ -141,7 +185,8 @@ class VideoCacheActivity : AppCompatActivity() {
         progress: Int,
         cacheId: String,
         state: Int,
-        downloadedSize: Long
+        downloadedSize: Long,
+        modifier: Modifier = Modifier
     ) {
         var iconHeight by remember { mutableStateOf(0.dp) }
         val localDensity = LocalDensity.current
@@ -149,7 +194,7 @@ class VideoCacheActivity : AppCompatActivity() {
             targetValue = progress.toFloat() / 100,
             animationSpec = tween(durationMillis = 300)
         )
-        Column(modifier = Modifier
+        Column(modifier = modifier
             .pointerInput(Unit) {
                 detectTapGestures(onLongPress = {
 
@@ -165,7 +210,8 @@ class VideoCacheActivity : AppCompatActivity() {
                         }
                     }
                 })
-            }) {
+            })
+        {
             Spacer(Modifier.height(6.dp))
             Column(
                 modifier = Modifier

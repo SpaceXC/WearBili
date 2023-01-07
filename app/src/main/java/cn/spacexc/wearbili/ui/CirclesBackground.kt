@@ -1,5 +1,6 @@
 package cn.spacexc.wearbili.ui
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -94,6 +95,7 @@ object CirclesBackground {
     fun RegularBackgroundWithTitleAndBackArrow(
         title: String,
         onBack: () -> Unit = {},
+        isLoading: Boolean = false,
         content: @Composable () -> Unit
     ) {
         val timeSource = TimeTextDefaults.timeSource("HH:mm")
@@ -149,57 +151,12 @@ object CirclesBackground {
                     )
                 }
             }   //背景
-            Column(Modifier.fillMaxSize()) {
-                Column(Modifier.fillMaxWidth()) {
-                    Spacer(Modifier.height(6.dp))
-                    if (isRound()) {
-                        Text(
-                            text = title,
-                            fontSize = 16.sp,
-                            fontFamily = puhuiFamily,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White,
-                            modifier = Modifier
-                                .onGloballyPositioned {
-                                    textHeight = with(localDensity) {
-                                        it.size.height.toDp()
-                                    }
-                                }
-                                .align(Alignment.CenterHorizontally)
-                                .clickable(
-                                    onClick = {
-                                        onBack()
-                                    },
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = null
-                                )
-                        )
-                    } else {
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.padding(start = 7.5f.dp, end = 7.5f.dp)
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.clickable(
-                                    onClick = {
-                                        onBack()
-                                    },
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = null
-                                )
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.ArrowBackIos,
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .height(16.dp)
-                                        .width(16.dp)
-                                        .align(Alignment.CenterVertically)
-                                        .offset(y = 0.9f.dp),
-                                    tint = Color.White
-                                )
-                                //Spacer(Modifier.width(2.dp))
+            Crossfade(targetState = isLoading) {
+                if (!it) {
+                    Column(Modifier.fillMaxSize()) {
+                        Column(Modifier.fillMaxWidth()) {
+                            Spacer(Modifier.height(6.dp))
+                            if (isRound()) {
                                 Text(
                                     text = title,
                                     fontSize = 16.sp,
@@ -212,26 +169,97 @@ object CirclesBackground {
                                                 it.size.height.toDp()
                                             }
                                         }
-                                        .align(Alignment.CenterVertically)
+                                        .align(Alignment.CenterHorizontally)
+                                        .clickable(
+                                            onClick = {
+                                                onBack()
+                                            },
+                                            interactionSource = remember { MutableInteractionSource() },
+                                            indication = null
+                                        )
                                 )
+                            } else {
+                                Row(
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    modifier = Modifier.padding(start = 7.5f.dp, end = 7.5f.dp)
+                                ) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.clickable(
+                                            onClick = {
+                                                onBack()
+                                            },
+                                            interactionSource = remember { MutableInteractionSource() },
+                                            indication = null
+                                        )
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.ArrowBackIos,
+                                            contentDescription = null,
+                                            modifier = Modifier
+                                                .height(16.dp)
+                                                .width(16.dp)
+                                                .align(Alignment.CenterVertically)
+                                                .offset(y = 0.9f.dp),
+                                            tint = Color.White
+                                        )
+                                        //Spacer(Modifier.width(2.dp))
+                                        Text(
+                                            text = title,
+                                            fontSize = 16.sp,
+                                            fontFamily = puhuiFamily,
+                                            fontWeight = FontWeight.Bold,
+                                            color = Color.White,
+                                            modifier = Modifier
+                                                .onGloballyPositioned {
+                                                    textHeight = with(localDensity) {
+                                                        it.size.height.toDp()
+                                                    }
+                                                }
+                                                .align(Alignment.CenterVertically)
+                                        )
 
-                                Spacer(modifier = Modifier.weight(1f))
-                                Text(
-                                    text = timeText,
-                                    fontSize = 16.sp,
-                                    fontFamily = googleSansFamily,
-                                    fontWeight = FontWeight.Medium,
-                                    color = Color.White,
-                                    modifier = Modifier.align(Alignment.CenterVertically)
-                                )
+                                        Spacer(modifier = Modifier.weight(1f))
+                                        Text(
+                                            text = timeText,
+                                            fontSize = 16.sp,
+                                            fontFamily = googleSansFamily,
+                                            fontWeight = FontWeight.Medium,
+                                            color = Color.White,
+                                            modifier = Modifier.align(Alignment.CenterVertically)
+                                        )
+                                    }
+                                }
                             }
+
+                            Spacer(Modifier.height(6.dp))
+                        }   //标题栏
+                        content()
+                    }   //内容
+                } else {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                                .align(Alignment.Center),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.loading_2233),
+                                contentDescription = null
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "玩命加载中",
+                                color = Color.White,
+                                fontFamily = puhuiFamily,
+                                fontWeight = FontWeight.Medium
+                            )
                         }
                     }
-
-                    Spacer(Modifier.height(6.dp))
-                }   //标题栏
-                content()
-            }   //内容
+                }
+            }
         }
     }   //Compose选手：77lines
 

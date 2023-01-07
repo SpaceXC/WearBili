@@ -30,15 +30,19 @@ class HistoryActivity : AppCompatActivity() {
             val historyList by viewModel.historyList.observeAsState()
             val isRefreshing by viewModel.isRefreshing.observeAsState()
             val refreshState = rememberSwipeRefreshState(isRefreshing ?: false)
-            RegularBackgroundWithTitleAndBackArrow(onBack = { finish() }, title = "历史记录") {
+            RegularBackgroundWithTitleAndBackArrow(
+                onBack = { finish() },
+                title = "历史记录",
+                isLoading = historyList == null
+            ) {
                 SwipeRefresh(
                     state = refreshState,
                     onRefresh = {
                         viewModel.getHistory(true)
                     },
                     modifier = Modifier.padding(if (isRound()) 8.dp else 0.dp)
-                ){
-                    if(SettingsManager.hasScrollVfx()){
+                ) {
+                    if (SettingsManager.hasScrollVfx()) {
                         ScalingLazyColumn(modifier = Modifier.fillMaxSize()) {
                             historyList?.forEach {
                                 item {

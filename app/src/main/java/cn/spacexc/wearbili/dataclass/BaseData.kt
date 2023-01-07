@@ -9,5 +9,6 @@ package cn.spacexc.wearbili.dataclass
  */
 
 data class BaseData(
-    val code: Int
+    val code: Int,
+    val message: String
 )

@@ -100,7 +100,7 @@ class SpaceProfileActivity : AppCompatActivity() {
                 ) else BilibiliPink, animationSpec = tween(durationMillis = 400)
             )
             CirclesBackground.RegularBackgroundWithTitleAndBackArrow(
-                title = "个人空间", onBack = { finish() }
+                title = "个人空间", onBack = { finish() }, isLoading = user == null
             ) {
                 Box(
                     modifier = Modifier

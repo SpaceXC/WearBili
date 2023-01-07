@@ -43,7 +43,8 @@ class VideoRankingActivity : AppCompatActivity() {
             val rankingList by viewModel.rankingList.observeAsState()
             CirclesBackground.RegularBackgroundWithTitleAndBackArrow(
                 title = "全站排行榜",
-                onBack = ::finish
+                onBack = ::finish,
+                isLoading = rankingList == null
             ) {
                 if (SettingsManager.hasScrollVfx()) {
                     ScalingLazyColumn(

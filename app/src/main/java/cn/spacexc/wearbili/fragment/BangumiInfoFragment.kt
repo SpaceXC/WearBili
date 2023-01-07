@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
@@ -39,6 +40,7 @@ import androidx.wear.compose.material.Text
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.image.PhotoViewActivity
+import cn.spacexc.wearbili.dataclass.bangumi.BangumiDetail
 import cn.spacexc.wearbili.manager.SettingsManager
 import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.manager.isRound
@@ -85,13 +87,39 @@ class BangumiInfoFragment : Fragment() {
             }
         }
         (view as ComposeView).setContent {
-            MainUI()
+            val bangumi by activity.viewModel.bangumi.observeAsState()
+            Crossfade(targetState = bangumi != null) {
+                if (it) {
+                    MainUI(bangumi)
+                } else {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                                .align(Alignment.Center),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.loading_2233),
+                                contentDescription = null
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "玩命加载中",
+                                color = Color.White,
+                                fontFamily = puhuiFamily,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 
     @Composable
-    fun MainUI() {
-        val bangumi by activity.viewModel.bangumi.observeAsState()
+    fun MainUI(bangumi: BangumiDetail?) {
         val localDensity = LocalDensity.current
         var followTextHeight by remember {
             mutableStateOf(0.dp)

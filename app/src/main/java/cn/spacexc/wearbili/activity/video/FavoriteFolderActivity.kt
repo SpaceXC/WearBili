@@ -68,7 +68,8 @@ class FavoriteFolderActivity : AppCompatActivity() {
             }
             CirclesBackground.RegularBackgroundWithTitleAndBackArrow(
                 title = "收藏视频",
-                onBack = ::finish
+                onBack = ::finish,
+                isLoading = favList.isEmpty()
             ) {
                 Box(modifier = Modifier.fillMaxSize()) {
                     LazyColumn(
@@ -159,7 +160,7 @@ class FavoriteFolderActivity : AppCompatActivity() {
                     Box(
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
-                            .padding(bottom = 8.dp, start = 4.dp, end = 4.dp)
+                            .padding(bottom = 8.dp, start = 8.dp, end = 8.dp)
                     ) {
                         AnimatedVisibility(
                             visible = idsToAdd.isNotEmpty() || idsToDelete.isNotEmpty(),
@@ -181,7 +182,7 @@ class FavoriteFolderActivity : AppCompatActivity() {
                                         }
                                     }
                                     .clip(RoundedCornerShape(10.dp))
-                                    .background(color = Color(36, 36, 36, 128))
+                                    .background(color = Color(30, 30, 30, 230))
                                     .fillMaxWidth()
                                     .padding(vertical = 12.dp, horizontal = 6.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
