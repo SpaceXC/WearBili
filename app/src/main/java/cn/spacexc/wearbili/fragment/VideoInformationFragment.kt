@@ -76,18 +76,6 @@ class VideoInformationFragment : Fragment() {
     val viewModel by viewModels<VideoViewModel>()
     lateinit var activity: VideoActivity
 
-    private val btnListUpperRow = listOf(
-        RoundButtonDataNew(Icons.Outlined.PlayCircle, "播放", "播放"),
-        //RoundButtonDataNew(Icons.Outlined.ThumbUp, "点赞", "点赞"),
-        //RoundButtonDataNew(Icons.Outlined.MonetizationOn, "投币", "投币"),
-        //RoundButtonDataNew(Icons.Outlined.StarBorder, "收藏", "收藏"),
-        //RoundButtonDataNew(Icons.Outlined.ThumbDown, "点踩", "点踩"),
-        RoundButtonDataNew(Icons.Outlined.History, "稍后再看", "稍后再看"),
-        RoundButtonDataNew(Icons.Outlined.SendToMobile, "手机观看", "手机观看"),
-        RoundButtonDataNew(Icons.Outlined.CloudDownload, "缓存", "缓存")
-    )
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -337,9 +325,9 @@ class VideoInformationFragment : Fragment() {
                                         SettingsManager.playVideo(
                                             context = requireContext(),
                                             bvid = videoInfo?.data?.bvid,
-                                            cid = videoInfo?.data?.cid,
-                                            title = videoInfo?.data?.title,
-                                            progress = videoInfo?.data?.history?.progress ?: 0,
+                                            cid = page.cid,
+                                            title = "P${index + 1} ${page.part} - ${videoInfo?.data?.title}",
+                                            //progress = videoInfo?.data?.history?.progress ?: 0,
                                             subtitleUrl = null
                                         )
                                     }) {
@@ -526,12 +514,15 @@ class VideoInformationFragment : Fragment() {
                                 putExtra("cid", videoInfo?.data?.cid ?: 0)
                                 putExtra("title", videoInfo?.data?.title)
                                 putExtra("coverUrl", videoInfo?.data?.pic)
-                                putExtra(
-                                    "subtitleUrl",
-                                    viewModel.subtitle.value?.data?.subtitle?.list?.get(
-                                        0
-                                    )?.subtitleUrl
-                                )
+                                if (!viewModel.subtitle.value?.data?.subtitle?.list.isNullOrEmpty()) {
+                                    putExtra(
+                                        "subtitleUrl",
+                                        viewModel.subtitle.value?.data?.subtitle?.list?.get(
+                                            0
+                                        )?.subtitleUrl
+                                    )
+                                }
+
                                 putExtra(
                                     "data",
                                     Gson().toJson(videoInfo?.data?.pages?.let {
