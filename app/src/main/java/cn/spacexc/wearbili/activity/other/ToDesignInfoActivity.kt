@@ -95,7 +95,7 @@ class ToDesignInfoActivity : AppCompatActivity() {
                         fontWeight = FontWeight.Bold
                     )
                     Image(
-                        painter = painterResource(id = cn.spacexc.wearbili.R.drawable.loading_2233_error),
+                        painter = painterResource(id = cn.spacexc.wearbili.R.drawable.todesign_banner),
                         contentDescription = null,
                         modifier = Modifier.fillMaxWidth(),
                         contentScale = ContentScale.Fit
