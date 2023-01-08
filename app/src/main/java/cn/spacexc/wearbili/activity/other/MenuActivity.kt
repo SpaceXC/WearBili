@@ -103,6 +103,11 @@ class MenuActivity : AppCompatActivity() {
                             val intent =
                                 Intent(this@MenuActivity, VideoCacheActivity::class.java)
                             startActivity(intent)
+                            finish()
+                            overridePendingTransition(
+                                R.anim.activity_in_y,
+                                R.anim.activity_out_y
+                            )
                         }
                         "测试" -> {
                             /*val data: Uri =

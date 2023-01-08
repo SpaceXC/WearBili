@@ -259,9 +259,13 @@ object VideoManager {
             }
 
             override fun onResponse(call: Call, response: Response) {
-                val result =
-                    Gson().fromJson(response.body?.string().log(), VideoDetailInfo::class.java)
-                callback.onSuccess(result, result.code)
+                try {
+                    val result =
+                        Gson().fromJson(response.body?.string().log(), VideoDetailInfo::class.java)
+                    callback.onSuccess(result, result.code)
+                } catch (e: Exception) {
+                    callback.onFailed(e)
+                }
             }
 
         })

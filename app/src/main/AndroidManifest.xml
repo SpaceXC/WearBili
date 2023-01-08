@@ -93,9 +93,6 @@
             android:name=".activity.other.RequireNetworkActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.welcome.StartActivity"
-            android:exported="false" />
-        <activity
             android:name=".activity.dynamic.DynamicDetailActivity"
             android:exported="false" />
         <activity

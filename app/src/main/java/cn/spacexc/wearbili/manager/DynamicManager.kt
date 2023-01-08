@@ -252,6 +252,9 @@ object DynamicManager {
             return emptyList()
         }
         val tempList = mutableListOf<Card>()
+        if (result.data.cards.isNullOrEmpty()) {
+            return emptyList()
+        }
         for (dynamic in result.data.cards) {
             when (dynamic.desc.type) {
                 1 -> {

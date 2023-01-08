@@ -146,11 +146,13 @@ class VideoCacheActivity : AppCompatActivity() {
                                         File(SubtitleSharedPreferencesUtils.getUrl(cid)!!).delete()
                                     }
                                 }
-                                SwipeToDismiss(state = state, background = {
+                                SwipeToDismiss(
+                                    state = state, background = {
 
-                                }, dismissThresholds = { direction ->
+                                    }/*, dismissThresholds = { direction ->
                                     FractionalThreshold(if (direction == DismissDirection.EndToStart) 0.25f else 0.5f)
-                                }, directions = setOf(DismissDirection.EndToStart)) {
+                                }*/, directions = setOf(DismissDirection.EndToStart)
+                                ) {
                                     Box(modifier = Modifier.animateItemPlacement()) {
                                         CacheCard(
                                             cover = CoverSharedPreferencesUtils.getUrl(

@@ -52,19 +52,26 @@ class VideoViewModel : ViewModel() {
     val isCoined = MutableLiveData(false)
     val isFavorite = MutableLiveData(false)
 
+    val isError = MutableLiveData(false)
+
     var coinCount = 0
 
     fun getVideoInfo(bvid: String) {
         VideoManager.getVideoInfo(bvid, object : NetworkUtils.ResultCallback<VideoDetailInfo> {
             override fun onSuccess(result: VideoDetailInfo, code: Int) {
                 MainScope().launch {
-                    _videoInfo.value = result
+                    if (result.code == 0) {
+                        _videoInfo.value = result
+                    } else {
+                        isError.value = true
+                    }
                 }
             }
 
             override fun onFailed(e: Exception?) {
                 MainScope().launch {
                     ToastUtils.showText("网络异常")
+                    isError.value = true
                 }
             }
 
@@ -76,13 +83,24 @@ class VideoViewModel : ViewModel() {
             override fun onFailure(call: Call, e: IOException) {
                 MainScope().launch {
                     ToastUtils.showText("网络异常")
+                    isError.value = true
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
-                val result = Gson().fromJson(response.body?.string(), SubtitleInfo::class.java)
-                MainScope().launch {
-                    _subtitle.value = result
+                try {
+                    val result = Gson().fromJson(response.body?.string(), SubtitleInfo::class.java)
+                    MainScope().launch {
+                        if (result.code == 0) {
+                            _subtitle.value = result
+                        } else {
+                            isError.value = true
+                        }
+                    }
+                } catch (e: Exception) {
+                    MainScope().launch {
+                        isError.value = true
+                    }
                 }
             }
 

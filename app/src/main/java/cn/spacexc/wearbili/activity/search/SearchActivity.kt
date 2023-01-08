@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
+import cn.spacexc.wearbili.activity.user.SpaceProfileActivity
 import cn.spacexc.wearbili.activity.video.VideoActivity
 import cn.spacexc.wearbili.adapter.HotSearchAdapter
 import cn.spacexc.wearbili.databinding.ActivitySearchBinding
@@ -169,6 +170,19 @@ class SearchActivity : AppCompatActivity() {
             intent.putExtra("videoId", keyword)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
+        } else if (keyword.startsWith("uid") || keyword.startsWith("mid")) {
+            val uid = keyword.substring(3, keyword.length)
+            if (uid.isNotEmpty()) {
+                Intent(this, SpaceProfileActivity::class.java).apply {
+                    putExtra("userMid", uid.toLong())
+                    startActivity(this)
+                }
+            } else {
+                val intent = Intent(this@SearchActivity, SearchResultActivityNew::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                intent.putExtra("keyword", keyword)
+                startActivity(intent)
+            }
         } else {
             val intent = Intent(this@SearchActivity, SearchResultActivityNew::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK

@@ -23,7 +23,7 @@ import cn.spacexc.wearbili.utils.ToastUtils
 //import kotlinx.coroutines.launch
 //import androidx.lifecycle.lifecycleScope
 
-const val APP_VERSION = "Rel-AL 0.20.6"
+const val APP_VERSION = "Rel-AL 0.21.0"
 
 class AboutActivity : AppCompatActivity() {
     private val firstList = listOf(
@@ -79,7 +79,11 @@ class AboutActivity : AppCompatActivity() {
             }
         }).also { it.submitList(firstList) }
         recyclerView2.adapter = UserHorizontalButtonAdapter(this).also { it.submitList(secondList) }
-        recyclerView3.adapter = UserHorizontalButtonAdapter(this).also { it.submitList(thirdList) }
+        recyclerView3.adapter = UserHorizontalButtonAdapter(this, listOf("uid198338518")) {
+            if (it == "uid198338518") {
+                startActivity(Intent(this, ToDesignInfoActivity::class.java))
+            }
+        }.also { it.submitList(thirdList) }
         recyclerView4.adapter = HorizontalButtonAdapter(object : OnItemViewClickListener {
             override fun onClick(buttonName: String, viewHolder: RecyclerView.ViewHolder) {
                 val repoName = when (buttonName) {

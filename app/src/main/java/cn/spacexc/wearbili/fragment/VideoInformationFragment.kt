@@ -51,7 +51,6 @@ import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.image.PhotoViewActivity
 import cn.spacexc.wearbili.activity.settings.ChooseSettingsActivity
-import cn.spacexc.wearbili.activity.user.SpaceProfileActivity
 import cn.spacexc.wearbili.activity.video.*
 import cn.spacexc.wearbili.dataclass.RoundButtonDataNew
 import cn.spacexc.wearbili.manager.ID_TYPE_SSID
@@ -60,12 +59,13 @@ import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.ui.BilibiliPink
 import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
+import cn.spacexc.wearbili.ui.OFFICIAL_TYPE_NONE
+import cn.spacexc.wearbili.ui.UserCard
 import cn.spacexc.wearbili.ui.puhuiFamily
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import cn.spacexc.wearbili.utils.TimeUtils.toDateStr
 import cn.spacexc.wearbili.utils.ToastUtils
 import cn.spacexc.wearbili.utils.ifNullOrEmpty
-import cn.spacexc.wearbili.utils.parseColor
 import cn.spacexc.wearbili.viewmodel.VideoViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -96,20 +96,22 @@ class VideoInformationFragment : Fragment() {
         viewModel.videoInfo.observe(
             viewLifecycleOwner
         ) {
-            activity.currentVideo = it.data
-            viewModel.getFans(it.data.owner.mid)
-            viewModel.getUploaderInfo(it.data.owner.mid)
-            VideoManager.uploadVideoViewingProgress(
-                it.data.bvid,
-                it.data.history?.cid ?: it.data.cid,
-                it.data.history?.progress?.toInt() ?: 0
-            )
-            if (it.data.season?.season_id?.isNotEmpty() == true) {
-                Intent(requireActivity(), BangumiActivity::class.java).apply {
-                    putExtra("id", it.data.season.season_id)
-                    putExtra("idType", ID_TYPE_SSID)
-                    startActivity(this)
-                    activity.finish()
+            if (it != null) {
+                activity.currentVideo = it.data
+                viewModel.getFans(it.data.owner.mid)
+                viewModel.getUploaderInfo(it.data.owner.mid)
+                VideoManager.uploadVideoViewingProgress(
+                    it.data.bvid,
+                    it.data.history?.cid ?: it.data.cid,
+                    it.data.history?.progress?.toInt() ?: 0
+                )
+                if (it.data.season?.season_id?.isNotEmpty() == true) {
+                    Intent(requireActivity(), BangumiActivity::class.java).apply {
+                        putExtra("id", it.data.season.season_id)
+                        putExtra("idType", ID_TYPE_SSID)
+                        startActivity(this)
+                        activity.finish()
+                    }
                 }
             }
         }
@@ -122,6 +124,7 @@ class VideoInformationFragment : Fragment() {
             val isLiked by viewModel.isLiked.observeAsState()
             val isFavorite by viewModel.isFavorite.observeAsState()
             val isCoined by viewModel.isCoined.observeAsState()
+            val isError by viewModel.isError.observeAsState()
             var descriptionMaxLines by remember {
                 mutableStateOf(3)
             }
@@ -167,73 +170,15 @@ class VideoInformationFragment : Fragment() {
                             modifier = Modifier.fillMaxWidth()
                         )
                         Spacer(modifier = Modifier.height(6.dp))
-                        Row(
-                            modifier = Modifier
-                                .clickVfx {
-                                    Intent(
-                                        requireActivity(),
-                                        SpaceProfileActivity::class.java
-                                    ).apply {
-                                        putExtra("userMid", uploaderInfo?.data?.mid)
-                                        startActivity(this)
-                                    }
-                                }
-                                .clip(
-                                    RoundedCornerShape(10.dp)
-                                )
-                                .background(Color(36, 36, 36, 120))
-                                .border(
-                                    width = 0.01.dp,
-                                    color = Color(112, 112, 112, 112),
-                                    shape = RoundedCornerShape(10.dp)
-                                )
-                                .padding(vertical = 10.dp, horizontal = 8.dp)
-                                .fillMaxWidth()
-
-                        ) {
-                            var infoHeight by remember {
-                                mutableStateOf(0.dp)
-                            }
-                            AsyncImage(
-                                model = ImageRequest.Builder(LocalContext.current)
-                                    .data(videoInfo?.data?.owner?.face).crossfade(true).build(),
-                                modifier = Modifier
-                                    .clip(
-                                        CircleShape
-                                    )
-                                    .size(infoHeight)
-                                    .animateContentSize(animationSpec = tween(durationMillis = 200)),
-                                contentDescription = null
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .onGloballyPositioned {
-                                        infoHeight = with(localDensity) {
-                                            it.size.height.toDp()
-                                        }
-                                    }, verticalArrangement = Arrangement.Center
-                            ) {
-                                Text(
-                                    text = videoInfo?.data?.owner?.name ?: "",
-                                    color = parseColor(uploaderInfo?.data?.vip?.nickname_color.ifNullOrEmpty { "#FFFFFF" }),
-                                    fontFamily = puhuiFamily,
-                                    fontSize = 16.sp,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Text(
-                                    text = "${userFans?.data?.card?.fans?.toShortChinese() ?: "0"}粉丝",
-                                    color = Color.White,
-                                    fontFamily = puhuiFamily,
-                                    fontSize = 12.sp,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                            }
-                        }   //用户信息
+                        UserCard(
+                            name = videoInfo?.data?.owner?.name ?: "",
+                            uid = videoInfo?.data?.owner?.mid ?: 0,
+                            sign = "${userFans?.data?.card?.fans?.toShortChinese() ?: "0"}粉丝",
+                            avatar = videoInfo?.data?.owner?.face ?: "",
+                            pendant = uploaderInfo?.data?.pendant?.image_enhance ?: "",
+                            nicknameColor = uploaderInfo?.data?.vip?.nickname_color.ifNullOrEmpty { "#FFFFFF" },
+                            officialType = uploaderInfo?.data?.official?.type ?: OFFICIAL_TYPE_NONE
+                        )
                         Spacer(modifier = Modifier.height(6.dp))
                         Column(modifier = Modifier.fillMaxWidth()) {
                             VideoInfoItem(
@@ -573,27 +518,59 @@ class VideoInformationFragment : Fragment() {
                         }
                     }
                 } else {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
-                                .align(Alignment.Center),
-                            horizontalAlignment = CenterHorizontally
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.loading_2233),
-                                contentDescription = null
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = "玩命加载中",
-                                color = Color.White,
-                                fontFamily = puhuiFamily,
-                                fontWeight = FontWeight.Medium
-                            )
+                    Crossfade(targetState = isError) { error ->
+                        if (error == true) {
+                            Box(modifier = Modifier.fillMaxSize()) {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp)
+                                        .align(Alignment.Center)
+                                        .clickVfx {
+                                            viewModel.isError.value = false
+                                            viewModel.getVideoInfo(activity.videoId)
+                                            viewModel.getSubtitle(activity.videoId)
+                                        },
+                                    horizontalAlignment = CenterHorizontally
+                                ) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.loading_2233_error),
+                                        contentDescription = null
+                                    )
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Text(
+                                        text = "加载失败, 点击重试",
+                                        color = Color.White,
+                                        fontFamily = puhuiFamily,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                }
+                            }
+                        } else {
+                            Box(modifier = Modifier.fillMaxSize()) {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp)
+                                        .align(Alignment.Center),
+                                    horizontalAlignment = CenterHorizontally
+                                ) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.loading_2233),
+                                        contentDescription = null
+                                    )
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Text(
+                                        text = "玩命加载中",
+                                        color = Color.White,
+                                        fontFamily = puhuiFamily,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                }
+                            }
                         }
                     }
+
                 }
             }
         }

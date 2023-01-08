@@ -5,7 +5,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.Crossfade
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
@@ -30,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -71,7 +71,7 @@ This is free software, and you are welcome to redistribute it under certain cond
 class SpaceProfileActivity : AppCompatActivity() {
     val viewModel: UserSpaceViewModel by viewModels()
 
-    @OptIn(ExperimentalPagerApi::class, ExperimentalAnimationApi::class)
+    @OptIn(ExperimentalPagerApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val userMid = intent.getLongExtra("userMid", 0)
@@ -90,6 +90,7 @@ class SpaceProfileActivity : AppCompatActivity() {
             val userVideos by viewModel.videos.observeAsState()
             val dynamicList by viewModel.dynamicCardList.observeAsState()
             val scope = rememberCoroutineScope()
+            val isError by viewModel.isError.observeAsState()
             val isSubscribed by viewModel.isFollowed.observeAsState()
             val followButtonColor by animateColorAsState(
                 targetValue = if (isSubscribed == true) Color(
@@ -100,7 +101,17 @@ class SpaceProfileActivity : AppCompatActivity() {
                 ) else BilibiliPink, animationSpec = tween(durationMillis = 400)
             )
             CirclesBackground.RegularBackgroundWithTitleAndBackArrow(
-                title = "个人空间", onBack = { finish() }, isLoading = user == null
+                title = "个人空间",
+                onBack = { finish() },
+                isLoading = user == null,
+                isError = isError == true,
+                errorRetry = {
+                    viewModel.isError.value = false
+                    viewModel.getUser(userMid)
+                    viewModel.getVideos(userMid, true)
+                    viewModel.getDynamic(userMid)
+                    viewModel.checkSubscribe(userMid)
+                }
             ) {
                 Box(
                     modifier = Modifier
@@ -129,9 +140,17 @@ class SpaceProfileActivity : AppCompatActivity() {
                                         .padding(vertical = 0.dp, horizontal = 8.dp),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
+                                    var avatarBoxSize by remember {
+                                        mutableStateOf(0.dp)
+                                    }
                                     Box(
                                         contentAlignment = Alignment.Center,
-                                        modifier = Modifier.weight(2f)
+                                        modifier = Modifier
+                                            .weight(2f)
+                                            .onGloballyPositioned {
+                                                avatarBoxSize =
+                                                    with(localDensity) { it.size.height.toDp() }
+                                            }
                                     ) {
                                         if (user?.data?.pendant?.image_enhance.isNullOrEmpty()) {
                                             AsyncImage(
@@ -178,6 +197,25 @@ class SpaceProfileActivity : AppCompatActivity() {
                                                     .aspectRatio(1f)
                                             )
 
+                                        }
+                                        if (user?.data?.official?.type != OFFICIAL_TYPE_NONE) {
+                                            Image(
+                                                painter = painterResource(
+                                                    id = when (user?.data?.official?.type) {
+                                                        OFFICIAL_TYPE_ORG -> R.drawable.flash_blue
+                                                        OFFICIAL_TYPE_PERSONAL -> R.drawable.flash_yellow
+                                                        else -> 0
+                                                    }
+                                                ),
+                                                contentDescription = null,
+                                                modifier = Modifier
+                                                    .size(avatarBoxSize.times(0.25f))
+                                                    .align(Alignment.BottomEnd)
+                                                    .offset(
+                                                        x = avatarBoxSize.times(-0.1f),
+                                                        y = avatarBoxSize.times(-0.1f)
+                                                    )
+                                            )
                                         }
                                     }
                                     Column(

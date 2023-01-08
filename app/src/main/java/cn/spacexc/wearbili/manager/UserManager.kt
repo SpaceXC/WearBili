@@ -235,9 +235,13 @@ object UserManager {
                 }
 
                 override fun onResponse(call: Call, response: Response) {
-                    val result =
-                        Gson().fromJson(response.body?.string(), UserSpaceVideo::class.java)
-                    callback.onSuccess(result)
+                    try {
+                        val result =
+                            Gson().fromJson(response.body?.string(), UserSpaceVideo::class.java)
+                        callback.onSuccess(result, result.code)
+                    } catch (e: Exception) {
+                        callback.onFailed(e)
+                    }
                 }
             }
         )

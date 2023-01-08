@@ -26,6 +26,7 @@ import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeTextDefaults
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.manager.isRound
+import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
 
 /**
  * Created by Xiaochang on 2022/9/16.
@@ -94,8 +95,10 @@ object CirclesBackground {
     @Composable
     fun RegularBackgroundWithTitleAndBackArrow(
         title: String,
-        onBack: () -> Unit = {},
+        onBack: () -> Unit = { },
         isLoading: Boolean = false,
+        isError: Boolean = false,
+        errorRetry: () -> Unit = {},
         content: @Composable () -> Unit
     ) {
         val timeSource = TimeTextDefaults.timeSource("HH:mm")
@@ -237,27 +240,55 @@ object CirclesBackground {
                         content()
                     }   //内容
                 } else {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
-                                .align(Alignment.Center),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.loading_2233),
-                                contentDescription = null
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = "玩命加载中",
-                                color = Color.White,
-                                fontFamily = puhuiFamily,
-                                fontWeight = FontWeight.Medium
-                            )
+                    Crossfade(targetState = isError) { error ->
+                        if (error) {
+                            Box(modifier = Modifier.fillMaxSize()) {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp)
+                                        .align(Alignment.Center)
+                                        .clickVfx {
+                                            errorRetry()
+                                        },
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.loading_2233_error),
+                                        contentDescription = null
+                                    )
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Text(
+                                        text = "加载失败了, 点击重试",
+                                        color = Color.White,
+                                        fontFamily = puhuiFamily,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                }
+                            }
+                        } else Box(modifier = Modifier.fillMaxSize()) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp)
+                                    .align(Alignment.Center),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.loading_2233),
+                                    contentDescription = null
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = "玩命加载中",
+                                    color = Color.White,
+                                    fontFamily = puhuiFamily,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
                         }
                     }
+
                 }
             }
         }

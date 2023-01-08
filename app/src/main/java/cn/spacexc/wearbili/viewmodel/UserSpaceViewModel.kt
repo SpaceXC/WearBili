@@ -52,18 +52,26 @@ class UserSpaceViewModel : ViewModel() {
     private val _isFollowed = MutableLiveData(false)
     val isFollowed: LiveData<Boolean> = _isFollowed
 
+    val isError = MutableLiveData(false)
+
     var videoPage = 1
 
     fun getUser(mid: Long) {
         UserManager.getUserById(mid, object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-
+                MainScope().launch {
+                    isError.value = true
+                }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 val result = Gson().fromJson(response.body?.string(), User::class.java)
                 MainScope().launch {
-                    _user.value = result
+                    if (result.code == 0) {
+                        _user.value = result
+                    } else {
+                        isError.value = true
+                    }
                 }
             }
         })
@@ -81,9 +89,13 @@ class UserSpaceViewModel : ViewModel() {
                     result.log()
                     MainScope().launch {
                         _isRefreshing.value = false
-                        if (isRefresh) _videos.value =
-                            result.data.list.vlist ?: emptyList() else _videos.value =
-                            _videos.value?.plus(result.data.list.vlist ?: emptyList())
+                        if (result.code == 0) {
+                            if (isRefresh) _videos.value =
+                                result.data.list.vlist ?: emptyList() else _videos.value =
+                                _videos.value?.plus(result.data.list.vlist ?: emptyList())
+                        } else {
+                            isError.value = true
+                        }
                     }
                 }
 
@@ -91,6 +103,7 @@ class UserSpaceViewModel : ViewModel() {
                     MainScope().launch {
                         _isRefreshing.value = false
                         ToastUtils.showText("网络异常")
+                        isError.value = true
                     }
                 }
 
@@ -104,6 +117,7 @@ class UserSpaceViewModel : ViewModel() {
                 MainScope().launch {
                     ToastUtils.showText("网络异常")
                     _isRefreshing.value = false
+                    isError.value = true
                 }
             }
 
@@ -124,6 +138,7 @@ class UserSpaceViewModel : ViewModel() {
                 MainScope().launch {
                     ToastUtils.showText("网络异常")
                     _isRefreshing.value = false
+                    isError.value = true
                 }
             }
 
@@ -197,13 +212,18 @@ class UserSpaceViewModel : ViewModel() {
                 override fun onFailure(call: Call, e: IOException) {
                     MainScope().launch {
                         ToastUtils.showText("网络异常")
+                        isError.value = true
                     }
                 }
 
                 override fun onResponse(call: Call, response: Response) {
                     val user = Gson().fromJson(response.body?.string(), User::class.java)
                     MainScope().launch {
-                        _isFollowed.value = user.data.is_followed
+                        if (user.code == 0) {
+                            _isFollowed.value = user.data.is_followed
+                        } else {
+                            isError.value = true
+                        }
                     }
                 }
 

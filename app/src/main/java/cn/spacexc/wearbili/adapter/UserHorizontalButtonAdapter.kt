@@ -34,7 +34,11 @@ import java.io.IOException
  * 给！爷！写！注！释！
  */
 
-class UserHorizontalButtonAdapter(val context: Context) :
+class UserHorizontalButtonAdapter(
+    val context: Context,
+    private val customActions: List<String> = emptyList(),
+    val customClickAction: (String) -> Unit = { }
+) :
     ListAdapter<HorizontalButtonData, UserHorizontalButtonAdapter.ButtonViewHolder>(object :
         DiffUtil.ItemCallback<HorizontalButtonData>() {
         override fun areItemsTheSame(
@@ -71,10 +75,14 @@ class UserHorizontalButtonAdapter(val context: Context) :
         if (getItem(position).mainText.contains("uid")) {
             val mid = (getItem(position).mainText.replace("uid", "")).toLong()
             holder.itemView.setOnClickListener {
-                Intent(context, SpaceProfileActivity::class.java).apply {
-                    putExtra("userMid", mid)
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    context.startActivity(this)
+                if (customActions.contains(getItem(position).mainText)) {
+                    customClickAction(getItem(position).mainText)
+                } else {
+                    Intent(context, SpaceProfileActivity::class.java).apply {
+                        putExtra("userMid", mid)
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        context.startActivity(this)
+                    }
                 }
             }
             holder.itemView.addClickScale()
@@ -114,6 +122,10 @@ class UserHorizontalButtonAdapter(val context: Context) :
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .placeholder(R.drawable.default_avatar).circleCrop()
                     .into(holder.icon)
+                holder.itemView.addClickScale()
+                holder.itemView.setOnClickListener {
+                    customClickAction(getItem(position).mainText)
+                }
 
             } catch (_: OutOfMemoryError) {
 
