@@ -35,7 +35,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.wear.compose.material.ExperimentalWearMaterialApi
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
 import cn.spacexc.wearbili.R
@@ -59,7 +58,7 @@ class VideoCacheActivity : AppCompatActivity() {
     val viewModel by viewModels<DownloadVideoInfoViewModel>()
 
     @OptIn(
-        ExperimentalFoundationApi::class, ExperimentalWearMaterialApi::class,
+        ExperimentalFoundationApi::class,
         ExperimentalMaterialApi::class
     )
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,27 +90,19 @@ class VideoCacheActivity : AppCompatActivity() {
                             )
                         }
                         downloadings?.forEach {
-                            item(key = it.request.id) {
-                                val state = rememberDismissState()
-                                SwipeToDismiss(
-                                    state = state,
-                                    background = {},
-                                    directions = setOf(/*DismissDirection.EndToStart*/)
-                                ) {
-                                    CacheCard(
-                                        cover = CoverSharedPreferencesUtils.getUrl(
-                                            it.request.id.split("///")[0]
-                                        ) ?: "",
-                                        title = it.request.id.split("///")[1],
-                                        partName = it.request.id.split("///")[2],
-                                        time = it.startTimeMs.toDateStr(),
-                                        cacheId = it.request.id,
-                                        state = it.state,
-                                        progress = it.percentDownloaded.toInt(),
-                                        downloadedSize = it.bytesDownloaded,
-                                        modifier = Modifier.animateItemPlacement()
-                                    )
-                                }
+                            item {
+                                CacheCard(
+                                    cover = CoverSharedPreferencesUtils.getUrl(
+                                        it.request.id.split("///")[0]
+                                    ) ?: "",
+                                    title = it.request.id.split("///")[1],
+                                    partName = it.request.id.split("///")[2],
+                                    time = it.startTimeMs.toDateStr(),
+                                    cacheId = it.request.id,
+                                    state = it.state,
+                                    progress = it.percentDownloaded.toInt(),
+                                    downloadedSize = it.bytesDownloaded
+                                )
                             }
                         }
                     }
@@ -126,7 +117,7 @@ class VideoCacheActivity : AppCompatActivity() {
                             )
                         }
                         downloads?.asReversed()?.forEach {
-                            item(key = it.request.id) {
+                            item {
                                 val state = rememberDismissState()
                                 if (state.isDismissed(DismissDirection.EndToStart)) {
                                     val cid = it.request.id.split("///")[0]
@@ -149,9 +140,7 @@ class VideoCacheActivity : AppCompatActivity() {
                                 SwipeToDismiss(
                                     state = state, background = {
 
-                                    }/*, dismissThresholds = { direction ->
-                                    FractionalThreshold(if (direction == DismissDirection.EndToStart) 0.25f else 0.5f)
-                                }*/, directions = setOf(DismissDirection.EndToStart)
+                                    }, directions = setOf(DismissDirection.EndToStart)
                                 ) {
                                     Box(modifier = Modifier.animateItemPlacement()) {
                                         CacheCard(
@@ -164,8 +153,7 @@ class VideoCacheActivity : AppCompatActivity() {
                                             cacheId = it.request.id,
                                             state = it.state,
                                             progress = it.percentDownloaded.toInt(),
-                                            downloadedSize = it.bytesDownloaded,
-                                            //modifier = Modifier.animateItemPlacement()
+                                            downloadedSize = it.bytesDownloaded
                                         )
                                     }
                                 }
@@ -179,7 +167,6 @@ class VideoCacheActivity : AppCompatActivity() {
 
     @Composable
     fun CacheCard(
-        //isCompleted: Boolean,
         cover: String,
         title: String,
         partName: String,

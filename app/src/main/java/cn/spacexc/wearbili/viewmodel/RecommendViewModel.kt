@@ -42,6 +42,8 @@ class RecommendViewModel : ViewModel() {
     val webVideoList: LiveData<List<cn.spacexc.wearbili.dataclass.video.rcmd.web.Item>> =
         _webVideoList
 
+    val isError = MutableLiveData(false)
+
     fun getAppRecommendVideos(isRefresh: Boolean) {
         MainScope().launch {
             _isRefreshing.value = true
@@ -51,6 +53,7 @@ class RecommendViewModel : ViewModel() {
                 MainScope().launch {
                     _isRefreshing.value = false
                     ToastUtils.showText("网络异常")
+                    isError.value = true
                 }
             }
 
@@ -79,6 +82,7 @@ class RecommendViewModel : ViewModel() {
                         ToastUtils.makeText(
                             "加载失败"
                         ).show()
+                        isError.value = true
                     }
 
                 }
@@ -105,6 +109,7 @@ class RecommendViewModel : ViewModel() {
             override fun onFailed(e: Exception?) {
                 MainScope().launch {
                     ToastUtils.showText("网络异常")
+                    isError.value = true
                 }
             }
 

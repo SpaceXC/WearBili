@@ -37,6 +37,8 @@ class DynamicViewModel : ViewModel() {
     private val _isRefreshing = MutableLiveData(false)
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
+    val isError = MutableLiveData(false)
+
     fun getDynamic() {
         MainScope().launch { _isRefreshing.value = true }
         DynamicManager.getRecommendDynamics(object : DynamicManager.DynamicResponseCallback {
@@ -44,6 +46,7 @@ class DynamicViewModel : ViewModel() {
                 MainScope().launch {
                     ToastUtils.showText("网络异常")
                     _isRefreshing.value = false
+                    isError.value = true
                 }
             }
 
@@ -64,6 +67,7 @@ class DynamicViewModel : ViewModel() {
                 MainScope().launch {
                     ToastUtils.showText("网络异常")
                     _isRefreshing.value = false
+                    isError.value = true
                 }
             }
 

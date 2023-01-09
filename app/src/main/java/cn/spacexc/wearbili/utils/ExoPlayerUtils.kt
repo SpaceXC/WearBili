@@ -3,13 +3,19 @@ package cn.spacexc.wearbili.utils
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.net.Uri
 import android.os.Build
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.work.*
+import cn.spacexc.wearbili.Application
+import cn.spacexc.wearbili.dataclass.VideoStreamsFlv
+import cn.spacexc.wearbili.manager.VideoManager
+import cn.spacexc.wearbili.worker.DanmakuDownloadWorker
+import cn.spacexc.wearbili.worker.ImageDownloadWorker
+import cn.spacexc.wearbili.worker.SubtitleDownloadWorker
 import com.google.android.exoplayer2.database.DatabaseProvider
 import com.google.android.exoplayer2.database.StandaloneDatabaseProvider
-import com.google.android.exoplayer2.offline.Download
-import com.google.android.exoplayer2.offline.DownloadIndex
-import com.google.android.exoplayer2.offline.DownloadManager
+import com.google.android.exoplayer2.offline.*
 import com.google.android.exoplayer2.offline.DownloadManager.Listener
 import com.google.android.exoplayer2.scheduler.Requirements
 import com.google.android.exoplayer2.ui.DownloadNotificationHelper
@@ -18,7 +24,14 @@ import com.google.android.exoplayer2.upstream.HttpDataSource
 import com.google.android.exoplayer2.upstream.cache.Cache
 import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
+import com.google.gson.Gson
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Response
 import java.io.File
+import java.io.IOException
 import java.util.concurrent.Executor
 
 
@@ -144,6 +157,86 @@ class ExoPlayerUtils(context: Context) {
 
     fun getDownloadingVideos(): List<Download> {
         return downloadManager.currentDownloads
+    }
+
+    fun downloadVideo(
+        coverUrl: String,
+        title: String,
+        partName: String,
+        bvid: String,
+        cid: Long,
+        subtitleUrl: String?,
+        onTaskAdded: () -> Unit
+    ) {
+        VideoManager.getVideoUrl(bvid, cid, object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                MainScope().launch {
+                    ToastUtils.showText("网络异常")
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val result = Gson().fromJson(response.body?.string(), VideoStreamsFlv::class.java)
+                val downloadRequest =
+                    DownloadRequest.Builder(
+                        "$cid///$title///$partName",
+                        Uri.parse(result.data.durl[0].url)
+                    )
+                        .build()
+                DownloadService.sendAddDownload(
+                    Application.context!!,
+                    cn.spacexc.wearbili.service.DownloadService::class.java,
+                    downloadRequest,
+                    false
+                )
+                val danmakuDownloadWorkRequest = OneTimeWorkRequestBuilder<DanmakuDownloadWorker>()
+                    .setInputData(
+                        workDataOf(
+                            "cid" to cid.toString()
+                        )
+                    )
+                    .setConstraints(
+                        Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+                    )
+                    .build()
+                WorkManager.getInstance(Application.context!!).enqueue(danmakuDownloadWorkRequest)
+
+                val coverPicDownloadWorker = OneTimeWorkRequestBuilder<ImageDownloadWorker>()
+                    .setInputData(
+                        workDataOf(
+                            "cid" to cid.toString(),
+                            "coverUrl" to coverUrl
+                        )
+                    )
+                    .setConstraints(
+                        Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+                    )
+                    .build()
+                WorkManager.getInstance(Application.context!!).enqueue(coverPicDownloadWorker)
+
+                if (subtitleUrl != null) {
+                    val subtitleDownloadWorker = OneTimeWorkRequestBuilder<SubtitleDownloadWorker>()
+                        .setInputData(
+                            workDataOf(
+                                "fileUrl" to subtitleUrl,
+                                "fileName" to "subtitle_$cid.json",
+                                "filePath" to "subtitle/",
+                                "cid" to cid.toString()
+                            )
+                        )
+                        .setConstraints(
+                            Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED)
+                                .build()
+                        )
+                        .build()
+                    WorkManager.getInstance(Application.context!!).enqueue(subtitleDownloadWorker)
+                }
+                MainScope().launch {
+                    ToastUtils.showText("已添加到下载队列")
+                    onTaskAdded()
+                }
+            }
+        })
     }
 
     companion object {

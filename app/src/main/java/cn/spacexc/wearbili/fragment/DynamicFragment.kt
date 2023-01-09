@@ -55,8 +55,6 @@ class DynamicFragment : Fragment() {
                 getDynamic()
             }
         }
-
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

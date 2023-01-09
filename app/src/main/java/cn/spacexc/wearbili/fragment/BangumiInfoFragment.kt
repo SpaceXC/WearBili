@@ -9,6 +9,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,6 +26,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
@@ -47,6 +49,7 @@ import cn.spacexc.wearbili.manager.isRound
 import cn.spacexc.wearbili.ui.BilibiliPink
 import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
 import cn.spacexc.wearbili.ui.puhuiFamily
+import cn.spacexc.wearbili.utils.ExoPlayerUtils
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -561,14 +564,27 @@ class BangumiInfoFragment : Fragment() {
                         ) {
                             bangumi?.result?.episodes?.forEachIndexed { index, episode ->
                                 item {
-                                    Column(modifier = Modifier.clickVfx {
-                                        SettingsManager.playVideo(
-                                            context = requireContext(),
-                                            bvid = episode.bvid,
-                                            cid = episode.cid,
-                                            title = "${episode.title} ${episode.long_title}",
-                                            subtitleUrl = null
-                                        )
+                                    Column(modifier = Modifier.pointerInput(Unit) {
+                                        detectTapGestures(onTap = {
+                                            SettingsManager.playVideo(
+                                                context = requireContext(),
+                                                bvid = episode.bvid,
+                                                cid = episode.cid,
+                                                title = "${episode.title} ${episode.long_title}",
+                                                subtitleUrl = null
+                                            )
+                                        }, onLongPress = {
+                                            ExoPlayerUtils.getInstance(requireContext())
+                                                .downloadVideo(
+                                                    coverUrl = episode.cover,
+                                                    title = bangumi.result.title,
+                                                    partName = "EP${index + 1} ${if (episode.long_title.isNullOrEmpty()) episode.title else episode.long_title}",
+                                                    bvid = episode.bvid,
+                                                    cid = episode.cid,
+                                                    subtitleUrl = null,
+                                                    onTaskAdded = {}
+                                                )
+                                        })
                                     }) {
                                         Column(
                                             modifier = Modifier
@@ -581,7 +597,6 @@ class BangumiInfoFragment : Fragment() {
                                                         204
                                                     ), shape = RoundedCornerShape(10.dp)
                                                 )
-
                                                 .background(color = Color(36, 36, 36, 199))
                                                 .padding(vertical = 12.dp, horizontal = 16.dp)
                                                 .fillMaxWidth(),
@@ -644,14 +659,27 @@ class BangumiInfoFragment : Fragment() {
                         ) {
                             section.episodes.forEach { episode ->
                                 item {
-                                    Column(modifier = Modifier.clickVfx {
-                                        SettingsManager.playVideo(
-                                            context = requireContext(),
-                                            bvid = episode.bvid,
-                                            cid = episode.cid,
-                                            title = "${episode.title} ${episode.long_title}",
-                                            subtitleUrl = null
-                                        )
+                                    Column(modifier = Modifier.pointerInput(Unit) {
+                                        detectTapGestures(onTap = {
+                                            SettingsManager.playVideo(
+                                                context = requireContext(),
+                                                bvid = episode.bvid,
+                                                cid = episode.cid,
+                                                title = "${episode.title} ${episode.long_title}",
+                                                subtitleUrl = null
+                                            )
+                                        }, onLongPress = {
+                                            ExoPlayerUtils.getInstance(requireContext())
+                                                .downloadVideo(
+                                                    coverUrl = episode.cover,
+                                                    title = bangumi.result.title,
+                                                    partName = if (episode.long_title.isEmpty()) episode.title else episode.long_title,
+                                                    bvid = episode.bvid,
+                                                    cid = episode.cid,
+                                                    subtitleUrl = null,
+                                                    onTaskAdded = {}
+                                                )
+                                        })
                                     }) {
                                         Column(
                                             modifier = Modifier

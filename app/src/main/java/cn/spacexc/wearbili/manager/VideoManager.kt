@@ -305,7 +305,7 @@ object VideoManager {
 
     fun getWebRecommend(callback: NetworkUtils.ResultCallback<WebRecommendVideo>) {
         NetworkUtils.getUrl(
-            "https://api.bilibili.com/x/web-interface/wbi/index/top/feed/rcmd?feed_version=V8&fresh_idx_1h=2&fetch_row=1&fresh_idx=2&brush=0&homepage_ver=1&ps=10",
+            "https://api.bilibili.com/x/web-interface/index/top/rcmd?fresh_type=10&version=1&ps=5&fresh_idx=&fresh_idx_1h=&homepage_ver=1",
             object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     callback.onFailed(e)
@@ -328,6 +328,7 @@ object VideoManager {
                         MainScope().launch {
                             ToastUtils.showText("请求错误")
                             ToastUtils.debugToast(str.log() ?: "")
+                            callback.onFailed(e)
                         }
                     }
                 }

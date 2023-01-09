@@ -153,6 +153,7 @@ object DynamicManager {
                         callback.onSuccess(tempList, code)
                     } catch (e: Exception) {
                         Log.e(TAG, "onResponse: ${e.cause}", e)
+                        callback.onFailed(call, e)
                         e.printStackTrace()
                     }
 
@@ -231,6 +232,7 @@ object DynamicManager {
                     } catch (e: Exception) {
                         Log.e(TAG, "onResponse: ${e.cause}", e)
                         e.printStackTrace()
+                        callback.onFailed(call, e)
                     }
 
                 }

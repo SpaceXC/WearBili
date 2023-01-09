@@ -1,6 +1,5 @@
 package cn.spacexc.wearbili.activity.video
 
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -19,27 +18,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.wear.compose.material.Text
-import androidx.work.*
-import cn.spacexc.wearbili.Application
-import cn.spacexc.wearbili.dataclass.VideoStreamsFlv
-import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.ui.CirclesBackground
 import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
 import cn.spacexc.wearbili.ui.puhuiFamily
-import cn.spacexc.wearbili.utils.ToastUtils
+import cn.spacexc.wearbili.utils.ExoPlayerUtils
 import cn.spacexc.wearbili.viewmodel.VideoCacheViewModel
-import cn.spacexc.wearbili.worker.DanmakuDownloadWorker
-import cn.spacexc.wearbili.worker.ImageDownloadWorker
-import cn.spacexc.wearbili.worker.SubtitleDownloadWorker
-import com.google.android.exoplayer2.offline.DownloadRequest
-import com.google.android.exoplayer2.offline.DownloadService
 import com.google.gson.Gson
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Response
-import java.io.IOException
 
 /* 
 WearBili Copyright (C) 2022 XC
@@ -83,14 +67,17 @@ class NewVideoCacheActivity : AppCompatActivity() {
                                 Column(
                                     modifier = Modifier
                                         .clickVfx {
-                                            downloadVideo(
-                                                coverUrl,
-                                                videoTitle,
-                                                "P${index.plus(1)} ${page.part}",
-                                                bvid,
-                                                page.cid,
-                                                subtitleUrl
-                                            )
+                                            ExoPlayerUtils
+                                                .getInstance(this@NewVideoCacheActivity)
+                                                .downloadVideo(
+                                                    coverUrl,
+                                                    videoTitle,
+                                                    "P${index.plus(1)} ${page.part}",
+                                                    bvid,
+                                                    page.cid,
+                                                    subtitleUrl,
+                                                    ::finish
+                                                )
                                         }
                                         .clip(RoundedCornerShape(10.dp))
                                         .border(
@@ -122,78 +109,5 @@ class NewVideoCacheActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    private fun downloadVideo(
-        coverUrl: String,
-        title: String,
-        partName: String,
-        bvid: String,
-        cid: Long,
-        subtitleUrl: String
-    ) {
-        VideoManager.getVideoUrl(bvid, cid, object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                MainScope().launch {
-                    ToastUtils.showText("网络异常")
-                }
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                val result = Gson().fromJson(response.body?.string(), VideoStreamsFlv::class.java)
-                val downloadRequest =
-                    DownloadRequest.Builder(
-                        "$cid///$title///$partName",
-                        Uri.parse(result.data.durl[0].url)
-                    )
-                        .build()
-                DownloadService.sendAddDownload(
-                    Application.context!!,
-                    cn.spacexc.wearbili.service.DownloadService::class.java,
-                    downloadRequest,
-                    false
-                )
-                val danmakuDownloadWorkRequest = OneTimeWorkRequestBuilder<DanmakuDownloadWorker>()
-                    .setInputData(
-                        workDataOf(
-                            "cid" to cid.toString()
-                        )
-                    )
-                    .setConstraints(
-                        Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-                    )
-                    .build()
-                WorkManager.getInstance(Application.context!!).enqueue(danmakuDownloadWorkRequest)
-
-                val coverPicDownloadWorker = OneTimeWorkRequestBuilder<ImageDownloadWorker>()
-                    .setInputData(
-                        workDataOf(
-                            "cid" to cid.toString(),
-                            "coverUrl" to coverUrl
-                        )
-                    )
-                    .setConstraints(
-                        Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-                    )
-                    .build()
-                WorkManager.getInstance(Application.context!!).enqueue(coverPicDownloadWorker)
-
-                val subtitleDownloadWorker = OneTimeWorkRequestBuilder<SubtitleDownloadWorker>()
-                    .setInputData(
-                        workDataOf(
-                            "fileUrl" to subtitleUrl,
-                            "fileName" to "subtitle_$cid.json",
-                            "filePath" to "subtitle/",
-                            "cid" to cid.toString()
-                        )
-                    )
-                    .build()
-                WorkManager.getInstance(Application.context!!).enqueue(subtitleDownloadWorker)
-                MainScope().launch {
-                    ToastUtils.showText("已添加到下载队列")
-                    finish()
-                }
-            }
-        })
     }
 }
