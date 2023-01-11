@@ -39,9 +39,8 @@ class UserSpaceViewModel : ViewModel() {
     private val _user = MutableLiveData<User>()
     val user: LiveData<User> = _user
 
-    private val _videos = MutableLiveData<List<Vlist>>()
-    val videos: LiveData<List<Vlist>> = _videos
-    var page = 1
+    private val _videos = MutableLiveData<List<Vlist>?>()
+    val videos: LiveData<List<Vlist>?> = _videos
 
     private val _dynamicCardList = MutableLiveData<List<Card>>()
     val dynamicCardList: LiveData<List<Card>> = _dynamicCardList
@@ -55,6 +54,8 @@ class UserSpaceViewModel : ViewModel() {
     val isError = MutableLiveData(false)
 
     var videoPage = 1
+
+    val dynamicManager = DynamicManager()
 
     fun getUser(mid: Long) {
         UserManager.getUserById(mid, object : Callback {
@@ -77,22 +78,30 @@ class UserSpaceViewModel : ViewModel() {
         })
     }
 
-    fun getVideos(mid: Long, isRefresh: Boolean) {
-        ++page
-        if (isRefresh) page = 1
+    fun getVideos(mid: Long, isRefresh: Boolean, keyword: String = "") {
+        ++videoPage
+        if (isRefresh) videoPage = 1
         _isRefreshing.value = true
         UserManager.getUserSpaceVideo(
             mid,
-            page,
+            videoPage,
+            keyword,
             object : NetworkUtils.ResultCallback<UserSpaceVideo> {
                 override fun onSuccess(result: UserSpaceVideo, code: Int) {
                     result.log()
                     MainScope().launch {
                         _isRefreshing.value = false
                         if (result.code == 0) {
-                            if (isRefresh) _videos.value =
-                                result.data.list.vlist ?: emptyList() else _videos.value =
-                                _videos.value?.plus(result.data.list.vlist ?: emptyList())
+                            if (result.data.list.vlist.isNullOrEmpty()) {
+                                if (isRefresh) {
+                                    _videos.value = emptyList()
+                                    return@launch
+                                } else return@launch
+                            }
+                            if (isRefresh)
+                                _videos.value = result.data.list.vlist
+                            else _videos.value =
+                                _videos.value?.plus(result.data.list.vlist)
                         } else {
                             isError.value = true
                         }
@@ -112,7 +121,7 @@ class UserSpaceViewModel : ViewModel() {
 
     fun getDynamic(mid: Long) {
         MainScope().launch { _isRefreshing.value = true }
-        DynamicManager.getSpaceDynamics(mid, object : DynamicManager.DynamicResponseCallback {
+        dynamicManager.getSpaceDynamics(mid, object : DynamicManager.DynamicResponseCallback {
             override fun onFailed(call: Call, e: Exception) {
                 MainScope().launch {
                     ToastUtils.showText("网络异常")
@@ -133,7 +142,7 @@ class UserSpaceViewModel : ViewModel() {
 
     fun getMoreDynamic(mid: Long) {
         MainScope().launch { _isRefreshing.value = true }
-        DynamicManager.getMoreSpaceDynamic(mid, object : DynamicManager.DynamicResponseCallback {
+        dynamicManager.getMoreSpaceDynamic(mid, object : DynamicManager.DynamicResponseCallback {
             override fun onFailed(call: Call, e: Exception) {
                 MainScope().launch {
                     ToastUtils.showText("网络异常")

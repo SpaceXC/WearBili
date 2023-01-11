@@ -52,6 +52,7 @@ import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.image.PhotoViewActivity
 import cn.spacexc.wearbili.activity.settings.ChooseSettingsActivity
 import cn.spacexc.wearbili.activity.video.*
+import cn.spacexc.wearbili.dataclass.RoundButtonData
 import cn.spacexc.wearbili.dataclass.RoundButtonDataNew
 import cn.spacexc.wearbili.manager.ID_TYPE_SSID
 import cn.spacexc.wearbili.manager.SettingsManager
@@ -116,8 +117,6 @@ class VideoInformationFragment : Fragment() {
             }
         }
         (view as ComposeView).setContent {
-            //var buttonItemHeight by remember { mutableStateOf(0.dp) }
-            val localDensity = LocalDensity.current
             val videoInfo by viewModel.videoInfo.observeAsState()
             val userFans by viewModel.uploaderFans.observeAsState()
             val uploaderInfo by viewModel.uploaderInfo.observeAsState()
@@ -131,7 +130,6 @@ class VideoInformationFragment : Fragment() {
             val likeColor by animateColorAsState(targetValue = if (isLiked == true) BilibiliPink else Color.White)
             val coinColor by animateColorAsState(targetValue = if (isCoined == true) BilibiliPink else Color.White)
             val favColor by animateColorAsState(targetValue = if (isFavorite == true) BilibiliPink else Color.White)
-            //val scrollState = rememberScrollState()
 
             Crossfade(targetState = videoInfo != null) {
                 if (it) {
@@ -387,9 +385,9 @@ class VideoInformationFragment : Fragment() {
                                     tint = likeColor,
                                     modifier = Modifier.weight(1f)
                                 ) {
-                                    videoInfo?.let {
+                                    videoInfo?.let { video ->
                                         viewModel.likeVideo(
-                                            it.data.bvid,
+                                            video.data.bvid,
                                             isLiked ?: true
                                         )
                                     }
@@ -475,8 +473,8 @@ class VideoInformationFragment : Fragment() {
                             }
                             Row(modifier = Modifier.fillMaxWidth()) {
                                 RoundButton(
-                                    buttonItem = RoundButtonDataNew(
-                                        Icons.Outlined.CloudDownload,
+                                    buttonItem = RoundButtonData(
+                                        R.drawable.cloud_download,
                                         "缓存",
                                         "缓存"
                                     ),
@@ -503,9 +501,9 @@ class VideoInformationFragment : Fragment() {
 
                                         putExtra(
                                             "data",
-                                            Gson().toJson(videoInfo?.data?.pages?.let {
+                                            Gson().toJson(videoInfo?.data?.pages?.let { pages ->
                                                 cn.spacexc.wearbili.dataclass.videoDetail.Data.Pages(
-                                                    it
+                                                    pages
                                                 )
                                             })
                                         )
@@ -627,6 +625,76 @@ class VideoInformationFragment : Fragment() {
                 ) {
                     Icon(
                         imageVector = buttonItem.icon,
+                        contentDescription = null,
+                        modifier = Modifier.align(Alignment.Center),
+                        tint = tint
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = buttonItem.displayName,
+                color = Color.White,
+                fontWeight = FontWeight.Medium,
+                fontFamily = puhuiFamily,
+                fontSize = 12.sp,
+                modifier = Modifier.align(CenterHorizontally),
+                maxLines = 1
+            )
+        }
+    }
+
+    @Composable
+    fun RoundButton(
+        buttonItem: RoundButtonData,
+        //videoInfo: VideoDetailInfo?,
+        onLongClick: () -> Unit,
+        tint: Color,
+        modifier: Modifier = Modifier,
+        onClick: () -> Unit,
+    ) {
+        val localDensity = LocalDensity.current
+        var buttonItemHeight by remember {
+            mutableStateOf(0.dp)
+        }
+        Column(
+            modifier = modifier
+                //.fillMaxWidth()
+                .pointerInput(
+                    Unit
+                ) {
+                    detectTapGestures(onTap = {
+                        onClick()
+                    }, onLongPress = {
+                        onLongClick()
+
+                    })
+                }
+                .onGloballyPositioned {
+                    buttonItemHeight = with(localDensity) { it.size.height.toDp() }
+                }, verticalArrangement = Arrangement.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
+                    .aspectRatio(1f)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f)
+                        .align(Alignment.Center)
+                        .clip(CircleShape)
+                        .border(
+                            width = 0.1.dp, color = Color(
+                                91, 92, 93, 204
+                            ), shape = CircleShape
+                        )
+                        .background(Color(41, 41, 41, 204))
+                ) {
+                    Icon(
+                        painter = painterResource(id = buttonItem.resId),
                         contentDescription = null,
                         modifier = Modifier.align(Alignment.Center),
                         tint = tint

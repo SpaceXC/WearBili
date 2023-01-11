@@ -31,6 +31,7 @@ class DynamicFragment : Fragment() {
     private var _binding: FragmentDynamicBinding? = null
     val binding get() = _binding!!
 
+    val dynamicManager = DynamicManager()
 
     lateinit var adapter: DynamicAdapter
 
@@ -119,7 +120,7 @@ class DynamicFragment : Fragment() {
         }
         ToastUtils.debugShowText("开始获取动态...")
 
-        DynamicManager.getRecommendDynamics(object : DynamicManager.DynamicResponseCallback {
+        dynamicManager.getRecommendDynamics(object : DynamicManager.DynamicResponseCallback {
             override fun onFailed(call: Call, e: Exception) {
                 MainScope().launch {
                     binding.swipeRefreshLayout.isRefreshing = false
@@ -162,7 +163,7 @@ class DynamicFragment : Fragment() {
             binding.swipeRefreshLayout.visibility = View.GONE
             binding.requireLogin.visibility = View.VISIBLE
         }
-        DynamicManager.getMoreDynamic(object : DynamicManager.DynamicResponseCallback {
+        dynamicManager.getMoreDynamic(object : DynamicManager.DynamicResponseCallback {
             override fun onFailed(call: Call, e: Exception) {
 
                 MainScope().launch {

@@ -39,9 +39,11 @@ class DynamicViewModel : ViewModel() {
 
     val isError = MutableLiveData(false)
 
+    val dynamicManager = DynamicManager()
+
     fun getDynamic() {
         MainScope().launch { _isRefreshing.value = true }
-        DynamicManager.getRecommendDynamics(object : DynamicManager.DynamicResponseCallback {
+        dynamicManager.getRecommendDynamics(object : DynamicManager.DynamicResponseCallback {
             override fun onFailed(call: Call, e: Exception) {
                 MainScope().launch {
                     ToastUtils.showText("网络异常")
@@ -62,7 +64,7 @@ class DynamicViewModel : ViewModel() {
 
     fun getMoreDynamic() {
         MainScope().launch { _isRefreshing.value = true }
-        DynamicManager.getMoreDynamic(object : DynamicManager.DynamicResponseCallback {
+        dynamicManager.getMoreDynamic(object : DynamicManager.DynamicResponseCallback {
             override fun onFailed(call: Call, e: Exception) {
                 MainScope().launch {
                     ToastUtils.showText("网络异常")

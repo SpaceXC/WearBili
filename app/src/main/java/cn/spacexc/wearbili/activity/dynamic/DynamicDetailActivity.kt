@@ -43,6 +43,9 @@ class DynamicDetailActivity : AppCompatActivity() {
     var page: Int = 1
     lateinit var adapter: CommentAdapter
     var isCommentEnd = false
+
+    val dynamicManager = DynamicManager()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDynamicDetailBinding.inflate(layoutInflater)
@@ -67,7 +70,7 @@ class DynamicDetailActivity : AppCompatActivity() {
     }
 
     private fun getDynamicDetails(dynamicId: String) {
-        DynamicManager.getDynamicDetails(dynamicId, object : Callback {
+        dynamicManager.getDynamicDetails(dynamicId, object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 MainScope().launch {
                     binding.swipeRefreshLayout.isRefreshing = false
@@ -79,7 +82,7 @@ class DynamicDetailActivity : AppCompatActivity() {
             override fun onResponse(call: Call, response: Response) {
                 val str = response.body?.string()
                 val result = Gson().fromJson(str, Detail::class.java)
-                val card = DynamicManager.dynamicProcessor(result.data.card)!!
+                val card = dynamicManager.dynamicProcessor(result.data.card)!!
                 MainScope().launch {
                     binding.dynamicUsername.addClickScale()
                     binding.dynamicAvatar.addClickScale()
@@ -284,7 +287,7 @@ class DynamicDetailActivity : AppCompatActivity() {
             else -> 0
         }
         if (isCommentEnd) return
-        DynamicManager.getCommentsByLikes(
+        dynamicManager.getCommentsByLikes(
             requestType,
             oid,
             page,

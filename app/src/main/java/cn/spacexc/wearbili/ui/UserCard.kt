@@ -149,7 +149,7 @@ fun UserCard(
                         )
 
                     }
-                    if (officialType != OFFICIAL_TYPE_NONE) {
+                    if (officialType == OFFICIAL_TYPE_ORG || officialType == OFFICIAL_TYPE_PERSONAL) {
                         Image(
                             painter = painterResource(
                                 id = when (officialType) {

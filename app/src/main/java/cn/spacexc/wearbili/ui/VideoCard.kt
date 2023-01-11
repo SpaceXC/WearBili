@@ -59,21 +59,23 @@ object VideoUis {
         ssid: String = "",
         badge: String = "",
         tagName: String = "",
-        context: Context = Application.getContext()
+        context: Context = Application.getContext(),
+        modifier: Modifier = Modifier
     ) {
         var iconHeight by remember { mutableStateOf(0.dp) }
         val localDensity = LocalDensity.current
-        Column(modifier = Modifier
-            .pointerInput(Unit) {
-                detectTapGestures(onLongPress = {
-                    if (videoBvid.isNotEmpty()) {
-                        val intent = Intent(context, VideoLongClickActivity::class.java)
-                        intent.putExtra("bvid", videoBvid)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        context.startActivity(intent)
-                    }
-                }, onTap = {
-                    if (isBangumi && epid.isNotEmpty()) {
+        Column(
+            modifier = modifier
+                .pointerInput(Unit) {
+                    detectTapGestures(onLongPress = {
+                        if (videoBvid.isNotEmpty()) {
+                            val intent = Intent(context, VideoLongClickActivity::class.java)
+                            intent.putExtra("bvid", videoBvid)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            context.startActivity(intent)
+                        }
+                    }, onTap = {
+                        if (isBangumi && epid.isNotEmpty()) {
                         Intent(context, BangumiActivity::class.java).apply {
                             if (epid.isNotEmpty()) {
                                 putExtra("id", epid)

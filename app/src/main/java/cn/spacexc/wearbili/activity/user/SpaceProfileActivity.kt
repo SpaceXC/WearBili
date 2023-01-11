@@ -4,9 +4,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.*
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
@@ -16,9 +14,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -26,10 +26,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -71,7 +73,7 @@ This is free software, and you are welcome to redistribute it under certain cond
 class SpaceProfileActivity : AppCompatActivity() {
     val viewModel: UserSpaceViewModel by viewModels()
 
-    @OptIn(ExperimentalPagerApi::class)
+    @OptIn(ExperimentalPagerApi::class, ExperimentalFoundationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val userMid = intent.getLongExtra("userMid", 0)
@@ -100,6 +102,9 @@ class SpaceProfileActivity : AppCompatActivity() {
                     255
                 ) else BilibiliPink, animationSpec = tween(durationMillis = 400)
             )
+            var searchBoxKeyword by remember {
+                mutableStateOf("")
+            }
             CirclesBackground.RegularBackgroundWithTitleAndBackArrow(
                 title = "个人空间",
                 onBack = { finish() },
@@ -338,31 +343,115 @@ class SpaceProfileActivity : AppCompatActivity() {
                                 )
                                 .background(Color(36, 36, 36, 100))
                         ) {
-                            LazyRow(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .verticalScroll(
-                                        rememberScrollState()
-                                    ), contentPadding = PaddingValues(
-                                    start = 6.dp, end = 6.dp, top = 8.dp, bottom = 6.dp
-                                )
-                            ) {
-                                item {
-                                    TabItem(text = "投稿", isSelected = pagerState.currentPage == 0) {
-                                        scope.launch {
-                                            pagerState.animateScrollToPage(0)
+                            Box(modifier = Modifier.fillMaxWidth()) {
+                                var tabHeight by remember {
+                                    mutableStateOf(0.dp)
+                                }
+                                var isSearchBoxExpand by remember {
+                                    mutableStateOf(false)
+                                }
+                                Crossfade(targetState = isSearchBoxExpand && pagerState.currentPage == 0) {
+                                    if (it) {
+                                        BasicTextField(
+                                            value = searchBoxKeyword,
+                                            modifier = Modifier
+                                                .padding(
+                                                    start = 6.dp,
+                                                    end = 4.dp.plus(tabHeight - 14.dp),
+                                                    top = 8.dp,
+                                                    bottom = 6.dp
+                                                )
+                                                .border(
+                                                    width = (0.5).dp, color = Color(
+                                                        255,
+                                                        255,
+                                                        255,
+                                                        61
+                                                    ), shape = RoundedCornerShape(360.dp)
+                                                )
+                                                .clip(RoundedCornerShape(360.dp))
+                                                .fillMaxWidth()
+                                                .background(Color.Transparent)
+                                                .padding(
+                                                    start = 12.dp,
+                                                    end = 13.dp,
+                                                    top = 3.dp,
+                                                    bottom = 4.dp
+                                                ),
+                                            onValueChange = { value ->
+                                                searchBoxKeyword = value
+                                                viewModel.getVideos(userMid, true, value)
+                                            },
+                                            textStyle = TextStyle(
+                                                color = Color.White,
+                                                fontSize = 14.sp,
+                                                fontFamily = puhuiFamily
+                                            ),
+                                            cursorBrush = SolidColor(
+                                                BilibiliPink
+                                            )
+                                        )
+                                    } else {
+                                        LazyRow(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .verticalScroll(
+                                                    rememberScrollState()
+                                                )
+                                                .onGloballyPositioned {
+                                                    tabHeight =
+                                                        with(localDensity) { it.size.height.toDp() }
+                                                }, contentPadding = PaddingValues(
+                                                start = 6.dp, end = 6.dp, top = 8.dp, bottom = 6.dp
+                                            )
+                                        ) {
+                                            item {
+                                                TabItem(
+                                                    text = "投稿",
+                                                    isSelected = pagerState.currentPage == 0
+                                                ) {
+                                                    scope.launch {
+                                                        pagerState.animateScrollToPage(0)
+                                                    }
+                                                }
+                                            }
+                                            item {
+                                                TabItem(
+                                                    text = "动态",
+                                                    isSelected = pagerState.currentPage == 1
+                                                ) {
+                                                    scope.launch {
+                                                        pagerState.animateScrollToPage(1)
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }
-                                item {
-                                    TabItem(text = "动态", isSelected = pagerState.currentPage == 1) {
-                                        scope.launch {
-                                            pagerState.animateScrollToPage(1)
-                                        }
+                                Row(
+                                    modifier = Modifier.align(
+                                        Alignment.CenterEnd
+                                    )
+                                ) {
+                                    AnimatedVisibility(
+                                        visible = pagerState.currentPage == 0,
+                                        enter = fadeIn(),
+                                        exit = fadeOut()
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Search,
+                                            contentDescription = null,
+                                            modifier = Modifier
+                                                .size(tabHeight - 14.dp)
+                                                .padding(end = 6.dp)
+                                                .clickable {
+                                                    isSearchBoxExpand = !isSearchBoxExpand
+                                                }
+                                        )
                                     }
                                 }
-
                             }
+
                             HorizontalPager(count = 2, state = pagerState) { page ->
                                 when (page) {
                                     0 -> {
@@ -374,7 +463,7 @@ class SpaceProfileActivity : AppCompatActivity() {
                                             )
                                         ) {
                                             userVideos?.forEach {
-                                                item {
+                                                item(key = it.aid) {
                                                     VideoUis.VideoCard(
                                                         videoName = it.title,
                                                         uploader = it.author,
@@ -383,13 +472,18 @@ class SpaceProfileActivity : AppCompatActivity() {
                                                         badge = if (it.is_union_video == 1) "合作" else if (it.is_live_playback == 1) "直播回放" else if (it.is_pay == 1) "付费" else "",
                                                         videoBvid = it.bvid,
                                                         context = this@SpaceProfileActivity,
-                                                        clickable = true
+                                                        clickable = true,
+                                                        modifier = Modifier.animateItemPlacement()
                                                     )
                                                 }
                                             }
                                             item {
                                                 LaunchedEffect(key1 = Unit, block = {
-                                                    viewModel.getVideos(userMid, false)
+                                                    viewModel.getVideos(
+                                                        userMid,
+                                                        false,
+                                                        searchBoxKeyword
+                                                    )
                                                 })
                                             }
                                         }
@@ -417,9 +511,11 @@ class SpaceProfileActivity : AppCompatActivity() {
                                                     )
                                                 }
                                             }
-                                            item {
-                                                LaunchedEffect(key1 = Unit) {
-                                                    viewModel.getMoreDynamic(userMid)
+                                            if (!dynamicList.isNullOrEmpty()) {
+                                                item {
+                                                    LaunchedEffect(key1 = Unit) {
+                                                        viewModel.getMoreDynamic(userMid)
+                                                    }
                                                 }
                                             }
                                         }

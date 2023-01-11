@@ -70,7 +70,7 @@ import java.io.IOException
  * 以及其他开源仓库的贡献者们！
  */
 
-object DynamicManager {
+class DynamicManager {
     var lastDynamicId: Long = 0
 
     var lastSpaceDynamicId: Long = 0
@@ -84,7 +84,7 @@ object DynamicManager {
      *
      * 8 - 投稿
      */
-    const val type = "268435455,1,2,4,8,4098"    //前面那个268435455我也不知道为什么要加，反正不加就报错，github上看到的
+    val type = "268435455,1,2,4,8,4098"    //前面那个268435455我也不知道为什么要加，反正不加就报错，github上看到的
 
     fun getRecommendDynamics(callback: DynamicResponseCallback) {
         if (!UserManager.isLoggedIn()) return
@@ -191,7 +191,7 @@ object DynamicManager {
                             //Log.d(TAG, "onResponse: $tempList")
                             if (tempList.isNotEmpty()) {
                                 lastSpaceDynamicId = tempList[tempList.size - 1].desc.dynamic_id
-                                lastSpaceDynamicId.debugToast("")
+                                lastSpaceDynamicId.debugToast("last dynamic id")
                                 callback.onSuccess(tempList, code)
                             } else {
                                 callback.onSuccess(emptyList(), code)
@@ -214,7 +214,12 @@ object DynamicManager {
     }
 
     fun getMoreSpaceDynamic(mid: Long, callback: DynamicResponseCallback) {
-        NetworkUtils.getUrl("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?host_uid=$mid&type=$type&offset_dynamic_id=$lastSpaceDynamicId",
+        NetworkUtils.getUrl(
+            "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?host_uid=$mid&type=$type&offset_dynamic_id=${
+                lastSpaceDynamicId.log(
+                    "call: last dynamic id"
+                )
+            }".log("more space dynamic url"),
             object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     callback.onFailed(call, e)
@@ -227,7 +232,9 @@ object DynamicManager {
                             code = it
                         }
                         //Log.d(TAG, "onResponse: $tempList")
-                        lastSpaceDynamicId = tempList[tempList.size - 1].desc.dynamic_id
+                        if (tempList.isNotEmpty()) {
+                            lastSpaceDynamicId = tempList[tempList.size - 1].desc.dynamic_id
+                        }
                         callback.onSuccess(tempList, code)
                     } catch (e: Exception) {
                         Log.e(TAG, "onResponse: ${e.cause}", e)
@@ -251,6 +258,9 @@ object DynamicManager {
         val result = Gson().fromJson(response, Dynamic::class.java)
         callback.invoke(result.code)
         if (result.code != 0) {
+            return emptyList()
+        }
+        if (result.data.has_more == 0) {
             return emptyList()
         }
         val tempList = mutableListOf<Card>()

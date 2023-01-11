@@ -1,6 +1,5 @@
 package cn.spacexc.wearbili.viewmodel
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -33,11 +32,9 @@ This is free software, and you are welcome to redistribute it under certain cond
 class SearchViewModel : ViewModel() {
     private val _searchedVideosData =
         MutableLiveData<List<cn.spacexc.wearbili.dataclass.search.Result>>()
-    val searchedVideosData: LiveData<List<cn.spacexc.wearbili.dataclass.search.Result>> =
-        _searchedVideosData
-    val searchedUser = mutableStateOf(emptyList<SearchedUser>())
-    val searchedMediaFt = mutableStateOf(emptyList<SearchedMediaFt>())
-    val searchedVideo = mutableStateOf(emptyList<SearchedVideo>())
+    val searchedUser = MutableLiveData<List<SearchedUser>>()
+    val searchedMediaFt = MutableLiveData<List<SearchedMediaFt>>()
+    val searchedVideo = MutableLiveData<List<SearchedVideo>>()
     var page = 1
 
     private val _isRefreshing = MutableLiveData(false)
@@ -80,7 +77,7 @@ class SearchViewModel : ViewModel() {
                     } else {
                         _searchedVideosData.value =
                             _searchedVideosData.value?.plus(result.data.result)
-                        searchedVideo.value = searchedVideo.value.plus(videoItems)
+                        searchedVideo.value = searchedVideo.value?.plus(videoItems)
                     }
                     _isRefreshing.value = false
                     page++

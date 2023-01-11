@@ -225,10 +225,11 @@ object UserManager {
     fun getUserSpaceVideo(
         mid: Long,
         page: Int,
+        keyword: String = "",
         callback: NetworkUtils.ResultCallback<UserSpaceVideo>
     ) {
         NetworkUtils.getUrl(
-            "https://api.bilibili.com/x/space/arc/search?mid=$mid&pn=$page&ps=20&order=pubdate&order_avoided=true&jsonp=jsonp".log(),
+            "https://api.bilibili.com/x/space/arc/search?mid=$mid&pn=$page&ps=20&order=pubdate&order_avoided=true&jsonp=jsonp${if (keyword.isNotEmpty()) "&keyword=$keyword" else ""}".log(),
             object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     callback.onFailed(e)

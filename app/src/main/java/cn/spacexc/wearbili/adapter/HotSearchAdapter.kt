@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
-import cn.spacexc.wearbili.activity.search.SearchResultActivity
+import cn.spacexc.wearbili.activity.search.SearchResultActivityNew
 import cn.spacexc.wearbili.dataclass.HotSearchData
 import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
 import com.bumptech.glide.Glide
@@ -52,7 +52,7 @@ class HotSearchAdapter : ListAdapter<HotSearchData, HotSearchAdapter.HotSearchVi
         val searchData = getItem(position)
         holder.showNameText.text = searchData.show_name
         holder.itemView.setOnClickListener {
-            val intent = Intent(Application.getContext(), SearchResultActivity::class.java)
+            val intent = Intent(Application.getContext(), SearchResultActivityNew::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             intent.putExtra("keyword", searchData.keyword)
             Application.getContext().startActivity(intent)

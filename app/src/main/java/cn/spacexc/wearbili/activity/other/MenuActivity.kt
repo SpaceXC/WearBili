@@ -23,8 +23,8 @@ class MenuActivity : AppCompatActivity() {
         RoundButtonData(R.drawable.ic_baseline_person_outline_24, "我的", "我的"),
         RoundButtonData(R.drawable.mode_fan, "动态", "动态"),
         RoundButtonData(R.drawable.ic_baseline_search_24, "搜索", "搜索"),
-        RoundButtonData(R.drawable.cloud_download, "离线缓存", "离线缓存"),
-        RoundButtonData(R.drawable.ic_outline_local_fire_department_24, "热门", "热门"),
+        RoundButtonData(R.drawable.cloud_download, "缓存", "缓存"),
+        RoundButtonData(R.drawable.local_fire_department, "热门", "热门"),
         RoundButtonData(R.drawable.ic_baseline_movie_24, "番剧", "番剧"),
         RoundButtonData(R.drawable.ic_outline_info_24, "关于", "关于")
     )
@@ -99,7 +99,7 @@ class MenuActivity : AppCompatActivity() {
                             finish()
                             overridePendingTransition(R.anim.activity_in_y, R.anim.activity_out_y)
                         }
-                        "离线缓存" -> {
+                        "缓存" -> {
                             val intent =
                                 Intent(this@MenuActivity, VideoCacheActivity::class.java)
                             startActivity(intent)

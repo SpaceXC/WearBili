@@ -165,7 +165,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
-                    android:drawableStart="@drawable/ic_outline_local_fire_department_24"
+                    android:drawableStart="@drawable/local_fire_department"
                     android:fontFamily="@font/puhui_bold"
                     android:gravity="center_vertical"
                     android:text="热门搜索"
