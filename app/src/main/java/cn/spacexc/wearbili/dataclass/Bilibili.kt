@@ -229,7 +229,7 @@ data class CommentData(
     val hots: List<CommentContentData>,
     val notice: CommentNotice,
     val replies: List<CommentContentData>?,
-    val top: CommentContentData?,
+    val top: TopComment?,
     val upper: UpperInfo
 )
 
@@ -242,20 +242,23 @@ data class CommentCursor(
     val is_end : Boolean,
     val name : String
 )
+
 data class CommentNotice(
-    val content : String,
-    val link : String,
-    val id : Int,
+    val content: String,
+    val link: String,
+    val id: Int,
     val title: String
 )
+
+data class TopComment(val upper: CommentContentData)
 data class CommentContentData(
     var rpid: Long,
     var oid: Long,
     var type: Int,
     var mid: Long,
-    var root: Int,
-    var parent: Int,
-    var dialog: Int,
+    var root: Long,
+    var parent: Long,
+    var dialog: Long,
     var count: Int,
     var rcount: Int,
     var state: Int,
@@ -274,7 +277,7 @@ data class CommentContentData(
     var up_action: UpAction,
     var show_follow: Boolean,
     var invisible: Boolean,
-    var reply_control: ReplyControl,
+    var reply_control: ReplyControl?,
     var replies: Array<Replies>?,
     var card_label: Array<CardLabel>,
     var is_top: Boolean = false
@@ -511,78 +514,6 @@ data class CommentContentData(
             var max_line: Int,
         )
     }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as CommentContentData
-
-        if (rpid != other.rpid) return false
-        if (oid != other.oid) return false
-        if (type != other.type) return false
-        if (mid != other.mid) return false
-        if (root != other.root) return false
-        if (parent != other.parent) return false
-        if (dialog != other.dialog) return false
-        if (count != other.count) return false
-        if (rcount != other.rcount) return false
-        if (state != other.state) return false
-        if (fansgrade != other.fansgrade) return false
-        if (attr != other.attr) return false
-        if (ctime != other.ctime) return false
-        if (rpid_str != other.rpid_str) return false
-        if (root_str != other.root_str) return false
-        if (parent_str != other.parent_str) return false
-        if (like != other.like) return false
-        if (action != other.action) return false
-        if (member != other.member) return false
-        if (content != other.content) return false
-        if (assist != other.assist) return false
-        if (folder != other.folder) return false
-        if (up_action != other.up_action) return false
-        if (show_follow != other.show_follow) return false
-        if (invisible != other.invisible) return false
-        if (reply_control != other.reply_control) return false
-        if (!replies.contentEquals(other.replies)) return false
-        if (!card_label.contentEquals(other.card_label)) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = rpid.hashCode()
-        result = 31 * result + oid.hashCode()
-        result = 31 * result + type
-        result = 31 * result + mid.hashCode()
-        result = 31 * result + root
-        result = 31 * result + parent
-        result = 31 * result + dialog
-        result = 31 * result + count
-        result = 31 * result + rcount
-        result = 31 * result + state
-        result = 31 * result + fansgrade
-        result = 31 * result + attr
-        result = 31 * result + ctime.hashCode()
-        result = 31 * result + rpid_str.hashCode()
-        result = 31 * result + root_str.hashCode()
-        result = 31 * result + parent_str.hashCode()
-        result = 31 * result + like
-        result = 31 * result + action
-        result = 31 * result + (member?.hashCode() ?: 0)
-        result = 31 * result + (content?.hashCode() ?: 0)
-        result = 31 * result + assist
-        result = 31 * result + folder.hashCode()
-        result = 31 * result + up_action.hashCode()
-        result = 31 * result + show_follow.hashCode()
-        result = 31 * result + invisible.hashCode()
-        result = 31 * result + reply_control.hashCode()
-        result = 31 * result + (replies?.contentHashCode() ?: 0)
-        result = 31 * result + card_label.contentHashCode()
-        result = 31 * result + is_top.hashCode()
-        return result
-    }
-
 }
 
 

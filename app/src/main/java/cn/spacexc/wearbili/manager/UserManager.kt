@@ -44,7 +44,7 @@ object UserManager {
     }
 
     fun getUserById(mid: Long, callback: Callback) {
-        NetworkUtils.getUrl("https://api.bilibili.com/x/space/acc/info?mid=$mid", callback)
+        NetworkUtils.getUrl("https://api.bilibili.com/x/space/acc/info?mid=$mid".log(), callback)
     }
 
     fun getUserFans(mid: Long, callback: Callback) {

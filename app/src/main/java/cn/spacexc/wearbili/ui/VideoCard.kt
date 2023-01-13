@@ -2,6 +2,8 @@ package cn.spacexc.wearbili.ui
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -45,8 +47,10 @@ import coil.request.ImageRequest
  * 给！爷！写！注！释！
  */
 object VideoUis {
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun VideoCard(
+        modifier: Modifier = Modifier,
         videoName: String,
         uploader: String,
         views: String,
@@ -59,13 +63,13 @@ object VideoUis {
         ssid: String = "",
         badge: String = "",
         tagName: String = "",
-        context: Context = Application.getContext(),
-        modifier: Modifier = Modifier
+        context: Context = Application.getContext()
     ) {
         var iconHeight by remember { mutableStateOf(0.dp) }
         val localDensity = LocalDensity.current
         Column(
             modifier = modifier
+                .animateContentSize()
                 .pointerInput(Unit) {
                     detectTapGestures(onLongPress = {
                         if (videoBvid.isNotEmpty()) {
@@ -76,29 +80,30 @@ object VideoUis {
                         }
                     }, onTap = {
                         if (isBangumi && epid.isNotEmpty()) {
-                        Intent(context, BangumiActivity::class.java).apply {
-                            if (epid.isNotEmpty()) {
-                                putExtra("id", epid)
-                                putExtra("idType", ID_TYPE_EPID)
-                            } else {
-                                putExtra("id", ssid)
-                                putExtra("idType", ID_TYPE_SSID)
+                            Intent(context, BangumiActivity::class.java).apply {
+                                if (epid.isNotEmpty()) {
+                                    putExtra("id", epid)
+                                    putExtra("idType", ID_TYPE_EPID)
+                                } else {
+                                    putExtra("id", ssid)
+                                    putExtra("idType", ID_TYPE_SSID)
+                                }
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                context.startActivity(this)
                             }
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            context.startActivity(this)
+                        } else if (clickable && videoBvid.isNotEmpty()) {
+                            Intent(context, VideoActivity::class.java).apply {
+                                putExtra("videoId", videoBvid)
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                context.startActivity(this)
+                            }
                         }
-                    } else if (clickable && videoBvid.isNotEmpty()) {
-                        Intent(context, VideoActivity::class.java).apply {
-                            putExtra("videoId", videoBvid)
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            context.startActivity(this)
-                        }
-                    }
-                })
-            }) {
+                    })
+                }) {
             Spacer(Modifier.height(6.dp))
             Column(
                 modifier = Modifier
+                    .animateContentSize()
                     .clip(RoundedCornerShape(10.dp))
                     .border(
                         width = 0.1f.dp,
@@ -106,7 +111,7 @@ object VideoUis {
                         shape = RoundedCornerShape(10.dp)
                     )
                     .background(color = Color(36, 36, 36, 100))
-                    .padding(start = 6.dp, end = 6.dp, top = 10.dp, bottom = 10.dp),
+                    .padding(start = 6.dp, end = 6.dp, top = 10.dp, bottom = 10.dp)
             ) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,

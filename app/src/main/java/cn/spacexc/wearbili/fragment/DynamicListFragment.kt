@@ -69,7 +69,7 @@ class DynamicListFragment : Fragment() {
                                 state = viewModel.lazyListState
                             ) {
                                 dynamicList?.forEach { card ->
-                                    item {
+                                    item(key = card.desc.dynamic_id) {
                                         DynamicCard(
                                             posterAvatar = card.desc.user_profile.info.face,
                                             posterName = card.desc.user_profile.info.uname,

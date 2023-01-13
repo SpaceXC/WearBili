@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.wear.compose.material.Icon
@@ -99,6 +100,7 @@ object CirclesBackground {
         isLoading: Boolean = false,
         isError: Boolean = false,
         errorRetry: () -> Unit = {},
+        contentHeight: (Dp) -> Unit = {},
         content: @Composable () -> Unit
     ) {
         val timeSource = TimeTextDefaults.timeSource("HH:mm")
@@ -234,10 +236,15 @@ object CirclesBackground {
                                     }
                                 }
                             }
-
                             Spacer(Modifier.height(6.dp))
                         }   //标题栏
-                        content()
+                        Box(modifier = Modifier
+                            .fillMaxWidth()
+                            .onGloballyPositioned {
+                                contentHeight(with(localDensity) { it.size.height.toDp() })
+                            }) {
+                            content()
+                        }
                     }   //内容
                 } else {
                     Crossfade(targetState = isError) { error ->

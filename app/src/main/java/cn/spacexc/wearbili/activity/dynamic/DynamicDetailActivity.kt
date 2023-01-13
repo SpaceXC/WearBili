@@ -315,8 +315,8 @@ class DynamicDetailActivity : AppCompatActivity() {
                             if (result.data.cursor.is_end) return@launch
                             if (isRefresh) {
                                 var top = mutableListOf<CommentContentData>()
-                                if (result.data.top?.content != null && result.data.top.member != null) {
-                                    top = mutableListOf(result.data.top)
+                                if (result.data.top?.upper?.content != null && result.data.top?.upper.member != null) {
+                                    top = mutableListOf(result.data.top.upper)
                                 }
                                 if (!result.data.replies.isNullOrEmpty()) {
                                     adapter.uploaderMid = result.data.upper.mid

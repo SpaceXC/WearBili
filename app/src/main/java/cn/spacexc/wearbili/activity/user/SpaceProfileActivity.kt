@@ -81,6 +81,7 @@ class SpaceProfileActivity : AppCompatActivity() {
         viewModel.getVideos(userMid, true)
         viewModel.getDynamic(userMid)
         viewModel.checkSubscribe(userMid)
+        viewModel.getUserFans(userMid)
         setContent {
             val localDensity = LocalDensity.current
             val user by viewModel.user.observeAsState()
@@ -94,6 +95,7 @@ class SpaceProfileActivity : AppCompatActivity() {
             val scope = rememberCoroutineScope()
             val isError by viewModel.isError.observeAsState()
             val isSubscribed by viewModel.isFollowed.observeAsState()
+            val fans by viewModel.fans.observeAsState()
             val followButtonColor by animateColorAsState(
                 targetValue = if (isSubscribed == true) Color(
                     63,
@@ -108,7 +110,7 @@ class SpaceProfileActivity : AppCompatActivity() {
             CirclesBackground.RegularBackgroundWithTitleAndBackArrow(
                 title = "个人空间",
                 onBack = { finish() },
-                isLoading = user == null,
+                isLoading = user == null || fans == null || isSubscribed == null || userVideos == null || dynamicList == null,
                 isError = isError == true,
                 errorRetry = {
                     viewModel.isError.value = false
@@ -307,7 +309,7 @@ class SpaceProfileActivity : AppCompatActivity() {
 
                                             Spacer(modifier = Modifier.width(4.dp))
                                             Text(
-                                                text = if (isSubscribed == true) "已关注" else "关注",
+                                                text = "${if (isSubscribed == true) "已关注" else "关注"}  ${(fans ?: 0).toShortChinese()}",
                                                 color = Color.White,
                                                 fontFamily = puhuiFamily,
                                                 fontWeight = FontWeight.Medium,

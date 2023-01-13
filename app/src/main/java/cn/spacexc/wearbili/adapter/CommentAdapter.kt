@@ -116,7 +116,7 @@ class CommentAdapter(
                 holder.replies.layoutManager = LinearLayoutManager(this@CommentAdapter.context)
                 holder.replies.adapter = hotRepliesAdapter
                 hotRepliesAdapter.submitList(comment.replies!!.toList())
-                holder.repliesControl.text = comment.reply_control.sub_reply_entry_text
+                holder.repliesControl.text = comment.reply_control?.sub_reply_entry_text ?: ""
             } else {
                 holder.repliesCard.visibility = View.GONE
             }

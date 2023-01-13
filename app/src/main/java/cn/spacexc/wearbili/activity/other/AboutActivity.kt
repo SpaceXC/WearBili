@@ -23,7 +23,7 @@ import cn.spacexc.wearbili.utils.ToastUtils
 //import kotlinx.coroutines.launch
 //import androidx.lifecycle.lifecycleScope
 
-const val APP_VERSION = "Rel-AL 0.21.2"
+const val APP_VERSION = "Rel-AL 0.21.6"
 
 class AboutActivity : AppCompatActivity() {
     private val firstList = listOf(
@@ -34,6 +34,7 @@ class AboutActivity : AppCompatActivity() {
         HorizontalButtonData(0, "uid480816699", "开发者 项目发起人"),
         HorizontalButtonData(0, "uid426907991", "图标设计师"),
         HorizontalButtonData(0, "uid293793435", "API仓库Owner"),
+        HorizontalButtonData(0, "uid247874626", "技术协力"),
         HorizontalButtonData(
             R.drawable.akari,       //Rechrd's Avatar
             "虚位以待",     //Rechrd

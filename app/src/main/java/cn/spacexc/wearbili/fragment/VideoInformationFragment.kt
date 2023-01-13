@@ -51,6 +51,7 @@ import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.image.PhotoViewActivity
 import cn.spacexc.wearbili.activity.settings.ChooseSettingsActivity
+import cn.spacexc.wearbili.activity.user.SpaceProfileActivity
 import cn.spacexc.wearbili.activity.video.*
 import cn.spacexc.wearbili.dataclass.RoundButtonData
 import cn.spacexc.wearbili.dataclass.RoundButtonDataNew
@@ -58,15 +59,13 @@ import cn.spacexc.wearbili.manager.ID_TYPE_SSID
 import cn.spacexc.wearbili.manager.SettingsManager
 import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.manager.VideoManager
-import cn.spacexc.wearbili.ui.BilibiliPink
+import cn.spacexc.wearbili.ui.*
 import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
-import cn.spacexc.wearbili.ui.OFFICIAL_TYPE_NONE
-import cn.spacexc.wearbili.ui.UserCard
-import cn.spacexc.wearbili.ui.puhuiFamily
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import cn.spacexc.wearbili.utils.TimeUtils.toDateStr
 import cn.spacexc.wearbili.utils.ToastUtils
 import cn.spacexc.wearbili.utils.ifNullOrEmpty
+import cn.spacexc.wearbili.utils.parseColor
 import cn.spacexc.wearbili.viewmodel.VideoViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -117,6 +116,7 @@ class VideoInformationFragment : Fragment() {
             }
         }
         (view as ComposeView).setContent {
+            val localDensity = LocalDensity.current
             val videoInfo by viewModel.videoInfo.observeAsState()
             val userFans by viewModel.uploaderFans.observeAsState()
             val uploaderInfo by viewModel.uploaderInfo.observeAsState()
@@ -137,381 +137,538 @@ class VideoInformationFragment : Fragment() {
                         modifier = Modifier
                             .fillMaxSize()
                             .verticalScroll(state = viewModel.scrollState)
-                            .padding(vertical = 8.dp, horizontal = 10.dp)
+                            .padding(vertical = 8.dp)
                             .animateContentSize()
                     ) {
-                        AsyncImage(
-                            model = ImageRequest.Builder(LocalContext.current)
-                                .placeholder(R.drawable.placeholder)
-                                .data(videoInfo?.data?.pic).crossfade(true).build(),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .animateContentSize(animationSpec = tween(durationMillis = 200))
-                                .clickVfx {
-                                    val intent =
-                                        Intent(requireActivity(), PhotoViewActivity::class.java)
-                                    intent.putExtra("imageUrl", videoInfo?.data?.pic)
-                                    startActivity(intent)
-                                }
-                                .clip(
-                                    RoundedCornerShape(10.dp)
-                                )
-                        )
-                        Spacer(modifier = Modifier.height(6.dp))
-                        Text(
-                            text = videoInfo?.data?.title ?: "",
-                            color = Color.White,
-                            fontFamily = puhuiFamily,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        Spacer(modifier = Modifier.height(6.dp))
-                        UserCard(
-                            name = videoInfo?.data?.owner?.name ?: "",
-                            uid = videoInfo?.data?.owner?.mid ?: 0,
-                            sign = "${userFans?.data?.card?.fans?.toShortChinese() ?: "0"}粉丝",
-                            avatar = videoInfo?.data?.owner?.face ?: "",
-                            pendant = uploaderInfo?.data?.pendant?.image_enhance ?: "",
-                            nicknameColor = uploaderInfo?.data?.vip?.nickname_color.ifNullOrEmpty { "#FFFFFF" },
-                            officialType = uploaderInfo?.data?.official?.type ?: OFFICIAL_TYPE_NONE
-                        )
-                        Spacer(modifier = Modifier.height(6.dp))
-                        Column(modifier = Modifier.fillMaxWidth()) {
-                            VideoInfoItem(
-                                icon = Icons.Outlined.PlayCircle,
-                                content = "${videoInfo?.data?.stat?.view?.toShortChinese() ?: "0"}播放"
-                            )
-                            Spacer(modifier = Modifier.height(2.dp))
-                            VideoInfoItem(
-                                icon = painterResource(id = R.drawable.ic_danmaku),
-                                content = "${videoInfo?.data?.stat?.danmaku ?: "0"}弹幕"
-                            )
-                            Spacer(modifier = Modifier.height(2.dp))
-                            VideoInfoItem(
-                                icon = Icons.Outlined.Movie,
-                                content = videoInfo?.data?.bvid ?: "",
-                                onLongClick = {
-                                    val clipboardManager: ClipboardManager =
-                                        ContextCompat.getSystemService(
-                                            requireContext(),
-                                            ClipboardManager::class.java
-                                        ) as ClipboardManager
-                                    val clip: ClipData =
-                                        ClipData.newPlainText(
-                                            "wearbili bvid",
-                                            videoInfo?.data?.bvid ?: ""
-                                        )
-                                    clipboardManager.setPrimaryClip(clip)
-                                    ToastUtils.makeText("已复制BV号")
-                                        .show()
-                                }
-                            )
-                            Spacer(modifier = Modifier.height(2.dp))
-                            VideoInfoItem(
-                                icon = Icons.Outlined.CalendarMonth,
-                                content = videoInfo?.data?.pubdate?.times(1000)?.toDateStr() ?: ""
-                            )
-                            Spacer(modifier = Modifier.height(2.dp))
-                        }
-                        Spacer(modifier = Modifier.height(6.dp))
-                        if (videoInfo?.data?.desc?.isNotEmpty() == true) {
-                            Text(text = videoInfo?.data?.desc ?: "",
+                        Column(modifier = Modifier.padding(horizontal = 10.dp)) {
+                            AsyncImage(
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .placeholder(R.drawable.placeholder)
+                                    .data(videoInfo?.data?.pic).crossfade(true).build(),
+                                contentDescription = null,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .animateContentSize(animationSpec = tween(durationMillis = 400))
-                                    .clickable {
-                                        descriptionMaxLines =
-                                            if (descriptionMaxLines == 3) Int.MAX_VALUE else 3
+                                    .animateContentSize(animationSpec = tween(durationMillis = 200))
+                                    .clickVfx {
+                                        val intent =
+                                            Intent(requireActivity(), PhotoViewActivity::class.java)
+                                        intent.putExtra("imageUrl", videoInfo?.data?.pic)
+                                        startActivity(intent)
                                     }
-                                    .alpha(0.9f),
-                                fontSize = 13.sp,
-                                color = Color.White,
-                                fontFamily = puhuiFamily,
-                                maxLines = descriptionMaxLines,
-                                overflow = TextOverflow.Ellipsis)
-                            Spacer(modifier = Modifier.height(8.dp))
-                        }
-                        if (videoInfo?.data?.pages?.size != 1) {
-                            Text(
-                                text = "选集(${videoInfo?.data?.pages?.size ?: 0})",
-                                fontFamily = puhuiFamily,
-                                fontWeight = FontWeight.Normal,
-                                fontSize = 18.sp,
-                                color = Color.White,
-                                modifier = Modifier.clickVfx {
-                                    videoInfo?.data?.pages?.let { pages ->
-                                        val intent = Intent(
-                                            requireActivity(),
-                                            ViewFullVideoPartsActivity::class.java
-                                        )
-                                        intent.putExtra(
-                                            "data",
-                                            Gson().toJson(
-                                                cn.spacexc.wearbili.dataclass.videoDetail.Data.Pages(
-                                                    pages
-                                                )
-                                            )
-                                        )
-                                        intent.putExtra("bvid", videoInfo?.data?.bvid)
-                                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                        Application.getContext().startActivity(intent)
-                                    }
-
-                                }
+                                    .clip(
+                                        RoundedCornerShape(10.dp)
+                                    )
                             )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Box(modifier = Modifier.fillMaxWidth()) {
-                                LazyColumn(
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Text(
+                                text = videoInfo?.data?.title ?: "",
+                                color = Color.White,
+                                fontFamily = puhuiFamily,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            Spacer(modifier = Modifier.height(6.dp))
+                        }
+                        if (!videoInfo?.data?.staff.isNullOrEmpty()) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                            ) {
+                                var rowHeight by remember {
+                                    mutableStateOf(0.dp)
+                                }
+                                val state = rememberScrollState()
+                                val sixteenDpsToPx = with(localDensity) {
+                                    16.dp.toPx()
+                                }
+                                Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .clip(RoundedCornerShape(10.dp))
-                                        .requiredSizeIn(maxHeight = 140.dp)
+                                        .horizontalScroll(state)
+                                        .onGloballyPositioned {
+                                            rowHeight = with(localDensity) { it.size.height.toDp() }
+                                        }
                                 ) {
-                                    videoInfo?.data?.pages?.forEachIndexed { index, page ->
-                                        item {
-                                            Column(modifier = Modifier.clickVfx {
-                                                SettingsManager.playVideo(
-                                                    context = requireContext(),
-                                                    bvid = videoInfo?.data?.bvid,
-                                                    cid = page.cid,
-                                                    title = "P${index + 1} ${page.part} - ${videoInfo?.data?.title}",
-                                                    //progress = videoInfo?.data?.history?.progress ?: 0,
-                                                    subtitleUrl = null
+                                    Spacer(modifier = Modifier.width(16.dp))
+                                    videoInfo?.data?.staff?.forEach { staff ->
+                                        var textHeight by remember {
+                                            mutableStateOf(0.dp)
+                                        }
+                                        var avatarHeight by remember {
+                                            mutableStateOf(0.dp)
+                                        }
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .clickVfx {
+                                                    Intent(
+                                                        context,
+                                                        SpaceProfileActivity::class.java
+                                                    ).apply {
+                                                        putExtra("userMid", staff.mid)
+                                                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                                        requireContext().startActivity(this)
+                                                    }
+                                                }
+                                                .border(
+                                                    width = (0.1).dp,
+                                                    color = Color(112, 112, 112, 112),
+                                                    shape = RoundedCornerShape(10.dp)
                                                 )
-                                            }) {
-                                                Column(
-                                                    modifier = Modifier
-                                                        .clip(RoundedCornerShape(10.dp))
-                                                        .border(
-                                                            width = 0.1f.dp, color = Color(
-                                                                112,
-                                                                112,
-                                                                112,
-                                                                204
-                                                            ), shape = RoundedCornerShape(10.dp)
-                                                        )
-
-                                                        .background(color = Color(36, 36, 36, 199))
-                                                        .padding(
-                                                            vertical = 12.dp,
-                                                            horizontal = 16.dp
-                                                        )
-                                                        .fillMaxWidth(),
-                                                ) {
-                                                    Text(
-                                                        text = "P${index + 1} ${page.part}",
-                                                        color = Color.White,
-                                                        fontSize = 16.sp,
-                                                        fontFamily = puhuiFamily,
-                                                        maxLines = 1,
-                                                        overflow = TextOverflow.Ellipsis,
-                                                        modifier = Modifier.alpha(0.76f),
-                                                        fontWeight = FontWeight.Medium
+                                                .clip(RoundedCornerShape(10.dp))
+                                                .background(Color(36, 36, 36, 166))
+                                                .padding(12.dp)
+                                        ) {
+                                            Box {
+                                                AsyncImage(
+                                                    model = ImageRequest.Builder(LocalContext.current)
+                                                        .data(staff.face).crossfade(true).build(),
+                                                    contentDescription = null, modifier = Modifier
+                                                        .size(textHeight.times(1.3f))
+                                                        .clip(CircleShape)
+                                                        .onGloballyPositioned {
+                                                            avatarHeight =
+                                                                with(localDensity) { it.size.height.toDp() }
+                                                        }
+                                                )
+                                                if (staff.officialVerify.type == OFFICIAL_TYPE_ORG || staff.officialVerify.type == OFFICIAL_TYPE_PERSONAL) {
+                                                    Image(
+                                                        painter = painterResource(
+                                                            id = when (staff.officialVerify.type) {
+                                                                OFFICIAL_TYPE_ORG -> R.drawable.flash_blue
+                                                                OFFICIAL_TYPE_PERSONAL -> R.drawable.flash_yellow
+                                                                else -> 0
+                                                            }
+                                                        ),
+                                                        contentDescription = null,
+                                                        modifier = Modifier
+                                                            .size(avatarHeight.times(0.25f))
+                                                            .align(Alignment.BottomEnd)
                                                     )
                                                 }
-                                                Spacer(modifier = Modifier.height(6.dp))
+                                            }
+                                            Spacer(modifier = Modifier.height(4.dp))
+                                            Column(modifier = Modifier.onGloballyPositioned {
+                                                textHeight =
+                                                    with(localDensity) { it.size.height.toDp() }
+                                            }) {
+                                                Text(
+                                                    text = staff.name,
+                                                    color = parseColor(staff.vip.label.bgColor.ifNullOrEmpty { "#FFFFFF" }),
+                                                    fontFamily = puhuiFamily
+                                                )
+                                                Spacer(modifier = Modifier.height(2.dp))
+                                                Text(
+                                                    text = staff.title,
+                                                    color = Color.White,
+                                                    fontFamily = puhuiFamily,
+                                                    fontSize = 12.sp,
+                                                    modifier = Modifier.alpha(0.7f)
+                                                )
                                             }
                                         }
+                                        Spacer(modifier = Modifier.width(8.dp))
                                     }
-                                }   //部分选集
-                                if ((videoInfo?.data?.pages?.size ?: 0) > 3) {
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                }
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                ) {
+
                                     Box(
                                         modifier = Modifier
-                                            .clip(RoundedCornerShape(10.dp))
+                                            .alpha(state.value / sixteenDpsToPx)
                                             .background(
-                                                Brush.verticalGradient(
+                                                Brush.horizontalGradient(
                                                     listOf(
-                                                        Color.Transparent,
-                                                        Color(0, 0, 0, 204)
+                                                        Color(0, 0, 0, 204),
+                                                        Color.Transparent
                                                     )
                                                 )
                                             )
-                                            .fillMaxWidth()
-                                            .height(50.dp)
-                                            .align(Alignment.BottomCenter),
-                                    )   //阴影
-                                }
-                            }   //部分选集
-                        }
-                        Spacer(modifier = Modifier.height(8.dp))
+                                            .height(rowHeight)
+                                            .width(32.dp),
+                                    )
 
-                        Column(modifier = Modifier.fillMaxWidth()) {
-                            Row(modifier = Modifier.fillMaxWidth()) {
-                                RoundButton(
-                                    buttonItem = RoundButtonDataNew(
-                                        Icons.Outlined.PlayCircle,
-                                        "播放",
-                                        "播放"
-                                    ), onLongClick = {
-                                        Log.d(
-                                            Application.TAG,
-                                            "setOnLongClickListener: "
-                                        )
-                                        val intent =
-                                            Intent(
-                                                context,
-                                                ChooseSettingsActivity::class.java
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    Box(
+                                        modifier = Modifier
+                                            .alpha((state.maxValue - state.value) / sixteenDpsToPx)
+                                            .background(
+                                                Brush.horizontalGradient(
+                                                    listOf(
+                                                        Color.Transparent,
+                                                        Color(0, 0, 0, 204),
+
+                                                        )
+                                                )
                                             )
-                                        val item =
-                                            SettingsManager.getSettingByName("defaultPlayer")
-                                        intent.putExtra("item", item)
-                                        /*intent.putExtra("itemKey", item?.settingName)
-                                        intent.putExtra("itemName", item?.displayName)
-                                        intent.putExtra("defVal", item?.defString)*/
-                                        startActivity(intent)
-                                    }, tint = Color.White, modifier = Modifier.weight(1f)
-                                ) {
-                                    SettingsManager.playVideo(
-                                        context = requireContext(),
-                                        bvid = videoInfo?.data?.bvid,
-                                        cid = videoInfo?.data?.cid,
-                                        title = videoInfo?.data?.title,
-                                        progress = videoInfo?.data?.history?.progress
-                                            ?: 0,
-                                        subtitleUrl = if (viewModel.subtitle.value?.data?.subtitle?.list.isNullOrEmpty()) null else viewModel.subtitle.value?.data?.subtitle?.list?.get(
-                                            0
-                                        )?.subtitleUrl
+                                            .height(rowHeight)
+                                            .width(32.dp),
                                     )
                                 }
-                                RoundButton(
-                                    buttonItem = RoundButtonDataNew(
-                                        Icons.Outlined.ThumbUp,
-                                        "点赞",
-                                        "点赞"
-                                    ),
-                                    onLongClick = { },
-                                    tint = likeColor,
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    videoInfo?.let { video ->
-                                        viewModel.likeVideo(
-                                            video.data.bvid,
-                                            isLiked ?: true
-                                        )
-                                    }
-                                }
-                                RoundButton(
-                                    buttonItem = RoundButtonDataNew(
-                                        Icons.Outlined.MonetizationOn,
-                                        "投币",
-                                        "投币"
-                                    ),
-                                    onLongClick = { },
-                                    tint = coinColor,
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    startActivity(
-                                        Intent(
-                                            requireActivity(),
-                                            CoinActivity::class.java
-                                        ).apply {
-                                            putExtra("bvid", videoInfo?.data?.bvid)
-                                            putExtra("coinCount", viewModel.coinCount)
-                                            putExtra("aid", videoInfo?.data?.aid)
-                                        })
-                                }
                             }
-                            Row(modifier = Modifier.fillMaxWidth()) {
-                                RoundButton(
-                                    buttonItem = RoundButtonDataNew(
-                                        Icons.Outlined.StarBorder,
-                                        "收藏",
-                                        "收藏"
-                                    ),
-                                    onLongClick = { },
-                                    tint = favColor,
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    if (UserManager.isLoggedIn()) {
-                                        startActivity(
-                                            Intent(
+                        } else {
+                            Column(modifier = Modifier.padding(horizontal = 10.dp)) {
+                                UserCard(
+                                    name = videoInfo?.data?.owner?.name ?: "",
+                                    uid = videoInfo?.data?.owner?.mid ?: 0,
+                                    sign = "${userFans?.data?.card?.fans?.toShortChinese() ?: "0"}粉丝",
+                                    avatar = videoInfo?.data?.owner?.face ?: "",
+                                    pendant = uploaderInfo?.data?.pendant?.image_enhance ?: "",
+                                    nicknameColor = uploaderInfo?.data?.vip?.nickname_color.ifNullOrEmpty { "#FFFFFF" },
+                                    officialType = uploaderInfo?.data?.official?.type
+                                        ?: OFFICIAL_TYPE_NONE
+                                )
+                            }
+                        }
+                        Column(modifier = Modifier.padding(horizontal = 10.dp)) {
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Column(modifier = Modifier.fillMaxWidth()) {
+                                VideoInfoItem(
+                                    icon = Icons.Outlined.PlayCircle,
+                                    content = "${videoInfo?.data?.stat?.view?.toShortChinese() ?: "0"}播放"
+                                )
+                                Spacer(modifier = Modifier.height(2.dp))
+                                VideoInfoItem(
+                                    icon = painterResource(id = R.drawable.ic_danmaku),
+                                    content = "${videoInfo?.data?.stat?.danmaku?.toShortChinese() ?: "0"}弹幕"
+                                )
+                                Spacer(modifier = Modifier.height(2.dp))
+                                VideoInfoItem(
+                                    icon = Icons.Outlined.Movie,
+                                    content = videoInfo?.data?.bvid ?: "",
+                                    onLongClick = {
+                                        val clipboardManager: ClipboardManager =
+                                            ContextCompat.getSystemService(
                                                 requireContext(),
-                                                FavoriteFolderActivity::class.java
-                                            ).apply { putExtra("aid", videoInfo?.data?.aid) })
-                                    } else {
-                                        ToastUtils.showText("你还没有登录捏")
-                                    }
-                                }
-                                RoundButton(
-                                    buttonItem = RoundButtonDataNew(
-                                        Icons.Outlined.History,
-                                        "稍后再看",
-                                        "稍后再看"
-                                    ),
-                                    onLongClick = { },
-                                    tint = Color.White,
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    videoInfo?.data?.bvid?.let { bvid ->
-                                        viewModel.addToViewLater(bvid)
-                                    }
-                                }
-                                RoundButton(
-                                    buttonItem = RoundButtonDataNew(
-                                        Icons.Outlined.SendToMobile,
-                                        "手机观看",
-                                        "手机观看"
-                                    ),
-                                    onLongClick = { /*TODO*/ },
-                                    tint = Color.White,
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    if (isAdded) {
-                                        val intent = Intent(
-                                            requireActivity(),
-                                            PlayOnPhoneActivity::class.java
-                                        )
-                                        intent.putExtra(
-                                            "qrCodeUrl",
-                                            "https://www.bilibili.com/video/${activity.videoId}"
-                                        )
-                                        startActivity(intent)
-                                    }
-                                }
-                            }
-                            Row(modifier = Modifier.fillMaxWidth()) {
-                                RoundButton(
-                                    buttonItem = RoundButtonData(
-                                        R.drawable.cloud_download,
-                                        "缓存",
-                                        "缓存"
-                                    ),
-                                    onLongClick = { },
-                                    tint = Color.White,
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    Intent(
-                                        requireActivity(),
-                                        NewVideoCacheActivity::class.java
-                                    ).apply {
-                                        putExtra("bvid", videoInfo?.data?.bvid ?: "")
-                                        putExtra("cid", videoInfo?.data?.cid ?: 0)
-                                        putExtra("title", videoInfo?.data?.title)
-                                        putExtra("coverUrl", videoInfo?.data?.pic)
-                                        if (!viewModel.subtitle.value?.data?.subtitle?.list.isNullOrEmpty()) {
-                                            putExtra(
-                                                "subtitleUrl",
-                                                viewModel.subtitle.value?.data?.subtitle?.list?.get(
-                                                    0
-                                                )?.subtitleUrl
+                                                ClipboardManager::class.java
+                                            ) as ClipboardManager
+                                        val clip: ClipData =
+                                            ClipData.newPlainText(
+                                                "wearbili bvid",
+                                                videoInfo?.data?.bvid ?: ""
                                             )
+                                        clipboardManager.setPrimaryClip(clip)
+                                        ToastUtils.makeText("已复制BV号")
+                                            .show()
+                                    }
+                                )
+                                Spacer(modifier = Modifier.height(2.dp))
+                                VideoInfoItem(
+                                    icon = Icons.Outlined.CalendarMonth,
+                                    content = videoInfo?.data?.pubdate?.times(1000)?.toDateStr()
+                                        ?: ""
+                                )
+                                Spacer(modifier = Modifier.height(2.dp))
+                            }
+                            Spacer(modifier = Modifier.height(6.dp))
+                            if (videoInfo?.data?.desc?.isNotEmpty() == true) {
+                                Text(text = videoInfo?.data?.desc ?: "",
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .animateContentSize(animationSpec = tween(durationMillis = 400))
+                                        .clickable {
+                                            descriptionMaxLines =
+                                                if (descriptionMaxLines == 3) Int.MAX_VALUE else 3
+                                        }
+                                        .alpha(0.9f),
+                                    fontSize = 13.sp,
+                                    color = Color.White,
+                                    fontFamily = puhuiFamily,
+                                    maxLines = descriptionMaxLines,
+                                    overflow = TextOverflow.Ellipsis)
+                                Spacer(modifier = Modifier.height(8.dp))
+                            }
+                            if (videoInfo?.data?.pages?.size != 1) {
+                                Text(
+                                    text = "选集(${videoInfo?.data?.pages?.size ?: 0})",
+                                    fontFamily = puhuiFamily,
+                                    fontWeight = FontWeight.Normal,
+                                    fontSize = 18.sp,
+                                    color = Color.White,
+                                    modifier = Modifier.clickVfx {
+                                        videoInfo?.data?.pages?.let { pages ->
+                                            val intent = Intent(
+                                                requireActivity(),
+                                                ViewFullVideoPartsActivity::class.java
+                                            )
+                                            intent.putExtra(
+                                                "data",
+                                                Gson().toJson(
+                                                    cn.spacexc.wearbili.dataclass.videoDetail.Data.Pages(
+                                                        pages
+                                                    )
+                                                )
+                                            )
+                                            intent.putExtra("bvid", videoInfo?.data?.bvid)
+                                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                            Application.getContext().startActivity(intent)
                                         }
 
-                                        putExtra(
-                                            "data",
-                                            Gson().toJson(videoInfo?.data?.pages?.let { pages ->
-                                                cn.spacexc.wearbili.dataclass.videoDetail.Data.Pages(
-                                                    pages
+                                    }
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Box(modifier = Modifier.fillMaxWidth()) {
+                                    LazyColumn(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clip(RoundedCornerShape(10.dp))
+                                            .requiredSizeIn(maxHeight = 140.dp)
+                                    ) {
+                                        videoInfo?.data?.pages?.forEachIndexed { index, page ->
+                                            item {
+                                                Column(modifier = Modifier.clickVfx {
+                                                    SettingsManager.playVideo(
+                                                        context = requireContext(),
+                                                        bvid = videoInfo?.data?.bvid,
+                                                        cid = page.cid,
+                                                        title = "P${index + 1} ${page.part} - ${videoInfo?.data?.title}",
+                                                        //progress = videoInfo?.data?.history?.progress ?: 0,
+                                                        subtitleUrl = null
+                                                    )
+                                                }) {
+                                                    Column(
+                                                        modifier = Modifier
+                                                            .clip(RoundedCornerShape(10.dp))
+                                                            .border(
+                                                                width = 0.1f.dp, color = Color(
+                                                                    112,
+                                                                    112,
+                                                                    112,
+                                                                    204
+                                                                ), shape = RoundedCornerShape(10.dp)
+                                                            )
+
+                                                            .background(
+                                                                color = Color(
+                                                                    36,
+                                                                    36,
+                                                                    36,
+                                                                    199
+                                                                )
+                                                            )
+                                                            .padding(
+                                                                vertical = 12.dp,
+                                                                horizontal = 16.dp
+                                                            )
+                                                            .fillMaxWidth(),
+                                                    ) {
+                                                        Text(
+                                                            text = "P${index + 1} ${page.part}",
+                                                            color = Color.White,
+                                                            fontSize = 16.sp,
+                                                            fontFamily = puhuiFamily,
+                                                            maxLines = 1,
+                                                            overflow = TextOverflow.Ellipsis,
+                                                            modifier = Modifier.alpha(0.76f),
+                                                            fontWeight = FontWeight.Medium
+                                                        )
+                                                    }
+                                                    Spacer(modifier = Modifier.height(6.dp))
+                                                }
+                                            }
+                                        }
+                                    }   //部分选集
+                                    if ((videoInfo?.data?.pages?.size ?: 0) > 3) {
+                                        Box(
+                                            modifier = Modifier
+                                                .clip(RoundedCornerShape(10.dp))
+                                                .background(
+                                                    Brush.verticalGradient(
+                                                        listOf(
+                                                            Color.Transparent,
+                                                            Color(0, 0, 0, 204)
+                                                        )
+                                                    )
                                                 )
-                                            })
+                                                .fillMaxWidth()
+                                                .height(50.dp)
+                                                .align(Alignment.BottomCenter),
+                                        )   //阴影
+                                    }
+                                }   //部分选集
+                            }
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Column(modifier = Modifier.fillMaxWidth()) {
+                                Row(modifier = Modifier.fillMaxWidth()) {
+                                    RoundButton(
+                                        buttonItem = RoundButtonDataNew(
+                                            Icons.Outlined.PlayCircle,
+                                            "播放",
+                                            "播放"
+                                        ), onLongClick = {
+                                            Log.d(
+                                                Application.TAG,
+                                                "setOnLongClickListener: "
+                                            )
+                                            val intent =
+                                                Intent(
+                                                    context,
+                                                    ChooseSettingsActivity::class.java
+                                                )
+                                            val item =
+                                                SettingsManager.getSettingByName("defaultPlayer")
+                                            intent.putExtra("item", item)
+                                            /*intent.putExtra("itemKey", item?.settingName)
+                                            intent.putExtra("itemName", item?.displayName)
+                                            intent.putExtra("defVal", item?.defString)*/
+                                            startActivity(intent)
+                                        }, tint = Color.White, modifier = Modifier.weight(1f)
+                                    ) {
+                                        SettingsManager.playVideo(
+                                            context = requireContext(),
+                                            bvid = videoInfo?.data?.bvid,
+                                            cid = videoInfo?.data?.cid,
+                                            title = videoInfo?.data?.title,
+                                            progress = videoInfo?.data?.history?.progress
+                                                ?: 0,
+                                            subtitleUrl = if (viewModel.subtitle.value?.data?.subtitle?.list.isNullOrEmpty()) null else viewModel.subtitle.value?.data?.subtitle?.list?.get(
+                                                0
+                                            )?.subtitleUrl
                                         )
-                                        startActivity(this)
+                                    }
+                                    RoundButton(
+                                        buttonItem = RoundButtonDataNew(
+                                            Icons.Outlined.ThumbUp,
+                                            "点赞",
+                                            "点赞"
+                                        ),
+                                        onLongClick = { },
+                                        tint = likeColor,
+                                        modifier = Modifier.weight(1f)
+                                    ) {
+                                        videoInfo?.let { video ->
+                                            viewModel.likeVideo(
+                                                video.data.bvid,
+                                                isLiked ?: true
+                                            )
+                                        }
+                                    }
+                                    RoundButton(
+                                        buttonItem = RoundButtonDataNew(
+                                            Icons.Outlined.MonetizationOn,
+                                            "投币",
+                                            "投币"
+                                        ),
+                                        onLongClick = { },
+                                        tint = coinColor,
+                                        modifier = Modifier.weight(1f)
+                                    ) {
+                                        startActivity(
+                                            Intent(
+                                                requireActivity(),
+                                                CoinActivity::class.java
+                                            ).apply {
+                                                putExtra("bvid", videoInfo?.data?.bvid)
+                                                putExtra("coinCount", viewModel.coinCount)
+                                                putExtra("aid", videoInfo?.data?.aid)
+                                            })
                                     }
                                 }
-                                Spacer(modifier = Modifier.weight(1f))
-                                Spacer(modifier = Modifier.weight(1f))
+                                Row(modifier = Modifier.fillMaxWidth()) {
+                                    RoundButton(
+                                        buttonItem = RoundButtonDataNew(
+                                            Icons.Outlined.StarBorder,
+                                            "收藏",
+                                            "收藏"
+                                        ),
+                                        onLongClick = { },
+                                        tint = favColor,
+                                        modifier = Modifier.weight(1f)
+                                    ) {
+                                        if (UserManager.isLoggedIn()) {
+                                            startActivity(
+                                                Intent(
+                                                    requireContext(),
+                                                    FavoriteFolderActivity::class.java
+                                                ).apply { putExtra("aid", videoInfo?.data?.aid) })
+                                        } else {
+                                            ToastUtils.showText("你还没有登录捏")
+                                        }
+                                    }
+                                    RoundButton(
+                                        buttonItem = RoundButtonDataNew(
+                                            Icons.Outlined.History,
+                                            "稍后再看",
+                                            "稍后再看"
+                                        ),
+                                        onLongClick = { },
+                                        tint = Color.White,
+                                        modifier = Modifier.weight(1f)
+                                    ) {
+                                        videoInfo?.data?.bvid?.let { bvid ->
+                                            viewModel.addToViewLater(bvid)
+                                        }
+                                    }
+                                    RoundButton(
+                                        buttonItem = RoundButtonDataNew(
+                                            Icons.Outlined.SendToMobile,
+                                            "手机观看",
+                                            "手机观看"
+                                        ),
+                                        onLongClick = { /*TODO*/ },
+                                        tint = Color.White,
+                                        modifier = Modifier.weight(1f)
+                                    ) {
+                                        if (isAdded) {
+                                            val intent = Intent(
+                                                requireActivity(),
+                                                PlayOnPhoneActivity::class.java
+                                            )
+                                            intent.putExtra(
+                                                "qrCodeUrl",
+                                                "https://www.bilibili.com/video/${activity.videoId}"
+                                            )
+                                            startActivity(intent)
+                                        }
+                                    }
+                                }
+                                Row(modifier = Modifier.fillMaxWidth()) {
+                                    RoundButton(
+                                        buttonItem = RoundButtonData(
+                                            R.drawable.cloud_download,
+                                            "缓存",
+                                            "缓存"
+                                        ),
+                                        onLongClick = { },
+                                        tint = Color.White,
+                                        modifier = Modifier.weight(1f)
+                                    ) {
+                                        Intent(
+                                            requireActivity(),
+                                            NewVideoCacheActivity::class.java
+                                        ).apply {
+                                            putExtra("bvid", videoInfo?.data?.bvid ?: "")
+                                            putExtra("cid", videoInfo?.data?.cid ?: 0)
+                                            putExtra("title", videoInfo?.data?.title)
+                                            putExtra("coverUrl", videoInfo?.data?.pic)
+                                            if (!viewModel.subtitle.value?.data?.subtitle?.list.isNullOrEmpty()) {
+                                                putExtra(
+                                                    "subtitleUrl",
+                                                    viewModel.subtitle.value?.data?.subtitle?.list?.get(
+                                                        0
+                                                    )?.subtitleUrl
+                                                )
+                                            }
+
+                                            putExtra(
+                                                "data",
+                                                Gson().toJson(videoInfo?.data?.pages?.let { pages ->
+                                                    cn.spacexc.wearbili.dataclass.videoDetail.Data.Pages(
+                                                        pages
+                                                    )
+                                                })
+                                            )
+                                            startActivity(this)
+                                        }
+                                    }
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    Spacer(modifier = Modifier.weight(1f))
+                                }
                             }
                         }
                     }
@@ -685,11 +842,11 @@ class VideoInformationFragment : Fragment() {
                         .fillMaxWidth()
                         .aspectRatio(1f)
                         .align(Alignment.Center)
-                        .clip(CircleShape)
+                        .clip(CircleShape/*RoundedCornerShape(6.dp)*/)
                         .border(
                             width = 0.1.dp, color = Color(
                                 91, 92, 93, 204
-                            ), shape = CircleShape
+                            ), shape = CircleShape/*RoundedCornerShape(6.dp)*/
                         )
                         .background(Color(41, 41, 41, 204))
                 ) {
@@ -774,7 +931,8 @@ class VideoInformationFragment : Fragment() {
                 tint = Color.White
             )
             Spacer(modifier = Modifier.width(2.dp))
-            Text(text = content,
+            Text(
+                text = content,
                 fontSize = 12.sp,
                 fontFamily = puhuiFamily,
                 color = Color.White,

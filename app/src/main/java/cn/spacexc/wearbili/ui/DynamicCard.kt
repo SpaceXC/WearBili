@@ -34,6 +34,7 @@ import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.dynamic.DynamicDetailActivity
 import cn.spacexc.wearbili.activity.image.ImageViewerActivity
+import cn.spacexc.wearbili.activity.user.SpaceProfileActivity
 import cn.spacexc.wearbili.activity.video.VideoActivity
 import cn.spacexc.wearbili.activity.video.VideoLongClickActivity
 import cn.spacexc.wearbili.dataclass.dynamic.Card
@@ -48,6 +49,7 @@ import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import cn.spacexc.wearbili.utils.VideoUtils
 import cn.spacexc.wearbili.utils.ifNullOrEmpty
+import cn.spacexc.wearbili.utils.parseColor
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 
@@ -90,7 +92,7 @@ fun DynamicCard(
         var posterInfoHeight by remember {
             mutableStateOf(0.dp)
         }
-        Row {
+        /*Row {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current).data(posterAvatar)
                     .placeholder(R.drawable.akari)
@@ -122,6 +124,126 @@ fun DynamicCard(
                     fontFamily = googleSansFamily
                 )
             }
+        }*/
+        Row(verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.clickVfx {
+                Intent(context, SpaceProfileActivity::class.java).apply {
+                    putExtra("userMid", card.desc.user_profile.info.uid)
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    context?.startActivity(this)
+                }
+            }
+        ) {
+            var pendentHeight by remember {
+                mutableStateOf(0.dp)
+            }
+            var avatarBoxSize by remember {
+                mutableStateOf(0.dp)
+            }
+            val avatarSizePx = with(localDensity) {
+                avatarBoxSize.plus(4.dp).toPx()
+            }
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+            ) {
+                if (card.desc.user_profile.pendant.image_enhance.isEmpty()) {
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .size(avatarSizePx.times(0.9f).toInt())
+                            .data(posterAvatar)
+                            .placeholder(R.drawable.akari).crossfade(true)
+                            .build(),
+                        contentDescription = null,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier
+                            .size(
+                                avatarBoxSize
+                                    .plus(4.dp)
+                                    .times(0.9f)
+                            )
+                            //.fillMaxWidth()
+                            //.padding(12.dp)
+                            .clip(CircleShape)
+                        //.aspectRatio(1f)
+                    )
+                } else {
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(posterAvatar)
+                            .size(avatarSizePx.times(0.7f).toInt())
+                            .crossfade(true).placeholder(R.drawable.akari)
+                            .build(),
+                        contentDescription = null,
+                        modifier = Modifier
+                            //.fillMaxWidth()
+                            .size(
+                                pendentHeight.times(0.7f)
+                            )
+                            .clip(CircleShape)
+                    )
+                    AsyncImage(model = ImageRequest.Builder(LocalContext.current)
+                        .size(avatarSizePx.times(1.4f).toInt())
+                        .data(card.desc.user_profile.pendant.image_enhance)
+                        .crossfade(true)
+                        .build(),
+                        contentDescription = null,
+                        modifier = Modifier
+                            //.fillMaxWidth()
+                            .size(
+                                avatarBoxSize
+                                    .plus(4.dp)
+                                    .times(1.4f)
+                            )
+                            .onGloballyPositioned {
+                                pendentHeight = with(localDensity) {
+                                    it.size.height.toDp()
+                                }
+                            }
+                            .aspectRatio(1f)
+                    )
+
+                }
+                /*if (card.desc.user_profile. == OFFICIAL_TYPE_ORG || senderOfficialVerify == OFFICIAL_TYPE_PERSONAL) {
+                    Image(
+                        painter = painterResource(
+                            id = when (senderOfficialVerify) {
+                                OFFICIAL_TYPE_ORG -> R.drawable.flash_blue
+                                OFFICIAL_TYPE_PERSONAL -> R.drawable.flash_yellow
+                                else -> 0
+                            }
+                        ),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(avatarBoxSize.times(0.33f))
+                            .align(Alignment.BottomEnd)
+                    )
+                }*/
+            }
+            Spacer(modifier = Modifier.width(4.dp))
+            Column(modifier = Modifier.onGloballyPositioned {
+                avatarBoxSize = with(localDensity) { it.size.height.toDp() }
+            }) {
+
+                Text(
+                    text = posterName,
+                    fontFamily = puhuiFamily,
+                    fontSize = 12.sp,
+                    color = parseColor(card.desc.user_profile.vip.nickname_color.ifNullOrEmpty { "#FFFFFF" }),
+                    fontWeight = FontWeight.Medium
+                )
+
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = postTime,
+                    fontFamily = googleSansFamily,
+                    fontSize = 10.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier.alpha(0.6f)
+                )
+            }
+
         }
         Spacer(modifier = Modifier.height(8.dp))
         when (card.desc.type) {

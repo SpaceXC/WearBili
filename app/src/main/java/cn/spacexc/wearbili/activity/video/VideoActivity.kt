@@ -4,15 +4,11 @@ import OnClickListerExtended
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import cn.spacexc.wearbili.adapter.VideoViewPagerAdapter
 import cn.spacexc.wearbili.databinding.ActivityVideoBinding
-import cn.spacexc.wearbili.fragment.CommentFragment
-import cn.spacexc.wearbili.utils.TimeUtils
+import cn.spacexc.wearbili.fragment.CommentFragmentNew
 import cn.spacexc.wearbili.utils.VideoUtils
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 
 class VideoActivity : AppCompatActivity() {
@@ -44,7 +40,7 @@ class VideoActivity : AppCompatActivity() {
                     supportFragmentManager.findFragmentByTag("f${binding.viewPager2.currentItem}")
                 when (binding.viewPager2.currentItem) {
                     1 -> {
-                        (fragment as CommentFragment).apply {
+                        (fragment as CommentFragmentNew).apply {
                             refresh()
                         }
                     }
@@ -103,11 +99,6 @@ class VideoActivity : AppCompatActivity() {
         ) return intent.data?.getQueryParameter("bvid")
         //return null
     }*/
-
-    fun setPage(page: Int) {
-        binding.viewPager2.currentItem = page - 1
-    }
-
 
     /*private var startY = 0f //手指按下时的Y坐标
 

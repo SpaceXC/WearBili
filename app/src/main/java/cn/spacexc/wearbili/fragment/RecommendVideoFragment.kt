@@ -23,7 +23,6 @@ import androidx.fragment.app.viewModels
 import androidx.wear.compose.material.ScalingLazyColumn
 import androidx.wear.compose.material.Text
 import cn.spacexc.wearbili.manager.SettingsManager
-import cn.spacexc.wearbili.manager.isRound
 import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
 import cn.spacexc.wearbili.ui.VideoUis
 import cn.spacexc.wearbili.ui.puhuiFamily
@@ -59,8 +58,8 @@ class RecommendVideoFragment : Fragment() {
             val isRefreshing by viewModel.isRefreshing.observeAsState()
             val isError by viewModel.isError.observeAsState()
             val refreshState = rememberSwipeRefreshState(isRefreshing ?: false)
-            Crossfade(targetState = !(appVideoList.isNullOrEmpty() && webVideoList.isNullOrEmpty())) {
-                if (it) {
+            Crossfade(targetState = !(appVideoList.isNullOrEmpty() && webVideoList.isNullOrEmpty())) { loading ->
+                if (loading) {
                     SwipeRefresh(
                         state = refreshState,
                         onRefresh = {
@@ -68,8 +67,7 @@ class RecommendVideoFragment : Fragment() {
                                 "app" -> viewModel.getAppRecommendVideos(true)
                                 "web" -> viewModel.getWebRecommendVideos(true)
                             }
-                        },
-                        modifier = Modifier.padding(if (isRound()) 8.dp else 0.dp)
+                        }
                     ) {
                         if (SettingsManager.hasScrollVfx()) {
                             ScalingLazyColumn(
@@ -80,7 +78,7 @@ class RecommendVideoFragment : Fragment() {
                                     "app" -> {
                                         appVideoList?.forEach {
                                             if (it.goto == "av"/* || it.goto == "bangumi"*/) {
-                                                item {
+                                                item(key = it.param) {
                                                     VideoUis.VideoCard(
                                                         videoName = it.title,
                                                         views = it.cover_left_text_2 ?: "",
@@ -107,7 +105,7 @@ class RecommendVideoFragment : Fragment() {
                                     "web" -> {
                                         webVideoList?.forEach {
                                             if (it.goto == "av") {
-                                                item {
+                                                item(key = it.bvid) {
                                                     VideoUis.VideoCard(
                                                         videoName = it.title,
                                                         uploader = it.owner?.name ?: "",
@@ -140,7 +138,7 @@ class RecommendVideoFragment : Fragment() {
                                     "app" -> {
                                         appVideoList?.forEach {
                                             if (it.goto == "av") {
-                                                item {
+                                                item(key = it.param) {
                                                     VideoUis.VideoCard(
                                                         videoName = it.title,
                                                         views = it.cover_left_text_2 ?: "",
@@ -153,7 +151,7 @@ class RecommendVideoFragment : Fragment() {
                                                         context = requireContext(),
                                                         isBangumi = false,  //it.goto == "bangumi",
                                                         epid = it.param,
-                                                        badge = it.cover_badge ?: "",
+                                                        badge = it.cover_badge ?: ""
                                                     )
                                                 }
                                             }
@@ -167,7 +165,7 @@ class RecommendVideoFragment : Fragment() {
                                     "web" -> {
                                         webVideoList?.forEach {
                                             if (it.goto == "av") {
-                                                item {
+                                                item(key = it.bvid) {
                                                     VideoUis.VideoCard(
                                                         videoName = it.title,
                                                         uploader = it.owner?.name ?: "",
@@ -177,7 +175,7 @@ class RecommendVideoFragment : Fragment() {
                                                         hasViews = true,
                                                         clickable = true,
                                                         videoBvid = it.bvid,
-                                                        context = requireContext(),
+                                                        context = requireContext()
                                                     )
                                                 }
                                             }

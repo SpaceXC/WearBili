@@ -25,16 +25,21 @@ import androidx.compose.ui.input.pointer.pointerInput
 object ModifierExtends {
     fun Modifier.clickVfx(
         interactionSource: MutableInteractionSource = MutableInteractionSource(),
+        isEnabled: Boolean = true,
         onClick: () -> Unit,
     ): Modifier = composed {
-        val isPressed by interactionSource.collectIsPressedAsState()
-        val sizePercent by animateFloatAsState(
-            targetValue = if (isPressed) 0.9f else 1f,
-            animationSpec = tween(durationMillis = 150)
-        )
-        scale(sizePercent).clickable(
-            indication = null, interactionSource = interactionSource, onClick = onClick
-        )
+        if (isEnabled) {
+            val isPressed by interactionSource.collectIsPressedAsState()
+            val sizePercent by animateFloatAsState(
+                targetValue = if (isPressed) 0.9f else 1f,
+                animationSpec = tween(durationMillis = 150)
+            )
+            scale(sizePercent).clickable(
+                indication = null, interactionSource = interactionSource, onClick = onClick
+            )
+        } else {
+            Modifier
+        }
     }
 
     fun Modifier.clickVfx(

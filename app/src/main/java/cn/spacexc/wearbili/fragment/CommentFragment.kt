@@ -172,8 +172,8 @@ class CommentFragment : Fragment() {
                                     if (result.data.cursor.is_end) return@launch
                                     if (isRefresh) {
                                         var top = mutableListOf<CommentContentData>()
-                                        if (result.data.top?.content != null && result.data.top.member != null) {
-                                            top = mutableListOf(result.data.top)
+                                        if (result.data.top?.upper?.content != null && result.data.top.upper.member != null) {
+                                            top = mutableListOf(result.data.top.upper)
                                         }
                                         adapter.submitList(listOf(null) + top + result.data.replies?.toMutableList()!!)
                                     } else {

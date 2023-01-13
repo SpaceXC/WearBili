@@ -26,6 +26,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.comment.CommentRepliesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.search.SearchActivityNew"
+            android:exported="false" />
+        <activity
             android:name=".activity.dynamic.NewDynamicDetailActivity"
             android:exported="false" />
         <activity
@@ -162,7 +168,7 @@
             android:theme="@style/Theme.WearBili.SwipeDisabled" />
         <activity
             android:name=".activity.search.SearchResultActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".activity.image.PhotoViewActivity"
             android:exported="false" />

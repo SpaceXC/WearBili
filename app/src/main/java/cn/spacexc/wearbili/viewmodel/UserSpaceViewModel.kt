@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import cn.spacexc.wearbili.dataclass.BaseData
 import cn.spacexc.wearbili.dataclass.dynamic.Card
 import cn.spacexc.wearbili.dataclass.user.User
+import cn.spacexc.wearbili.dataclass.user.UserFans
 import cn.spacexc.wearbili.dataclass.user.spacevideo.UserSpaceVideo
 import cn.spacexc.wearbili.dataclass.user.spacevideo.Vlist
 import cn.spacexc.wearbili.manager.DynamicManager
@@ -48,14 +49,17 @@ class UserSpaceViewModel : ViewModel() {
     private val _isRefreshing = MutableLiveData(false)
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
-    private val _isFollowed = MutableLiveData(false)
+    private val _isFollowed = MutableLiveData<Boolean>()
     val isFollowed: LiveData<Boolean> = _isFollowed
+
+    private val _fans = MutableLiveData<Int>()
+    val fans: LiveData<Int> = _fans
 
     val isError = MutableLiveData(false)
 
     var videoPage = 1
 
-    val dynamicManager = DynamicManager()
+    private val dynamicManager = DynamicManager()
 
     fun getUser(mid: Long) {
         UserManager.getUserById(mid, object : Callback {
@@ -212,6 +216,26 @@ class UserSpaceViewModel : ViewModel() {
                 }
             }
 
+        })
+    }
+
+    fun getUserFans(mid: Long) {
+        UserManager.getUserFans(mid, object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                MainScope().launch {
+                    ToastUtils.showText("网络异常")
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                MainScope().launch {
+                    _fans.value =
+                        Gson().fromJson(
+                            response.body?.string(),
+                            UserFans::class.java
+                        ).data.card.fans.toInt()
+                }
+            }
         })
     }
 
