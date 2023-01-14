@@ -11,7 +11,7 @@ data class Data(
     @SerializedName("item")
     val item: List<Item>,
     @SerializedName("mid")
-    val mid: Int,
+    val mid: Long,
     @SerializedName("preload_expose_pct")
     val preloadExposePct: Double,
     @SerializedName("preload_floor_expose_pct")

@@ -15,7 +15,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
@@ -84,7 +83,6 @@ class CommentFragmentNew : Fragment() {
         viewModel.getComment(aid.toLong(), true)
         (view as ComposeView).setContent {
             val localDensity = LocalDensity.current
-            val scrollState = rememberLazyListState()
             val commentList by viewModel.commentList.observeAsState()
             val topComment by viewModel.topComment.observeAsState()
             val isError by viewModel.isError.observeAsState()
@@ -102,7 +100,7 @@ class CommentFragmentNew : Fragment() {
                                     )
                                     .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
                                     .background(Color(36, 36, 36, 199)),
-                                contentPadding = PaddingValues(8.dp), state = scrollState
+                                contentPadding = PaddingValues(8.dp), state = viewModel.scrollState
                             ) {
                                 item {
                                     var textHeight by remember {

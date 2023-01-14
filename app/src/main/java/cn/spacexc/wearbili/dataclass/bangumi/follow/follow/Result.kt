@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class Result(
     @SerializedName("fmid")
-    val fmid: Int,
+    val fmid: Long,
     @SerializedName("relation")
     val relation: Boolean,
     @SerializedName("status")

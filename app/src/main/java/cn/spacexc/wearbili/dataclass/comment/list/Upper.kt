@@ -5,5 +5,5 @@ import com.google.gson.annotations.SerializedName
 
 data class Upper(
     @SerializedName("mid")
-    val mid: Int
+    val mid: Long
 )

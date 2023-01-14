@@ -15,5 +15,5 @@ data class Nameplate(
     @SerializedName("name")
     val name: String,
     @SerializedName("nid")
-    val nid: Int
+    val nid: Long
 )

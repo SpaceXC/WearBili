@@ -1,5 +1,6 @@
 package cn.spacexc.wearbili.viewmodel
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,6 +25,8 @@ This is free software, and you are welcome to redistribute it under certain cond
  */
 
 class CommentViewModel : ViewModel() {
+    val scrollState = LazyListState()
+
     var page = 1
 
     private val _commentList = MutableLiveData<List<CommentContentData>?>()

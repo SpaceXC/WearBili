@@ -7,7 +7,7 @@ data class Owner(
     @SerializedName("face")
     val face: String,
     @SerializedName("mid")
-    val mid: Int,
+    val mid: Long,
     @SerializedName("name")
     val name: String
 )

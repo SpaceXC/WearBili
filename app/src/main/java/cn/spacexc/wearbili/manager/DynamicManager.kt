@@ -21,6 +21,7 @@ import okhttp3.Response
 import java.io.IOException
 
 /**
+ * ```
  * Created by XC-Qan on 2022/7/15.
  *
  * I'm very cute so please be nice to my code!
@@ -68,8 +69,14 @@ import java.io.IOException
  * 大爱易姐！
  *
  * 以及其他开源仓库的贡献者们！
+ * ``
  */
 
+@Deprecated(
+    message = "垃圾api设计，什么鬼玩意，谁用谁傻逼，json里面套json，哪个天才想的，被开了吧已经",
+    replaceWith = ReplaceWith("DynamicManagerNew", "cn.spacexc.wearbili.manager.DynamicManagerNew"),
+    level = DeprecationLevel.WARNING
+)
 class DynamicManager {
     var lastDynamicId: Long = 0
 
@@ -83,6 +90,8 @@ class DynamicManager {
      * 4 - 文字
      *
      * 8 - 投稿
+     *
+     * 4098 - 番剧/影视
      */
     val type = "268435455,1,2,4,8,4098"    //前面那个268435455我也不知道为什么要加，反正不加就报错，github上看到的
 

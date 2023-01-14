@@ -65,10 +65,11 @@ object ToastUtils {
         }
     }
 
-    fun Any.debugToast() {
+    fun <T> T.debugToast(): T {
         if (isDebug()) {
             makeText("$this").show()
         }
+        return this
     }
 
     fun debugToast(content: String?) {

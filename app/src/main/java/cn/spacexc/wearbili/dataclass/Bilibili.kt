@@ -246,7 +246,7 @@ data class CommentCursor(
 data class CommentNotice(
     val content: String,
     val link: String,
-    val id: Int,
+    val id: Long,
     val title: String
 )
 

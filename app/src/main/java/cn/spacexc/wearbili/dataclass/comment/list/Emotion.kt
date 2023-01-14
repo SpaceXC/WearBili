@@ -7,7 +7,7 @@ data class Emotion(
     @SerializedName("attr")
     val attr: Int,
     @SerializedName("id")
-    val id: Int,
+    val id: Long,
     @SerializedName("jump_title")
     val jumpTitle: String,
     @SerializedName("meta")

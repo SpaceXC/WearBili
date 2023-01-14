@@ -11,13 +11,13 @@ data class Item(
     @SerializedName("bvid")
     val bvid: String,
     @SerializedName("cid")
-    val cid: Int,
+    val cid: Long,
     @SerializedName("duration")
     val duration: Int,
     @SerializedName("goto")
     val goto: String,
     @SerializedName("id")
-    val id: Int,
+    val id: Long,
     @SerializedName("is_followed")
     val isFollowed: Int,
     @SerializedName("is_stock")

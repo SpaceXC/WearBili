@@ -46,7 +46,8 @@ data class Data(
     val title: String,
     val tname: String,
     val videos: Int,
-    val staff: List<Staff>?
+    val staff: List<Staff>?,
+    val honor: Honor?
 ) {
     data class Pages(val pages: List<Page>)
 }

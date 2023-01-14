@@ -33,9 +33,9 @@ data class TopReply(
     @SerializedName("member")
     val member: Member,
     @SerializedName("mid")
-    val mid: Int,
+    val mid: Long,
     @SerializedName("oid")
-    val oid: Int,
+    val oid: Long,
     @SerializedName("parent")
     val parent: Int,
     @SerializedName("parent_str")

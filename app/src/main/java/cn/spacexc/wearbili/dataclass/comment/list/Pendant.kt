@@ -15,5 +15,5 @@ data class Pendant(
     @SerializedName("name")
     val name: String,
     @SerializedName("pid")
-    val pid: Int
+    val pid: Long
 )

@@ -31,9 +31,9 @@ data class BusinessInfo(
     @SerializedName("creative_type")
     val creativeType: Int,
     @SerializedName("epid")
-    val epid: Int,
+    val epid: Long,
     @SerializedName("id")
-    val id: Int,
+    val id: Long,
     @SerializedName("inline")
     val `inline`: Inline,
     @SerializedName("intro")

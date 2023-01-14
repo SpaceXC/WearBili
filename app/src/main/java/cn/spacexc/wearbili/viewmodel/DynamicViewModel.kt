@@ -39,7 +39,7 @@ class DynamicViewModel : ViewModel() {
 
     val isError = MutableLiveData(false)
 
-    val dynamicManager = DynamicManager()
+    private val dynamicManager = DynamicManager()
 
     fun getDynamic() {
         MainScope().launch { _isRefreshing.value = true }

@@ -17,7 +17,7 @@ data class Author(
     @SerializedName("is_senior_member")
     val isSeniorMember: Int,
     @SerializedName("mid")
-    val mid: Int,
+    val mid: Long,
     @SerializedName("name")
     val name: String,
     @SerializedName("rank")

@@ -365,8 +365,46 @@ class VideoInformationFragment : Fragment() {
                                 Spacer(modifier = Modifier.height(2.dp))
                             }
                             Spacer(modifier = Modifier.height(6.dp))
+
+                            videoInfo?.data?.honor?.let { honor ->
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(
+                                            parseColor(honor.bgColorNight)
+                                        )
+                                        .padding(8.dp)
+                                ) {
+                                    var textHeight by remember {
+                                        mutableStateOf(0.dp)
+                                    }
+                                    AsyncImage(
+                                        model = ImageRequest.Builder(LocalContext.current)
+                                            .data(honor.iconNight)
+                                            .crossfade(true)/*.size(with(localDensity){textHeight.roundToPx()})*/
+                                            .build(),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(textHeight)
+                                    )
+                                    Text(
+                                        text = honor.text,
+                                        fontSize = 12.sp,
+                                        color = parseColor(honor.textColorNight),
+                                        fontFamily = puhuiFamily,
+                                        modifier = Modifier.onGloballyPositioned {
+                                            textHeight =
+                                                with(localDensity) { it.size.height.toDp() }
+                                        },
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                                Spacer(modifier = Modifier.height(6.dp))
+                            }
+
                             if (videoInfo?.data?.desc?.isNotEmpty() == true) {
-                                Text(text = videoInfo?.data?.desc ?: "",
+                                Text(
+                                    text = videoInfo?.data?.desc ?: "",
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .animateContentSize(animationSpec = tween(durationMillis = 400))

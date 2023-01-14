@@ -37,5 +37,5 @@ data class FansDetail(
     @SerializedName("score")
     val score: Int,
     @SerializedName("uid")
-    val uid: Int
+    val uid: Long
 )

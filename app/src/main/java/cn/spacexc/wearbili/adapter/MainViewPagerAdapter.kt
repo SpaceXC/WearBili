@@ -3,10 +3,7 @@ package cn.spacexc.wearbili.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import cn.spacexc.wearbili.fragment.DynamicFragment
-import cn.spacexc.wearbili.fragment.DynamicListFragment
-import cn.spacexc.wearbili.fragment.ProfileFragment
-import cn.spacexc.wearbili.fragment.RecommendVideoFragment
+import cn.spacexc.wearbili.fragment.*
 import cn.spacexc.wearbili.manager.SettingsManager
 
 /**
@@ -27,7 +24,8 @@ class MainViewPagerAdapter(fragmentActivity: FragmentActivity) :
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> RecommendVideoFragment()
-            1 -> if (SettingsManager.useNewDynamicList()) DynamicListFragment() else DynamicFragment()
+            1 -> DynamicListFragmentNew()
+            3 -> if (SettingsManager.useNewDynamicList()) DynamicListFragment() else DynamicFragment()
             2 -> ProfileFragment()
             //3 -> ProfileFragment()
             else -> ProfileFragment()
