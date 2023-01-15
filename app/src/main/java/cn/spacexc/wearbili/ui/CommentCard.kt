@@ -2,12 +2,15 @@ package cn.spacexc.wearbili.ui
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material.icons.outlined.ThumbDown
@@ -26,19 +29,23 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
+import cn.spacexc.wearbili.Application.Companion.TAG
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.comment.CommentRepliesActivity
+import cn.spacexc.wearbili.activity.other.LinkProcessActivity
+import cn.spacexc.wearbili.activity.search.SearchResultActivityNew
 import cn.spacexc.wearbili.activity.user.SpaceProfileActivity
 import cn.spacexc.wearbili.dataclass.CommentContentData
+import cn.spacexc.wearbili.dataclass.EmoteObject
 import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
+import cn.spacexc.wearbili.utils.LogUtils.log
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import cn.spacexc.wearbili.utils.TimeUtils.toDateStr
 import cn.spacexc.wearbili.utils.parseColor
@@ -60,6 +67,168 @@ This is free software, and you are welcome to redistribute it under certain cond
  */
 
 @Composable
+fun RichText(
+    isCommentReply: Boolean = false,
+    replyUserName: AnnotatedString = buildAnnotatedString { },
+    replyUserMid: Long = 0L,
+    isTopComment: Boolean,
+    origText: String,
+    emoteMap: Map<String, EmoteObject>,
+    jumpUrlMap: Map<String, CommentContentData.JumpUrlObject>,
+    attentionUserMap: Map<String, Long>,
+    fontSize: TextUnit,
+    context: Context,
+    onGloballyClicked: () -> Unit
+) {
+    val inlineTextContent = hashMapOf<String, InlineTextContent>()
+    var temp = origText
+    jumpUrlMap.forEach {
+        temp = temp.replace(it.key, "///${it.key}///")
+    }
+    attentionUserMap.forEach {
+        temp = temp.replace("@${it.key}", "///${it.key}///")
+    }
+    val list = temp.replace("[", "///").replace("]", "///").split("///")
+    val annotatedString = buildAnnotatedString {
+        if (isTopComment) {
+            withStyle(style = SpanStyle(color = BilibiliPink, fontWeight = FontWeight.Bold)) {
+                append("[置顶] ")
+            }
+        }
+        if (isCommentReply) {
+            if (replyUserMid != 0L) {
+                pushStringAnnotation(
+                    tag = "tagUser",
+                    annotation = replyUserMid.toString()
+                )
+            }
+            append(replyUserName)
+            if (replyUserMid != 0L) {
+                pop()
+            }
+        }
+        list.forEach {
+            if (emoteMap.containsKey("[$it]")) {
+                appendInlineContent(id = "[$it]")
+                inlineTextContent["[$it]"] = InlineTextContent(
+                    placeholder = Placeholder(
+                        width = fontSize.times(1.4f),
+                        height = fontSize.times(1.4f),
+                        placeholderVerticalAlign = PlaceholderVerticalAlign.Center
+                    )
+                ) { _ ->
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(emoteMap["[$it]"]?.url)/*.size(
+                                with(localDensity) { fontSize.roundToPx() }
+                            )*/.crossfade(true).build(),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            } else if (jumpUrlMap.containsKey(it)) {
+                if (jumpUrlMap[it]?.extra?.is_word_search == true) {
+                    pushStringAnnotation(
+                        tag = "tagSearch",
+                        annotation = jumpUrlMap[it]?.title ?: ""
+                    )
+                } else {
+                    pushStringAnnotation(tag = "tagUrl", annotation = it)
+                }
+                if (jumpUrlMap[it]?.extra?.is_word_search == true) {
+                    withStyle(style = SpanStyle(color = parseColor("#008ac5"))) {
+                        append(jumpUrlMap[it]?.title ?: "")
+                    }
+                }
+                if (!jumpUrlMap[it]?.prefix_icon.isNullOrEmpty()) {
+                    appendInlineContent(id = jumpUrlMap[it]?.prefix_icon ?: "")
+                    inlineTextContent[jumpUrlMap[it]?.prefix_icon ?: ""] = InlineTextContent(
+                        placeholder = Placeholder(
+                            width = fontSize.times(1.3f),
+                            height = fontSize.times(1.3f),
+                            placeholderVerticalAlign = PlaceholderVerticalAlign.Center
+                        )
+                    ) { _ ->
+                        AsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(jumpUrlMap[it]?.prefix_icon)/*.size(
+                                with(localDensity) { fontSize.roundToPx() }
+                            )*/.crossfade(true).build(),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
+                }
+                if (jumpUrlMap[it]?.extra?.is_word_search != true) {
+                    withStyle(style = SpanStyle(color = parseColor("#008ac5"))) {
+                        append(jumpUrlMap[it]?.title ?: "")
+                    }
+                }
+                pop()
+            } else if (attentionUserMap.containsKey(it)) {
+                pushStringAnnotation(
+                    tag = "tagUser",
+                    annotation = attentionUserMap[it]?.toString() ?: ""
+                )
+                withStyle(style = SpanStyle(color = parseColor("#008ac5"))) {
+                    append("@$it")
+                }
+                pop()
+            } else {
+                withStyle(
+                    style = if (isCommentReply) SpanStyle(
+                        color = Color(
+                            255,
+                            255,
+                            255,
+                            179
+                        )
+                    ) else SpanStyle()
+                ) {
+                    append(it)
+                }
+            }
+        }
+    }
+    ClickableText(
+        text = annotatedString,
+        onClick = { index ->
+            annotatedString.getStringAnnotations(tag = "tagUser", start = index, end = index)
+                .firstOrNull()?.let { annotation ->
+                    Log.d(TAG, "RichText: tagUser: ${annotation.item}")
+                    context.startActivity(Intent(context, SpaceProfileActivity::class.java).apply {
+                        putExtra("userMid", annotation.item.toLong())
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    })
+                    return@ClickableText
+                }
+            annotatedString.getStringAnnotations(tag = "tagUrl", start = index, end = index)
+                .firstOrNull()?.let { annotation ->
+                    context.startActivity(Intent(context, LinkProcessActivity::class.java).apply {
+                        putExtra("url", annotation.item)
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    })
+                    return@ClickableText
+                }
+            annotatedString.getStringAnnotations(tag = "tagSearch", start = index, end = index)
+                .firstOrNull()?.let { annotation ->
+                    val intent = Intent(context, SearchResultActivityNew::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    intent.putExtra("keyword", annotation.item.log("keyword"))
+                    context.startActivity(intent)
+                    return@ClickableText
+                }
+            Log.d(TAG, "RichText: Global Click Event")
+            onGloballyClicked()
+        }, style = TextStyle(
+            fontFamily = puhuiFamily,
+            color = Color.White,
+            fontSize = fontSize
+        ), inlineTextContent = inlineTextContent
+    )
+}
+
+@Composable
 fun CommentCard(
     senderName: String,
     senderNameColor: String,
@@ -71,22 +240,25 @@ fun CommentCard(
     commentContent: String,
     commentLikeCount: Int,
     commentRepliesCount: Int,
-    commentReplies: Array<CommentContentData.Replies>,
+    commentReplies: List<CommentContentData.Replies>,
     commentReplyControl: String,
     commentRpid: Long,
+    commentEmoteMap: Map<String, EmoteObject>,
+    commentAttentionedUsersMap: Map<String, Long>,
+    commentJumpUrlMap: Map<String, CommentContentData.JumpUrlObject>,
     isUpLiked: Boolean,
     isTopComment: Boolean,
     uploaderMid: Long,
     context: Context,
     isClickable: Boolean,
-    videoAid: Long
+    oid: Long,
 ) {
     Column(
         modifier = Modifier
             .clickVfx(isEnabled = isClickable) {
                 if (isClickable) {
                     Intent(context, CommentRepliesActivity::class.java).apply {
-                        putExtra("aid", videoAid)
+                        putExtra("oid", oid)
                         putExtra("rootCommentId", commentRpid)
                         putExtra("upMid", uploaderMid)
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -225,19 +397,7 @@ fun CommentCard(
                         Spacer(modifier = Modifier.width(2.dp))
                     }
                     Text(
-                        text = buildAnnotatedString {
-                            /*if (isSenderUploader) {
-                                withStyle(
-                                    style = SpanStyle(
-                                        color = BilibiliPink,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                ) {
-                                    append("[UP] ")
-                                }
-                            }*/
-                            append(senderName)
-                        },
+                        text = senderName,
                         fontFamily = puhuiFamily,
                         fontSize = 12.sp,
                         color = parseColor(senderNameColor),
@@ -257,14 +417,25 @@ fun CommentCard(
 
         }
         Spacer(modifier = Modifier.height(4.dp))
-        Text(text = buildAnnotatedString {
-            if (isTopComment) {
-                withStyle(style = SpanStyle(color = BilibiliPink, fontWeight = FontWeight.Bold)) {
-                    append("[置顶] ")
+        RichText(
+            isTopComment = isTopComment,
+            origText = commentContent,
+            emoteMap = commentEmoteMap,
+            jumpUrlMap = commentJumpUrlMap,
+            attentionUserMap = commentAttentionedUsersMap,
+            fontSize = 13.sp,
+            context = context
+        ) {
+            if (isClickable) {
+                Intent(context, CommentRepliesActivity::class.java).apply {
+                    putExtra("aid", oid)
+                    putExtra("rootCommentId", commentRpid)
+                    putExtra("upMid", uploaderMid)
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    context.startActivity(this)
                 }
             }
-            append(commentContent)
-        }, color = Color.White, fontSize = 13.sp, fontFamily = puhuiFamily)
+        }
         Spacer(modifier = Modifier.height(8.dp))
         Row {
             CommentInfoItem(
@@ -331,8 +502,16 @@ fun CommentCard(
                     .padding(8.dp)
             ) {
                 commentReplies.forEach {
-                    Text(
-                        text = buildAnnotatedString {
+                    RichText(
+                        isTopComment = false,
+                        origText = it.content?.message ?: "",
+                        emoteMap = it.content?.emote ?: emptyMap(),
+                        jumpUrlMap = it.content?.jump_url ?: emptyMap(),
+                        attentionUserMap = it.content?.at_name_to_mid ?: emptyMap(),
+                        fontSize = 11.sp,
+                        isCommentReply = true,
+                        context = context,
+                        replyUserName = buildAnnotatedString {
                             withStyle(
                                 style = SpanStyle(
                                     color = if (it.member.mid == uploaderMid) BilibiliPink else Color.White,
@@ -342,13 +521,19 @@ fun CommentCard(
                                 append(it.member.uname)
                             }
                             append(": ")
-                            append(it.content?.message ?: "")
                         },
-                        fontSize = 11.sp,
-                        color = Color(255, 255, 255, 179),
-                        fontFamily = puhuiFamily,
-                        maxLines = 2
-                    )
+                        replyUserMid = it.member.mid
+                    ) {
+                        if (isClickable) {
+                            Intent(context, CommentRepliesActivity::class.java).apply {
+                                putExtra("aid", oid)
+                                putExtra("rootCommentId", commentRpid)
+                                putExtra("upMid", uploaderMid)
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                context.startActivity(this)
+                            }
+                        }
+                    }
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     var textHeight by remember {

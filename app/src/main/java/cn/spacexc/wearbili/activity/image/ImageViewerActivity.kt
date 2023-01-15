@@ -14,7 +14,7 @@ import androidx.core.view.isVisible
 import androidx.viewpager2.widget.ViewPager2
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.adapter.ImageViewerAdapter
-import cn.spacexc.wearbili.dataclass.dynamic.dynamicimage.card.Picture
+import cn.spacexc.wearbili.dataclass.dynamic.new.list.DrawItem
 import cn.spacexc.wearbili.utils.LogUtils.log
 
 
@@ -26,7 +26,7 @@ class ImageViewerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
         setContentView(R.layout.activity_image_viewer)
-        val list = intent.getParcelableArrayListExtra<Picture>("imageList")
+        val list = intent.getParcelableArrayListExtra<DrawItem>("imageList")
         val textview = findViewById<TextView>(R.id.textView10)
         val viewPager2 = findViewById<ViewPager2>(R.id.imageViewerPager)
         viewPager2.adapter = ImageViewerAdapter(this).apply { submitList(list) }

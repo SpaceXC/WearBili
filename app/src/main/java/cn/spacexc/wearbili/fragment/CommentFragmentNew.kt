@@ -173,7 +173,12 @@ class CommentFragmentNew : Fragment() {
                                             commentContent = comment.content?.message ?: "",
                                             commentLikeCount = comment.like,
                                             commentRepliesCount = comment.rcount,
-                                            commentReplies = comment.replies ?: emptyArray(),
+                                            commentReplies = comment.replies ?: emptyList(),
+                                            commentEmoteMap = comment.content?.emote ?: emptyMap(),
+                                            commentJumpUrlMap = comment.content?.jump_url
+                                                ?: emptyMap(),
+                                            commentAttentionedUsersMap = comment.content?.at_name_to_mid
+                                                ?: emptyMap(),
                                             commentReplyControl = comment.reply_control?.sub_reply_entry_text
                                                 ?: "",
                                             commentRpid = comment.rpid,
@@ -182,7 +187,7 @@ class CommentFragmentNew : Fragment() {
                                             isUpLiked = comment.up_action.like,
                                             context = requireContext(),
                                             isClickable = true,
-                                            videoAid = aid.toLong()
+                                            oid = aid.toLong()
                                         )
                                         Spacer(modifier = Modifier.height(12.dp))
                                         Divider(
@@ -207,7 +212,12 @@ class CommentFragmentNew : Fragment() {
                                             commentContent = comment.content?.message ?: "",
                                             commentLikeCount = comment.like,
                                             commentRepliesCount = comment.rcount,
-                                            commentReplies = comment.replies ?: emptyArray(),
+                                            commentReplies = comment.replies ?: emptyList(),
+                                            commentEmoteMap = comment.content?.emote ?: emptyMap(),
+                                            commentJumpUrlMap = comment.content?.jump_url
+                                                ?: emptyMap(),
+                                            commentAttentionedUsersMap = comment.content?.at_name_to_mid
+                                                ?: emptyMap(),
                                             commentReplyControl = comment.reply_control?.sub_reply_entry_text
                                                 ?: "",
                                             commentRpid = comment.rpid,
@@ -216,7 +226,7 @@ class CommentFragmentNew : Fragment() {
                                             isUpLiked = comment.up_action.like,
                                             context = requireContext(),
                                             isClickable = true,
-                                            videoAid = aid.toLong()
+                                            oid = aid.toLong()
                                         )
                                         Spacer(modifier = Modifier.height(12.dp))
                                         Divider(

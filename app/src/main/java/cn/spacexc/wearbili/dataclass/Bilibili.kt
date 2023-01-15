@@ -27,12 +27,12 @@ data class SelfUser(
     val level: Int,
     val silence: Int,
     val coins: Float,
-    val vip: VIP,
+    val vip: UserProfileVip,
     val follower: Int,
-    val pendant: Pendant
+    val pendant: UserProfilePendant
 )
 
-data class Pendant(
+data class UserProfilePendant(
     val expire: Int,
     val image: String,
     var image_enhance: String?,
@@ -41,7 +41,7 @@ data class Pendant(
     val pid: Long
 )
 
-data class VIP(
+data class UserProfileVip(
     val type: Int,
     val status: Int,
     val due_date: Long,
@@ -278,8 +278,8 @@ data class CommentContentData(
     var show_follow: Boolean,
     var invisible: Boolean,
     var reply_control: ReplyControl?,
-    var replies: Array<Replies>?,
-    var card_label: Array<CardLabel>,
+    var replies: List<Replies>?,
+    var card_label: List<CardLabel>,
     var is_top: Boolean = false
 ) {
     data class CardLabel(
@@ -376,8 +376,43 @@ data class CommentContentData(
         var plat: Int,
         var device: String,
         var max_line: Int,
-        var emote: Map<String, EmoteObject>
+        var emote: Map<String, EmoteObject>?,
+        var jump_url: Map<String, JumpUrlObject>?,
+        //var members: List<ReplyAttentionMember>?,
+        var at_name_to_mid: Map<String, Long>?
     )
+
+    data class ReplyAttentionMember(
+        @SerializedName("avatar")
+        val avatar: String,
+        @SerializedName("face_nft_new")
+        val faceNftNew: Int,
+        @SerializedName("is_senior_member")
+        val isSeniorMember: Int,
+        @SerializedName("level_info")
+        val levelInfo: LevelInfo,
+        @SerializedName("mid")
+        val mid: String,
+        @SerializedName("nameplate")
+        val nameplate: Nameplate,
+        @SerializedName("official_verify")
+        val officialVerify: OfficialVerify,
+        @SerializedName("pendant")
+        val pendant: UserProfilePendant,
+        @SerializedName("rank")
+        val rank: String,
+        @SerializedName("sex")
+        val sex: String,
+        @SerializedName("sign")
+        val sign: String,
+        @SerializedName("uname")
+        val uname: String,
+        @SerializedName("vip")
+        val vip: Vip
+    )
+
+    data class JumpUrlObject(val title: String, val prefix_icon: String?, val extra: JumpUrlExtra)
+    data class JumpUrlExtra(val is_word_search: Boolean)
 
 
     data class Folder(var has_folded: Boolean, var is_folded: Boolean, var rule: String)

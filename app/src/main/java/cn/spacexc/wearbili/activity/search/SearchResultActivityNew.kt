@@ -24,6 +24,7 @@ import cn.spacexc.wearbili.ui.CirclesBackground
 import cn.spacexc.wearbili.ui.UserCard
 import cn.spacexc.wearbili.ui.VideoUis
 import cn.spacexc.wearbili.ui.puhuiFamily
+import cn.spacexc.wearbili.utils.LogUtils.log
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import cn.spacexc.wearbili.viewmodel.SearchViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -34,16 +35,22 @@ class SearchResultActivityNew : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val keyword = getKeyword() ?: ""
+        val keyword = getKeyword().log() ?: ""
         viewModel.searchVideo(keyword, true)
         setContent {
             val searchedUser by viewModel.searchedUser.observeAsState()
             val searchedMediaFt by viewModel.searchedMediaFt.observeAsState()
             val searchedVideo by viewModel.searchedVideo.observeAsState()
+            val isError by viewModel.isError.observeAsState()
             CirclesBackground.RegularBackgroundWithTitleAndBackArrow(
                 title = "搜索结果",
                 onBack = ::finish,
-                isLoading = searchedUser == null && searchedMediaFt == null && searchedVideo == null
+                isLoading = searchedUser == null && searchedMediaFt == null && searchedVideo == null,
+                isError = isError == true,
+                errorRetry = {
+                    viewModel.isError.value = false
+                    viewModel.searchVideo(keyword, true)
+                }
             ) {
                 Crossfade(targetState = searchedUser?.isEmpty() == true && searchedMediaFt?.isEmpty() == true && searchedVideo?.isEmpty() == true) {
                     if (it) {

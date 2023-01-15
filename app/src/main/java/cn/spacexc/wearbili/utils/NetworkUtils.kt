@@ -25,7 +25,7 @@ const val USER_AGENT =
 class Cookies(var cookies: MutableList<Cookie>)
 
 object NetworkUtils {
-    private val client = OkHttpClient.Builder()
+    val client = OkHttpClient.Builder()
         .cookieJar(object : CookieJar {
             override fun loadForRequest(url: HttpUrl): List<Cookie> {
                 return CookiesManager.getCookies()

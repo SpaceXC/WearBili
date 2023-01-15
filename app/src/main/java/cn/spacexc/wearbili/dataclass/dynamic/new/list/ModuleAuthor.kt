@@ -21,9 +21,9 @@ data class ModuleAuthor(
     @SerializedName("name")
     val name: String,
     @SerializedName("official_verify")
-    val officialVerify: OfficialVerify,
+    val officialVerify: OfficialVerify?,
     @SerializedName("pendant")
-    val pendant: Pendant,
+    val pendant: Pendant?,
     @SerializedName("pub_action")
     val pubAction: String,
     @SerializedName("pub_location_text")

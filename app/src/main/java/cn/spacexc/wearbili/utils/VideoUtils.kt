@@ -1,6 +1,9 @@
 package cn.spacexc.wearbili.utils
 
+import android.util.Log
+import cn.spacexc.wearbili.Application
 import okio.ArrayIndexOutOfBoundsException
+import kotlin.math.pow
 
 /**
  * Created by XC-Qan on 2022/6/27.
@@ -73,5 +76,52 @@ object VideoUtils {
         }
     }
 
+    fun isAV(av: String): Boolean {
+        if (!av.startsWith("av")) return false
+        try {
+            val avstr = av.substring(2, av.length)
+            Log.d(Application.getTag(), "isAV: $avstr")
+            return if (av.isEmpty()) {
+                false
+            } else {
+                try {
+                    val avn1 = avstr.toLong()
+                    //av号是绝对不可能大于2的32次方的，不然此算法也将作废
+                    return avn1 < 2.0.pow(32.0)
+                } catch (e: NumberFormatException) {
+                    return false
+                }
+
+            }
+        } catch (e: IndexOutOfBoundsException) {
+            return false
+        }
+
+    }
+
+    fun isBV(bv: String): Boolean {   //bv号转换av号
+        if (bv.startsWith("BV")) { //先看看你有没有把bv带进来
+            return if (bv.length != 12) { //判断长度
+                false
+            } else {
+                val bv7 = bv[9]
+                //判断bv号的格式是否正确，防止你瞎输
+                if (bv.indexOf("1") == 2 && bv7 == '7') try {
+                    true
+                } catch (e: Exception) {
+                    false
+                } else { //如果格式不对的话就揍你一顿
+                    false
+                }
+            }
+        } else { //如果你不是用bv开头的
+            return if (bv.length != 10) { //判断长度
+                false
+            } else {
+                //判断格式是否正确
+                bv.indexOf("1") == 0 && bv[7] == '7'
+            }
+        }
+    }
 }
 

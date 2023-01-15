@@ -1,4 +1,4 @@
-package cn.spacexc.wearbili.dataclass.dynamic.new.list
+package cn.spacexc.wearbili.dataclass
 
 
 import com.google.gson.annotations.SerializedName
@@ -9,11 +9,11 @@ data class Pendant(
     @SerializedName("image")
     val image: String,
     @SerializedName("image_enhance")
-    val imageEnhance: String?,
+    val imageEnhance: String,
     @SerializedName("image_enhance_frame")
     val imageEnhanceFrame: String,
     @SerializedName("name")
     val name: String,
     @SerializedName("pid")
-    val pid: Long
+    val pid: Int
 )

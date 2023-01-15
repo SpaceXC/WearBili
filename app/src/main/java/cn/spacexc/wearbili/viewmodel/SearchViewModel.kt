@@ -40,6 +40,8 @@ class SearchViewModel : ViewModel() {
     private val _isRefreshing = MutableLiveData(false)
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
+    val isError = MutableLiveData(false)
+
     fun searchVideo(keyword: String, isRefresh: Boolean = false) {
         if (isRefresh) {
             _isRefreshing.value = true
@@ -88,6 +90,7 @@ class SearchViewModel : ViewModel() {
                 MainScope().launch {
                     ToastUtils.showText("网络异常")
                     _isRefreshing.value = false
+                    isError.value = true
                 }
             }
 

@@ -24,6 +24,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import okhttp3.*
 import java.io.IOException
+import java.net.URLEncoder
 
 /**
  * Created by XC-Qan on 2022/6/10.
@@ -356,7 +357,12 @@ object VideoManager {
 
     fun searchVideoAll(keyword: String, page: Int, callback: NetworkUtils.ResultCallback<Search>) {
         NetworkUtils.getUrl(
-            "https://api.bilibili.com/x/web-interface/search/all/v2?page=$page&single_column=0&keyword=$keyword",
+            "https://api.bilibili.com/x/web-interface/search/all/v2?page=$page&single_column=0&keyword=${
+                URLEncoder.encode(
+                    keyword,
+                    "UTF-8"
+                )
+            }".log(),
             object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     callback.onFailed(e)

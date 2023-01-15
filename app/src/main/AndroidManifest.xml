@@ -26,6 +26,20 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.other.LinkProcessActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <!-- 表示该页面可以被隐式调用，必须加上该项 -->
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="b23.tv"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".activity.comment.CommentRepliesActivity"
             android:exported="false" />
         <activity

@@ -4,6 +4,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import cn.spacexc.wearbili.dataclass.CommentContentData
 import cn.spacexc.wearbili.dataclass.dynamic.new.list.DynamicItem
 import cn.spacexc.wearbili.manager.DynamicManagerNew
 import cn.spacexc.wearbili.utils.ToastUtils
@@ -37,6 +38,14 @@ class DynamicViewModelNew : ViewModel() {
     private val _isRefreshing = MutableLiveData(false)
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
+    val dynamicDetailItem = MutableLiveData<DynamicItem>()
+    private val _commentList = MutableLiveData<List<CommentContentData>?>()
+    val commentList: LiveData<List<CommentContentData>?> = _commentList
+
+    private val _topComment = MutableLiveData<CommentContentData?>()
+    val topComment: LiveData<CommentContentData?> = _topComment
+    val commentCount = MutableLiveData(0)
+
     val isError = MutableLiveData(false)
 
     private val dynamicManager = DynamicManagerNew()
@@ -62,5 +71,57 @@ class DynamicViewModelNew : ViewModel() {
                 _isRefreshing.value = false
             }
         })
+    }
+
+    fun getDynamicDetail(dyId: String) {
+        dynamicManager.getDynamicDetail(dyId = dyId, onFailed = {
+            MainScope().launch {
+                if (it is IOException) {
+                    ToastUtils.showText("网络异常")
+                }
+                isError.value = true
+                _isRefreshing.value = false
+            }
+        }, onSuccess = {
+            MainScope().launch {
+                dynamicDetailItem.value = it.data.item
+                _isRefreshing.value = false
+            }
+        })
+    }
+
+    fun getDynamicComments(isRefresh: Boolean, dyId: String, type: String) {
+        val requestType = when (type) {
+            "DYNAMIC_TYPE_FORWARD" -> 17
+            "DYNAMIC_TYPE_DRAW" -> 11
+            "DYNAMIC_TYPE_WORD" -> 17
+            "DYNAMIC_TYPE_AV" -> 1
+            else -> 0
+        }
+        dynamicManager.getDynamicComments(
+            isRefresh = isRefresh,
+            dyId = dyId,
+            type = requestType,
+            onFailed = {
+                MainScope().launch {
+                    if (it is IOException) {
+                        ToastUtils.showText("网络异常")
+                    }
+                    isError.value = true
+                    _isRefreshing.value = false
+                }
+            },
+            onSuccess = {
+                MainScope().launch {
+                    _topComment.value = it.data.top?.upper
+                    if (isRefresh) {
+                        _commentList.value = it.data.replies
+                        commentCount.value = it.data.cursor.all_count
+                    } else {
+                        _commentList.value =
+                            _commentList.value?.plus(it.data.replies ?: emptyList())
+                    }
+                }
+            })
     }
 }

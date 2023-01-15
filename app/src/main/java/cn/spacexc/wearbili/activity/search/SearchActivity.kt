@@ -2,7 +2,6 @@ package cn.spacexc.wearbili.activity.search
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +17,8 @@ import cn.spacexc.wearbili.dataclass.HotSearch
 import cn.spacexc.wearbili.manager.SearchManager
 import cn.spacexc.wearbili.utils.ToastUtils
 import cn.spacexc.wearbili.utils.VideoUtils
+import cn.spacexc.wearbili.utils.VideoUtils.isAV
+import cn.spacexc.wearbili.utils.VideoUtils.isBV
 import com.google.gson.Gson
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -25,7 +26,6 @@ import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
-import kotlin.math.pow
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
@@ -245,51 +245,5 @@ class SearchActivity : AppCompatActivity() {
 //        })
 //    }
 
-    private fun isAV(av: String): Boolean {
-        if (!av.startsWith("av")) return false
-        try {
-            val avstr = av.substring(2, av.length)
-            Log.d(Application.getTag(), "isAV: $avstr")
-            return if (av.isEmpty()) {
-                false
-            } else {
-                try {
-                    val avn1 = avstr.toLong()
-                    //av号是绝对不可能大于2的32次方的，不然此算法也将作废
-                    return avn1 < 2.0.pow(32.0)
-                } catch (e: NumberFormatException) {
-                    return false
-                }
 
-            }
-        } catch (e: IndexOutOfBoundsException) {
-            return false
-        }
-
-    }
-
-    fun isBV(bv: String): Boolean {   //bv号转换av号
-        if (bv.startsWith("BV")) { //先看看你有没有把bv带进来
-            return if (bv.length != 12) { //判断长度
-                false
-            } else {
-                val bv7 = bv[9]
-                //判断bv号的格式是否正确，防止你瞎输
-                if (bv.indexOf("1") == 2 && bv7 == '7') try {
-                    true
-                } catch (e: Exception) {
-                    false
-                } else { //如果格式不对的话就揍你一顿
-                    false
-                }
-            }
-        } else { //如果你不是用bv开头的
-            return if (bv.length != 10) { //判断长度
-                false
-            } else {
-                //判断格式是否正确
-                bv.indexOf("1") == 0 && bv[7] == '7'
-            }
-        }
-    }
 }

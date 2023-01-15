@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.R
-import cn.spacexc.wearbili.dataclass.dynamic.dynamicimage.card.Picture
+import cn.spacexc.wearbili.dataclass.dynamic.new.list.DrawItem
 import com.bumptech.glide.Glide
 import com.github.chrisbanes.photoview.PhotoView
 
@@ -21,14 +21,14 @@ import com.github.chrisbanes.photoview.PhotoView
  */
 
 class ImageViewerAdapter(val context: Context) :
-    ListAdapter<Picture, ImageViewerAdapter.ImageViewerViewHolder>(object :
-        DiffUtil.ItemCallback<Picture>() {
-        override fun areItemsTheSame(oldItem: Picture, newItem: Picture): Boolean {
-            return oldItem.img_src == newItem.img_src
+    ListAdapter<DrawItem, ImageViewerAdapter.ImageViewerViewHolder>(object :
+        DiffUtil.ItemCallback<DrawItem>() {
+        override fun areItemsTheSame(oldItem: DrawItem, newItem: DrawItem): Boolean {
+            return oldItem.src == newItem.src
         }
 
-        override fun areContentsTheSame(oldItem: Picture, newItem: Picture): Boolean {
-            return oldItem.img_src == newItem.img_src
+        override fun areContentsTheSame(oldItem: DrawItem, newItem: DrawItem): Boolean {
+            return oldItem.src == newItem.src
         }
 
     }) {
@@ -40,12 +40,12 @@ class ImageViewerAdapter(val context: Context) :
 
     override fun onBindViewHolder(holder: ImageViewerViewHolder, position: Int) {
         try {
-            Glide.with(context).load(getItem(position).img_src)
+            Glide.with(context).load(getItem(position).src)
                 /*.listener(object : RequestListener<Drawable> {
 
                 })*/
                 .into(holder.photoView)
-        } catch (e: OutOfMemoryError) {
+        } catch (_: OutOfMemoryError) {
 
         }
     }
