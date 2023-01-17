@@ -7,9 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import cn.spacexc.wearbili.adapter.VideoViewPagerAdapter
 import cn.spacexc.wearbili.databinding.ActivityVideoBinding
-import cn.spacexc.wearbili.fragment.CommentFragmentNew
+import cn.spacexc.wearbili.fragment.CommentFragment
 import cn.spacexc.wearbili.utils.VideoUtils
 
+const val VIDEO_ID_AV = "aid"
+const val VIDEO_ID_BV = "bvid"
 
 class VideoActivity : AppCompatActivity() {
     private lateinit var binding: ActivityVideoBinding
@@ -40,7 +42,7 @@ class VideoActivity : AppCompatActivity() {
                     supportFragmentManager.findFragmentByTag("f${binding.viewPager2.currentItem}")
                 when (binding.viewPager2.currentItem) {
                     1 -> {
-                        (fragment as CommentFragmentNew).apply {
+                        (fragment as CommentFragment).apply {
                             refresh()
                         }
                     }
@@ -59,7 +61,7 @@ class VideoActivity : AppCompatActivity() {
 
     }
 
-    var currentVideo: cn.spacexc.wearbili.dataclass.videoDetail.Data? = null
+    var currentVideo: cn.spacexc.wearbili.dataclass.videoDetail.web.Data? = null
     var isInitialized = false
 
     val videoId: String
@@ -79,6 +81,19 @@ class VideoActivity : AppCompatActivity() {
                 }
             } else {
                 return intent.getStringExtra("videoId")!!
+            }
+        }
+    val videoIdType: String
+        get() {
+            if (intent.getStringExtra("videoId").isNullOrEmpty()) {
+                return if (intent.data?.path.isNullOrBlank()) {
+                    return if (intent.data?.getQueryParameter("bvid") == null) VIDEO_ID_AV
+                    else VIDEO_ID_BV
+                } else {
+                    VIDEO_ID_AV
+                }
+            } else {
+                return intent.getStringExtra("videoIdType")!!
             }
         }
 

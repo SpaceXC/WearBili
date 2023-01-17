@@ -42,7 +42,6 @@ import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.ui.*
 import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
-import cn.spacexc.wearbili.utils.TimeUtils.toDateStr
 import cn.spacexc.wearbili.utils.ifNullOrEmpty
 import cn.spacexc.wearbili.utils.parseColor
 import cn.spacexc.wearbili.viewmodel.UserSpaceViewModel
@@ -79,7 +78,7 @@ class SpaceProfileActivity : AppCompatActivity() {
         val userMid = intent.getLongExtra("userMid", 0)
         viewModel.getUser(userMid)
         viewModel.getVideos(userMid, true)
-        viewModel.getDynamic(userMid)
+        viewModel.getDynamic(true, userMid)
         viewModel.checkSubscribe(userMid)
         viewModel.getUserFans(userMid)
         setContent {
@@ -91,7 +90,7 @@ class SpaceProfileActivity : AppCompatActivity() {
             val collapsingState = rememberCollapsingToolbarScaffoldState()
             val pagerState = rememberPagerState()
             val userVideos by viewModel.videos.observeAsState()
-            val dynamicList by viewModel.dynamicCardList.observeAsState()
+            val dynamicList by viewModel.dynamicItemList.observeAsState()
             val scope = rememberCoroutineScope()
             val isError by viewModel.isError.observeAsState()
             val isSubscribed by viewModel.isFollowed.observeAsState()
@@ -116,7 +115,7 @@ class SpaceProfileActivity : AppCompatActivity() {
                     viewModel.isError.value = false
                     viewModel.getUser(userMid)
                     viewModel.getVideos(userMid, true)
-                    viewModel.getDynamic(userMid)
+                    viewModel.getDynamic(true, userMid)
                     viewModel.checkSubscribe(userMid)
                 }
             ) {
@@ -495,20 +494,10 @@ class SpaceProfileActivity : AppCompatActivity() {
                                             modifier = Modifier.fillMaxSize(),
                                             //contentPadding = PaddingValues(vertical = 4.dp)
                                         ) {
-                                            dynamicList?.forEach { card ->
+                                            dynamicList?.forEach { item ->
                                                 item {
-                                                    DynamicCard(
-                                                        posterAvatar = card.desc.user_profile.info.face,
-                                                        posterName = card.desc.user_profile.info.uname,
-                                                        posterNameColor = if (!card.desc.user_profile.vip.nickname_color.isNullOrEmpty()) Color(
-                                                            android.graphics.Color.parseColor(
-                                                                card.desc.user_profile.vip.nickname_color
-                                                            )
-                                                        ) else Color.White,
-                                                        postTime = (card.desc.timestamp * 1000).toDateStr(
-                                                            "MM-dd HH:mm"
-                                                        ),
-                                                        card = card,
+                                                    DynamicCardNew(
+                                                        item = item,
                                                         context = this@SpaceProfileActivity
                                                     )
                                                 }
@@ -516,7 +505,7 @@ class SpaceProfileActivity : AppCompatActivity() {
                                             if (!dynamicList.isNullOrEmpty()) {
                                                 item {
                                                     LaunchedEffect(key1 = Unit) {
-                                                        viewModel.getMoreDynamic(userMid)
+                                                        viewModel.getDynamic(false, userMid)
                                                     }
                                                 }
                                             }

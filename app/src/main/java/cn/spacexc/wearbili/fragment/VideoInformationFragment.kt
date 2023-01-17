@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
@@ -55,10 +56,7 @@ import cn.spacexc.wearbili.activity.user.SpaceProfileActivity
 import cn.spacexc.wearbili.activity.video.*
 import cn.spacexc.wearbili.dataclass.RoundButtonData
 import cn.spacexc.wearbili.dataclass.RoundButtonDataNew
-import cn.spacexc.wearbili.manager.ID_TYPE_SSID
-import cn.spacexc.wearbili.manager.SettingsManager
-import cn.spacexc.wearbili.manager.UserManager
-import cn.spacexc.wearbili.manager.VideoManager
+import cn.spacexc.wearbili.manager.*
 import cn.spacexc.wearbili.ui.*
 import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
@@ -92,7 +90,7 @@ class VideoInformationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         activity = getActivity() as VideoActivity
         viewModel.getVideoInfo(activity.videoId)
-        viewModel.getSubtitle(activity.videoId)
+        viewModel.getProgress(activity.videoId)
         viewModel.videoInfo.observe(
             viewLifecycleOwner
         ) {
@@ -102,16 +100,31 @@ class VideoInformationFragment : Fragment() {
                 viewModel.getUploaderInfo(it.data.owner.mid)
                 VideoManager.uploadVideoViewingProgress(
                     it.data.bvid,
-                    it.data.history?.cid ?: it.data.cid,
-                    it.data.history?.progress?.toInt() ?: 0
+                    viewModel.historyCid ?: it.data.cid,
+                    viewModel.historyCid?.toInt() ?: 0
                 )
-                if (it.data.season?.season_id?.isNotEmpty() == true) {
-                    Intent(requireActivity(), BangumiActivity::class.java).apply {
-                        putExtra("id", it.data.season.season_id)
-                        putExtra("idType", ID_TYPE_SSID)
-                        startActivity(this)
-                        activity.finish()
-                    }
+            }
+        }
+        viewModel.relatedSeasonId.observe(viewLifecycleOwner) {
+            if (!it.isNullOrEmpty()) {
+                Intent(requireActivity(), BangumiActivity::class.java).apply {
+                    putExtra("id", it)
+                    putExtra("idType", ID_TYPE_SSID)
+                    startActivity(this)
+                    activity.finish()
+
+
+                }
+            }
+        }
+        viewModel.relatedEpid.observe(viewLifecycleOwner) {
+            if (!it.isNullOrEmpty()) {
+                Intent(requireActivity(), BangumiActivity::class.java).apply {
+                    putExtra("id", it)
+                    putExtra("idType", ID_TYPE_EPID)
+                    startActivity(this)
+                    activity.finish()
+
                 }
             }
         }
@@ -157,7 +170,7 @@ class VideoInformationFragment : Fragment() {
                                     }
                                     .clip(
                                         RoundedCornerShape(10.dp)
-                                    )
+                                    ), contentScale = ContentScale.FillWidth
                             )
                             Spacer(modifier = Modifier.height(6.dp))
                             Text(
@@ -232,10 +245,10 @@ class VideoInformationFragment : Fragment() {
                                                                 with(localDensity) { it.size.height.toDp() }
                                                         }
                                                 )
-                                                if (staff.officialVerify.type == OFFICIAL_TYPE_ORG || staff.officialVerify.type == OFFICIAL_TYPE_PERSONAL) {
+                                                if (staff.official.type == OFFICIAL_TYPE_ORG || staff.official.type == OFFICIAL_TYPE_PERSONAL) {
                                                     Image(
                                                         painter = painterResource(
-                                                            id = when (staff.officialVerify.type) {
+                                                            id = when (staff.official.type) {
                                                                 OFFICIAL_TYPE_ORG -> R.drawable.flash_blue
                                                                 OFFICIAL_TYPE_PERSONAL -> R.drawable.flash_yellow
                                                                 else -> 0
@@ -255,7 +268,7 @@ class VideoInformationFragment : Fragment() {
                                             }) {
                                                 Text(
                                                     text = staff.name,
-                                                    color = parseColor(staff.vip.label.bgColor.ifNullOrEmpty { "#FFFFFF" }),
+                                                    color = parseColor(staff.vip.label.bg_color.ifNullOrEmpty { "#FFFFFF" }),
                                                     fontFamily = puhuiFamily
                                                 )
                                                 Spacer(modifier = Modifier.height(2.dp))
@@ -366,8 +379,8 @@ class VideoInformationFragment : Fragment() {
                             }
                             Spacer(modifier = Modifier.height(6.dp))
 
-                            videoInfo?.data?.honor?.let { honor ->
-                                Row(
+                            videoInfo?.data?.honor_reply?.honor?.forEach { honor ->
+                                /*Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .clip(RoundedCornerShape(8.dp))
@@ -382,7 +395,7 @@ class VideoInformationFragment : Fragment() {
                                     AsyncImage(
                                         model = ImageRequest.Builder(LocalContext.current)
                                             .data(honor.iconNight)
-                                            .crossfade(true)/*.size(with(localDensity){textHeight.roundToPx()})*/
+                                            .crossfade(true)*//*.size(with(localDensity){textHeight.roundToPx()})*//*
                                             .build(),
                                         contentDescription = null,
                                         modifier = Modifier.size(textHeight)
@@ -399,7 +412,7 @@ class VideoInformationFragment : Fragment() {
                                         fontWeight = FontWeight.Bold
                                     )
                                 }
-                                Spacer(modifier = Modifier.height(6.dp))
+                                Spacer(modifier = Modifier.height(6.dp))*/
                             }
 
                             if (videoInfo?.data?.desc?.isNotEmpty() == true) {
@@ -562,9 +575,9 @@ class VideoInformationFragment : Fragment() {
                                             bvid = videoInfo?.data?.bvid,
                                             cid = videoInfo?.data?.cid,
                                             title = videoInfo?.data?.title,
-                                            progress = videoInfo?.data?.history?.progress
-                                                ?: 0,
-                                            subtitleUrl = if (viewModel.subtitle.value?.data?.subtitle?.list.isNullOrEmpty()) null else viewModel.subtitle.value?.data?.subtitle?.list?.get(
+                                            progress = viewModel.historyProgress ?: 0L
+                                            ?: 0,
+                                            subtitleUrl = if (videoInfo?.data?.subtitle?.list.isNullOrEmpty()) null else videoInfo?.data?.subtitle?.list?.get(
                                                 0
                                             )?.subtitleUrl
                                         )
@@ -684,10 +697,10 @@ class VideoInformationFragment : Fragment() {
                                             putExtra("cid", videoInfo?.data?.cid ?: 0)
                                             putExtra("title", videoInfo?.data?.title)
                                             putExtra("coverUrl", videoInfo?.data?.pic)
-                                            if (!viewModel.subtitle.value?.data?.subtitle?.list.isNullOrEmpty()) {
+                                            if (!videoInfo?.data?.subtitle?.list.isNullOrEmpty()) {
                                                 putExtra(
                                                     "subtitleUrl",
-                                                    viewModel.subtitle.value?.data?.subtitle?.list?.get(
+                                                    videoInfo?.data?.subtitle?.list?.get(
                                                         0
                                                     )?.subtitleUrl
                                                 )
@@ -722,7 +735,7 @@ class VideoInformationFragment : Fragment() {
                                         .clickVfx {
                                             viewModel.isError.value = false
                                             viewModel.getVideoInfo(activity.videoId)
-                                            viewModel.getSubtitle(activity.videoId)
+                                            viewModel.getProgress(activity.videoId)
                                         },
                                     horizontalAlignment = CenterHorizontally
                                 ) {
@@ -766,146 +779,6 @@ class VideoInformationFragment : Fragment() {
 
                 }
             }
-        }
-    }
-
-    @Composable
-    fun RoundButton(
-        buttonItem: RoundButtonDataNew,
-        //videoInfo: VideoDetailInfo?,
-        onLongClick: () -> Unit,
-        tint: Color,
-        modifier: Modifier = Modifier,
-        onClick: () -> Unit,
-    ) {
-        val localDensity = LocalDensity.current
-        var buttonItemHeight by remember {
-            mutableStateOf(0.dp)
-        }
-        Column(
-            modifier = modifier
-                //.fillMaxWidth()
-                .pointerInput(
-                    Unit
-                ) {
-                    detectTapGestures(onTap = {
-                        onClick()
-                    }, onLongPress = {
-                        onLongClick()
-
-                    })
-                }
-                .onGloballyPositioned {
-                    buttonItemHeight = with(localDensity) { it.size.height.toDp() }
-                }, verticalArrangement = Arrangement.Center
-        ) {
-            Box(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .fillMaxWidth()
-                    .aspectRatio(1f)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(1f)
-                        .align(Alignment.Center)
-                        .clip(CircleShape)
-                        .border(
-                            width = 0.1.dp, color = Color(
-                                91, 92, 93, 204
-                            ), shape = CircleShape
-                        )
-                        .background(Color(41, 41, 41, 204))
-                ) {
-                    Icon(
-                        imageVector = buttonItem.icon,
-                        contentDescription = null,
-                        modifier = Modifier.align(Alignment.Center),
-                        tint = tint
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = buttonItem.displayName,
-                color = Color.White,
-                fontWeight = FontWeight.Medium,
-                fontFamily = puhuiFamily,
-                fontSize = 12.sp,
-                modifier = Modifier.align(CenterHorizontally),
-                maxLines = 1
-            )
-        }
-    }
-
-    @Composable
-    fun RoundButton(
-        buttonItem: RoundButtonData,
-        //videoInfo: VideoDetailInfo?,
-        onLongClick: () -> Unit,
-        tint: Color,
-        modifier: Modifier = Modifier,
-        onClick: () -> Unit,
-    ) {
-        val localDensity = LocalDensity.current
-        var buttonItemHeight by remember {
-            mutableStateOf(0.dp)
-        }
-        Column(
-            modifier = modifier
-                //.fillMaxWidth()
-                .pointerInput(
-                    Unit
-                ) {
-                    detectTapGestures(onTap = {
-                        onClick()
-                    }, onLongPress = {
-                        onLongClick()
-
-                    })
-                }
-                .onGloballyPositioned {
-                    buttonItemHeight = with(localDensity) { it.size.height.toDp() }
-                }, verticalArrangement = Arrangement.Center
-        ) {
-            Box(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .fillMaxWidth()
-                    .aspectRatio(1f)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(1f)
-                        .align(Alignment.Center)
-                        .clip(CircleShape/*RoundedCornerShape(6.dp)*/)
-                        .border(
-                            width = 0.1.dp, color = Color(
-                                91, 92, 93, 204
-                            ), shape = CircleShape/*RoundedCornerShape(6.dp)*/
-                        )
-                        .background(Color(41, 41, 41, 204))
-                ) {
-                    Icon(
-                        painter = painterResource(id = buttonItem.resId),
-                        contentDescription = null,
-                        modifier = Modifier.align(Alignment.Center),
-                        tint = tint
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = buttonItem.displayName,
-                color = Color.White,
-                fontWeight = FontWeight.Medium,
-                fontFamily = puhuiFamily,
-                fontSize = 12.sp,
-                modifier = Modifier.align(CenterHorizontally),
-                maxLines = 1
-            )
         }
     }
 

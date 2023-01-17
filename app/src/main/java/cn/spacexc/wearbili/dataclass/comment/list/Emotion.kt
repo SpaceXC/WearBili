@@ -15,7 +15,7 @@ data class Emotion(
     @SerializedName("mtime")
     val mtime: Int,
     @SerializedName("package_id")
-    val packageId: Int,
+    val packageid: Long,
     @SerializedName("state")
     val state: Int,
     @SerializedName("text")

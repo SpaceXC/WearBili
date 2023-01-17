@@ -29,7 +29,7 @@ data class FansDetail(
     @SerializedName("medal_color_name")
     val medalColorName: Long,
     @SerializedName("medal_id")
-    val medalId: Int,
+    val medalid: Long,
     @SerializedName("medal_level_bg_color")
     val medalLevelBgColor: Int,
     @SerializedName("medal_name")

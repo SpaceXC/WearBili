@@ -34,7 +34,7 @@ object BangumiManager {
         callback: NetworkUtils.ResultCallback<BangumiDetail>
     ) {
         NetworkUtils.getUrl(
-            "http://api.bilibili.com/pgc/view/web/season?$idType=$id",
+            "http://api.bilibili.com/pgc/view/web/season?$idType=$id".log(),
             object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     callback.onFailed(e)

@@ -750,7 +750,7 @@ fun ForwardShareDynamicCardNew(
             Spacer(modifier = Modifier.height(8.dp))
         }
         item.modules.moduleDynamic.desc?.let {
-            RichText(textNodes = it.richTextNodes, fontSize = 12.sp, context = context) {
+            RichText(textNodes = it.richTextNodes, fontSize = 11.sp, context = context) {
                 if (supportedDynamicTypes.contains(item.type)) {
                     val intent = Intent(context, NewDynamicDetailActivity::class.java)
                     intent.putExtra("dyId", item.idStr)

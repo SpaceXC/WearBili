@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.video.VideoPlayerActivity
-import cn.spacexc.wearbili.dataclass.videoDetail.Page
+import cn.spacexc.wearbili.dataclass.videoDetail.web.Page
 import cn.spacexc.wearbili.utils.ViewUtils.addClickScale
 
 /**

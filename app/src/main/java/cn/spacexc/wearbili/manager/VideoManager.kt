@@ -288,7 +288,7 @@ object VideoManager {
     fun isCoined(bvid: String, callback: NetworkUtils.ResultCallback<CoinState>) {
         if (!UserManager.isLoggedIn()) return
         NetworkUtils.getUrl(
-            "http://api.bilibili.com/x/web-interface/archive/coins?bvid=$bvid",
+            "http://api.bilibili.com/x/web-interface/archive/coins?bvid=$bvid".log(),
             object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     callback.onFailed(e)

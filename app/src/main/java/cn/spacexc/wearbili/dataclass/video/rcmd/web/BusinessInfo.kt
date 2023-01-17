@@ -17,7 +17,7 @@ data class BusinessInfo(
     @SerializedName("area")
     val area: Int,
     @SerializedName("asg_id")
-    val asgId: Int,
+    val asgid: Long,
     @SerializedName("business_mark")
     val businessMark: BusinessMark,
     @SerializedName("card_type")
@@ -27,7 +27,7 @@ data class BusinessInfo(
     @SerializedName("contract_id")
     val contractId: String,
     @SerializedName("creative_id")
-    val creativeId: Int,
+    val creativeid: Long,
     @SerializedName("creative_type")
     val creativeType: Int,
     @SerializedName("epid")
@@ -63,11 +63,11 @@ data class BusinessInfo(
     @SerializedName("request_id")
     val requestId: String,
     @SerializedName("res_id")
-    val resId: Int,
+    val resid: Long,
     @SerializedName("server_type")
     val serverType: Int,
     @SerializedName("src_id")
-    val srcId: Int,
+    val srcid: Long,
     @SerializedName("stime")
     val stime: Int,
     @SerializedName("style")

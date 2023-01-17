@@ -40,12 +40,13 @@ class SearchResultActivityNew : AppCompatActivity() {
         setContent {
             val searchedUser by viewModel.searchedUser.observeAsState()
             val searchedMediaFt by viewModel.searchedMediaFt.observeAsState()
+            val searchedBangumi by viewModel.searchedMediaBangumi.observeAsState()
             val searchedVideo by viewModel.searchedVideo.observeAsState()
             val isError by viewModel.isError.observeAsState()
             CirclesBackground.RegularBackgroundWithTitleAndBackArrow(
                 title = "搜索结果",
                 onBack = ::finish,
-                isLoading = searchedUser == null && searchedMediaFt == null && searchedVideo == null,
+                isLoading = searchedUser == null && searchedMediaFt == null && searchedVideo == null && searchedBangumi == null,
                 isError = isError == true,
                 errorRetry = {
                     viewModel.isError.value = false
@@ -68,7 +69,7 @@ class SearchResultActivityNew : AppCompatActivity() {
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
-                                    text = "今天真是寂寞如雪哦",
+                                    text = "今天真是寂寞如雪啊",
                                     color = Color.White,
                                     fontFamily = puhuiFamily,
                                     fontWeight = FontWeight.Medium
@@ -101,6 +102,25 @@ class SearchResultActivityNew : AppCompatActivity() {
                                             avatar = "http:${it.upic}",
                                             context = this@SearchResultActivityNew,
                                             officialType = it.officialVerify.type,
+                                        )
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                    }
+                                }
+                                searchedBangumi?.forEach {
+                                    item {
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        VideoUis.BangumiCard(
+                                            bangumiName = it.title.replace(
+                                                "<em class=\"keyword\">",
+                                                ""
+                                            )
+                                                .replace("</em>", ""),
+                                            cover = it.cover,
+                                            areaInfo = "${it.areas}, ${it.indexShow}",
+                                            description = it.desc,
+                                            context = this@SearchResultActivityNew,
+                                            id = it.seasonid.toString(),
+                                            idType = ID_TYPE_SSID
                                         )
                                         Spacer(modifier = Modifier.height(4.dp))
                                     }

@@ -132,7 +132,7 @@ class NewDynamicDetailActivity : AppCompatActivity() {
                                 isUpLiked = comment.up_action.like,
                                 context = this@NewDynamicDetailActivity,
                                 isClickable = true,
-                                oid = id?.toLong() ?: 0L
+                                oid = oid?.toLong() ?: 0L
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             Divider(
@@ -170,7 +170,7 @@ class NewDynamicDetailActivity : AppCompatActivity() {
                                 isUpLiked = comment.up_action.like,
                                 context = this@NewDynamicDetailActivity,
                                 isClickable = true,
-                                oid = id?.toLong() ?: 0L
+                                oid = oid?.toLong() ?: 0L
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             Divider(

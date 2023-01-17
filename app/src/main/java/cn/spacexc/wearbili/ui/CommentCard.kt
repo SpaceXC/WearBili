@@ -42,12 +42,15 @@ import cn.spacexc.wearbili.activity.comment.CommentRepliesActivity
 import cn.spacexc.wearbili.activity.other.LinkProcessActivity
 import cn.spacexc.wearbili.activity.search.SearchResultActivityNew
 import cn.spacexc.wearbili.activity.user.SpaceProfileActivity
+import cn.spacexc.wearbili.activity.video.VIDEO_ID_BV
+import cn.spacexc.wearbili.activity.video.VideoActivity
 import cn.spacexc.wearbili.dataclass.CommentContentData
 import cn.spacexc.wearbili.dataclass.EmoteObject
 import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
 import cn.spacexc.wearbili.utils.LogUtils.log
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
 import cn.spacexc.wearbili.utils.TimeUtils.toDateStr
+import cn.spacexc.wearbili.utils.VideoUtils
 import cn.spacexc.wearbili.utils.parseColor
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -204,10 +207,30 @@ fun RichText(
                 }
             annotatedString.getStringAnnotations(tag = "tagUrl", start = index, end = index)
                 .firstOrNull()?.let { annotation ->
-                    context.startActivity(Intent(context, LinkProcessActivity::class.java).apply {
-                        putExtra("url", annotation.item)
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    })
+                    if (VideoUtils.isBV(annotation.item)) {
+                        Intent(context, VideoActivity::class.java).apply {
+                            putExtra("videoId", annotation.item)
+                            putExtra("videoIdType", VIDEO_ID_BV)
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            context.startActivity(this)
+                        }
+                    } else if (VideoUtils.isAV(annotation.item)) {
+                        Intent(context, VideoActivity::class.java).apply {
+                            putExtra("videoId", VideoUtils.av2bv(annotation.item))
+                            putExtra("videoIdType", VIDEO_ID_BV)
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            context.startActivity(this)
+                        }
+                    } else if (annotation.item.startsWith("http")) {
+                        context.startActivity(
+                            Intent(
+                                context,
+                                LinkProcessActivity::class.java
+                            ).apply {
+                                putExtra("url", annotation.item)
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            })
+                    }
                     return@ClickableText
                 }
             annotatedString.getStringAnnotations(tag = "tagSearch", start = index, end = index)
@@ -428,7 +451,7 @@ fun CommentCard(
         ) {
             if (isClickable) {
                 Intent(context, CommentRepliesActivity::class.java).apply {
-                    putExtra("aid", oid)
+                    putExtra("oid", oid)
                     putExtra("rootCommentId", commentRpid)
                     putExtra("upMid", uploaderMid)
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -526,7 +549,7 @@ fun CommentCard(
                     ) {
                         if (isClickable) {
                             Intent(context, CommentRepliesActivity::class.java).apply {
-                                putExtra("aid", oid)
+                                putExtra("oid", oid)
                                 putExtra("rootCommentId", commentRpid)
                                 putExtra("upMid", uploaderMid)
                                 flags = Intent.FLAG_ACTIVITY_NEW_TASK

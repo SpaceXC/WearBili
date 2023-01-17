@@ -4,12 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cn.spacexc.wearbili.dataclass.BaseData
-import cn.spacexc.wearbili.dataclass.dynamic.Card
+import cn.spacexc.wearbili.dataclass.dynamic.new.list.DynamicItem
 import cn.spacexc.wearbili.dataclass.user.User
 import cn.spacexc.wearbili.dataclass.user.UserFans
 import cn.spacexc.wearbili.dataclass.user.spacevideo.UserSpaceVideo
 import cn.spacexc.wearbili.dataclass.user.spacevideo.Vlist
-import cn.spacexc.wearbili.manager.DynamicManager
+import cn.spacexc.wearbili.manager.DynamicManagerNew
 import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.utils.LogUtils.log
 import cn.spacexc.wearbili.utils.NetworkUtils
@@ -43,8 +43,8 @@ class UserSpaceViewModel : ViewModel() {
     private val _videos = MutableLiveData<List<Vlist>?>()
     val videos: LiveData<List<Vlist>?> = _videos
 
-    private val _dynamicCardList = MutableLiveData<List<Card>>()
-    val dynamicCardList: LiveData<List<Card>> = _dynamicCardList
+    private val _dynamicItemList = MutableLiveData<List<DynamicItem>>()
+    val dynamicItemList: LiveData<List<DynamicItem>> = _dynamicItemList
 
     private val _isRefreshing = MutableLiveData(false)
     val isRefreshing: LiveData<Boolean> = _isRefreshing
@@ -59,7 +59,7 @@ class UserSpaceViewModel : ViewModel() {
 
     var videoPage = 1
 
-    private val dynamicManager = DynamicManager()
+    private val dynamicManager = DynamicManagerNew()
 
     fun getUser(mid: Long) {
         UserManager.getUserById(mid, object : Callback {
@@ -123,45 +123,26 @@ class UserSpaceViewModel : ViewModel() {
             })
     }
 
-    fun getDynamic(mid: Long) {
-        MainScope().launch { _isRefreshing.value = true }
-        dynamicManager.getSpaceDynamics(mid, object : DynamicManager.DynamicResponseCallback {
-            override fun onFailed(call: Call, e: Exception) {
-                MainScope().launch {
+    fun getDynamic(isRefreshing: Boolean, mid: Long) {
+        MainScope().launch {
+            if (isRefreshing) _isRefreshing.value = true
+        }
+        dynamicManager.getSpaceDynamic(isRefreshing, mid = mid, onFailed = {
+            MainScope().launch {
+                if (it is IOException) {
                     ToastUtils.showText("网络异常")
-                    _isRefreshing.value = false
-                    isError.value = true
                 }
+                isError.value = true
+                _isRefreshing.value = false
             }
-
-            override fun onSuccess(dynamicCards: List<Card>, code: Int) {
-                MainScope().launch {
-                    _dynamicCardList.value = dynamicCards
-                    _isRefreshing.value = false
-                }
+        }, onSuccess = {
+            MainScope().launch {
+                if (isRefreshing)
+                    _dynamicItemList.value = it.data.items
+                else
+                    _dynamicItemList.value = _dynamicItemList.value?.plus(it.data.items)
+                _isRefreshing.value = false
             }
-
-        })
-    }
-
-    fun getMoreDynamic(mid: Long) {
-        MainScope().launch { _isRefreshing.value = true }
-        dynamicManager.getMoreSpaceDynamic(mid, object : DynamicManager.DynamicResponseCallback {
-            override fun onFailed(call: Call, e: Exception) {
-                MainScope().launch {
-                    ToastUtils.showText("网络异常")
-                    _isRefreshing.value = false
-                    isError.value = true
-                }
-            }
-
-            override fun onSuccess(dynamicCards: List<Card>, code: Int) {
-                MainScope().launch {
-                    _dynamicCardList.value = _dynamicCardList.value?.plus(dynamicCards)
-                    _isRefreshing.value = false
-                }
-            }
-
         })
     }
 

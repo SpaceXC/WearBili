@@ -1,6 +1,7 @@
 package cn.spacexc.wearbili.activity.search
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
@@ -8,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
+import cn.spacexc.wearbili.activity.other.LinkProcessActivity
 import cn.spacexc.wearbili.activity.user.SpaceProfileActivity
 import cn.spacexc.wearbili.activity.video.VideoActivity
 import cn.spacexc.wearbili.adapter.HotSearchAdapter
@@ -178,6 +180,20 @@ class SearchActivity : AppCompatActivity() {
                     startActivity(this)
                 }
             } else {
+                val intent = Intent(this@SearchActivity, SearchResultActivityNew::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                intent.putExtra("keyword", keyword)
+                startActivity(intent)
+            }
+        } else if (keyword.startsWith("http")) {
+            try {
+                Uri.parse(keyword)
+                Intent(this@SearchActivity, LinkProcessActivity::class.java).apply {
+                    putExtra("url", keyword)
+                    startActivity(this)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
                 val intent = Intent(this@SearchActivity, SearchResultActivityNew::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 intent.putExtra("keyword", keyword)

@@ -23,6 +23,7 @@ import cn.spacexc.wearbili.activity.video.VideoActivity
 import cn.spacexc.wearbili.ui.CirclesBackground
 import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
 import cn.spacexc.wearbili.ui.puhuiFamily
+import cn.spacexc.wearbili.utils.LogUtils.log
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.VideoUtils
 import kotlinx.coroutines.MainScope
@@ -147,18 +148,21 @@ class LinkProcessActivity : AppCompatActivity() {
                 override fun onResponse(call: Call, response: Response) {
                     val location = Uri.parse(response.headers["location"])
                     MainScope().launch {
-                        if (VideoUtils.isBV(location.path?.replace("/", "") ?: "")) {
+                        if (VideoUtils.isBV(location.path?.log()?.replace("/video/", "") ?: "")) {
                             state.value = 1
                             startActivity(
                                 Intent(
                                     this@LinkProcessActivity,
                                     VideoActivity::class.java
                                 ).apply {
-                                    putExtra("videoId", uri.path?.replace("/", ""))
+                                    putExtra(
+                                        "videoId",
+                                        location.path?.log()?.replace("/video/", "")
+                                    )
                                 })
                             finish()
                         } else {
-                            state.value = 3
+                            state.value = 2
                         }
                     }
                 }

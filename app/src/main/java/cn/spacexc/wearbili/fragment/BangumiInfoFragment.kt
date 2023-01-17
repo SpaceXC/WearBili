@@ -2,55 +2,67 @@ package cn.spacexc.wearbili.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material.icons.outlined.Movie
-import androidx.compose.material.icons.outlined.PlayCircle
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.ArrowForwardIos
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.BottomStart
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
+import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.image.PhotoViewActivity
+import cn.spacexc.wearbili.activity.settings.ChooseSettingsActivity
+import cn.spacexc.wearbili.activity.video.PlayOnPhoneActivity
+import cn.spacexc.wearbili.dataclass.RoundButtonData
+import cn.spacexc.wearbili.dataclass.RoundButtonDataNew
 import cn.spacexc.wearbili.dataclass.bangumi.BangumiDetail
+import cn.spacexc.wearbili.manager.ID_TYPE_EPID
 import cn.spacexc.wearbili.manager.SettingsManager
 import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.manager.isRound
 import cn.spacexc.wearbili.ui.BilibiliPink
 import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
+import cn.spacexc.wearbili.ui.RoundButton
+import cn.spacexc.wearbili.ui.googleSansFamily
 import cn.spacexc.wearbili.ui.puhuiFamily
 import cn.spacexc.wearbili.utils.ExoPlayerUtils
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
+import cn.spacexc.wearbili.utils.parseColor
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 
@@ -131,11 +143,33 @@ class BangumiInfoFragment : Fragment() {
             mutableStateOf(3)
         }
         val state = rememberScrollState()
+        var totalWidth by remember {
+            mutableStateOf(0.dp)
+        }
+        var currentCid by remember {
+            mutableStateOf(0L)
+        }
+        var currentEpid by remember {
+            mutableStateOf(if (activity.idType == ID_TYPE_EPID && activity.id.isNotEmpty()) activity.id.toLong() else 0L)
+        }
+        var currentBvid by remember {
+            mutableStateOf("")
+        }
+        var currentCover by remember {
+            mutableStateOf("")
+        }
+        var currentTitle by remember {
+            mutableStateOf("")
+        }
         Column(
             modifier = Modifier
-                .padding(horizontal = 10.dp)
                 .fillMaxSize()
                 .verticalScroll(state = state)
+                .onGloballyPositioned {
+                    totalWidth = with(localDensity) {
+                        it.size.width.toDp()
+                    }
+                }
             /*.nestedScroll(connection = object : NestedScrollConnection {
                 override fun onPreScroll(
                     available: Offset,
@@ -146,17 +180,17 @@ class BangumiInfoFragment : Fragment() {
             })*/
         ) {
             Spacer(modifier = Modifier.height(8.dp))
-            Row(modifier = Modifier.fillMaxWidth()) {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(bangumi?.result?.cover)
-                        .crossfade(true)
-                        .build(),
-                    modifier = Modifier
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 10.dp)
+                    .fillMaxSize()
+            ) {
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Box(modifier = Modifier
                         .weight(2f)
                         //.fillMaxHeight()
-                        .fillMaxSize()
-                        .aspectRatio(0.75f, matchHeightConstraintsFirst = true)
+
+
                         .align(Alignment.CenterVertically)
                         .clickVfx {
                             val intent =
@@ -164,181 +198,131 @@ class BangumiInfoFragment : Fragment() {
                             intent.putExtra("imageUrl", bangumi?.result?.cover)
                             startActivity(intent)
                         }
-                        .clip(RoundedCornerShape(10.dp)), contentDescription = null
-                )   //番剧封面
-                Column(
-                    modifier = Modifier
-                        .weight(3f)
-                        .fillMaxWidth()
-                        .padding(start = 8.dp)
-                ) {
-                    Text(
-                        text = bangumi?.result?.title ?: "",
-                        color = Color.White,
-                        fontFamily = puhuiFamily,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = "${bangumi?.result?.areas?.get(0)?.name}, ${bangumi?.result?.new_ep?.desc}",
-                        fontFamily = puhuiFamily,
-                        color = Color.Gray, fontSize = 12.sp
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Row(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(360.dp))
-                            .background(
-                                BilibiliPink
-                            )
-                            .padding(start = 6.dp, end = 10.dp, top = 4.dp, bottom = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.Add,
+                        .clip(RoundedCornerShape(10.dp))) {
+                        AsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(bangumi?.result?.cover)
+                                .crossfade(true)
+                                .build(),
                             contentDescription = null,
-                            tint = Color.White,
-                            modifier = Modifier.size(followTextHeight)
-                        )
-                        Spacer(modifier = Modifier.width(2.dp))
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .aspectRatio(0.75f, matchHeightConstraintsFirst = true)
+                        )   //番剧封面
                         Text(
-                            text = "追番",
-                            fontSize = 12.sp,
-                            color = Color.White,
-                            fontFamily = puhuiFamily,
-                            modifier = Modifier.onGloballyPositioned {
-                                followTextHeight = with(localDensity) {
-                                    it.size.height.toDp()
+                            text = buildAnnotatedString {
+                                withStyle(
+                                    style = SpanStyle(
+                                        color = Color(249, 157, 87, 255),
+                                        fontFamily = googleSansFamily,
+                                        fontSize = 13.sp
+                                    )
+                                ) {
+                                    append(bangumi?.result?.rating?.score.toString())
+                                }
+                                withStyle(
+                                    style = SpanStyle(
+                                        color = Color(249, 157, 87, 255),
+                                        fontFamily = puhuiFamily,
+                                        fontSize = 10.sp
+                                    )
+                                ) {
+                                    append("分")
                                 }
                             },
-                            fontWeight = FontWeight.Medium
+                            color = Color.White,
+                            fontSize = 8.sp,
+                            fontFamily = puhuiFamily,
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier
+                                .align(BottomStart)
+                                .clip(
+                                    RoundedCornerShape(topEnd = 12.dp)
+                                )
+                                .background(
+                                    Color(67, 67, 67, 255)
+                                )
+                                .padding(
+                                    start = 7.dp,
+                                    end = 7.dp,
+                                    top = 2.dp,
+                                    bottom = 2.dp
+                                )
                         )
                     }
-                }   //番剧信息
-            }   //番剧基本信息
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = bangumi?.result?.evaluate ?: "",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .animateContentSize(animationSpec = tween(durationMillis = 400))
-                    .clickable {
-                        descriptionMaxLines = if (descriptionMaxLines == 3) Int.MAX_VALUE else 3
-                    },
-                fontSize = 13.sp,
-                color = Color.White,
-                fontFamily = puhuiFamily,
-                maxLines = descriptionMaxLines,
-                overflow = TextOverflow.Ellipsis
-            )
+                    Column(
+                        modifier = Modifier
+                            .weight(3f)
+                            .fillMaxWidth()
+                            .padding(start = 8.dp)
+                    ) {
+                        Text(
+                            text = bangumi?.result?.title ?: "",
+                            color = Color.White,
+                            fontFamily = puhuiFamily,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        if (!bangumi?.result?.areas.isNullOrEmpty()) {
+                            Text(
+                                text = "${bangumi?.result?.areas?.get(0)?.name}, ${bangumi?.result?.new_ep?.desc}",
+                                fontFamily = puhuiFamily,
+                                color = Color.Gray, fontSize = 12.sp
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Row(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(360.dp))
+                                .background(
+                                    BilibiliPink
+                                )
+                                .padding(start = 6.dp, end = 10.dp, top = 4.dp, bottom = 6.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.Add,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(followTextHeight)
+                            )
+                            Spacer(modifier = Modifier.width(2.dp))
+                            Text(
+                                text = "追番",
+                                fontSize = 12.sp,
+                                color = Color.White,
+                                fontFamily = puhuiFamily,
+                                modifier = Modifier.onGloballyPositioned {
+                                    followTextHeight = with(localDensity) {
+                                        it.size.height.toDp()
+                                    }
+                                },
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }   //番剧信息
+                }   //番剧基本信息
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = bangumi?.result?.evaluate ?: "",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateContentSize(animationSpec = tween(durationMillis = 400))
+                        .clickable {
+                            descriptionMaxLines = if (descriptionMaxLines == 3) Int.MAX_VALUE else 3
+                        },
+                    fontSize = 13.sp,
+                    color = Color.White,
+                    fontFamily = puhuiFamily,
+                    maxLines = descriptionMaxLines,
+                    overflow = TextOverflow.Ellipsis
+                )
 
-            //简介
-            Spacer(modifier = Modifier.height(4.dp))
-            Column(modifier = Modifier.fillMaxWidth()) {
-                if (isRound()) {
-                    Row {
-                        var textHeight by remember {
-                            mutableStateOf(0.dp)
-                        }
-                        Icon(
-                            imageVector = Icons.Outlined.PlayCircle,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .alpha(0.6f)
-                                .size(textHeight), tint = Color.White
-                        )
-                        Spacer(modifier = Modifier.width(2.dp))
-                        Text(
-                            text = "${bangumi?.result?.stat?.views?.toShortChinese() ?: "0"}播放",
-                            fontSize = 12.sp,
-                            fontFamily = puhuiFamily,
-                            color = Color.White,
-                            modifier = Modifier
-                                .alpha(0.6f)
-                                .onGloballyPositioned {
-                                    textHeight = with(localDensity) { it.size.height.toDp() }
-                                }
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Row {
-                        var textHeight by remember {
-                            mutableStateOf(0.dp)
-                        }
-                        Icon(
-                            imageVector = Icons.Outlined.CheckCircle,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .alpha(0.6f)
-                                .size(textHeight), tint = Color.White
-                        )
-                        Spacer(modifier = Modifier.width(2.dp))
-                        Text(
-                            text = "${bangumi?.result?.stat?.favorites?.toShortChinese() ?: "0"}追番",
-                            fontSize = 12.sp,
-                            fontFamily = puhuiFamily,
-                            color = Color.White,
-                            modifier = Modifier
-                                .alpha(0.6f)
-                                .onGloballyPositioned {
-                                    textHeight = with(localDensity) { it.size.height.toDp() }
-                                }
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Row {
-                        var textHeight by remember {
-                            mutableStateOf(0.dp)
-                        }
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_danmaku),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .alpha(0.6f)
-                                .size(textHeight), tint = Color.White
-                        )
-                        Spacer(modifier = Modifier.width(2.dp))
-                        Text(
-                            text = "${bangumi?.result?.stat?.danmakus?.toShortChinese() ?: "0"}弹幕",
-                            fontSize = 12.sp,
-                            fontFamily = puhuiFamily,
-                            color = Color.White,
-                            modifier = Modifier
-                                .alpha(0.6f)
-                                .onGloballyPositioned {
-                                    textHeight = with(localDensity) { it.size.height.toDp() }
-                                }
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Row {
-                        var textHeight by remember {
-                            mutableStateOf(0.dp)
-                        }
-                        Icon(
-                            imageVector = Icons.Outlined.Movie,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .alpha(0.6f)
-                                .size(textHeight), tint = Color.White
-                        )
-                        Spacer(modifier = Modifier.width(2.dp))
-                        Text(
-                            text = bangumi?.result?.episodes?.get(0)?.bvid ?: "",
-                            fontSize = 12.sp,
-                            fontFamily = puhuiFamily,
-                            color = Color.White,
-                            modifier = Modifier
-                                .alpha(0.6f)
-                                .onGloballyPositioned {
-                                    textHeight = with(localDensity) { it.size.height.toDp() }
-                                }
-                        )
-                    }
-                } else {
-                    //TODO 调整下
-                    /*Row(modifier = Modifier.fillMaxWidth()) {
+                //简介
+                Spacer(modifier = Modifier.height(4.dp))
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    if (isRound()) {
                         Row {
                             var textHeight by remember {
                                 mutableStateOf(0.dp)
@@ -363,7 +347,7 @@ class BangumiInfoFragment : Fragment() {
                                     }
                             )
                         }
-                        Spacer(modifier = Modifier.width(4.dp))
+                        Spacer(modifier = Modifier.height(2.dp))
                         Row {
                             var textHeight by remember {
                                 mutableStateOf(0.dp)
@@ -388,9 +372,7 @@ class BangumiInfoFragment : Fragment() {
                                     }
                             )
                         }
-                    }
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Spacer(modifier = Modifier.height(2.dp))
                         Row {
                             var textHeight by remember {
                                 mutableStateOf(0.dp)
@@ -415,7 +397,7 @@ class BangumiInfoFragment : Fragment() {
                                     }
                             )
                         }
-                        Spacer(modifier = Modifier.width(4.dp))
+                        Spacer(modifier = Modifier.height(2.dp))
                         Row {
                             var textHeight by remember {
                                 mutableStateOf(0.dp)
@@ -440,299 +422,738 @@ class BangumiInfoFragment : Fragment() {
                                     }
                             )
                         }
-                    }*/
-                    Row {
-                        var textHeight by remember {
-                            mutableStateOf(0.dp)
-                        }
-                        Icon(
-                            imageVector = Icons.Outlined.PlayCircle,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .alpha(0.6f)
-                                .size(textHeight), tint = Color.White
-                        )
-                        Spacer(modifier = Modifier.width(2.dp))
-                        Text(
-                            text = "${bangumi?.result?.stat?.views?.toShortChinese() ?: "0"}播放",
-                            fontSize = 12.sp,
-                            fontFamily = puhuiFamily,
-                            color = Color.White,
-                            modifier = Modifier
-                                .alpha(0.6f)
-                                .onGloballyPositioned {
-                                    textHeight = with(localDensity) { it.size.height.toDp() }
+                    } else {
+                        //TODO 调整下
+                        /*Row(modifier = Modifier.fillMaxWidth()) {
+                            Row {
+                                var textHeight by remember {
+                                    mutableStateOf(0.dp)
                                 }
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Row {
-                        var textHeight by remember {
-                            mutableStateOf(0.dp)
-                        }
-                        Icon(
-                            imageVector = Icons.Outlined.CheckCircle,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .alpha(0.6f)
-                                .size(textHeight), tint = Color.White
-                        )
-                        Spacer(modifier = Modifier.width(2.dp))
-                        Text(
-                            text = "${bangumi?.result?.stat?.favorites?.toShortChinese() ?: "0"}追番",
-                            fontSize = 12.sp,
-                            fontFamily = puhuiFamily,
-                            color = Color.White,
-                            modifier = Modifier
-                                .alpha(0.6f)
-                                .onGloballyPositioned {
-                                    textHeight = with(localDensity) { it.size.height.toDp() }
+                                Icon(
+                                    imageVector = Icons.Outlined.PlayCircle,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .alpha(0.6f)
+                                        .size(textHeight), tint = Color.White
+                                )
+                                Spacer(modifier = Modifier.width(2.dp))
+                                Text(
+                                    text = "${bangumi?.result?.stat?.views?.toShortChinese() ?: "0"}播放",
+                                    fontSize = 12.sp,
+                                    fontFamily = puhuiFamily,
+                                    color = Color.White,
+                                    modifier = Modifier
+                                        .alpha(0.6f)
+                                        .onGloballyPositioned {
+                                            textHeight = with(localDensity) { it.size.height.toDp() }
+                                        }
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Row {
+                                var textHeight by remember {
+                                    mutableStateOf(0.dp)
                                 }
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Row {
-                        var textHeight by remember {
-                            mutableStateOf(0.dp)
+                                Icon(
+                                    imageVector = Icons.Outlined.CheckCircle,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .alpha(0.6f)
+                                        .size(textHeight), tint = Color.White
+                                )
+                                Spacer(modifier = Modifier.width(2.dp))
+                                Text(
+                                    text = "${bangumi?.result?.stat?.favorites?.toShortChinese() ?: "0"}追番",
+                                    fontSize = 12.sp,
+                                    fontFamily = puhuiFamily,
+                                    color = Color.White,
+                                    modifier = Modifier
+                                        .alpha(0.6f)
+                                        .onGloballyPositioned {
+                                            textHeight = with(localDensity) { it.size.height.toDp() }
+                                        }
+                                )
+                            }
                         }
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_danmaku),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .alpha(0.6f)
-                                .size(textHeight), tint = Color.White
-                        )
-                        Spacer(modifier = Modifier.width(2.dp))
-                        Text(
-                            text = "${bangumi?.result?.stat?.danmakus?.toShortChinese() ?: "0"}弹幕",
-                            fontSize = 12.sp,
-                            fontFamily = puhuiFamily,
-                            color = Color.White,
-                            modifier = Modifier
-                                .alpha(0.6f)
-                                .onGloballyPositioned {
-                                    textHeight = with(localDensity) { it.size.height.toDp() }
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            Row {
+                                var textHeight by remember {
+                                    mutableStateOf(0.dp)
                                 }
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Row {
-                        var textHeight by remember {
-                            mutableStateOf(0.dp)
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_danmaku),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .alpha(0.6f)
+                                        .size(textHeight), tint = Color.White
+                                )
+                                Spacer(modifier = Modifier.width(2.dp))
+                                Text(
+                                    text = "${bangumi?.result?.stat?.danmakus?.toShortChinese() ?: "0"}弹幕",
+                                    fontSize = 12.sp,
+                                    fontFamily = puhuiFamily,
+                                    color = Color.White,
+                                    modifier = Modifier
+                                        .alpha(0.6f)
+                                        .onGloballyPositioned {
+                                            textHeight = with(localDensity) { it.size.height.toDp() }
+                                        }
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Row {
+                                var textHeight by remember {
+                                    mutableStateOf(0.dp)
+                                }
+                                Icon(
+                                    imageVector = Icons.Outlined.Movie,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .alpha(0.6f)
+                                        .size(textHeight), tint = Color.White
+                                )
+                                Spacer(modifier = Modifier.width(2.dp))
+                                Text(
+                                    text = bangumi?.result?.episodes?.get(0)?.bvid ?: "",
+                                    fontSize = 12.sp,
+                                    fontFamily = puhuiFamily,
+                                    color = Color.White,
+                                    modifier = Modifier
+                                        .alpha(0.6f)
+                                        .onGloballyPositioned {
+                                            textHeight = with(localDensity) { it.size.height.toDp() }
+                                        }
+                                )
+                            }
+                        }*/
+                        Row {
+                            var textHeight by remember {
+                                mutableStateOf(0.dp)
+                            }
+                            Icon(
+                                imageVector = Icons.Outlined.PlayCircle,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .alpha(0.6f)
+                                    .size(textHeight), tint = Color.White
+                            )
+                            Spacer(modifier = Modifier.width(2.dp))
+                            Text(
+                                text = "${bangumi?.result?.stat?.views?.toShortChinese() ?: "0"}播放",
+                                fontSize = 12.sp,
+                                fontFamily = puhuiFamily,
+                                color = Color.White,
+                                modifier = Modifier
+                                    .alpha(0.6f)
+                                    .onGloballyPositioned {
+                                        textHeight = with(localDensity) { it.size.height.toDp() }
+                                    }
+                            )
                         }
-                        Icon(
-                            imageVector = Icons.Outlined.Movie,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .alpha(0.6f)
-                                .size(textHeight), tint = Color.White
-                        )
-                        Spacer(modifier = Modifier.width(2.dp))
-                        Text(
-                            text = if (bangumi?.result?.episodes.isNullOrEmpty()) "" else bangumi?.result?.episodes?.get(
-                                0
-                            )?.bvid ?: "",
-                            fontSize = 12.sp,
-                            fontFamily = puhuiFamily,
-                            color = Color.White,
-                            modifier = Modifier
-                                .alpha(0.6f)
-                                .onGloballyPositioned {
-                                    textHeight = with(localDensity) { it.size.height.toDp() }
-                                }
-                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Row {
+                            var textHeight by remember {
+                                mutableStateOf(0.dp)
+                            }
+                            Icon(
+                                imageVector = Icons.Outlined.CheckCircle,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .alpha(0.6f)
+                                    .size(textHeight), tint = Color.White
+                            )
+                            Spacer(modifier = Modifier.width(2.dp))
+                            Text(
+                                text = "${bangumi?.result?.stat?.favorites?.toShortChinese() ?: "0"}追番",
+                                fontSize = 12.sp,
+                                fontFamily = puhuiFamily,
+                                color = Color.White,
+                                modifier = Modifier
+                                    .alpha(0.6f)
+                                    .onGloballyPositioned {
+                                        textHeight = with(localDensity) { it.size.height.toDp() }
+                                    }
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Row {
+                            var textHeight by remember {
+                                mutableStateOf(0.dp)
+                            }
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_danmaku),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .alpha(0.6f)
+                                    .size(textHeight), tint = Color.White
+                            )
+                            Spacer(modifier = Modifier.width(2.dp))
+                            Text(
+                                text = "${bangumi?.result?.stat?.danmakus?.toShortChinese() ?: "0"}弹幕",
+                                fontSize = 12.sp,
+                                fontFamily = puhuiFamily,
+                                color = Color.White,
+                                modifier = Modifier
+                                    .alpha(0.6f)
+                                    .onGloballyPositioned {
+                                        textHeight = with(localDensity) { it.size.height.toDp() }
+                                    }
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Row {
+                            var textHeight by remember {
+                                mutableStateOf(0.dp)
+                            }
+                            Icon(
+                                imageVector = Icons.Outlined.Movie,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .alpha(0.6f)
+                                    .size(textHeight), tint = Color.White
+                            )
+                            Spacer(modifier = Modifier.width(2.dp))
+                            Text(
+                                text = if (bangumi?.result?.episodes.isNullOrEmpty()) "" else bangumi?.result?.episodes?.get(
+                                    0
+                                )?.bvid ?: "",
+                                fontSize = 12.sp,
+                                fontFamily = puhuiFamily,
+                                color = Color.White,
+                                modifier = Modifier
+                                    .alpha(0.6f)
+                                    .onGloballyPositioned {
+                                        textHeight = with(localDensity) { it.size.height.toDp() }
+                                    }
+                            )
+                        }
                     }
+                }   //番剧流量信息
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
+            if (!bangumi?.result?.episodes.isNullOrEmpty()) {
+                Row(
+                    modifier = Modifier
+                        .padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically
+                ) {
+                    var textHeight by remember {
+                        mutableStateOf(0.dp)
+                    }
+                    Text(
+                        text = "选集(${bangumi?.result?.episodes?.size ?: 0})",
+                        fontFamily = puhuiFamily,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 18.sp,
+                        color = Color.White,
+                        modifier = Modifier.onGloballyPositioned {
+                            textHeight = with(localDensity) {
+                                it.size.height.toDp()
+                            }
+                        }
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Icon(
+                        imageVector = Icons.Rounded.ArrowForwardIos,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(textHeight.times(0.6f))
+                    )
                 }
-            }   //番剧流量信息
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "选集(${bangumi?.result?.episodes?.size ?: 0})",
-                fontFamily = puhuiFamily,
-                fontWeight = FontWeight.Normal,
-                fontSize = 18.sp,
-                color = Color.White
-            )
-            Column(modifier = Modifier.fillMaxWidth()) {
-                if (!bangumi?.result?.episodes.isNullOrEmpty()) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Box(modifier = Modifier.fillMaxWidth()) {
-                        LazyColumn(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(10.dp))
-                                .requiredSizeIn(maxHeight = 140.dp)
-                        ) {
-                            bangumi?.result?.episodes?.forEachIndexed { index, episode ->
-                                item {
-                                    Column(modifier = Modifier.pointerInput(Unit) {
-                                        detectTapGestures(onTap = {
-                                            SettingsManager.playVideo(
-                                                context = requireContext(),
-                                                bvid = episode.bvid,
-                                                cid = episode.cid,
-                                                title = "${episode.title} ${episode.long_title}",
-                                                subtitleUrl = null
-                                            )
-                                        }, onLongPress = {
-                                            ExoPlayerUtils.getInstance(requireContext())
-                                                .downloadVideo(
-                                                    coverUrl = episode.cover,
-                                                    title = bangumi.result.title,
-                                                    partName = "EP${index + 1} ${if (episode.long_title.isNullOrEmpty()) episode.title else episode.long_title}",
-                                                    bvid = episode.bvid,
-                                                    cid = episode.cid,
-                                                    subtitleUrl = null,
-                                                    onTaskAdded = {}
-                                                )
-                                        })
-                                    }) {
-                                        Column(
-                                            modifier = Modifier
-                                                .clip(RoundedCornerShape(10.dp))
-                                                .border(
-                                                    width = 0.1f.dp, color = Color(
-                                                        112,
-                                                        112,
-                                                        112,
-                                                        204
-                                                    ), shape = RoundedCornerShape(10.dp)
-                                                )
-                                                .background(color = Color(36, 36, 36, 199))
-                                                .padding(vertical = 12.dp, horizontal = 16.dp)
-                                                .fillMaxWidth(),
-                                        ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    var rowHeight by remember {
+                        mutableStateOf(0.dp)
+                    }
+                    val episodeScrollState = rememberLazyListState()
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .onGloballyPositioned {
+                                rowHeight = with(localDensity) { it.size.height.toDp() }
+                            },
+                        state = episodeScrollState,
+                        contentPadding = PaddingValues(start = 10.dp, end = 2.dp)
+                    ) {
+                        bangumi?.result?.episodes?.forEachIndexed { index, episode ->
+                            item {
+                                val borderColor by animateColorAsState(
+                                    targetValue = if (currentCid == episode.cid) Color(
+                                        254,
+                                        103,
+                                        154,
+                                        112
+                                    ) else Color(112, 112, 112)
+                                )
+                                val textColor by animateColorAsState(targetValue = if (currentCid == episode.cid) BilibiliPink else Color.White)
+                                Column(
+                                    modifier = Modifier
+                                        .requiredSizeIn(maxWidth = totalWidth.div(1.5f))
+                                        .clickVfx {
+                                            currentCid =
+                                                if (currentCid == episode.cid) 0 else episode.cid
+                                            currentBvid =
+                                                if (currentBvid == episode.bvid) "" else episode.bvid
+                                            currentCover =
+                                                if (currentBvid == episode.bvid) "" else episode.cover
+                                            currentEpid =
+                                                if (currentEpid == episode.id) 0L else episode.id
+                                            currentTitle =
+                                                if (currentBvid == episode.bvid) "" else "EP${
+                                                    index.plus(1)
+                                                } ${if (episode.long_title.isNullOrEmpty()) episode.title else episode.long_title}"
+                                        }
+                                        .border(
+                                            width = (0.1).dp,
+                                            color = borderColor,
+                                            shape = RoundedCornerShape(10.dp)
+                                        )
+                                        .clip(RoundedCornerShape(10.dp))
+                                        .background(Color(36, 36, 36, 166))
+                                        .padding(12.dp)
+                                ) {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Text(
+                                            text = "EP${index.plus(1)}",
+                                            fontFamily = googleSansFamily,
+                                            fontWeight = FontWeight.Bold,
+                                            color = textColor
+                                        )
+                                        if (!episode.badge.isNullOrEmpty() && !episode.badge_info?.bg_color.isNullOrEmpty()) {
+                                            Spacer(modifier = Modifier.width(2.dp))
                                             Text(
-                                                text = "EP${index + 1} ${if (episode.long_title.isNullOrEmpty()) episode.title else episode.long_title}",
+                                                text = episode.badge,
                                                 color = Color.White,
-                                                fontSize = 16.sp,
+                                                fontSize = 8.sp,
                                                 fontFamily = puhuiFamily,
-                                                maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis,
-                                                modifier = Modifier.alpha(0.76f),
-                                                fontWeight = FontWeight.Medium
+                                                fontWeight = FontWeight.Medium,
+                                                modifier = Modifier
+                                                    .offset(y = (-0.4).dp)
+                                                    .clip(
+                                                        RoundedCornerShape(4.dp)
+                                                    )
+                                                    .background(
+                                                        parseColor(
+                                                            episode.badge_info?.bg_color
+                                                                ?: "#FFFFFF"
+                                                        )
+                                                    )
+                                                    .padding(
+                                                        start = 5.dp,
+                                                        end = 5.dp,
+                                                        top = 2.dp,
+                                                        bottom = 2.dp
+                                                    )
                                             )
                                         }
-                                        Spacer(modifier = Modifier.height(6.dp))
                                     }
-
-
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    (if (episode.long_title.isNullOrEmpty()) episode.title else episode.long_title)?.let {
+                                        Text(
+                                            text = it,
+                                            fontFamily = puhuiFamily,
+                                            fontWeight = FontWeight.Bold,
+                                            color = textColor,
+                                            maxLines = 2,
+                                            overflow = TextOverflow.Ellipsis,
+                                            modifier = Modifier
+                                                .sizeIn(minHeight = with(LocalDensity.current) {
+                                                    (13.sp * 3).toDp()
+                                                })
+                                                .alpha(0.8f),
+                                            fontSize = 13.sp
+                                        )
+                                    }
                                 }
+                                LaunchedEffect(key1 = currentEpid == episode.id, block = {
+                                    if (currentEpid == episode.id) {
+                                        currentCid = episode.cid
+                                        currentBvid = episode.bvid
+                                        currentCover = episode.cover
+                                        currentTitle = "EP${
+                                            index.plus(1)
+                                        } ${if (episode.long_title.isNullOrEmpty()) episode.title else episode.long_title}"
+                                    }
+                                })
+                                Spacer(modifier = Modifier.width(8.dp))
                             }
-                        }   //部分选集
-                        if ((bangumi?.result?.episodes?.size ?: 0) > 3) {
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .background(
-                                        Brush.verticalGradient(
-                                            listOf(
-                                                Color.Transparent,
-                                                Color(0, 0, 0, 204)
-                                            )
+                        }
+                    }
+                    /*Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .alpha(episodeScrollState. / sixteenDpsToPx)
+                                .background(
+                                    Brush.horizontalGradient(
+                                        listOf(
+                                            Color(0, 0, 0, 204),
+                                            Color.Transparent
                                         )
                                     )
-                                    .fillMaxWidth()
-                                    .height(50.dp)
-                                    .align(Alignment.BottomCenter),
-                            )   //阴影
-                        }
-                    }   //部分选集
-                }
+                                )
+                                .height(rowHeight)
+                                .width(32.dp),
+                        )
 
-                bangumi?.result?.section?.forEach { section ->
-                    Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.weight(1f))
+                        Box(
+                            modifier = Modifier
+                                .alpha(1f)
+                                .background(
+                                    Brush.horizontalGradient(
+                                        listOf(
+                                            Color.Transparent,
+                                            Color(0, 0, 0, 204),
+
+                                            )
+                                    )
+                                )
+                                .height(rowHeight)
+                                .width(32.dp),
+                        )
+                    }*/
+                }
+            }
+
+            bangumi?.result?.section?.forEach { section ->
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier
+                        .padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically
+                ) {
+                    var textHeight by remember {
+                        mutableStateOf(0.dp)
+                    }
                     Text(
                         text = "${section.title}(${section.episodes.size})",
                         fontFamily = puhuiFamily,
-                        fontWeight = FontWeight.Normal,
+                        fontWeight = FontWeight.Medium,
                         fontSize = 18.sp,
-                        color = Color.White
+                        color = Color.White,
+                        modifier = Modifier.onGloballyPositioned {
+                            textHeight = with(localDensity) {
+                                it.size.height.toDp()
+                            }
+                        }
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Box(modifier = Modifier.fillMaxWidth()) {
-                        LazyColumn(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(10.dp))
-                                //.height(90.dp)
-                                .requiredSizeIn(maxHeight = 140.dp)
-                        ) {
-                            section.episodes.forEach { episode ->
-                                item {
-                                    Column(modifier = Modifier.pointerInput(Unit) {
-                                        detectTapGestures(onTap = {
-                                            SettingsManager.playVideo(
-                                                context = requireContext(),
-                                                bvid = episode.bvid,
-                                                cid = episode.cid,
-                                                title = "${episode.title} ${episode.long_title}",
-                                                subtitleUrl = null
-                                            )
-                                        }, onLongPress = {
-                                            ExoPlayerUtils.getInstance(requireContext())
-                                                .downloadVideo(
-                                                    coverUrl = episode.cover,
-                                                    title = bangumi.result.title,
-                                                    partName = if (episode.long_title.isEmpty()) episode.title else episode.long_title,
-                                                    bvid = episode.bvid,
-                                                    cid = episode.cid,
-                                                    subtitleUrl = null,
-                                                    onTaskAdded = {}
-                                                )
-                                        })
-                                    }) {
-                                        Column(
-                                            modifier = Modifier
-                                                .clip(RoundedCornerShape(10.dp))
-                                                .border(
-                                                    width = 0.1f.dp, color = Color(
-                                                        112,
-                                                        112,
-                                                        112,
-                                                        204
-                                                    ), shape = RoundedCornerShape(10.dp)
-                                                )
-
-                                                .background(color = Color(36, 36, 36, 199))
-                                                .padding(vertical = 12.dp, horizontal = 16.dp)
-                                                .fillMaxWidth(),
-                                        ) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Icon(
+                        imageVector = Icons.Rounded.ArrowForwardIos,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(textHeight.times(0.6f))
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    var rowHeight by remember {
+                        mutableStateOf(0.dp)
+                    }
+                    val episodeScrollState = rememberLazyListState()
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .onGloballyPositioned {
+                                rowHeight = with(localDensity) { it.size.height.toDp() }
+                            },
+                        state = episodeScrollState,
+                        contentPadding = PaddingValues(start = 10.dp, end = 2.dp)
+                    ) {
+                        section.episodes.forEachIndexed { index, episode ->
+                            item {
+                                val borderColor by animateColorAsState(
+                                    targetValue = if (currentCid == episode.cid) Color(
+                                        254,
+                                        103,
+                                        154,
+                                        112
+                                    ) else Color(112, 112, 112)
+                                )
+                                val textColor by animateColorAsState(targetValue = if (currentCid == episode.cid) BilibiliPink else Color.White)
+                                LaunchedEffect(key1 = currentEpid == episode.id, block = {
+                                    if (currentEpid == episode.id) {
+                                        currentCid = episode.cid
+                                        currentBvid = episode.bvid
+                                        currentCover = episode.cover
+                                        currentTitle =
+                                            "P${index.plus(1)} ${episode.title} ${episode.long_title}"
+                                    }
+                                })
+                                Column(
+                                    modifier = Modifier
+                                        .requiredSizeIn(maxWidth = totalWidth.div(1.5f))
+                                        .clickVfx {
+                                            currentCid =
+                                                if (currentCid == episode.cid) 0 else episode.cid
+                                            currentBvid =
+                                                if (currentBvid == episode.bvid) "" else episode.bvid
+                                            currentEpid =
+                                                if (currentEpid == episode.id) 0L else episode.id
+                                            currentCover =
+                                                if (currentBvid == episode.bvid) "" else episode.cover
+                                            currentTitle =
+                                                if (currentBvid == episode.bvid) "" else "P${
+                                                    index.plus(
+                                                        1
+                                                    )
+                                                } ${episode.title} ${episode.long_title}"
+                                        }
+                                        .border(
+                                            width = (0.1).dp,
+                                            color = borderColor,
+                                            shape = RoundedCornerShape(10.dp)
+                                        )
+                                        .clip(RoundedCornerShape(10.dp))
+                                        .background(Color(36, 36, 36, 166))
+                                        .padding(12.dp)
+                                ) {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Text(
+                                            text = "P${index.plus(1)}",
+                                            fontFamily = googleSansFamily,
+                                            fontWeight = FontWeight.Bold,
+                                            color = textColor
+                                        )
+                                        if (!episode.badge.isNullOrEmpty() && !episode.badge_info?.bg_color.isNullOrEmpty()) {
+                                            Spacer(modifier = Modifier.width(2.dp))
                                             Text(
-                                                text = "${episode.title} ${episode.long_title}",
+                                                text = episode.badge,
                                                 color = Color.White,
-                                                fontSize = 16.sp,
+                                                fontSize = 8.sp,
                                                 fontFamily = puhuiFamily,
-                                                maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis,
-                                                modifier = Modifier.alpha(0.76f),
-                                                fontWeight = FontWeight.Medium
+                                                fontWeight = FontWeight.Medium,
+                                                modifier = Modifier
+                                                    .offset(y = (-0.4).dp)
+                                                    .clip(
+                                                        RoundedCornerShape(4.dp)
+                                                    )
+                                                    .background(
+                                                        parseColor(
+                                                            episode.badge_info?.bg_color
+                                                                ?: "#FFFFFF"
+                                                        )
+                                                    )
+                                                    .padding(
+                                                        start = 5.dp,
+                                                        end = 5.dp,
+                                                        top = 2.dp,
+                                                        bottom = 2.dp
+                                                    )
                                             )
                                         }
-                                        Spacer(modifier = Modifier.height(6.dp))
                                     }
+                                    Spacer(modifier = Modifier.height(4.dp))
+
+                                    Text(
+                                        text = "${episode.title} ${episode.long_title}",
+                                        fontFamily = puhuiFamily,
+                                        fontWeight = FontWeight.Bold,
+                                        color = textColor,
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Ellipsis,
+                                        modifier = Modifier
+                                            .sizeIn(minHeight = with(LocalDensity.current) {
+                                                (13.sp * 3).toDp()
+                                            })
+                                            .alpha(0.8f),
+                                        fontSize = 13.sp
+                                    )
+
                                 }
+                                Spacer(modifier = Modifier.width(8.dp))
                             }
-                        }   //部分选集
-                        if (section.episodes.size > 3) {
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .background(
-                                        Brush.verticalGradient(
-                                            listOf(
-                                                Color.Transparent,
-                                                Color(0, 0, 0, 204)
-                                            )
+                        }
+                    }
+                    /*Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .alpha(episodeScrollState. / sixteenDpsToPx)
+                                .background(
+                                    Brush.horizontalGradient(
+                                        listOf(
+                                            Color(0, 0, 0, 204),
+                                            Color.Transparent
                                         )
                                     )
-                                    .fillMaxWidth()
-                                    .height(50.dp)
-                                    .align(Alignment.BottomCenter),
-                            )   //阴影
+                                )
+                                .height(rowHeight)
+                                .width(32.dp),
+                        )
+
+                        Spacer(modifier = Modifier.weight(1f))
+                        Box(
+                            modifier = Modifier
+                                .alpha(1f)
+                                .background(
+                                    Brush.horizontalGradient(
+                                        listOf(
+                                            Color.Transparent,
+                                            Color(0, 0, 0, 204),
+
+                                            )
+                                    )
+                                )
+                                .height(rowHeight)
+                                .width(32.dp),
+                        )
+                    }*/
+                }
+            }   //其他部分视频
+            Spacer(modifier = Modifier.height(8.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 4.dp)
+            ) {
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    RoundButton(
+                        buttonItem = RoundButtonDataNew(
+                            Icons.Outlined.PlayCircle,
+                            "播放",
+                            "播放"
+                        ), onLongClick = {
+                            Log.d(
+                                Application.TAG,
+                                "setOnLongClickListener: "
+                            )
+                            val intent =
+                                Intent(
+                                    context,
+                                    ChooseSettingsActivity::class.java
+                                )
+                            val item =
+                                SettingsManager.getSettingByName("defaultPlayer")
+                            intent.putExtra("item", item)
+                            /*intent.putExtra("itemKey", item?.settingName)
+                            intent.putExtra("itemName", item?.displayName)
+                            intent.putExtra("defVal", item?.defString)*/
+                            startActivity(intent)
+                        }, tint = Color.White, modifier = Modifier.weight(1f)
+                    ) {
+                        if (currentBvid.isNotEmpty() && currentCid != 0L) {
+                            SettingsManager.playVideo(
+                                context = requireContext(),
+                                bvid = currentBvid,
+                                cid = currentCid,
+                                title = currentTitle,
+                                progress = 0L,
+                                subtitleUrl = null
+                            )
                         }
 
-                    }   //部分选集
-                }   //其他部分视频
+                    }
+                    RoundButton(
+                        buttonItem = RoundButtonDataNew(
+                            Icons.Outlined.ThumbUp,
+                            "点赞",
+                            "点赞"
+                        ),
+                        onLongClick = { },
+                        tint = Color.White,
+                        modifier = Modifier.weight(1f)
+                    ) {
+
+                    }
+                    RoundButton(
+                        buttonItem = RoundButtonDataNew(
+                            Icons.Outlined.MonetizationOn,
+                            "投币",
+                            "投币"
+                        ),
+                        onLongClick = { },
+                        tint = Color.White,
+                        modifier = Modifier.weight(1f)
+                    ) {
+
+                    }
+                }
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    RoundButton(
+                        buttonItem = RoundButtonDataNew(
+                            Icons.Outlined.StarBorder,
+                            "收藏",
+                            "收藏"
+                        ),
+                        onLongClick = { },
+                        tint = Color.White,
+                        modifier = Modifier.weight(1f)
+                    ) {
+
+                    }
+                    RoundButton(
+                        buttonItem = RoundButtonDataNew(
+                            Icons.Outlined.History,
+                            "稍后再看",
+                            "稍后再看"
+                        ),
+                        onLongClick = { },
+                        tint = Color.White,
+                        modifier = Modifier.weight(1f)
+                    ) {
+
+                    }
+                    RoundButton(
+                        buttonItem = RoundButtonDataNew(
+                            Icons.Outlined.SendToMobile,
+                            "手机观看",
+                            "手机观看"
+                        ),
+                        onLongClick = { /*TODO*/ },
+                        tint = Color.White,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        if (isAdded) {
+                            if (currentEpid != 0L) {
+                                val intent = Intent(
+                                    requireActivity(),
+                                    PlayOnPhoneActivity::class.java
+                                )
+                                intent.putExtra(
+                                    "qrCodeUrl",
+                                    "https://www.bilibili.com/bangumi/play/ep$currentEpid"
+                                )
+                                startActivity(intent)
+                            }
+                        }
+                    }
+                }
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    RoundButton(
+                        buttonItem = RoundButtonData(
+                            R.drawable.cloud_download,
+                            "缓存",
+                            "缓存"
+                        ),
+                        onLongClick = { },
+                        tint = Color.White,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        if (currentBvid.isNotEmpty() && currentCid != 0L && currentCover.isNotEmpty())
+                            ExoPlayerUtils.getInstance(requireContext())
+                                .downloadVideo(
+                                    coverUrl = currentCover,
+                                    title = currentTitle,
+                                    partName = bangumi?.result?.title ?: "",
+                                    bvid = currentBvid,
+                                    cid = currentCid,
+                                    subtitleUrl = null,
+                                    onTaskAdded = {}
+                                )
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.weight(1f))
+                }
             }
             Spacer(modifier = Modifier.height((if (isRound()) 50 else 10).dp))
         }

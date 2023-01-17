@@ -45,10 +45,10 @@ class CommentRepliesActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val aid = intent.getLongExtra("aid", 0)
+        val oid = intent.getLongExtra("oid", 0)
         val rootCommentId = intent.getLongExtra("rootCommentId", 0)
         val upMid = intent.getLongExtra("upMid", 0)
-        viewModel.getCommentReplies(aid = aid, rootCommentId = rootCommentId, true)
+        viewModel.getCommentReplies(aid = oid, rootCommentId = rootCommentId, true)
         setContent {
             val rootComment by viewModel.rootComment.observeAsState()
             val commentReplies by viewModel.commentReplies.observeAsState()
@@ -61,7 +61,7 @@ class CommentRepliesActivity : AppCompatActivity() {
                 isError = isError == true,
                 errorRetry = {
                     viewModel.isError.value = false
-                    viewModel.getCommentReplies(aid = aid, rootCommentId = rootCommentId, true)
+                    viewModel.getCommentReplies(aid = oid, rootCommentId = rootCommentId, true)
                 }
             ) {
                 LazyColumn(
@@ -105,7 +105,7 @@ class CommentRepliesActivity : AppCompatActivity() {
                                 isUpLiked = comment.up_action.like,
                                 context = this@CommentRepliesActivity,
                                 isClickable = false,
-                                oid = aid
+                                oid = oid
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                         }
@@ -149,7 +149,7 @@ class CommentRepliesActivity : AppCompatActivity() {
                                     isUpLiked = comment.up_action.like,
                                     context = this@CommentRepliesActivity,
                                     isClickable = false,
-                                    oid = aid
+                                    oid = oid
                                 )
                                 Spacer(modifier = Modifier.height(12.dp))
                                 Divider(
@@ -161,7 +161,7 @@ class CommentRepliesActivity : AppCompatActivity() {
                         item {
                             LaunchedEffect(key1 = Unit, block = {
                                 viewModel.getCommentReplies(
-                                    aid = aid,
+                                    aid = oid,
                                     rootCommentId = rootCommentId,
                                     false
                                 )

@@ -37,6 +37,11 @@ class CommentViewModel : ViewModel() {
 
     var isError = MutableLiveData(false)
 
+    fun appendFrontComment(comment: CommentContentData) {
+        val list = listOf(comment)
+        _commentList.value = _commentList.value?.plus(list)
+    }
+
     fun getComment(aid: Long, isRefresh: Boolean) {
         //VideoManager.getCommentsByLikes()
         page++

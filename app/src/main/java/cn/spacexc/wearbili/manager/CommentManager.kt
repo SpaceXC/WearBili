@@ -21,7 +21,7 @@ import java.io.IOException
  */
 
 object CommentManager {
-    val commentTypes = mapOf(
+    private val commentTypes = mapOf(
         COMMENT_TYPE_VIDEO to 1,
         COMMENT_TYPE_IMAGE_DYNAMIC to 11,
         COMMENT_TYPE_TEXT_DYNAMIC to 17
@@ -34,7 +34,7 @@ object CommentManager {
         callback: NetworkUtils.ResultCallback<CommentSent>
     ) {
         val body = FormBody.Builder()
-            .add("access_key", UserManager.getAccessKey()!!)
+            .add("access_key", UserManager.getAccessKey())
             .add("type", commentTypes[commentType]?.toString()!!)
             .add("oid", oid.toString())
             .add("message", content)

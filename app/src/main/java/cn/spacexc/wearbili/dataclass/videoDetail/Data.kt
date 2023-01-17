@@ -49,5 +49,5 @@ data class Data(
     val staff: List<Staff>?,
     val honor: Honor?
 ) {
-    data class Pages(val pages: List<Page>)
+    data class Pages(val pages: List<cn.spacexc.wearbili.dataclass.videoDetail.web.Page>)
 }

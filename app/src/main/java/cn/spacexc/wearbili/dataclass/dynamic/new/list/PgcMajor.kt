@@ -13,7 +13,7 @@ data class PgcMajor(
     @SerializedName("jump_url")
     val jumpUrl: String,
     @SerializedName("season_id")
-    val seasonId: Int,
+    val seasonid: Long,
     @SerializedName("stat")
     val stat: StatX,
     @SerializedName("sub_type")

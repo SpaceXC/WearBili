@@ -24,11 +24,10 @@ import androidx.fragment.app.viewModels
 import androidx.wear.compose.material.Text
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.manager.UserManager
-import cn.spacexc.wearbili.ui.DynamicCard
+import cn.spacexc.wearbili.ui.DynamicCardNew
 import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
 import cn.spacexc.wearbili.ui.puhuiFamily
-import cn.spacexc.wearbili.utils.TimeUtils.toDateStr
-import cn.spacexc.wearbili.viewmodel.DynamicViewModel
+import cn.spacexc.wearbili.viewmodel.DynamicViewModelNew
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
@@ -41,7 +40,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
  */
 
 class DynamicListFragment : Fragment() {
-    val viewModel by viewModels<DynamicViewModel>()
+    val viewModel by viewModels<DynamicViewModelNew>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,7 +54,7 @@ class DynamicListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (view as ComposeView).setContent {
-            val dynamicList by viewModel.dynamicCardList.observeAsState()
+            val dynamicList by viewModel.dynamicItemList.observeAsState()
             val isError by viewModel.isError.observeAsState()
             val refreshState = rememberSwipeRefreshState(
                 isRefreshing = viewModel.isRefreshing.observeAsState().value ?: false
@@ -63,30 +62,24 @@ class DynamicListFragment : Fragment() {
             if (UserManager.isLoggedIn()) {
                 Crossfade(targetState = !dynamicList.isNullOrEmpty()) {
                     if (it) {
-                        SwipeRefresh(state = refreshState, onRefresh = { viewModel.getDynamic() }) {
+                        SwipeRefresh(
+                            state = refreshState,
+                            onRefresh = { viewModel.getDynamic(true) }) {
                             LazyColumn(
                                 modifier = Modifier.fillMaxSize(),
                                 state = viewModel.lazyListState
                             ) {
-                                dynamicList?.forEach { card ->
-                                    item(key = card.desc.dynamic_id) {
-                                        DynamicCard(
-                                            posterAvatar = card.desc.user_profile.info.face,
-                                            posterName = card.desc.user_profile.info.uname,
-                                            posterNameColor = if (!card.desc.user_profile.vip.nickname_color.isNullOrEmpty()) Color(
-                                                android.graphics.Color.parseColor(
-                                                    card.desc.user_profile.vip.nickname_color
-                                                )
-                                            ) else Color.White,
-                                            postTime = (card.desc.timestamp * 1000).toDateStr("MM-dd HH:mm"),
-                                            card = card,
-                                            context = context
+                                dynamicList?.forEach { item ->
+                                    item(key = item.idStr) {
+                                        DynamicCardNew(
+                                            item = item,
+                                            context = requireContext()
                                         )
                                     }
                                 }
                                 item {
                                     LaunchedEffect(key1 = Unit) {
-                                        viewModel.getMoreDynamic()
+                                        viewModel.getDynamic(false)
                                     }
                                 }
                             }
@@ -180,12 +173,12 @@ class DynamicListFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        if (viewModel.dynamicCardList.value.isNullOrEmpty()) {
-            viewModel.getDynamic()
+        if (viewModel.dynamicItemList.value.isNullOrEmpty()) {
+            viewModel.getDynamic(true)
         }
     }
 
     fun refresh() {
-        viewModel.getDynamic()
+        viewModel.getDynamic(true)
     }
 }

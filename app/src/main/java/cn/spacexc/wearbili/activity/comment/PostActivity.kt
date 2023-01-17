@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import cn.spacexc.wearbili.databinding.ActivityPostBinding
 import cn.spacexc.wearbili.dataclass.comment.CommentSent
 import cn.spacexc.wearbili.manager.CommentManager
+import cn.spacexc.wearbili.utils.LogUtils.log
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.ToastUtils
 import com.google.gson.Gson
@@ -63,12 +64,26 @@ class PostActivity : AppCompatActivity() {
             content,
             object : NetworkUtils.ResultCallback<CommentSent> {
                 override fun onSuccess(result: CommentSent, code: Int) {
-                    setResult(
-                        Activity.RESULT_OK,
-                        Intent().putExtra("commentDataStr", Gson().toJson(result.data.reply))
-                            .putExtra("code", result.code)
-                    )
-                    finish()
+                    MainScope().launch {
+                        if (result.code == 0) {
+                            setResult(
+                                Activity.RESULT_OK,
+                                Intent().putExtra(
+                                    "commentDataStr",
+                                    Gson().toJson(result.data.reply)
+                                )
+                                    .putExtra("code", 0)
+                            )
+                            finish()
+                        } else {
+                            result.log()
+                            ToastUtils.showText("${result.code}: ${result.message}")
+                            binding.send.isEnabled = true
+                            binding.emoji.isEnabled = true
+                            binding.enter.isEnabled = true
+                            binding.input.isEnabled = true
+                        }
+                    }
                 }
 
                 override fun onFailed(e: Exception?) {

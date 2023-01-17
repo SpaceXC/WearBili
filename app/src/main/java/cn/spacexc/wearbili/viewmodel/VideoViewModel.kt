@@ -1,11 +1,11 @@
 package cn.spacexc.wearbili.viewmodel
 
+import android.net.Uri
 import androidx.compose.foundation.ScrollState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cn.spacexc.wearbili.dataclass.SimplestUniversalDataClass
-import cn.spacexc.wearbili.dataclass.subtitle.get.SubtitleInfo
 import cn.spacexc.wearbili.dataclass.user.User
 import cn.spacexc.wearbili.dataclass.user.UserFans
 import cn.spacexc.wearbili.dataclass.video.state.CoinState
@@ -13,6 +13,7 @@ import cn.spacexc.wearbili.dataclass.video.state.FavState
 import cn.spacexc.wearbili.dataclass.video.state.LikeState
 import cn.spacexc.wearbili.dataclass.video.state.result.LikeResult
 import cn.spacexc.wearbili.dataclass.videoDetail.VideoDetailInfo
+import cn.spacexc.wearbili.dataclass.videoDetail.web.VideoInfo
 import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.utils.NetworkUtils
@@ -36,14 +37,16 @@ import java.io.IOException
 class VideoViewModel : ViewModel() {
     val scrollState = ScrollState(0)
 
-    private val _videoInfo = MutableLiveData<VideoDetailInfo>()
-    val videoInfo: LiveData<VideoDetailInfo> = _videoInfo
+    var historyProgress: Long? = null
+    var historyCid: Long? = null
+
+    private val _videoInfo = MutableLiveData<VideoInfo>()
+    val videoInfo: LiveData<VideoInfo> = _videoInfo
+    val relatedSeasonId = MutableLiveData("")
+    val relatedEpid = MutableLiveData("")
 
     private val _uploaderFans = MutableLiveData<UserFans>()
     val uploaderFans: LiveData<UserFans> = _uploaderFans
-
-    private val _subtitle = MutableLiveData<SubtitleInfo>()
-    val subtitle: LiveData<SubtitleInfo> = _subtitle
 
     private val _uploaderInfo = MutableLiveData<User>()
     val uploaderInfo: LiveData<User> = _uploaderInfo
@@ -57,28 +60,6 @@ class VideoViewModel : ViewModel() {
     var coinCount = 0
 
     fun getVideoInfo(bvid: String) {
-        VideoManager.getVideoInfo(bvid, object : NetworkUtils.ResultCallback<VideoDetailInfo> {
-            override fun onSuccess(result: VideoDetailInfo, code: Int) {
-                MainScope().launch {
-                    if (result.code == 0) {
-                        _videoInfo.value = result
-                    } else {
-                        isError.value = true
-                    }
-                }
-            }
-
-            override fun onFailed(e: Exception?) {
-                MainScope().launch {
-                    ToastUtils.showText("网络异常")
-                    isError.value = true
-                }
-            }
-
-        })
-    }
-
-    fun getSubtitle(bvid: String) {
         VideoManager.getVideoById(bvid, object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 MainScope().launch {
@@ -89,10 +70,10 @@ class VideoViewModel : ViewModel() {
 
             override fun onResponse(call: Call, response: Response) {
                 try {
-                    val result = Gson().fromJson(response.body?.string(), SubtitleInfo::class.java)
+                    val result = Gson().fromJson(response.body?.string(), VideoInfo::class.java)
                     MainScope().launch {
                         if (result.code == 0) {
-                            _subtitle.value = result
+                            _videoInfo.value = result
                         } else {
                             isError.value = true
                         }
@@ -101,6 +82,43 @@ class VideoViewModel : ViewModel() {
                     MainScope().launch {
                         isError.value = true
                     }
+                }
+            }
+
+        })
+    }
+
+    fun getProgress(bvid: String) {
+        VideoManager.getVideoInfo(bvid, object : NetworkUtils.ResultCallback<VideoDetailInfo> {
+            override fun onSuccess(result: VideoDetailInfo, code: Int) {
+                MainScope().launch {
+                    if (result.code == 0) {
+                        if (!result.data.season?.ogv_play_url.isNullOrEmpty()) {
+                            try {
+                                val uri = Uri.parse(result.data.season?.ogv_play_url)
+                                val epid = uri.path?.replace("/bangumi/play/", "")
+                                if (epid?.startsWith("ep") == true) {
+                                    relatedEpid.value = epid.replace("ep", "")
+                                } else {
+                                    relatedSeasonId.value = result.data.season?.season_id
+                                }
+                            } catch (_: Exception) {
+                                relatedSeasonId.value = result.data.season?.season_id
+                            }
+                        } else {
+                            relatedSeasonId.value = result.data.season?.season_id
+                        }
+                        historyProgress = result.data.history?.progress
+                        historyCid = result.data.history?.cid
+
+                    }
+                }
+            }
+
+            override fun onFailed(e: Exception?) {
+                MainScope().launch {
+                    ToastUtils.showText("网络异常")
+                    //isError.value = true
                 }
             }
 

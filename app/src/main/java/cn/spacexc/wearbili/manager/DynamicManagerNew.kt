@@ -35,6 +35,9 @@ class DynamicManagerNew {
     var recommendDynamicOffset = ""
     var recommendDynamicPage = 1
 
+    var spaceDynamicOffset = ""
+    var spaceDynamicPage = 1
+
     var commentPage = 1
 
     fun getRecommendDynamic(
@@ -58,6 +61,43 @@ class DynamicManagerNew {
                             onSuccess(result)
                             recommendDynamicOffset = result.data.offset
                             recommendDynamicPage++
+                        } else {
+                            val exception = IllegalDataReturnException(result.message, result.code)
+                            exception.printStackTrace()
+                            onFailed(exception)
+                        }
+                    } catch (e: JsonSyntaxException) {
+                        e.printStackTrace()
+                        ToastUtils.showText("处理数据时出现问题")
+                        onFailed(e)
+                    }
+                }
+
+            })
+    }
+
+    fun getSpaceDynamic(
+        isRefresh: Boolean,
+        mid: Long,
+        onFailed: (Exception) -> Unit,
+        onSuccess: (DynamicList) -> Unit
+    ) {
+        if (isRefresh) recommendDynamicPage = 1
+        NetworkUtils.getUrl(
+            "https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space?timezone_offset=-480&host_mid=$mid&type=all${if (recommendDynamicOffset.isEmpty()) "" else "&offset=$recommendDynamicOffset"}&page=$recommendDynamicPage".log(),
+            object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    onFailed(e)
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val responseStr = response.body?.string()?.debugToast().log()
+                    try {
+                        val result = Gson().fromJson(responseStr, DynamicList::class.java)
+                        if (result.code == 0) {
+                            onSuccess(result)
+                            spaceDynamicOffset = result.data.offset
+                            spaceDynamicPage++
                         } else {
                             val exception = IllegalDataReturnException(result.message, result.code)
                             exception.printStackTrace()
