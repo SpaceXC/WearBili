@@ -558,7 +558,8 @@ class BangumiInfoFragment : Fragment() {
                             .fillMaxWidth()
                             .onGloballyPositioned {
                                 rowHeight = with(localDensity) { it.size.height.toDp() }
-                            },
+                            }
+                            .animateContentSize(),
                         state = episodeScrollState,
                         contentPadding = PaddingValues(start = 10.dp, end = 2.dp)
                     ) {
@@ -651,9 +652,9 @@ class BangumiInfoFragment : Fragment() {
                                             maxLines = 2,
                                             overflow = TextOverflow.Ellipsis,
                                             modifier = Modifier
-                                                .sizeIn(minHeight = with(LocalDensity.current) {
+                                                /*.sizeIn(minHeight = with(LocalDensity.current) {
                                                     (9.sp * 3).toDp()
-                                                })
+                                                })*/    //FIXME
                                                 .alpha(0.8f),
                                             fontSize = 9.sp
                                         )
@@ -758,7 +759,8 @@ class BangumiInfoFragment : Fragment() {
                             .fillMaxWidth()
                             .onGloballyPositioned {
                                 rowHeight = with(localDensity) { it.size.height.toDp() }
-                            },
+                            }
+                            .animateContentSize(),
                         state = episodeScrollState,
                         contentPadding = PaddingValues(start = 10.dp, end = 2.dp)
                     ) {
@@ -865,9 +867,9 @@ class BangumiInfoFragment : Fragment() {
                                         maxLines = 2,
                                         overflow = TextOverflow.Ellipsis,
                                         modifier = Modifier
-                                            .sizeIn(minHeight = with(LocalDensity.current) {
+                                            /*.sizeIn(minHeight = with(LocalDensity.current) {
                                                 (9.sp * 3).toDp()
-                                            })
+                                            })*/    //FIXME
                                             .alpha(0.8f),
                                         fontSize = 9.sp
                                     )
@@ -1014,7 +1016,7 @@ class BangumiInfoFragment : Fragment() {
                             "手机观看",
                             "手机观看"
                         ),
-                        onLongClick = { /*TODO*/ },
+                        onLongClick = { },
                         tint = Color.White,
                         modifier = Modifier.weight(1f)
                     ) {
@@ -1026,7 +1028,7 @@ class BangumiInfoFragment : Fragment() {
                                 )
                                 intent.putExtra(
                                     "qrCodeUrl",
-                                    "https://www.bilibili.com/bangumi/play/ep$activity.viewModel.currentEpid"
+                                    "https://www.bilibili.com/bangumi/play/ep${activity.viewModel.currentEpid}"
                                 )
                                 startActivity(intent)
                             }

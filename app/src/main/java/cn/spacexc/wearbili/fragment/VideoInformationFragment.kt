@@ -23,6 +23,7 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.BottomEnd
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -60,6 +61,7 @@ import cn.spacexc.wearbili.manager.*
 import cn.spacexc.wearbili.ui.*
 import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
 import cn.spacexc.wearbili.utils.NumberUtils.toShortChinese
+import cn.spacexc.wearbili.utils.TimeUtils.secondToTime
 import cn.spacexc.wearbili.utils.TimeUtils.toDateStr
 import cn.spacexc.wearbili.utils.ToastUtils
 import cn.spacexc.wearbili.utils.ifNullOrEmpty
@@ -154,24 +156,43 @@ class VideoInformationFragment : Fragment() {
                             .animateContentSize()
                     ) {
                         Column(modifier = Modifier.padding(horizontal = 10.dp)) {
-                            AsyncImage(
-                                model = ImageRequest.Builder(LocalContext.current)
-                                    .placeholder(R.drawable.placeholder)
-                                    .data(videoInfo?.data?.pic).crossfade(true).build(),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .animateContentSize(animationSpec = tween(durationMillis = 200))
-                                    .clickVfx {
-                                        val intent =
-                                            Intent(requireActivity(), PhotoViewActivity::class.java)
-                                        intent.putExtra("imageUrl", videoInfo?.data?.pic)
-                                        startActivity(intent)
-                                    }
-                                    .clip(
-                                        RoundedCornerShape(10.dp)
-                                    ), contentScale = ContentScale.FillWidth
-                            )
+                            Box(modifier = Modifier
+                                .fillMaxWidth()
+                                .animateContentSize(animationSpec = tween(durationMillis = 200))
+                                .clickVfx {
+                                    val intent =
+                                        Intent(
+                                            requireActivity(),
+                                            PhotoViewActivity::class.java
+                                        )
+                                    intent.putExtra("imageUrl", videoInfo?.data?.pic)
+                                    startActivity(intent)
+                                }
+                                .clip(
+                                    RoundedCornerShape(10.dp)
+                                )) {
+                                AsyncImage(
+                                    model = ImageRequest.Builder(LocalContext.current)
+                                        .placeholder(R.drawable.placeholder)
+                                        .data(videoInfo?.data?.pic).crossfade(true).build(),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .animateContentSize(animationSpec = tween(durationMillis = 200)),
+                                    contentScale = ContentScale.FillWidth
+                                )
+                                Text(
+                                    text = videoInfo?.data?.duration?.secondToTime() ?: "",
+                                    fontFamily = googleSansFamily,
+                                    fontSize = 12.sp,
+                                    color = Color.White,
+                                    modifier = Modifier
+                                        .align(
+                                            BottomEnd
+                                        )
+                                        .padding(6.dp)
+                                )
+                            }
                             Spacer(modifier = Modifier.height(6.dp))
                             Text(
                                 text = videoInfo?.data?.title ?: "",

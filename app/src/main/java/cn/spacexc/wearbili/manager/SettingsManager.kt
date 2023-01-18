@@ -70,16 +70,6 @@ object SettingsManager {
             )
         ),
         SettingItem(
-            type = SettingType.TYPE_SWITCH,
-            settingName = "useNewDynamicList",
-            displayName = "新版动态",
-            description = "使用新版动态列表",
-            iconRes = R.drawable.mode_fan,
-            requireRestart = true,
-            defBool = false,
-            requireSave = true,
-        ),
-        SettingItem(
             type = SettingType.TYPE_CHOOSE,
             settingName = "recommendSource",
             displayName = "推荐源",
@@ -177,8 +167,8 @@ object SettingsManager {
 
     fun getRecommendSource(): String = SharedPreferencesUtils.getString("recommendSource", "app")
 
-    fun defPlayer(): String = SharedPreferencesUtils.getString("defaultPlayer", "builtinPlayer")
-    fun useNewDynamicList(): Boolean = SharedPreferencesUtils.getBoolean("useNewDynamicList", false)
+    private fun defaultPlayer(): String =
+        SharedPreferencesUtils.getString("defaultPlayer", "builtinPlayer")
 
     fun playVideo(
         context: Context,
@@ -188,7 +178,7 @@ object SettingsManager {
         progress: Long = 0,
         subtitleUrl: String?
     ) {
-        when (defPlayer()) {
+        when (defaultPlayer()) {
             "builtinPlayer" -> {
                 val intent =
                     Intent(context, VideoPlayerActivity::class.java)
