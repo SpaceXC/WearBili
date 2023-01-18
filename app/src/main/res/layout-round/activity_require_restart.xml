@@ -98,7 +98,7 @@
                     android:gravity="center"
                     android:text="重启软件以应用设置"
                     android:textColor="#ffffff"
-                    android:textSize="12sp"
+                    android:textSize="11sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView24" />
@@ -112,7 +112,7 @@
                     android:gravity="center"
                     android:text="需要重启啊"
                     android:textColor="#ffffff"
-                    android:textSize="16sp"
+                    android:textSize="11sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView23" />
@@ -142,7 +142,7 @@
             android:paddingTop="1dp"
             android:text="12:00"
             android:textColor="#fff"
-            android:textSize="16sp"
+            android:textSize="11sp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -192,7 +192,7 @@
                 android:lines="1"
                 android:text="重启"
                 android:textColor="#fff"
-                android:textSize="16sp"
+                android:textSize="11sp"
                 app:autoSizeTextType="uniform" />
         </LinearLayout>
 

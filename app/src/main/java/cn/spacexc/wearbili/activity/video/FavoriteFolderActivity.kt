@@ -144,7 +144,7 @@ class FavoriteFolderActivity : AppCompatActivity() {
                                         Text(
                                             text = it.title,
                                             color = textColor,
-                                            fontSize = 16.sp,
+                                            fontSize = 10.sp,
                                             fontFamily = puhuiFamily,
                                             overflow = TextOverflow.Ellipsis,
                                             modifier = Modifier.alpha(0.76f),
@@ -192,7 +192,7 @@ class FavoriteFolderActivity : AppCompatActivity() {
                                     text = "确定",
                                     color = Color.White,
                                     fontFamily = puhuiFamily,
-                                    fontSize = 16.sp
+                                    fontSize = 10.sp
                                 )
                             }
                         }

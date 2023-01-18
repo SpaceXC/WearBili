@@ -98,7 +98,7 @@ class NewDynamicDetailActivity : AppCompatActivity() {
                             text = "相关回复($commentCount)",
                             color = Color.White,
                             fontFamily = puhuiFamily,
-                            fontSize = 14.sp,
+                            fontSize = 10.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(4.dp))

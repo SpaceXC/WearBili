@@ -93,7 +93,7 @@ fun RoundButton(
             color = Color.White,
             fontWeight = FontWeight.Medium,
             fontFamily = puhuiFamily,
-            fontSize = 12.sp,
+            fontSize = 10.sp,
             modifier = Modifier.align(Alignment.CenterHorizontally),
             maxLines = 1
         )
@@ -163,7 +163,7 @@ fun RoundButton(
             color = Color.White,
             fontWeight = FontWeight.Medium,
             fontFamily = puhuiFamily,
-            fontSize = 12.sp,
+            fontSize = 10.sp,
             modifier = Modifier.align(Alignment.CenterHorizontally),
             maxLines = 1
         )

@@ -346,10 +346,9 @@ fun CommentCard(
                         modifier = Modifier
                             //.fillMaxWidth()
                             .size(
-                                pendentHeight.times(0.7f)
+                                pendentHeight.times(0.6f)
                             )
                             .clip(CircleShape)
-                            .aspectRatio(1f)
                     )
                     AsyncImage(model = ImageRequest.Builder(LocalContext.current)
                         .size(avatarSizePx.times(1.4f).toInt())
@@ -361,8 +360,8 @@ fun CommentCard(
                             //.fillMaxWidth()
                             .size(
                                 avatarBoxSize
-                                    .plus(4.dp)
-                                    .times(1.4f)
+                                    .plus(8.dp)
+                                //.times(1.wf)
                             )
                             .onGloballyPositioned {
                                 pendentHeight = with(localDensity) {
@@ -387,8 +386,12 @@ fun CommentCard(
                             .size(avatarBoxSize.times(0.33f))
                             .align(Alignment.BottomEnd)
                             .offset(
-                                x = if (senderPendant.isEmpty()) 0.dp else avatarBoxSize.times(-0.23f),
-                                y = if (senderPendant.isEmpty()) 0.dp else avatarBoxSize.times(-0.23f)
+                                x = if (senderPendant.isEmpty()) 0.dp else avatarBoxSize.times(
+                                    -0.23f
+                                ),
+                                y = if (senderPendant.isEmpty()) 0.dp else avatarBoxSize.times(
+                                    -0.23f
+                                )
                             )
                     )
                 }
@@ -396,45 +399,26 @@ fun CommentCard(
             Spacer(modifier = Modifier.width(4.dp))
             Column(modifier = Modifier.onGloballyPositioned {
                 avatarBoxSize = with(localDensity) { it.size.height.toDp() }
-            }) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    if (senderMid == uploaderMid) {
-                        Text(
-                            text = "UP",
-                            color = Color.White,
-                            fontSize = 8.sp,
-                            fontFamily = googleSansFamily,
-                            modifier = Modifier
-                                .offset(y = (0.4).dp)
-                                .clip(
-                                    RoundedCornerShape(100)
-                                )
-                                .background(BilibiliPink)
-                                .padding(
-                                    start = 5.dp,
-                                    end = 5.dp,
-                                    top = 2.dp,
-                                    bottom = 1.dp
-                                )
-                        )
-                        Spacer(modifier = Modifier.width(2.dp))
-                    }
-                    Text(
-                        text = senderName,
-                        fontFamily = puhuiFamily,
-                        fontSize = 12.sp,
-                        color = parseColor(senderNameColor),
-                        fontWeight = FontWeight.Medium
-                    )
-                }
+            }
+            ) {
+                Text(
+                    text = senderName,
+                    fontFamily = puhuiFamily,
+                    fontSize = 9.sp,
+                    color = parseColor(senderNameColor),
+                    fontWeight = FontWeight.Medium,
+                    maxLines = 1
+                )
+
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = sendTimeStamp.toDateStr("yyyy-MM-dd"),
-                    fontFamily = googleSansFamily,
-                    fontSize = 10.sp,
+                    fontFamily = puhuiFamily,
+                    fontSize = 9.sp,
                     color = Color.White,
                     fontWeight = FontWeight.Medium,
-                    modifier = Modifier.alpha(0.6f)
+                    modifier = Modifier.alpha(0.6f),
+                    maxLines = 1
                 )
             }
 
@@ -446,7 +430,7 @@ fun CommentCard(
             emoteMap = commentEmoteMap,
             jumpUrlMap = commentJumpUrlMap,
             attentionUserMap = commentAttentionedUsersMap,
-            fontSize = 13.sp,
+            fontSize = 9.sp,
             context = context
         ) {
             if (isClickable) {
@@ -501,7 +485,7 @@ fun CommentCard(
                 Spacer(modifier = Modifier.width(2.dp))
                 Text(
                     text = "UP主觉得很赞",
-                    fontSize = 10.sp,
+                    fontSize = 8.sp,
                     fontFamily = puhuiFamily,
                     color = Color.White,
                     modifier = Modifier
@@ -531,7 +515,7 @@ fun CommentCard(
                         emoteMap = it.content?.emote ?: emptyMap(),
                         jumpUrlMap = it.content?.jump_url ?: emptyMap(),
                         attentionUserMap = it.content?.at_name_to_mid ?: emptyMap(),
-                        fontSize = 11.sp,
+                        fontSize = 9.sp,
                         isCommentReply = true,
                         context = context,
                         replyUserName = buildAnnotatedString {
@@ -564,7 +548,7 @@ fun CommentCard(
                     }
                     Text(
                         text = commentReplyControl,
-                        fontSize = 11.sp,
+                        fontSize = 9.sp,
                         fontFamily = puhuiFamily,
                         color = BilibiliPink,
                         modifier = Modifier
@@ -613,7 +597,7 @@ fun CommentInfoItem(
         )
         Spacer(modifier = Modifier.width(2.dp))
         Text(text = content,
-            fontSize = 11.sp,
+            fontSize = 9.sp,
             fontFamily = puhuiFamily,
             color = Color.White,
             modifier = Modifier
@@ -651,7 +635,7 @@ fun CommentInfoItem(
         Spacer(modifier = Modifier.width(2.dp))
         Text(
             text = content,
-            fontSize = 11.sp,
+            fontSize = 9.sp,
             fontFamily = puhuiFamily,
             color = Color.White,
             modifier = Modifier

@@ -73,8 +73,8 @@
                     android:singleLine="true"
                     android:text="测试收藏夹"
                     android:textColor="#fff"
-                    android:textSize="14sp"
-                    app:layout_constraintBottom_toTopOf="@+id/guideline44"
+                android:textSize="11sp"
+                app:layout_constraintBottom_toTopOf="@+id/guideline44"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/guideline2"/>
 
@@ -87,9 +87,9 @@
                     android:alpha="0.7"
                     android:fontFamily="@font/puhui_medium"
                     android:text="114514/1919810"
-                    android:textColor="#fff"
-                    android:textSize="12sp"
-                    app:layout_constraintStart_toEndOf="@+id/imageView26"
+                android:textColor="#fff"
+                android:textSize="11sp"
+                app:layout_constraintStart_toEndOf="@+id/imageView26"
                     app:layout_constraintTop_toTopOf="@+id/guideline44"/>
 
             <ImageView

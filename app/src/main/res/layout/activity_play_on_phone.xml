@@ -200,7 +200,7 @@
                 android:gravity="center"
                 android:text="手机观看"
                 android:textColor="#fff"
-                android:textSize="16sp"
+                android:textSize="11sp"
                 app:drawableStartCompat="@drawable/ic_baseline_arrow_back_ios_24"
                 app:layout_constraintBottom_toBottomOf="@+id/timeText"
                 app:layout_constraintStart_toStartOf="parent"
@@ -217,7 +217,7 @@
                 android:format12Hour="hh:mm"
                 android:format24Hour="HH:mm"
                 android:textColor="#fff"
-                android:textSize="16sp"
+                android:textSize="11sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

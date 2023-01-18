@@ -23,7 +23,7 @@ import cn.spacexc.wearbili.utils.ToastUtils
 //import kotlinx.coroutines.launch
 //import androidx.lifecycle.lifecycleScope
 
-const val APP_VERSION = "Rel-AL 0.22.1"
+const val APP_VERSION = "Rel-AL 0.22.2"
 
 class AboutActivity : AppCompatActivity() {
     private val firstList = listOf(

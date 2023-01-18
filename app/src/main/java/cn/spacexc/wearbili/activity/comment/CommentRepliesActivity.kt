@@ -116,7 +116,7 @@ class CommentRepliesActivity : AppCompatActivity() {
                                 text = "相关回复($repliesCount)",
                                 color = Color.White,
                                 fontFamily = puhuiFamily,
-                                fontSize = 14.sp,
+                                fontSize = 10.sp,
                                 fontWeight = FontWeight.Bold
                             )
                         }

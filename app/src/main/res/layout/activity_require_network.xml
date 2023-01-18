@@ -98,7 +98,7 @@
                     android:gravity="center"
                     android:text="将手表连接至互联网再试"
                     android:textColor="#ffffff"
-                    android:textSize="12sp"
+                    android:textSize="11sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView24" />
@@ -112,7 +112,7 @@
                     android:gravity="center"
                     android:text="怎么连不上惹"
                     android:textColor="#ffffff"
-                    android:textSize="16sp"
+                    android:textSize="11sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView23" />
@@ -143,7 +143,7 @@
             android:format12Hour="hh:mm"
             android:format24Hour="HH:mm"
             android:textColor="#fff"
-            android:textSize="16sp"
+            android:textSize="11sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -204,7 +204,7 @@
                 android:lines="1"
                 android:text="重试"
                 android:textColor="#fff"
-                android:textSize="16sp"
+                android:textSize="11sp"
                 app:autoSizeTextType="uniform" />
         </LinearLayout>
 

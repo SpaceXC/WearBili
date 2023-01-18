@@ -74,7 +74,7 @@
             android:gravity="center|start"
             android:text="个人收藏"
             android:textColor="#fff"
-            android:textSize="16sp"
+            android:textSize="11sp"
             app:drawableStartCompat="@drawable/ic_baseline_arrow_back_ios_24"
             app:layout_constraintBottom_toBottomOf="@+id/timeText"
             app:layout_constraintEnd_toStartOf="@+id/timeText"
@@ -92,7 +92,7 @@
             android:format12Hour="hh:mm"
             android:format24Hour="HH:mm"
             android:textColor="#fff"
-            android:textSize="16sp"
+            android:textSize="11sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -130,7 +130,7 @@
                     android:fontFamily="@font/puhui_medium"
                     android:text="其他收藏夹"
                     android:textColor="#fff"
-                    android:textSize="16sp"
+                    android:textSize="11sp"
                     app:layout_constraintStart_toStartOf="@+id/cardView"
                     app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
@@ -178,7 +178,7 @@
                             android:fontFamily="@font/puhui_medium"
                             android:text="0/0"
                             android:textColor="#fff"
-                            android:textSize="12sp"
+                            android:textSize="11sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="@+id/title"
                             app:layout_constraintStart_toEndOf="@+id/imageView27"
@@ -209,7 +209,7 @@
                             android:fontFamily="@font/puhui_medium"
                             android:text="默认收藏夹"
                             android:textColor="#fff"
-                            android:textSize="16sp"
+                            android:textSize="11sp"
                             app:layout_constraintEnd_toEndOf="@+id/cover"
                             app:layout_constraintStart_toStartOf="@+id/cover"
                             app:layout_constraintTop_toBottomOf="@+id/cover" />

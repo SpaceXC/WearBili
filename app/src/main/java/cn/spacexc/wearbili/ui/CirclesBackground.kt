@@ -164,7 +164,7 @@ object CirclesBackground {
                             if (isRound()) {
                                 Text(
                                     text = title,
-                                    fontSize = 16.sp,
+                                    fontSize = 10.sp,
                                     fontFamily = puhuiFamily,
                                     fontWeight = FontWeight.Bold,
                                     color = Color.White,
@@ -202,16 +202,15 @@ object CirclesBackground {
                                             imageVector = Icons.Default.ArrowBackIos,
                                             contentDescription = null,
                                             modifier = Modifier
-                                                .height(16.dp)
-                                                .width(16.dp)
+                                                .size(textHeight.times(0.7f))
                                                 .align(Alignment.CenterVertically)
-                                                .offset(y = 0.9f.dp),
+                                                .offset(y = (0.5).dp),
                                             tint = Color.White
                                         )
                                         //Spacer(Modifier.width(2.dp))
                                         Text(
                                             text = title,
-                                            fontSize = 16.sp,
+                                            fontSize = 11.sp,
                                             fontFamily = puhuiFamily,
                                             fontWeight = FontWeight.Bold,
                                             color = Color.White,
@@ -227,7 +226,7 @@ object CirclesBackground {
                                         Spacer(modifier = Modifier.weight(1f))
                                         Text(
                                             text = timeText,
-                                            fontSize = 16.sp,
+                                            fontSize = 11.sp,
                                             fontFamily = googleSansFamily,
                                             fontWeight = FontWeight.Medium,
                                             color = Color.White,

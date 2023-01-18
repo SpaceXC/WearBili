@@ -71,4 +71,8 @@ class BangumiActivity : AppCompatActivity() {
 //        }
         binding.pageName.setOnClickListener { finish() }
     }
+
+    fun pagerScrollTo(index: Int) {
+        binding.viewPager2.currentItem = index
+    }
 }

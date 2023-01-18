@@ -99,7 +99,7 @@
                 android:lines="1"
                 android:text="你还没有登录啊 (ﾟДﾟ*)ﾉ"
                 android:textColor="#fff"
-                android:textSize="12sp"
+                android:textSize="11sp"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -207,7 +207,7 @@
                         android:fontFamily="@font/puhui_bold"
                         android:text="114512"
                         android:textColor="#fff"
-                        android:textSize="16sp" />
+                        android:textSize="11sp" />
 
                     <TextView
                         android:id="@+id/textView20"
@@ -218,7 +218,7 @@
                         android:fontFamily="@font/puhui"
                         android:text="硬币"
                         android:textColor="#fff"
-                        android:textSize="12sp" />
+                        android:textSize="11sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -241,7 +241,7 @@
                         android:fontFamily="@font/puhui_bold"
                         android:text="114"
                         android:textColor="#fff"
-                        android:textSize="16sp" />
+                        android:textSize="11sp" />
 
                     <TextView
                         android:id="@+id/textView18"
@@ -252,7 +252,7 @@
                         android:fontFamily="@font/puhui"
                         android:text="粉丝"
                         android:textColor="#fff"
-                        android:textSize="12sp" />
+                        android:textSize="11sp" />
                 </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -275,7 +275,7 @@
                     android:fontFamily="@font/puhui_medium"
                     android:text="访客"
                     android:textColor="#fff"
-                    android:textSize="16sp" />
+                    android:textSize="11sp" />
 
                 <TextView
                     android:id="@+id/levelText"
@@ -291,7 +291,7 @@
                     android:paddingBottom="2dp"
                     android:text="LV5"
                     android:textColor="#ffffff"
-                    android:textSize="12sp"
+                    android:textSize="11sp"
                     android:visibility="gone" />
             </LinearLayout>
 
@@ -364,14 +364,14 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="6dp"
                         android:layout_weight="2"
-                        android:ellipsize="end"
+                        android:ellipsize="none"
                         android:fontFamily="@font/puhui"
                         android:gravity="start"
                         android:lines="1"
                         android:text="设置"
                         android:textColor="#fff"
-                        android:textSize="16sp"
-                        app:autoSizeTextType="uniform" />
+                        android:textSize="11sp"
+                        app:autoSizeTextType="none" />
                 </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -435,14 +435,14 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="6dp"
                     android:layout_weight="2"
-                    android:ellipsize="end"
+                    android:ellipsize="none"
                     android:fontFamily="@font/puhui"
                     android:gravity="start"
                     android:lines="1"
                     android:text="登入"
                     android:textColor="#fff"
-                    android:textSize="16sp"
-                    app:autoSizeTextType="uniform" />
+                    android:textSize="11sp"
+                    app:autoSizeTextType="none" />
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

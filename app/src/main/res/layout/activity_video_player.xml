@@ -98,7 +98,7 @@
                             android:fontFamily="@font/puhui_medium"
                             android:text="-人在看"
                             android:textColor="#fff"
-                            android:textSize="12sp"
+                            android:textSize="11sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="@+id/videoTitle"
                             app:layout_constraintTop_toBottomOf="@+id/videoTitle" />
@@ -127,7 +127,7 @@
                             android:fontFamily="@font/puhui_bold"
                             android:singleLine="true"
                             android:textColor="#fff"
-                            android:textSize="15sp"
+                            android:textSize="10sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toEndOf="@+id/back"
@@ -162,6 +162,7 @@
                             android:ellipsize="marquee"
                             android:fontFamily="@font/puhui_bold"
                             android:textColor="#fff"
+                            android:textSize="13sp"
                             app:layout_constraintBottom_toTopOf="@+id/progress"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.0"
@@ -243,7 +244,7 @@
                             android:paddingBottom="6dp"
                             android:text="选项"
                             android:textColor="#fff"
-                            android:textSize="12sp"
+                            android:textSize="11sp"
                             android:visibility="gone"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent" />
@@ -277,36 +278,37 @@
                     app:layout_constraintVertical_bias="0.3"/>
 
             <TextView
-                    android:id="@+id/loadingStatText"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="4dp"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp"
-                    android:text="播放器正在加载中...ヾ(•ω•`)o"
-                    android:textColor="#B0B0B0"
-                    app:layout_constraintBottom_toTopOf="@+id/tips"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                android:id="@+id/loadingStatText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingStart="4dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:text="播放器正在加载中...ヾ(•ω•`)o"
+                android:textColor="#B0B0B0"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@+id/tips"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
-                    android:id="@+id/tips"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:background="#474747"
-                    android:fontFamily="@font/puhui_medium"
-                    android:paddingStart="4dp"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="4dp"
-                    android:singleLine="true"
-                    android:text="看完视频记得分享给好基（朋）友哦(ﾟДﾟ*)ﾉ"
-                    android:textColor="#B0B0B0"
-                    android:textSize="10sp"
-                    app:autoSizeTextType="uniform"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    tools:ignore="TextContrastCheck"/>
+                android:id="@+id/tips"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="#474747"
+                android:fontFamily="@font/puhui_medium"
+                android:paddingStart="4dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="4dp"
+                android:singleLine="true"
+                android:text="看完视频记得分享给好基（朋）友哦(ﾟДﾟ*)ﾉ"
+                android:textColor="#B0B0B0"
+                android:textSize="9sp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="TextContrastCheck" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -338,18 +340,18 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-                android:text="电量100% 温度42.3°C 12:00"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/watchStats"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:textColor="#B0B0B0"
-                android:fontFamily="@font/puhui"
-                android:textSize="10sp"
-                android:layout_marginStart="4dp"
-                android:layout_marginBottom="4dp"/>
+            android:id="@+id/watchStats"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginBottom="4dp"
+            android:fontFamily="@font/puhui"
+            android:text="电量100% 温度42.3°C 12:00"
+            android:textColor="#B0B0B0"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

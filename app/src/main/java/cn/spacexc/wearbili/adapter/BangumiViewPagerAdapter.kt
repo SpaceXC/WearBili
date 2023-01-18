@@ -16,12 +16,12 @@ import cn.spacexc.wearbili.fragment.CommentFragment
 
 class BangumiViewPagerAdapter(fragmentActivity: FragmentActivity) :
     FragmentStateAdapter(fragmentActivity) {
-    override fun getItemCount(): Int = 1
+    override fun getItemCount(): Int = 2
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> BangumiInfoFragment()
-            1 -> CommentFragment()
+            1 -> CommentFragment(true)
             else -> CommentFragment()
         }
     }

@@ -90,7 +90,7 @@ class ToDesignInfoActivity : AppCompatActivity() {
                     Text(
                         text = "组织详情",
                         fontFamily = puhuiFamily,
-                        fontSize = 18.sp,
+                        fontSize = 10.sp,
                         color = Color(255, 255, 255, 204),
                         fontWeight = FontWeight.Bold
                     )

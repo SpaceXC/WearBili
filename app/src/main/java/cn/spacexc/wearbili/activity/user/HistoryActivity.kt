@@ -58,7 +58,7 @@ class HistoryActivity : AppCompatActivity() {
                                         isBangumi = it.history.epid != 0L,
                                         epid = if (it.history.epid != 0L) it.history.epid.toString() else "",
                                         badge = it.badge,
-                                        tagName = it.tag_name
+                                        //tagName = it.tag_name
                                     )
                                 }
                             }
@@ -87,7 +87,7 @@ class HistoryActivity : AppCompatActivity() {
                                         isBangumi = it.history.epid != 0L,
                                         epid = if (it.history.epid != 0L) it.history.epid.toString() else "",
                                         badge = it.badge,
-                                        tagName = it.tag_name
+                                        //tagName = it.tag_name
                                     )
                                 }
                             }

@@ -67,7 +67,7 @@
                     android:lines="1"
                     android:text="登入"
                     android:textColor="#fff"
-                    android:textSize="16sp"
+                    android:textSize="11sp"
                     app:autoSizeTextType="uniform" />
             </LinearLayout>
 

@@ -177,7 +177,7 @@ class VideoInformationFragment : Fragment() {
                                 text = videoInfo?.data?.title ?: "",
                                 color = Color.White,
                                 fontFamily = puhuiFamily,
-                                fontSize = 16.sp,
+                                fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.fillMaxWidth()
                             )
@@ -238,7 +238,7 @@ class VideoInformationFragment : Fragment() {
                                                     model = ImageRequest.Builder(LocalContext.current)
                                                         .data(staff.face).crossfade(true).build(),
                                                     contentDescription = null, modifier = Modifier
-                                                        .size(textHeight.times(1.3f))
+                                                        .size(textHeight.times(1.1f))
                                                         .clip(CircleShape)
                                                         .onGloballyPositioned {
                                                             avatarHeight =
@@ -269,14 +269,15 @@ class VideoInformationFragment : Fragment() {
                                                 Text(
                                                     text = staff.name,
                                                     color = parseColor(staff.vip.label.bg_color.ifNullOrEmpty { "#FFFFFF" }),
-                                                    fontFamily = puhuiFamily
+                                                    fontFamily = puhuiFamily,
+                                                    fontSize = 11.sp
                                                 )
                                                 Spacer(modifier = Modifier.height(2.dp))
                                                 Text(
                                                     text = staff.title,
                                                     color = Color.White,
                                                     fontFamily = puhuiFamily,
-                                                    fontSize = 12.sp,
+                                                    fontSize = 8.sp,
                                                     modifier = Modifier.alpha(0.7f)
                                                 )
                                             }
@@ -402,7 +403,7 @@ class VideoInformationFragment : Fragment() {
                                     )
                                     Text(
                                         text = honor.text,
-                                        fontSize = 12.sp,
+                                        fontSize = 10.sp,
                                         color = parseColor(honor.textColorNight),
                                         fontFamily = puhuiFamily,
                                         modifier = Modifier.onGloballyPositioned {
@@ -426,7 +427,7 @@ class VideoInformationFragment : Fragment() {
                                                 if (descriptionMaxLines == 3) Int.MAX_VALUE else 3
                                         }
                                         .alpha(0.9f),
-                                    fontSize = 13.sp,
+                                    fontSize = 10.sp,
                                     color = Color.White,
                                     fontFamily = puhuiFamily,
                                     maxLines = descriptionMaxLines,
@@ -438,7 +439,7 @@ class VideoInformationFragment : Fragment() {
                                     text = "选集(${videoInfo?.data?.pages?.size ?: 0})",
                                     fontFamily = puhuiFamily,
                                     fontWeight = FontWeight.Normal,
-                                    fontSize = 18.sp,
+                                    fontSize = 10.sp,
                                     color = Color.White,
                                     modifier = Modifier.clickVfx {
                                         videoInfo?.data?.pages?.let { pages ->
@@ -510,7 +511,7 @@ class VideoInformationFragment : Fragment() {
                                                         Text(
                                                             text = "P${index + 1} ${page.part}",
                                                             color = Color.White,
-                                                            fontSize = 16.sp,
+                                                            fontSize = 10.sp,
                                                             fontFamily = puhuiFamily,
                                                             maxLines = 1,
                                                             overflow = TextOverflow.Ellipsis,
@@ -806,7 +807,7 @@ class VideoInformationFragment : Fragment() {
             )
             Spacer(modifier = Modifier.width(2.dp))
             Text(text = content,
-                fontSize = 12.sp,
+                fontSize = 10.sp,
                 fontFamily = puhuiFamily,
                 color = Color.White,
                 modifier = Modifier
@@ -844,7 +845,7 @@ class VideoInformationFragment : Fragment() {
             Spacer(modifier = Modifier.width(2.dp))
             Text(
                 text = content,
-                fontSize = 12.sp,
+                fontSize = 10.sp,
                 fontFamily = puhuiFamily,
                 color = Color.White,
                 modifier = Modifier

@@ -75,7 +75,7 @@
             android:gravity="center"
             android:text="动态详情"
             android:textColor="#fff"
-            android:textSize="16sp"
+            android:textSize="11sp"
             app:layout_constraintBottom_toBottomOf="@+id/timeText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/timeText" />
@@ -89,7 +89,7 @@
             android:gravity="center"
             android:paddingTop="1dp"
             android:textColor="#fff"
-            android:textSize="16sp"
+            android:textSize="11sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -166,7 +166,7 @@
                         android:fontFamily="@font/puhui"
                         android:lines="1"
                         android:textColor="#fff"
-                        android:textSize="10sp"
+                        android:textSize="11sp"
                         app:autoSizeTextType="uniform"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
@@ -224,7 +224,7 @@
                         android:alpha="0.7"
                         android:fontFamily="@font/puhui"
                         android:textColor="#fff"
-                        android:textSize="12sp"
+                        android:textSize="11sp"
                         app:layout_constraintStart_toEndOf="@+id/imageView6"
                         app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
 
@@ -239,7 +239,7 @@
                         android:gravity="center"
                         android:text="回复"
                         android:textColor="#fff"
-                        android:textSize="12sp"
+                        android:textSize="11sp"
                         app:layout_constraintBottom_toBottomOf="@+id/likes"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/likes"
@@ -285,7 +285,7 @@
                         android:fontFamily="@font/puhui_medium"
                         android:text="评论(0)"
                         android:textColor="#fff"
-                        android:textSize="16sp"
+                        android:textSize="11sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/divider4" />
 

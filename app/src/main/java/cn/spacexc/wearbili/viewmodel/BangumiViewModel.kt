@@ -1,5 +1,9 @@
 package cn.spacexc.wearbili.viewmodel
 
+import androidx.compose.foundation.ScrollState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,6 +25,25 @@ import kotlinx.coroutines.launch
  */
 
 class BangumiViewModel : ViewModel() {
+    val scrollState = ScrollState(initial = 0)
+
+    val currentAid = MutableLiveData(0L)
+    var currentCid by
+    mutableStateOf(0L)
+
+    var currentEpid by
+    mutableStateOf(0L)
+
+    var currentBvid by
+    mutableStateOf("")
+
+    var currentCover by
+    mutableStateOf("")
+
+    var currentTitle by
+    mutableStateOf("")
+
+
     private val _bangumi: MutableLiveData<BangumiDetail> = MutableLiveData()
     val bangumi: LiveData<BangumiDetail> = _bangumi
 

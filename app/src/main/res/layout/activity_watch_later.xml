@@ -74,7 +74,7 @@
             android:gravity="center|start"
             android:text="稍后再看"
             android:textColor="#fff"
-            android:textSize="16sp"
+            android:textSize="11sp"
             app:drawableStartCompat="@drawable/ic_baseline_arrow_back_ios_24"
             app:layout_constraintBottom_toBottomOf="@+id/timeText"
             app:layout_constraintEnd_toStartOf="@+id/timeText"
@@ -92,7 +92,7 @@
             android:format12Hour="hh:mm"
             android:format24Hour="HH:mm"
             android:textColor="#fff"
-            android:textSize="16sp"
+            android:textSize="11sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

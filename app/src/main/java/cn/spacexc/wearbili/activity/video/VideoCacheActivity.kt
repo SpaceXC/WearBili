@@ -85,7 +85,7 @@ class VideoCacheActivity : AppCompatActivity() {
                                 text = "正在下载",
                                 fontFamily = puhuiFamily,
                                 color = Color.White,
-                                fontSize = 16.sp,
+                                fontSize = 10.sp,
                                 fontWeight = FontWeight.Medium
                             )
                         }
@@ -112,7 +112,7 @@ class VideoCacheActivity : AppCompatActivity() {
                                 text = "下载完成",
                                 fontFamily = puhuiFamily,
                                 color = Color.White,
-                                fontSize = 16.sp,
+                                fontSize = 10.sp,
                                 fontWeight = FontWeight.Medium
                             )
                         }
@@ -386,7 +386,7 @@ class VideoCacheActivity : AppCompatActivity() {
                                 }
                             } $progress%",
                             fontFamily = puhuiFamily,
-                            fontSize = 12.sp,
+                            fontSize = 10.sp,
                             color = if (state == Download.STATE_FAILED) BilibiliPink else Color.White
                         )
                         Spacer(modifier = Modifier.height(2.dp))

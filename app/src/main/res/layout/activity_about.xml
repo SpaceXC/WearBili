@@ -79,7 +79,7 @@
                 android:layout_marginBottom="6dp"
                 android:fontFamily="@font/puhui_bold"
                 android:textColor="#fff"
-                android:textSize="16sp"
+                android:textSize="11sp"
                 app:drawableStartCompat="@drawable/ic_baseline_arrow_back_ios_24" />
 
             <TextClock
@@ -92,7 +92,7 @@
                 android:layout_marginBottom="6dp"
                 android:fontFamily="@font/googlesans_medium"
                 android:textColor="#fff"
-                android:textSize="16sp"
+                android:textSize="11sp"
                 android:format12Hour="hh:mm"
                 android:format24Hour="HH:mm"/>
         </FrameLayout>
@@ -167,7 +167,7 @@
                     android:fontFamily="@font/puhui_medium"
                     android:text="一个第三方哔哩哔哩手表客户端"
                     android:textColor="#fff"
-                    android:textSize="14sp"
+                    android:textSize="11sp"
                     app:autoSizeTextType="uniform"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/imageView10"
@@ -232,7 +232,7 @@
                     android:fontFamily="@font/puhui_medium"
                     android:text="参与个人"
                     android:textColor="#fff"
-                    android:textSize="16sp"
+                    android:textSize="11sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@+id/imageView8"
@@ -247,7 +247,7 @@
                     android:fontFamily="@font/puhui_medium"
                     android:text="第三方团体"
                     android:textColor="#fff"
-                    android:textSize="16sp"
+                    android:textSize="11sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@+id/imageView13"
@@ -262,7 +262,7 @@
                     android:fontFamily="@font/puhui_medium"
                     android:text="特别鸣谢"
                     android:textColor="#fff"
-                    android:textSize="16sp"
+                    android:textSize="11sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@+id/imageView13"

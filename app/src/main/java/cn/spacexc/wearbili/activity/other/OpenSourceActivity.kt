@@ -119,7 +119,7 @@ class OpenSourceActivity : AppCompatActivity() {
                     Text(
                         text = "Permissions",
                         fontFamily = googleSansFamily,
-                        fontSize = 14.sp,
+                        fontSize = 10.sp,
                         color = Color.White,
                         fontWeight = FontWeight.Bold
                     )
@@ -132,7 +132,7 @@ class OpenSourceActivity : AppCompatActivity() {
                     Text(
                         text = "Limitations",
                         fontFamily = googleSansFamily,
-                        fontSize = 14.sp,
+                        fontSize = 10.sp,
                         color = Color.White,
                         fontWeight = FontWeight.Bold
                     )
@@ -142,7 +142,7 @@ class OpenSourceActivity : AppCompatActivity() {
                     Text(
                         text = "Conditions",
                         fontFamily = googleSansFamily,
-                        fontSize = 14.sp,
+                        fontSize = 10.sp,
                         color = Color.White,
                         fontWeight = FontWeight.Bold
                     )
@@ -178,7 +178,7 @@ class OpenSourceActivity : AppCompatActivity() {
             )
             Text(
                 text = text,
-                fontSize = 13.sp,
+                fontSize = 9.sp,
                 fontFamily = googleSansFamily,
                 modifier = Modifier.onGloballyPositioned {
                     iconSize = with(localDensity) { it.size.height.toDp() }

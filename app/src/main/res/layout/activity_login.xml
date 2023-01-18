@@ -75,7 +75,7 @@
                 android:gravity="center"
                 android:text="登录"
                 android:textColor="#fff"
-                android:textSize="16sp"
+                android:textSize="11sp"
                 app:layout_constraintBottom_toBottomOf="@+id/timeText"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/timeText" />
@@ -91,7 +91,7 @@
                 android:gravity="center"
                 android:paddingTop="1dp"
                 android:textColor="#fff"
-                android:textSize="16sp"
+                android:textSize="11sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -163,6 +163,7 @@
                     android:gravity="center"
                     android:text="使用手机客户端扫描二维码登入"
                     android:textColor="#fff"
+                    android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

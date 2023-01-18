@@ -52,7 +52,7 @@
             android:fontFamily="@font/puhui_medium"
             android:text="20w"
             android:textColor="#fff"
-            android:textSize="10sp"
+            android:textSize="11sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView20" />
 
@@ -69,7 +69,7 @@
             android:singleLine="false"
             android:text="123456789123456789123456789123456789测试标题测试标题测试标题"
             android:textColor="#fff"
-            android:textSize="12sp"
+            android:textSize="11sp"
             app:autoSizeTextType="none"
             app:layout_constraintBottom_toTopOf="@+id/videoViews"
             app:layout_constraintEnd_toEndOf="parent"

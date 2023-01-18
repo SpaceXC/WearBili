@@ -235,7 +235,7 @@ class SpaceProfileActivity : AppCompatActivity() {
                                         Text(
                                             text = user?.data?.name ?: "加载中",
                                             fontFamily = puhuiFamily,
-                                            fontSize = 16.sp,
+                                            fontSize = 10.sp,
                                             fontWeight = FontWeight.Bold,
                                             color = parseColor(user?.data?.vip?.nickname_color.ifNullOrEmpty { "#FFFFFF" })
                                             //modifier = Modifier.scale(collapsingState.toolbarState.progress)
@@ -257,7 +257,7 @@ class SpaceProfileActivity : AppCompatActivity() {
                                                     },
                                                 maxLines = maxLines,
                                                 fontFamily = puhuiFamily,
-                                                fontSize = 12.sp,
+                                                fontSize = 8.5.sp,
                                                 overflow = TextOverflow.Ellipsis
                                             )
                                         }
@@ -322,7 +322,7 @@ class SpaceProfileActivity : AppCompatActivity() {
                                                         buttonTextHeight = with(localDensity) {
                                                             it.size.height.toDp()
                                                         }
-                                                    }, fontSize = 12.sp
+                                                    }, fontSize = 8.sp
                                             )
                                         }
                                     }
@@ -385,7 +385,7 @@ class SpaceProfileActivity : AppCompatActivity() {
                                             },
                                             textStyle = TextStyle(
                                                 color = Color.White,
-                                                fontSize = 14.sp,
+                                                fontSize = 10.sp,
                                                 fontFamily = puhuiFamily
                                             ),
                                             cursorBrush = SolidColor(
@@ -551,7 +551,7 @@ class SpaceProfileActivity : AppCompatActivity() {
                         interactionSource = MutableInteractionSource(),
                         indication = null,
                         onClick = { onClick() }),
-                fontWeight = FontWeight.Medium, fontSize = 14.sp
+                fontWeight = FontWeight.Medium, fontSize = 10.sp
 
             )
             Spacer(modifier = Modifier.width(4.dp))

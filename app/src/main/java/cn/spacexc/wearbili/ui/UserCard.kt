@@ -177,7 +177,7 @@ fun UserCard(
                     Text(
                         text = name,
                         fontFamily = puhuiFamily,
-                        fontSize = 14.sp,
+                        fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(android.graphics.Color.parseColor(nicknameColor)),
                         maxLines = 1

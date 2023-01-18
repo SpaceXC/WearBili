@@ -95,7 +95,7 @@ class NewVideoCacheActivity : AppCompatActivity() {
                                     Text(
                                         text = "P${index.plus(1)} ${page.part}",
                                         color = Color.White,
-                                        fontSize = 16.sp,
+                                        fontSize = 10.sp,
                                         fontFamily = puhuiFamily,
                                         overflow = TextOverflow.Ellipsis,
                                         modifier = Modifier.alpha(0.76f),

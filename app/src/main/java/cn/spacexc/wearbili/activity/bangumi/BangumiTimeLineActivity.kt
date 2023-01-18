@@ -86,7 +86,7 @@ class BangumiTimeLineActivity : AppCompatActivity() {
                                     text = "${it.date} 星期${chineseNums[it.day_of_week]}",
                                     fontFamily = puhuiFamily,
                                     color = Color.White,
-                                    fontSize = 14.sp,
+                                    fontSize = 10.sp,
                                     modifier = Modifier
                                         .alpha(0.8f)
                                         .fillMaxWidth(),
@@ -139,19 +139,19 @@ class BangumiTimeLineActivity : AppCompatActivity() {
                                                     text = episode.title,
                                                     color = Color.White,
                                                     fontFamily = puhuiFamily,
-                                                    fontSize = 14.sp,
+                                                    fontSize = 10.sp,
                                                     fontWeight = FontWeight.Bold
                                                 )
                                                 Spacer(modifier = Modifier.height(2.dp))
                                                 Text(
                                                     text = episode.pub_time,
                                                     fontFamily = puhuiFamily,
-                                                    color = Color.Gray, fontSize = 12.sp
+                                                    color = Color.Gray, fontSize = 10.sp
                                                 )
                                                 Text(
                                                     text = if (episode.pub_ts * 1000 >= System.currentTimeMillis()) "即将更新${episode.pub_index}" else "更新至${episode.pub_index}",
                                                     fontFamily = puhuiFamily,
-                                                    color = Color.Gray, fontSize = 12.sp
+                                                    color = Color.Gray, fontSize = 10.sp
                                                 )
                                                 Spacer(modifier = Modifier.height(4.dp))
                                             }   //番剧信息
@@ -175,7 +175,7 @@ class BangumiTimeLineActivity : AppCompatActivity() {
                                     text = "${it.date} 星期${chineseNums[it.day_of_week]}",
                                     fontFamily = puhuiFamily,
                                     color = Color.White,
-                                    fontSize = 14.sp,
+                                    fontSize = 10.sp,
                                     modifier = Modifier.alpha(0.8f)
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
@@ -225,19 +225,19 @@ class BangumiTimeLineActivity : AppCompatActivity() {
                                                     text = episode.title,
                                                     color = Color.White,
                                                     fontFamily = puhuiFamily,
-                                                    fontSize = 14.sp,
+                                                    fontSize = 10.sp,
                                                     fontWeight = FontWeight.Bold
                                                 )
                                                 Spacer(modifier = Modifier.height(2.dp))
                                                 Text(
                                                     text = episode.pub_time,
                                                     fontFamily = puhuiFamily,
-                                                    color = Color.Gray, fontSize = 12.sp
+                                                    color = Color.Gray, fontSize = 10.sp
                                                 )
                                                 Text(
                                                     text = if (episode.pub_ts * 1000 >= System.currentTimeMillis()) "即将更新${episode.pub_index}" else "更新至${episode.pub_index}",
                                                     fontFamily = puhuiFamily,
-                                                    color = Color.Gray, fontSize = 12.sp
+                                                    color = Color.Gray, fontSize = 10.sp
                                                 )
                                                 Spacer(modifier = Modifier.height(4.dp))
                                             }   //番剧信息

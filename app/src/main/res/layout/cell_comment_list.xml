@@ -19,7 +19,7 @@
         android:paddingBottom="2dp"
         android:text="UP"
         android:textColor="#fff"
-        android:textSize="10sp"
+        android:textSize="11sp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/dynamicPubDate"
         app:layout_constraintEnd_toEndOf="parent"
@@ -66,7 +66,7 @@
         android:fontFamily="@font/puhui"
         android:text="11-45-14"
         android:textColor="#fff"
-        android:textSize="10sp"
+        android:textSize="11sp"
         app:layout_constraintStart_toEndOf="@+id/dynamicAvatar"
         app:layout_constraintTop_toBottomOf="@+id/dynamicUsername" />
 
@@ -147,7 +147,7 @@
         android:paddingBottom="5dp"
         android:text=" UP主觉得很赞"
         android:textColor="#fff"
-        android:textSize="10sp"
+        android:textSize="11sp"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="@+id/dynamicText"
         app:layout_constraintTop_toBottomOf="@+id/likes" />
@@ -196,7 +196,7 @@
         android:fontFamily="@font/puhui"
         android:text="1.2w"
         android:textColor="#fff"
-        android:textSize="12sp"
+        android:textSize="11sp"
         app:layout_constraintStart_toEndOf="@+id/imageView6"
         app:layout_constraintTop_toBottomOf="@+id/dynamicText" />
 
@@ -211,7 +211,7 @@
         android:gravity="center"
         android:text="回复"
         android:textColor="#fff"
-        android:textSize="12sp"
+        android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="@+id/likes"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/likes"

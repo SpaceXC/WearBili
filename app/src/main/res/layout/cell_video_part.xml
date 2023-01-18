@@ -40,7 +40,7 @@
             android:gravity="start"
             android:text="P1 - 日和（ヒヨリ）"
             android:textColor="#fff"
-            android:textSize="16sp" />
+            android:textSize="11sp" />
     </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -59,7 +59,7 @@
                 android:fontFamily="@font/puhui"
                 android:text="如果您需要心理协助，可以拨打 全国24小时心理咨询热线 010-82951332 或在手机端访问能量加油站"
                 android:textColor="#fff"
-                android:textSize="14sp"
+                android:textSize="11sp"
                 app:autoSizeTextType="none" />
 
         </LinearLayout>
@@ -109,7 +109,7 @@
                 android:lines="1"
                 android:text="扫码打开能量加油站"
                 android:textColor="#fff"
-                android:textSize="16sp"
+                android:textSize="11sp"
                 app:autoSizeTextType="uniform" />
         </LinearLayout>
 

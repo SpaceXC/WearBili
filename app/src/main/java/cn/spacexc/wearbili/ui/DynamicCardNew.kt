@@ -17,6 +17,7 @@ import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.PlayCircle
+import androidx.compose.material.icons.outlined.Redeem
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -93,6 +94,20 @@ fun RichText(
                 tint = parseColor("#178bcf"),
                 modifier = Modifier.fillMaxSize()
             )
+        },
+        "lotteryIcon" to InlineTextContent(
+            Placeholder(
+                width = fontSize,
+                height = fontSize,
+                placeholderVerticalAlign = PlaceholderVerticalAlign.Center
+            )
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Redeem,
+                contentDescription = null,
+                tint = parseColor("#178bcf"),
+                modifier = Modifier.fillMaxSize()
+            )
         }
     )
     val annotatedString = buildAnnotatedString {
@@ -122,6 +137,12 @@ fun RichText(
                         append(it.text)
                     }
                     pop()
+                }
+                "RICH_TEXT_NODE_TYPE_LOTTERY" -> {
+                    withStyle(style = SpanStyle(color = parseColor("#178bcf"))) {
+                        appendInlineContent("lotteryIcon")
+                        append(it.text)
+                    }
                 }
                 "RICH_TEXT_NODE_TYPE_EMOJI" -> {
                     appendInlineContent(it.emoji?.text ?: "")
@@ -283,7 +304,7 @@ fun DynamicContent(
                     modifier = Modifier
                         //.fillMaxWidth()
                         .size(
-                            pendentHeight.times(0.7f)
+                            pendentHeight.times(0.6f)
                         )
                         .clip(CircleShape)
                 )
@@ -297,8 +318,8 @@ fun DynamicContent(
                         //.fillMaxWidth()
                         .size(
                             avatarBoxSize
-                                .plus(4.dp)
-                                .times(1.4f)
+                                .plus(8.dp)
+                            //.times(1.wf)
                         )
                         .onGloballyPositioned {
                             pendentHeight = with(localDensity) {
@@ -336,31 +357,33 @@ fun DynamicContent(
         Spacer(modifier = Modifier.width(4.dp))
         Column(modifier = Modifier.onGloballyPositioned {
             avatarBoxSize = with(localDensity) { it.size.height.toDp() }
-        }) {
-
+        }
+        ) {
             Text(
                 text = item.modules.moduleAuthor.name,
                 fontFamily = puhuiFamily,
-                fontSize = 12.sp,
+                fontSize = 9.sp,
                 color = parseColor(item.modules.moduleAuthor.vip.nicknameColor.ifNullOrEmpty { "#FFFFFF" }),
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
+                maxLines = 1
             )
 
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = "${item.modules.moduleAuthor.pubTime} ${item.modules.moduleAuthor.pubAction}",
                 fontFamily = puhuiFamily,
-                fontSize = 10.sp,
+                fontSize = 9.sp,
                 color = Color.White,
                 fontWeight = FontWeight.Medium,
-                modifier = Modifier.alpha(0.6f)
+                modifier = Modifier.alpha(0.6f),
+                maxLines = 1
             )
         }
 
     }
     Spacer(modifier = Modifier.height(8.dp))
     item.modules.moduleDynamic.desc?.let {
-        RichText(textNodes = it.richTextNodes, fontSize = 12.sp, context = context) {
+        RichText(textNodes = it.richTextNodes, fontSize = 10.sp, context = context) {
             if (supportedDynamicTypes.contains(item.type)) {
                 val intent = Intent(context, NewDynamicDetailActivity::class.java)
                 intent.putExtra("dyId", item.idStr)
@@ -541,7 +564,7 @@ fun DynamicContent(
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier,
-                        fontSize = 11.sp
+                        fontSize = 9.sp
                     )
                     Row {
                         var textHeight by remember {
@@ -574,7 +597,7 @@ fun DynamicContent(
                 text = "${item.modules.moduleDynamic.major?.pgc?.title} 更新了",
                 fontFamily = puhuiFamily,
                 color = Color.White,
-                fontSize = 12.sp
+                fontSize = 10.sp
             )*/
             Column(modifier = Modifier.clickVfx {
                 Intent(
@@ -635,7 +658,7 @@ fun DynamicContent(
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier,
-                            fontSize = 11.sp
+                            fontSize = 9.sp
                         )
                         Row {
                             var textHeight by remember {
@@ -669,7 +692,7 @@ fun DynamicContent(
             Text(
                 text = "不支持的动态类型",
                 color = Color.White,
-                fontSize = 12.sp,
+                fontSize = 10.sp,
                 fontFamily = puhuiFamily
             )
         }
@@ -742,7 +765,7 @@ fun ForwardShareDynamicCardNew(
                         text = item.modules.moduleAuthor.name,
                         color = parseColor(item.modules.moduleAuthor.vip?.nicknameColor.ifNullOrEmpty { "#FFFFFF" }),
                         fontFamily = puhuiFamily,
-                        fontSize = 11.sp,
+                        fontSize = 9.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -750,7 +773,7 @@ fun ForwardShareDynamicCardNew(
             Spacer(modifier = Modifier.height(8.dp))
         }
         item.modules.moduleDynamic.desc?.let {
-            RichText(textNodes = it.richTextNodes, fontSize = 11.sp, context = context) {
+            RichText(textNodes = it.richTextNodes, fontSize = 9.sp, context = context) {
                 if (supportedDynamicTypes.contains(item.type)) {
                     val intent = Intent(context, NewDynamicDetailActivity::class.java)
                     intent.putExtra("dyId", item.idStr)
@@ -921,7 +944,7 @@ fun ForwardShareDynamicCardNew(
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier,
-                            fontSize = 11.sp
+                            fontSize = 9.sp
                         )
                         Row {
                             var textHeight by remember {
@@ -954,7 +977,7 @@ fun ForwardShareDynamicCardNew(
                     text = "${item.modules.moduleDynamic.major?.pgc?.title} 更新了",
                     fontFamily = puhuiFamily,
                     color = Color.White,
-                    fontSize = 11.sp
+                    fontSize = 9.sp
                 )*/
                 Column(modifier = Modifier.clickVfx {
                     Intent(
@@ -1015,7 +1038,7 @@ fun ForwardShareDynamicCardNew(
                                 maxLines = 2,
                                 overflow = TextOverflow.Ellipsis,
                                 modifier = Modifier,
-                                fontSize = 11.sp
+                                fontSize = 9.sp
                             )
                             Row {
                                 var textHeight by remember {
@@ -1049,7 +1072,7 @@ fun ForwardShareDynamicCardNew(
                 Text(
                     text = "不支持的动态类型",
                     color = Color.White,
-                    fontSize = 11.sp,
+                    fontSize = 9.sp,
                     fontFamily = puhuiFamily
                 )
             }

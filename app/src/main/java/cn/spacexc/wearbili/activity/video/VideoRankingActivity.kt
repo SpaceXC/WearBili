@@ -59,7 +59,7 @@ class VideoRankingActivity : AppCompatActivity() {
                             Text(
                                 text = rankingList?.data?.note ?: "",
                                 color = Color.White,
-                                fontSize = 12.sp,
+                                fontSize = 10.sp,
                                 fontFamily = puhuiFamily,
                                 modifier = Modifier
                                     .alpha(0.8f)
@@ -95,7 +95,7 @@ class VideoRankingActivity : AppCompatActivity() {
                             Text(
                                 text = rankingList?.data?.note ?: "",
                                 color = Color.White,
-                                fontSize = 12.sp,
+                                fontSize = 10.sp,
                                 fontFamily = puhuiFamily,
                                 modifier = Modifier
                                     .alpha(0.8f)

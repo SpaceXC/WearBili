@@ -17,7 +17,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.ArrowForwardIos
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -101,6 +100,8 @@ class BangumiInfoFragment : Fragment() {
                 )
             }
         }
+        activity.viewModel.currentEpid =
+            if (activity.idType == ID_TYPE_EPID && activity.id.isNotEmpty()) activity.id.toLong() else 0L
         (view as ComposeView).setContent {
             val bangumi by activity.viewModel.bangumi.observeAsState()
             Crossfade(targetState = bangumi != null) {
@@ -136,35 +137,19 @@ class BangumiInfoFragment : Fragment() {
     @Composable
     fun MainUI(bangumi: BangumiDetail?) {
         val localDensity = LocalDensity.current
-        var followTextHeight by remember {
+        /*var followTextHeight by remember {
             mutableStateOf(0.dp)
-        }
+        }*/
         var descriptionMaxLines by remember {
             mutableStateOf(3)
         }
-        val state = rememberScrollState()
         var totalWidth by remember {
             mutableStateOf(0.dp)
-        }
-        var currentCid by remember {
-            mutableStateOf(0L)
-        }
-        var currentEpid by remember {
-            mutableStateOf(if (activity.idType == ID_TYPE_EPID && activity.id.isNotEmpty()) activity.id.toLong() else 0L)
-        }
-        var currentBvid by remember {
-            mutableStateOf("")
-        }
-        var currentCover by remember {
-            mutableStateOf("")
-        }
-        var currentTitle by remember {
-            mutableStateOf("")
         }
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(state = state)
+                .verticalScroll(state = activity.viewModel.scrollState)
                 .onGloballyPositioned {
                     totalWidth = with(localDensity) {
                         it.size.width.toDp()
@@ -189,8 +174,6 @@ class BangumiInfoFragment : Fragment() {
                     Box(modifier = Modifier
                         .weight(2f)
                         //.fillMaxHeight()
-
-
                         .align(Alignment.CenterVertically)
                         .clickVfx {
                             val intent =
@@ -209,46 +192,48 @@ class BangumiInfoFragment : Fragment() {
                                 .fillMaxSize()
                                 .aspectRatio(0.75f, matchHeightConstraintsFirst = true)
                         )   //番剧封面
-                        Text(
-                            text = buildAnnotatedString {
-                                withStyle(
-                                    style = SpanStyle(
-                                        color = Color(249, 157, 87, 255),
-                                        fontFamily = googleSansFamily,
-                                        fontSize = 13.sp
+                        if (bangumi?.result?.rating?.score != null) {
+                            Text(
+                                text = buildAnnotatedString {
+                                    withStyle(
+                                        style = SpanStyle(
+                                            color = Color(249, 157, 87, 255),
+                                            fontFamily = googleSansFamily,
+                                            fontSize = 10.sp
+                                        )
+                                    ) {
+                                        append(bangumi.result.rating.score.toString())
+                                    }
+                                    withStyle(
+                                        style = SpanStyle(
+                                            color = Color(249, 157, 87, 255),
+                                            fontFamily = puhuiFamily,
+                                            fontSize = 8.sp
+                                        )
+                                    ) {
+                                        append("分")
+                                    }
+                                },
+                                color = Color.White,
+                                fontSize = 7.sp,
+                                fontFamily = puhuiFamily,
+                                fontWeight = FontWeight.Medium,
+                                modifier = Modifier
+                                    .align(BottomStart)
+                                    .clip(
+                                        RoundedCornerShape(topEnd = 12.dp)
                                     )
-                                ) {
-                                    append(bangumi?.result?.rating?.score.toString())
-                                }
-                                withStyle(
-                                    style = SpanStyle(
-                                        color = Color(249, 157, 87, 255),
-                                        fontFamily = puhuiFamily,
-                                        fontSize = 10.sp
+                                    .background(
+                                        Color(67, 67, 67, 255)
                                     )
-                                ) {
-                                    append("分")
-                                }
-                            },
-                            color = Color.White,
-                            fontSize = 8.sp,
-                            fontFamily = puhuiFamily,
-                            fontWeight = FontWeight.Medium,
-                            modifier = Modifier
-                                .align(BottomStart)
-                                .clip(
-                                    RoundedCornerShape(topEnd = 12.dp)
-                                )
-                                .background(
-                                    Color(67, 67, 67, 255)
-                                )
-                                .padding(
-                                    start = 7.dp,
-                                    end = 7.dp,
-                                    top = 2.dp,
-                                    bottom = 2.dp
-                                )
-                        )
+                                    .padding(
+                                        start = 7.dp,
+                                        end = 7.dp,
+                                        top = 2.dp,
+                                        bottom = 2.dp
+                                    )
+                            )
+                        }
                     }
                     Column(
                         modifier = Modifier
@@ -260,7 +245,7 @@ class BangumiInfoFragment : Fragment() {
                             text = bangumi?.result?.title ?: "",
                             color = Color.White,
                             fontFamily = puhuiFamily,
-                            fontSize = 14.sp,
+                            fontSize = 10.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(2.dp))
@@ -268,11 +253,13 @@ class BangumiInfoFragment : Fragment() {
                             Text(
                                 text = "${bangumi?.result?.areas?.get(0)?.name}, ${bangumi?.result?.new_ep?.desc}",
                                 fontFamily = puhuiFamily,
-                                color = Color.Gray, fontSize = 12.sp
+                                color = Color.Gray, fontSize = 10.sp
                             )
                         }
                         Spacer(modifier = Modifier.height(4.dp))
-                        Row(
+
+                        //TODO 追番
+                        /*Row(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(360.dp))
                                 .background(
@@ -290,7 +277,7 @@ class BangumiInfoFragment : Fragment() {
                             Spacer(modifier = Modifier.width(2.dp))
                             Text(
                                 text = "追番",
-                                fontSize = 12.sp,
+                                fontSize = 10.sp,
                                 color = Color.White,
                                 fontFamily = puhuiFamily,
                                 modifier = Modifier.onGloballyPositioned {
@@ -300,7 +287,7 @@ class BangumiInfoFragment : Fragment() {
                                 },
                                 fontWeight = FontWeight.Medium
                             )
-                        }
+                        }*/
                     }   //番剧信息
                 }   //番剧基本信息
                 Spacer(modifier = Modifier.height(4.dp))
@@ -312,7 +299,7 @@ class BangumiInfoFragment : Fragment() {
                         .clickable {
                             descriptionMaxLines = if (descriptionMaxLines == 3) Int.MAX_VALUE else 3
                         },
-                    fontSize = 13.sp,
+                    fontSize = 9.sp,
                     color = Color.White,
                     fontFamily = puhuiFamily,
                     maxLines = descriptionMaxLines,
@@ -337,7 +324,7 @@ class BangumiInfoFragment : Fragment() {
                             Spacer(modifier = Modifier.width(2.dp))
                             Text(
                                 text = "${bangumi?.result?.stat?.views?.toShortChinese() ?: "0"}播放",
-                                fontSize = 12.sp,
+                                fontSize = 10.sp,
                                 fontFamily = puhuiFamily,
                                 color = Color.White,
                                 modifier = Modifier
@@ -362,7 +349,7 @@ class BangumiInfoFragment : Fragment() {
                             Spacer(modifier = Modifier.width(2.dp))
                             Text(
                                 text = "${bangumi?.result?.stat?.favorites?.toShortChinese() ?: "0"}追番",
-                                fontSize = 12.sp,
+                                fontSize = 10.sp,
                                 fontFamily = puhuiFamily,
                                 color = Color.White,
                                 modifier = Modifier
@@ -387,7 +374,7 @@ class BangumiInfoFragment : Fragment() {
                             Spacer(modifier = Modifier.width(2.dp))
                             Text(
                                 text = "${bangumi?.result?.stat?.danmakus?.toShortChinese() ?: "0"}弹幕",
-                                fontSize = 12.sp,
+                                fontSize = 10.sp,
                                 fontFamily = puhuiFamily,
                                 color = Color.White,
                                 modifier = Modifier
@@ -412,7 +399,7 @@ class BangumiInfoFragment : Fragment() {
                             Spacer(modifier = Modifier.width(2.dp))
                             Text(
                                 text = bangumi?.result?.episodes?.get(0)?.bvid ?: "",
-                                fontSize = 12.sp,
+                                fontSize = 10.sp,
                                 fontFamily = puhuiFamily,
                                 color = Color.White,
                                 modifier = Modifier
@@ -423,110 +410,6 @@ class BangumiInfoFragment : Fragment() {
                             )
                         }
                     } else {
-                        //TODO 调整下
-                        /*Row(modifier = Modifier.fillMaxWidth()) {
-                            Row {
-                                var textHeight by remember {
-                                    mutableStateOf(0.dp)
-                                }
-                                Icon(
-                                    imageVector = Icons.Outlined.PlayCircle,
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .alpha(0.6f)
-                                        .size(textHeight), tint = Color.White
-                                )
-                                Spacer(modifier = Modifier.width(2.dp))
-                                Text(
-                                    text = "${bangumi?.result?.stat?.views?.toShortChinese() ?: "0"}播放",
-                                    fontSize = 12.sp,
-                                    fontFamily = puhuiFamily,
-                                    color = Color.White,
-                                    modifier = Modifier
-                                        .alpha(0.6f)
-                                        .onGloballyPositioned {
-                                            textHeight = with(localDensity) { it.size.height.toDp() }
-                                        }
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Row {
-                                var textHeight by remember {
-                                    mutableStateOf(0.dp)
-                                }
-                                Icon(
-                                    imageVector = Icons.Outlined.CheckCircle,
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .alpha(0.6f)
-                                        .size(textHeight), tint = Color.White
-                                )
-                                Spacer(modifier = Modifier.width(2.dp))
-                                Text(
-                                    text = "${bangumi?.result?.stat?.favorites?.toShortChinese() ?: "0"}追番",
-                                    fontSize = 12.sp,
-                                    fontFamily = puhuiFamily,
-                                    color = Color.White,
-                                    modifier = Modifier
-                                        .alpha(0.6f)
-                                        .onGloballyPositioned {
-                                            textHeight = with(localDensity) { it.size.height.toDp() }
-                                        }
-                                )
-                            }
-                        }
-                        Spacer(modifier = Modifier.height(2.dp))
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            Row {
-                                var textHeight by remember {
-                                    mutableStateOf(0.dp)
-                                }
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_danmaku),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .alpha(0.6f)
-                                        .size(textHeight), tint = Color.White
-                                )
-                                Spacer(modifier = Modifier.width(2.dp))
-                                Text(
-                                    text = "${bangumi?.result?.stat?.danmakus?.toShortChinese() ?: "0"}弹幕",
-                                    fontSize = 12.sp,
-                                    fontFamily = puhuiFamily,
-                                    color = Color.White,
-                                    modifier = Modifier
-                                        .alpha(0.6f)
-                                        .onGloballyPositioned {
-                                            textHeight = with(localDensity) { it.size.height.toDp() }
-                                        }
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Row {
-                                var textHeight by remember {
-                                    mutableStateOf(0.dp)
-                                }
-                                Icon(
-                                    imageVector = Icons.Outlined.Movie,
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .alpha(0.6f)
-                                        .size(textHeight), tint = Color.White
-                                )
-                                Spacer(modifier = Modifier.width(2.dp))
-                                Text(
-                                    text = bangumi?.result?.episodes?.get(0)?.bvid ?: "",
-                                    fontSize = 12.sp,
-                                    fontFamily = puhuiFamily,
-                                    color = Color.White,
-                                    modifier = Modifier
-                                        .alpha(0.6f)
-                                        .onGloballyPositioned {
-                                            textHeight = with(localDensity) { it.size.height.toDp() }
-                                        }
-                                )
-                            }
-                        }*/
                         Row {
                             var textHeight by remember {
                                 mutableStateOf(0.dp)
@@ -541,7 +424,7 @@ class BangumiInfoFragment : Fragment() {
                             Spacer(modifier = Modifier.width(2.dp))
                             Text(
                                 text = "${bangumi?.result?.stat?.views?.toShortChinese() ?: "0"}播放",
-                                fontSize = 12.sp,
+                                fontSize = 10.sp,
                                 fontFamily = puhuiFamily,
                                 color = Color.White,
                                 modifier = Modifier
@@ -566,7 +449,7 @@ class BangumiInfoFragment : Fragment() {
                             Spacer(modifier = Modifier.width(2.dp))
                             Text(
                                 text = "${bangumi?.result?.stat?.favorites?.toShortChinese() ?: "0"}追番",
-                                fontSize = 12.sp,
+                                fontSize = 10.sp,
                                 fontFamily = puhuiFamily,
                                 color = Color.White,
                                 modifier = Modifier
@@ -591,7 +474,7 @@ class BangumiInfoFragment : Fragment() {
                             Spacer(modifier = Modifier.width(2.dp))
                             Text(
                                 text = "${bangumi?.result?.stat?.danmakus?.toShortChinese() ?: "0"}弹幕",
-                                fontSize = 12.sp,
+                                fontSize = 10.sp,
                                 fontFamily = puhuiFamily,
                                 color = Color.White,
                                 modifier = Modifier
@@ -618,7 +501,7 @@ class BangumiInfoFragment : Fragment() {
                                 text = if (bangumi?.result?.episodes.isNullOrEmpty()) "" else bangumi?.result?.episodes?.get(
                                     0
                                 )?.bvid ?: "",
-                                fontSize = 12.sp,
+                                fontSize = 10.sp,
                                 fontFamily = puhuiFamily,
                                 color = Color.White,
                                 modifier = Modifier
@@ -645,7 +528,7 @@ class BangumiInfoFragment : Fragment() {
                         text = "选集(${bangumi?.result?.episodes?.size ?: 0})",
                         fontFamily = puhuiFamily,
                         fontWeight = FontWeight.Medium,
-                        fontSize = 18.sp,
+                        fontSize = 12.sp,
                         color = Color.White,
                         modifier = Modifier.onGloballyPositioned {
                             textHeight = with(localDensity) {
@@ -661,6 +544,7 @@ class BangumiInfoFragment : Fragment() {
                         modifier = Modifier.size(textHeight.times(0.6f))
                     )
                 }
+                Spacer(modifier = Modifier.height(8.dp))
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -681,28 +565,34 @@ class BangumiInfoFragment : Fragment() {
                         bangumi?.result?.episodes?.forEachIndexed { index, episode ->
                             item {
                                 val borderColor by animateColorAsState(
-                                    targetValue = if (currentCid == episode.cid) Color(
+                                    targetValue = if (activity.viewModel.currentCid == episode.cid) Color(
                                         254,
                                         103,
                                         154,
                                         112
                                     ) else Color(112, 112, 112)
                                 )
-                                val textColor by animateColorAsState(targetValue = if (currentCid == episode.cid) BilibiliPink else Color.White)
+                                val textColor by animateColorAsState(targetValue = if (activity.viewModel.currentCid == episode.cid) BilibiliPink else Color.White)
                                 Column(
                                     modifier = Modifier
                                         .requiredSizeIn(maxWidth = totalWidth.div(1.5f))
                                         .clickVfx {
-                                            currentCid =
-                                                if (currentCid == episode.cid) 0 else episode.cid
-                                            currentBvid =
-                                                if (currentBvid == episode.bvid) "" else episode.bvid
-                                            currentCover =
-                                                if (currentBvid == episode.bvid) "" else episode.cover
-                                            currentEpid =
-                                                if (currentEpid == episode.id) 0L else episode.id
-                                            currentTitle =
-                                                if (currentBvid == episode.bvid) "" else "EP${
+                                            VideoManager.uploadVideoViewingProgress(
+                                                episode.bvid,
+                                                episode.cid,
+                                                0
+                                            )
+                                            activity.viewModel.currentAid.value = episode.aid
+                                            activity.viewModel.currentCid =
+                                                if (activity.viewModel.currentCid == episode.cid) 0 else episode.cid
+                                            activity.viewModel.currentBvid =
+                                                if (activity.viewModel.currentBvid == episode.bvid) "" else episode.bvid
+                                            activity.viewModel.currentCover =
+                                                if (activity.viewModel.currentBvid == episode.bvid) "" else episode.cover
+                                            activity.viewModel.currentEpid =
+                                                if (activity.viewModel.currentEpid == episode.id) 0L else episode.id
+                                            activity.viewModel.currentTitle =
+                                                if (activity.viewModel.currentBvid == episode.bvid) "" else "EP${
                                                     index.plus(1)
                                                 } ${if (episode.long_title.isNullOrEmpty()) episode.title else episode.long_title}"
                                         }
@@ -720,14 +610,15 @@ class BangumiInfoFragment : Fragment() {
                                             text = "EP${index.plus(1)}",
                                             fontFamily = googleSansFamily,
                                             fontWeight = FontWeight.Bold,
-                                            color = textColor
+                                            color = textColor,
+                                            fontSize = 11.sp
                                         )
                                         if (!episode.badge.isNullOrEmpty() && !episode.badge_info?.bg_color.isNullOrEmpty()) {
                                             Spacer(modifier = Modifier.width(2.dp))
                                             Text(
                                                 text = episode.badge,
                                                 color = Color.White,
-                                                fontSize = 8.sp,
+                                                fontSize = 7.sp,
                                                 fontFamily = puhuiFamily,
                                                 fontWeight = FontWeight.Medium,
                                                 modifier = Modifier
@@ -761,23 +652,26 @@ class BangumiInfoFragment : Fragment() {
                                             overflow = TextOverflow.Ellipsis,
                                             modifier = Modifier
                                                 .sizeIn(minHeight = with(LocalDensity.current) {
-                                                    (13.sp * 3).toDp()
+                                                    (9.sp * 3).toDp()
                                                 })
                                                 .alpha(0.8f),
-                                            fontSize = 13.sp
+                                            fontSize = 9.sp
                                         )
                                     }
                                 }
-                                LaunchedEffect(key1 = currentEpid == episode.id, block = {
-                                    if (currentEpid == episode.id) {
-                                        currentCid = episode.cid
-                                        currentBvid = episode.bvid
-                                        currentCover = episode.cover
-                                        currentTitle = "EP${
-                                            index.plus(1)
-                                        } ${if (episode.long_title.isNullOrEmpty()) episode.title else episode.long_title}"
-                                    }
-                                })
+                                LaunchedEffect(
+                                    key1 = activity.viewModel.currentEpid == episode.id,
+                                    block = {
+                                        if (activity.viewModel.currentEpid == episode.id) {
+                                            activity.viewModel.currentAid.value = episode.aid
+                                            activity.viewModel.currentCid = episode.cid
+                                            activity.viewModel.currentBvid = episode.bvid
+                                            activity.viewModel.currentCover = episode.cover
+                                            activity.viewModel.currentTitle = "EP${
+                                                index.plus(1)
+                                            } ${if (episode.long_title.isNullOrEmpty()) episode.title else episode.long_title}"
+                                        }
+                                    })
                                 Spacer(modifier = Modifier.width(8.dp))
                             }
                         }
@@ -822,7 +716,7 @@ class BangumiInfoFragment : Fragment() {
             }
 
             bangumi?.result?.section?.forEach { section ->
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(14.dp))
                 Row(
                     modifier = Modifier
                         .padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically
@@ -834,7 +728,7 @@ class BangumiInfoFragment : Fragment() {
                         text = "${section.title}(${section.episodes.size})",
                         fontFamily = puhuiFamily,
                         fontWeight = FontWeight.Medium,
-                        fontSize = 18.sp,
+                        fontSize = 12.sp,
                         color = Color.White,
                         modifier = Modifier.onGloballyPositioned {
                             textHeight = with(localDensity) {
@@ -850,6 +744,7 @@ class BangumiInfoFragment : Fragment() {
                         modifier = Modifier.size(textHeight.times(0.6f))
                     )
                 }
+                Spacer(modifier = Modifier.height(8.dp))
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -870,37 +765,46 @@ class BangumiInfoFragment : Fragment() {
                         section.episodes.forEachIndexed { index, episode ->
                             item {
                                 val borderColor by animateColorAsState(
-                                    targetValue = if (currentCid == episode.cid) Color(
+                                    targetValue = if (activity.viewModel.currentCid == episode.cid) Color(
                                         254,
                                         103,
                                         154,
                                         112
                                     ) else Color(112, 112, 112)
                                 )
-                                val textColor by animateColorAsState(targetValue = if (currentCid == episode.cid) BilibiliPink else Color.White)
-                                LaunchedEffect(key1 = currentEpid == episode.id, block = {
-                                    if (currentEpid == episode.id) {
-                                        currentCid = episode.cid
-                                        currentBvid = episode.bvid
-                                        currentCover = episode.cover
-                                        currentTitle =
-                                            "P${index.plus(1)} ${episode.title} ${episode.long_title}"
-                                    }
-                                })
+                                val textColor by animateColorAsState(targetValue = if (activity.viewModel.currentCid == episode.cid) BilibiliPink else Color.White)
+                                LaunchedEffect(
+                                    key1 = activity.viewModel.currentEpid == episode.id,
+                                    block = {
+                                        if (activity.viewModel.currentEpid == episode.id) {
+                                            activity.viewModel.currentAid.value = episode.aid
+                                            activity.viewModel.currentCid = episode.cid
+                                            activity.viewModel.currentBvid = episode.bvid
+                                            activity.viewModel.currentCover = episode.cover
+                                            activity.viewModel.currentTitle =
+                                                "P${index.plus(1)} ${episode.title} ${episode.long_title}"
+                                        }
+                                    })
                                 Column(
                                     modifier = Modifier
                                         .requiredSizeIn(maxWidth = totalWidth.div(1.5f))
                                         .clickVfx {
-                                            currentCid =
-                                                if (currentCid == episode.cid) 0 else episode.cid
-                                            currentBvid =
-                                                if (currentBvid == episode.bvid) "" else episode.bvid
-                                            currentEpid =
-                                                if (currentEpid == episode.id) 0L else episode.id
-                                            currentCover =
-                                                if (currentBvid == episode.bvid) "" else episode.cover
-                                            currentTitle =
-                                                if (currentBvid == episode.bvid) "" else "P${
+                                            VideoManager.uploadVideoViewingProgress(
+                                                episode.bvid,
+                                                episode.cid,
+                                                0
+                                            )
+                                            activity.viewModel.currentAid.value = episode.aid
+                                            activity.viewModel.currentCid =
+                                                if (activity.viewModel.currentCid == episode.cid) 0 else episode.cid
+                                            activity.viewModel.currentBvid =
+                                                if (activity.viewModel.currentBvid == episode.bvid) "" else episode.bvid
+                                            activity.viewModel.currentEpid =
+                                                if (activity.viewModel.currentEpid == episode.id) 0L else episode.id
+                                            activity.viewModel.currentCover =
+                                                if (activity.viewModel.currentBvid == episode.bvid) "" else episode.cover
+                                            activity.viewModel.currentTitle =
+                                                if (activity.viewModel.currentBvid == episode.bvid) "" else "P${
                                                     index.plus(
                                                         1
                                                     )
@@ -920,14 +824,15 @@ class BangumiInfoFragment : Fragment() {
                                             text = "P${index.plus(1)}",
                                             fontFamily = googleSansFamily,
                                             fontWeight = FontWeight.Bold,
-                                            color = textColor
+                                            color = textColor,
+                                            fontSize = 11.sp
                                         )
                                         if (!episode.badge.isNullOrEmpty() && !episode.badge_info?.bg_color.isNullOrEmpty()) {
                                             Spacer(modifier = Modifier.width(2.dp))
                                             Text(
                                                 text = episode.badge,
                                                 color = Color.White,
-                                                fontSize = 8.sp,
+                                                fontSize = 7.sp,
                                                 fontFamily = puhuiFamily,
                                                 fontWeight = FontWeight.Medium,
                                                 modifier = Modifier
@@ -961,10 +866,10 @@ class BangumiInfoFragment : Fragment() {
                                         overflow = TextOverflow.Ellipsis,
                                         modifier = Modifier
                                             .sizeIn(minHeight = with(LocalDensity.current) {
-                                                (13.sp * 3).toDp()
+                                                (9.sp * 3).toDp()
                                             })
                                             .alpha(0.8f),
-                                        fontSize = 13.sp
+                                        fontSize = 9.sp
                                     )
 
                                 }
@@ -1041,12 +946,12 @@ class BangumiInfoFragment : Fragment() {
                             startActivity(intent)
                         }, tint = Color.White, modifier = Modifier.weight(1f)
                     ) {
-                        if (currentBvid.isNotEmpty() && currentCid != 0L) {
+                        if (activity.viewModel.currentBvid.isNotEmpty() && activity.viewModel.currentCid != 0L) {
                             SettingsManager.playVideo(
                                 context = requireContext(),
-                                bvid = currentBvid,
-                                cid = currentCid,
-                                title = currentTitle,
+                                bvid = activity.viewModel.currentBvid,
+                                cid = activity.viewModel.currentCid,
+                                title = activity.viewModel.currentTitle,
                                 progress = 0L,
                                 subtitleUrl = null
                             )
@@ -1114,14 +1019,14 @@ class BangumiInfoFragment : Fragment() {
                         modifier = Modifier.weight(1f)
                     ) {
                         if (isAdded) {
-                            if (currentEpid != 0L) {
+                            if (activity.viewModel.currentEpid != 0L) {
                                 val intent = Intent(
                                     requireActivity(),
                                     PlayOnPhoneActivity::class.java
                                 )
                                 intent.putExtra(
                                     "qrCodeUrl",
-                                    "https://www.bilibili.com/bangumi/play/ep$currentEpid"
+                                    "https://www.bilibili.com/bangumi/play/ep$activity.viewModel.currentEpid"
                                 )
                                 startActivity(intent)
                             }
@@ -1139,14 +1044,14 @@ class BangumiInfoFragment : Fragment() {
                         tint = Color.White,
                         modifier = Modifier.weight(1f)
                     ) {
-                        if (currentBvid.isNotEmpty() && currentCid != 0L && currentCover.isNotEmpty())
+                        if (activity.viewModel.currentBvid.isNotEmpty() && activity.viewModel.currentCid != 0L && activity.viewModel.currentCover.isNotEmpty())
                             ExoPlayerUtils.getInstance(requireContext())
                                 .downloadVideo(
-                                    coverUrl = currentCover,
-                                    title = currentTitle,
+                                    coverUrl = activity.viewModel.currentCover,
+                                    title = activity.viewModel.currentTitle,
                                     partName = bangumi?.result?.title ?: "",
-                                    bvid = currentBvid,
-                                    cid = currentCid,
+                                    bvid = activity.viewModel.currentBvid,
+                                    cid = activity.viewModel.currentCid,
                                     subtitleUrl = null,
                                     onTaskAdded = {}
                                 )

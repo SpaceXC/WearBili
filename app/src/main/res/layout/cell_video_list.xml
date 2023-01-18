@@ -123,7 +123,7 @@
                 android:maxLines="3"
                 android:text="标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题"
                 android:textColor="#fff"
-                android:textSize="12sp"
+                android:textSize="11sp"
                 app:layout_constraintBottom_toTopOf="@+id/listUpName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline2"

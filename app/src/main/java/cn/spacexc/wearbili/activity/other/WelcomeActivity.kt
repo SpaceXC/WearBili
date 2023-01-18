@@ -136,7 +136,7 @@ class WelcomeActivity : AppCompatActivity() {
                 text = "WearBili",
                 color = BilibiliPink,
                 fontFamily = puhuiFamily,
-                fontSize = 28.sp,
+                fontSize = 26.sp,
                 fontWeight = FontWeight.Medium
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -159,7 +159,7 @@ class WelcomeActivity : AppCompatActivity() {
                     text = "开始设置",
                     color = Color.White,
                     fontFamily = puhuiFamily,
-                    fontSize = 16.sp
+                    fontSize = 10.sp
                     //fontWeight = FontWeight.Medium
                 )
             }
@@ -168,7 +168,7 @@ class WelcomeActivity : AppCompatActivity() {
                 text = "$APP_VERSION | ${Build.DEVICE}",
                 color = Color.White,
                 fontFamily = puhuiFamily,
-                fontSize = 11.sp,
+                fontSize = 9.sp,
                 modifier = Modifier
                     .alpha(0.6f)
                     .align(Alignment.CenterHorizontally),
@@ -200,14 +200,14 @@ class WelcomeActivity : AppCompatActivity() {
                 text = "条款与隐私协议",
                 color = Color.White,
                 fontFamily = puhuiFamily,
-                fontSize = 16.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Medium
             )
             Text(
                 text = "在开始使用前，您需要阅读条款与隐私协议。",
                 color = Color.White,
                 fontFamily = puhuiFamily,
-                fontSize = 14.sp,
+                fontSize = 10.sp,
                 //fontWeight = FontWeight.Medium,
                 modifier = Modifier.alpha(0.8f)
             )
@@ -231,7 +231,7 @@ class WelcomeActivity : AppCompatActivity() {
                     text = "阅读",
                     color = Color.White,
                     fontFamily = puhuiFamily,
-                    fontSize = 16.sp
+                    fontSize = 10.sp
                     //fontWeight = FontWeight.Medium
                 )
             }
@@ -255,7 +255,7 @@ class WelcomeActivity : AppCompatActivity() {
                     text = "返回",
                     color = Color.White,
                     fontFamily = puhuiFamily,
-                    fontSize = 16.sp
+                    fontSize = 10.sp
                     //fontWeight = FontWeight.Medium
                 )
             }
@@ -279,12 +279,12 @@ class WelcomeActivity : AppCompatActivity() {
                 color = Color.White,
                 fontFamily = puhuiFamily,
                 fontWeight = FontWeight.Bold,
-                fontSize = 24.sp
+                fontSize = 20.sp
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "更新时间：2022年11月16日", color = Color.White,
-                fontFamily = puhuiFamily, modifier = Modifier.alpha(0.6f)
+                fontFamily = puhuiFamily, modifier = Modifier.alpha(0.6f), fontSize = 12.sp
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -294,7 +294,7 @@ class WelcomeActivity : AppCompatActivity() {
                         "\n三、我们接受大家的监督审查。您可以在https://github.com/XC-Qan/WearBili上查看本项目部分开源代码。您也可以在即时设计官方网站或ToDesign@Bilibili账号下查看此应用的UI设计稿件。\n" +
                         "\n四、哔哩哔哩 (゜-゜)つロ 干杯\n" +
                         "\nEnjoy～", color = Color.White,
-                fontFamily = puhuiFamily
+                fontFamily = puhuiFamily, fontSize = 12.sp
             )
             Spacer(modifier = Modifier.height(8.dp))
             Button(onClick = { pageCurrent.value = pageCurrent.value?.plus(1) }, text = "我已阅读并同意")
@@ -330,14 +330,14 @@ class WelcomeActivity : AppCompatActivity() {
                 text = "登入哔哩哔哩账号",
                 color = Color.White,
                 fontFamily = puhuiFamily,
-                fontSize = 16.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Medium
             )
             Text(
                 text = "立即登入哔哩哔哩账号\n以获得更好的体验",
                 color = Color.White,
                 fontFamily = puhuiFamily,
-                fontSize = 14.sp,
+                fontSize = 10.sp,
                 //fontWeight = FontWeight.Medium,
                 modifier = Modifier.alpha(0.8f)
             )
@@ -353,7 +353,7 @@ class WelcomeActivity : AppCompatActivity() {
                 text = "跳过",
                 color = Color.White,
                 fontFamily = puhuiFamily,
-                fontSize = 16.sp,
+                fontSize = 10.sp,
                 modifier = Modifier
                     .clickVfx {
                         pageCurrent.value = pageCurrent.value?.plus(1)
@@ -388,14 +388,14 @@ class WelcomeActivity : AppCompatActivity() {
                 text = "搞定(≧∇≦)ﾉ",
                 color = Color.White,
                 fontFamily = puhuiFamily,
-                fontSize = 16.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Medium
             )
             Text(
                 text = "立即开始使用WearBili吧",
                 color = Color.White,
                 fontFamily = puhuiFamily,
-                fontSize = 14.sp,
+                fontSize = 10.sp,
                 //fontWeight = FontWeight.Medium,
                 modifier = Modifier.alpha(0.8f)
             )
@@ -415,7 +415,7 @@ class WelcomeActivity : AppCompatActivity() {
                 text = if (UserManager.isLoggedIn()) "UID:${UserManager.getUid()}" else "未登录",
                 color = Color.White,
                 fontFamily = puhuiFamily,
-                fontSize = 14.sp,
+                fontSize = 10.sp,
                 //fontWeight = FontWeight.Medium,
                 modifier = Modifier.alpha(0.8f)
             )
@@ -451,7 +451,7 @@ class WelcomeActivity : AppCompatActivity() {
                 text = text,
                 color = Color.White,
                 fontFamily = puhuiFamily,
-                fontSize = 16.sp
+                fontSize = 10.sp
                 //fontWeight = FontWeight.Medium
             )
         }

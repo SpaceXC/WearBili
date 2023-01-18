@@ -172,7 +172,7 @@ class CoinActivity : AppCompatActivity() {
                                 text = "投${coinCount}个币",
                                 color = Color.White,
                                 fontFamily = puhuiFamily,
-                                fontSize = 16.sp
+                                fontSize = 10.sp
                             )
                         }
                     }

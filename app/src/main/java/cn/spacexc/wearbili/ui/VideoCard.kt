@@ -3,7 +3,6 @@ package cn.spacexc.wearbili.ui
 import android.content.Context
 import android.content.Intent
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -47,7 +46,6 @@ import coil.request.ImageRequest
  * 给！爷！写！注！释！
  */
 object VideoUis {
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun VideoCard(
         modifier: Modifier = Modifier,
@@ -62,7 +60,7 @@ object VideoUis {
         epid: String = "",
         ssid: String = "",
         badge: String = "",
-        tagName: String = "",
+        //tagName: String = "",
         context: Context = Application.getContext()
     ) {
         var iconHeight by remember { mutableStateOf(0.dp) }
@@ -104,11 +102,11 @@ object VideoUis {
             Column(
                 modifier = Modifier
                     .animateContentSize()
-                    .clip(RoundedCornerShape(10.dp))
+                    .clip(RoundedCornerShape(8.dp))
                     .border(
                         width = 0.1f.dp,
                         color = Color(112, 112, 112, 70),
-                        shape = RoundedCornerShape(10.dp)
+                        shape = RoundedCornerShape(8.dp)
                     )
                     .background(color = Color(36, 36, 36, 100))
                     .padding(start = 6.dp, end = 6.dp, top = 10.dp, bottom = 10.dp)
@@ -136,7 +134,7 @@ object VideoUis {
                                     .aspectRatio(1.6f, matchHeightConstraintsFirst = false)
                                     //.align(Alignment.CenterVertically)
                                     .clip(
-                                        RoundedCornerShape(8.dp)
+                                        RoundedCornerShape(6.dp)
                                     )
                                     .offset(y = (1f).dp),
                                 contentScale = ContentScale.Crop,
@@ -145,7 +143,7 @@ object VideoUis {
                                 Text(
                                     text = badge,
                                     color = Color.White,
-                                    fontSize = 8.sp,
+                                    fontSize = 7.sp,
                                     modifier = Modifier
                                         .padding(top = 4.dp, end = 4.dp)
                                         .clip(
@@ -158,6 +156,23 @@ object VideoUis {
                                         .align(Alignment.TopEnd)
                                 )
                             }
+                            /*if (tagName.isNotEmpty()) {
+                                Text(
+                                    text = tagName,
+                                    color = Color.White,
+                                    fontSize = 7.sp,
+                                    modifier = Modifier
+                                        .padding(top = 4.dp, end = 4.dp)
+                                        .clip(
+                                            RoundedCornerShape(4.dp)
+                                        )
+                                        .background(
+                                            BilibiliPink
+                                        )
+                                        .padding(vertical = 2.dp, horizontal = 4.dp)
+                                        .align(Alignment.TopEnd)
+                                )
+                            }*/
 
                         }
 
@@ -174,7 +189,7 @@ object VideoUis {
                             text = videoName,
                             fontFamily = puhuiFamily,
                             fontWeight = FontWeight.Medium,
-                            fontSize = 10.sp,
+                            fontSize = 9.sp,
                             color = Color.White,
                             maxLines = 3,
                             modifier = Modifier.align(Alignment.CenterVertically),
@@ -202,7 +217,7 @@ object VideoUis {
                             color = Color.White,
                             modifier = Modifier.alpha(0.5f),
                             fontFamily = puhuiFamily,
-                            fontSize = 7.sp,
+                            fontSize = 6.5.sp,
                             fontWeight = FontWeight.Medium,
                             maxLines = 1
                         )
@@ -229,7 +244,7 @@ object VideoUis {
                                     }
                                 },
                             fontFamily = puhuiFamily,
-                            fontSize = 7.sp,
+                            fontSize = 6.5.sp,
                             fontWeight = FontWeight.Medium,
                             maxLines = 1
                         )
@@ -253,7 +268,7 @@ object VideoUis {
     ) {
         Column(
             modifier = Modifier
-                .clip(RoundedCornerShape(10.dp))
+                .clip(RoundedCornerShape(8.dp))
                 .clickVfx {
                     Intent(
                         context,
@@ -267,7 +282,7 @@ object VideoUis {
                 .border(
                     width = 0.1f.dp,
                     color = Color(112, 112, 112, 70),
-                    shape = RoundedCornerShape(10.dp)
+                    shape = RoundedCornerShape(8.dp)
                 )
                 .background(color = Color(36, 36, 36, 100))
                 .padding(start = 6.dp, end = 6.dp, top = 10.dp, bottom = 10.dp),
@@ -284,7 +299,7 @@ object VideoUis {
                         .fillMaxSize()
                         .aspectRatio(0.75f, matchHeightConstraintsFirst = true)
                         .align(Alignment.CenterVertically)
-                        .clip(RoundedCornerShape(10.dp)), contentDescription = null
+                        .clip(RoundedCornerShape(6.dp)), contentDescription = null
                 )   //番剧封面
                 Column(
                     modifier = Modifier
@@ -296,20 +311,20 @@ object VideoUis {
                         text = bangumiName,
                         color = Color.White,
                         fontFamily = puhuiFamily,
-                        fontSize = 14.sp,
+                        fontSize = 10.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = areaInfo,
                         fontFamily = puhuiFamily,
-                        color = Color.Gray, fontSize = 12.sp
+                        color = Color.Gray, fontSize = 10.sp
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = description,
                         fontFamily = puhuiFamily,
-                        color = Color.Gray, fontSize = 12.sp,
+                        color = Color.Gray, fontSize = 10.sp,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )

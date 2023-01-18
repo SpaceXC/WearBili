@@ -27,6 +27,6 @@
             android:gravity="center"
             android:text="密码错误，请重试！"
             android:textColor="#fff"
-            android:textSize="15sp" />
+            android:textSize="9sp" />
     </LinearLayout>
 </FrameLayout>

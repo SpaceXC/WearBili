@@ -50,7 +50,7 @@
                     android:layout_marginStart="10dp"
                     android:fontFamily="@font/puhui_medium"
                     android:textColor="#fff"
-                    android:textSize="16sp"
+                    android:textSize="11sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/guideline65"
@@ -75,7 +75,7 @@
                 android:fontFamily="@font/puhui"
                 android:text="视频选集"
                 android:textColor="#fff"
-                android:textSize="18sp"
+                android:textSize="11sp"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -219,7 +219,7 @@
                 android:fontFamily="@font/puhui"
                 android:text="操作"
                 android:textColor="#fff"
-                android:textSize="18sp"
+                android:textSize="11sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/videoDesc" />
 

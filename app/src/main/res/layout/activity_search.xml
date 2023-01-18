@@ -70,14 +70,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="7dp"
-            android:drawableStart="@drawable/ic_baseline_arrow_back_ios_24"
             android:fontFamily="@font/puhui_bold"
             android:gravity="center"
             android:text="搜索"
             android:textColor="#fff"
-            android:textSize="16sp"
+            android:textSize="11sp"
             app:layout_constraintBottom_toBottomOf="@+id/timeText"
             app:layout_constraintStart_toStartOf="parent"
+            app:drawableStartCompat="@drawable/ic_baseline_arrow_back_ios_24"
             app:layout_constraintTop_toTopOf="@+id/timeText" />
 
         <TextClock
@@ -91,7 +91,7 @@
             android:format12Hour="hh:mm"
             android:format24Hour="HH:mm"
             android:textColor="#fff"
-            android:textSize="16sp"
+            android:textSize="11sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -113,6 +113,7 @@
             <EditText
                 android:id="@+id/keywordInput"
                 style="@style/Widget.AppCompat.EditText"
+                android:textSize="12sp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="7.5dp"
@@ -135,7 +136,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+                tools:ignore="HardcodedText,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
             <View
                 android:id="@+id/search"
@@ -170,7 +171,7 @@
                     android:gravity="center_vertical"
                     android:text="热门搜索"
                     android:textColor="#fff"
-                    android:textSize="16sp" />
+                    android:textSize="11sp" />
 
                 <androidx.wear.widget.WearableRecyclerView
                     android:id="@+id/hotSearchRecyclerView"
