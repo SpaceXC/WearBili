@@ -40,6 +40,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activity.other.QrCodeActivityNew"
+            android:exported="false" />
+        <activity
             android:name=".activity.comment.CommentRepliesActivity"
             android:exported="false" />
         <activity

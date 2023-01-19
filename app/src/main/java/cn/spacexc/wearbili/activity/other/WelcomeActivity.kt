@@ -117,7 +117,7 @@ class WelcomeActivity : AppCompatActivity() {
                 .padding(vertical = 16.dp, horizontal = 16.dp),
             horizontalAlignment = if (isRound()) Alignment.CenterHorizontally else Alignment.Start
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
             Image(
                 painter = painterResource(id = R.mipmap.app_icon),
                 contentDescription = null,
@@ -129,14 +129,14 @@ class WelcomeActivity : AppCompatActivity() {
                 text = "欢迎使用",
                 color = Color.White,
                 fontFamily = puhuiFamily,
-                fontSize = 20.sp,
+                fontSize = 17.sp,
                 fontWeight = FontWeight.Medium
             )
             Text(
                 text = "WearBili",
                 color = BilibiliPink,
                 fontFamily = puhuiFamily,
-                fontSize = 26.sp,
+                fontSize = 23.sp,
                 fontWeight = FontWeight.Medium
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -200,7 +200,7 @@ class WelcomeActivity : AppCompatActivity() {
                 text = "条款与隐私协议",
                 color = Color.White,
                 fontFamily = puhuiFamily,
-                fontSize = 10.sp,
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Medium
             )
             Text(
@@ -279,12 +279,12 @@ class WelcomeActivity : AppCompatActivity() {
                 color = Color.White,
                 fontFamily = puhuiFamily,
                 fontWeight = FontWeight.Bold,
-                fontSize = 20.sp
+                fontSize = 18.sp
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "更新时间：2022年11月16日", color = Color.White,
-                fontFamily = puhuiFamily, modifier = Modifier.alpha(0.6f), fontSize = 12.sp
+                fontFamily = puhuiFamily, modifier = Modifier.alpha(0.6f), fontSize = 11.sp
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -294,7 +294,7 @@ class WelcomeActivity : AppCompatActivity() {
                         "\n三、我们接受大家的监督审查。您可以在https://github.com/XC-Qan/WearBili上查看本项目部分开源代码。您也可以在即时设计官方网站或ToDesign@Bilibili账号下查看此应用的UI设计稿件。\n" +
                         "\n四、哔哩哔哩 (゜-゜)つロ 干杯\n" +
                         "\nEnjoy～", color = Color.White,
-                fontFamily = puhuiFamily, fontSize = 12.sp
+                fontFamily = puhuiFamily, fontSize = 11.sp
             )
             Spacer(modifier = Modifier.height(8.dp))
             Button(onClick = { pageCurrent.value = pageCurrent.value?.plus(1) }, text = "我已阅读并同意")
@@ -330,7 +330,7 @@ class WelcomeActivity : AppCompatActivity() {
                 text = "登入哔哩哔哩账号",
                 color = Color.White,
                 fontFamily = puhuiFamily,
-                fontSize = 10.sp,
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Medium
             )
             Text(
@@ -388,7 +388,7 @@ class WelcomeActivity : AppCompatActivity() {
                 text = "搞定(≧∇≦)ﾉ",
                 color = Color.White,
                 fontFamily = puhuiFamily,
-                fontSize = 10.sp,
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Medium
             )
             Text(

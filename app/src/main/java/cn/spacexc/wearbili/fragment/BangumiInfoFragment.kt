@@ -45,8 +45,10 @@ import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.image.PhotoViewActivity
+import cn.spacexc.wearbili.activity.other.PARAM_QRCODE_MESSAGE
+import cn.spacexc.wearbili.activity.other.PARAM_QRCODE_URL
+import cn.spacexc.wearbili.activity.other.QrCodeActivityNew
 import cn.spacexc.wearbili.activity.settings.ChooseSettingsActivity
-import cn.spacexc.wearbili.activity.video.PlayOnPhoneActivity
 import cn.spacexc.wearbili.dataclass.RoundButtonData
 import cn.spacexc.wearbili.dataclass.RoundButtonDataNew
 import cn.spacexc.wearbili.dataclass.bangumi.BangumiDetail
@@ -1022,15 +1024,17 @@ class BangumiInfoFragment : Fragment() {
                     ) {
                         if (isAdded) {
                             if (activity.viewModel.currentEpid != 0L) {
-                                val intent = Intent(
-                                    requireActivity(),
-                                    PlayOnPhoneActivity::class.java
-                                )
-                                intent.putExtra(
-                                    "qrCodeUrl",
-                                    "https://www.bilibili.com/bangumi/play/ep${activity.viewModel.currentEpid}"
-                                )
-                                startActivity(intent)
+                                startActivity(
+                                    Intent(
+                                        requireContext(),
+                                        QrCodeActivityNew::class.java
+                                    ).apply {
+                                        putExtra(
+                                            PARAM_QRCODE_URL,
+                                            "https://www.bilibili.com/bangumi/play/ep${activity.viewModel.currentEpid}"
+                                        )
+                                        putExtra(PARAM_QRCODE_MESSAGE, "手机扫描二维码\n继续观看")
+                                    })
                             }
                         }
                     }

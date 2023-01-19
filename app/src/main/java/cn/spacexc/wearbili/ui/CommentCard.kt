@@ -260,6 +260,7 @@ fun CommentCard(
     senderOfficialVerify: Int,
     senderMid: Long,
     sendTimeStamp: Long,
+    senderIpLocation: String,
     commentContent: String,
     commentLikeCount: Int,
     commentRepliesCount: Int,
@@ -313,12 +314,12 @@ fun CommentCard(
             }
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier
+                //modifier = Modifier.padding(0.dp)
             ) {
                 if (senderPendant.isEmpty()) {
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .size(avatarSizePx.times(0.9f).toInt())
+                            //.size(avatarSizePx.times(0.9f).toInt())
                             .data(senderAvatar)
                             .placeholder(R.drawable.akari).crossfade(true)
                             .build(),
@@ -327,7 +328,7 @@ fun CommentCard(
                         modifier = Modifier
                             .size(
                                 avatarBoxSize
-                                    .plus(4.dp)
+                                    //.plus(4.dp)
                                     .times(0.9f)
                             )
                             //.fillMaxWidth()
@@ -339,7 +340,7 @@ fun CommentCard(
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
                             .data(senderAvatar)
-                            .size(avatarSizePx.times(0.7f).toInt())
+                            //.size(avatarSizePx.times(0.7f).toInt())
                             .crossfade(true).placeholder(R.drawable.akari)
                             .build(),
                         contentDescription = null,
@@ -360,7 +361,7 @@ fun CommentCard(
                             //.fillMaxWidth()
                             .size(
                                 avatarBoxSize
-                                    .plus(8.dp)
+                                //.plus(8.dp)
                                 //.times(1.wf)
                             )
                             .onGloballyPositioned {
@@ -387,10 +388,10 @@ fun CommentCard(
                             .align(Alignment.BottomEnd)
                             .offset(
                                 x = if (senderPendant.isEmpty()) 0.dp else avatarBoxSize.times(
-                                    -0.23f
+                                    -0.1f
                                 ),
                                 y = if (senderPendant.isEmpty()) 0.dp else avatarBoxSize.times(
-                                    -0.23f
+                                    -0.1f
                                 )
                             )
                     )
@@ -409,12 +410,19 @@ fun CommentCard(
                     fontWeight = FontWeight.Medium,
                     maxLines = 1
                 )
-
-                Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = sendTimeStamp.toDateStr("yyyy-MM-dd"),
                     fontFamily = puhuiFamily,
-                    fontSize = 9.sp,
+                    fontSize = 8.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier.alpha(0.6f),
+                    maxLines = 1
+                )
+                Text(
+                    text = senderIpLocation,
+                    fontFamily = puhuiFamily,
+                    fontSize = 8.sp,
                     color = Color.White,
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier.alpha(0.6f),

@@ -98,7 +98,7 @@
                             android:fontFamily="@font/puhui_medium"
                             android:text="-人在看"
                             android:textColor="#fff"
-                            android:textSize="11sp"
+                            android:textSize="10sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="@+id/videoTitle"
                             app:layout_constraintTop_toBottomOf="@+id/videoTitle" />
@@ -127,7 +127,7 @@
                             android:fontFamily="@font/puhui_bold"
                             android:singleLine="true"
                             android:textColor="#fff"
-                            android:textSize="10sp"
+                            android:textSize="12sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toEndOf="@+id/back"

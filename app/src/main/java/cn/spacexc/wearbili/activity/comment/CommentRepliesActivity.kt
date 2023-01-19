@@ -88,6 +88,7 @@ class CommentRepliesActivity : AppCompatActivity() {
                                 senderOfficialVerify = comment.member?.official_verify?.type
                                     ?: -1,
                                 senderMid = comment.member?.mid ?: 0,
+                                senderIpLocation = comment.reply_control?.location ?: "",
                                 sendTimeStamp = comment.ctime.times(1000),
                                 commentContent = comment.content?.message ?: "",
                                 commentLikeCount = comment.like,
@@ -132,6 +133,7 @@ class CommentRepliesActivity : AppCompatActivity() {
                                     senderOfficialVerify = comment.member?.official_verify?.type
                                         ?: -1,
                                     senderMid = comment.member?.mid ?: 0,
+                                    senderIpLocation = comment.reply_control?.location ?: "",
                                     sendTimeStamp = comment.ctime.times(1000),
                                     commentContent = comment.content?.message ?: "",
                                     commentLikeCount = comment.like,

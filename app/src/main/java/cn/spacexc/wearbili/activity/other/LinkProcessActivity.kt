@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.getValue
@@ -50,75 +51,96 @@ class LinkProcessActivity : AppCompatActivity() {
             val loadingState by state.observeAsState()
             CirclesBackground.RegularBackgroundWithNoTitle {
                 Box(modifier = Modifier.fillMaxSize()) {
-                    when (loadingState) {
-                        0 -> {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp)
-                                    .align(Alignment.Center),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.loading_2233),
-                                    contentDescription = null
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = "玩命加载中",
-                                    color = Color.White,
-                                    fontFamily = puhuiFamily,
-                                    fontWeight = FontWeight.Medium,
-                                    textAlign = TextAlign.Center
-                                )
-                            }
-                        }
-                        2 -> {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp)
-                                    .align(Alignment.Center),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.loading_2233_error),
-                                    contentDescription = null
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = "不支持跳转, 点击获取页面二维码",
-                                    color = Color.White,
-                                    fontFamily = puhuiFamily,
-                                    fontWeight = FontWeight.Medium,
-                                    textAlign = TextAlign.Center
-                                )
-                            }
-                        }
-                        3 -> {
-                            Column(
-                                modifier = Modifier
-                                    .clickVfx {
-                                        state.value = 0
-                                        verifyUrl()
+                    Box(modifier = Modifier.align(Alignment.Center)) {
+                        Crossfade(targetState = loadingState) {
+                            when (it) {
+                                0 -> {
+                                    Column(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(16.dp)
+                                            .align(Alignment.Center),
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.loading_2233),
+                                            contentDescription = null
+                                        )
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Text(
+                                            text = "玩命加载中",
+                                            color = Color.White,
+                                            fontFamily = puhuiFamily,
+                                            fontWeight = FontWeight.Medium,
+                                            textAlign = TextAlign.Center
+                                        )
                                     }
-                                    .fillMaxWidth()
-                                    .padding(16.dp)
-                                    .align(Alignment.Center),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.loading_2233_error),
-                                    contentDescription = null
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = "加载失败了, 点击重试",
-                                    color = Color.White,
-                                    fontFamily = puhuiFamily,
-                                    fontWeight = FontWeight.Medium,
-                                    textAlign = TextAlign.Center
-                                )
+                                }
+                                2 -> {
+                                    Column(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(16.dp)
+                                            .align(Alignment.Center)
+                                            .clickVfx {
+                                                startActivity(
+                                                    Intent(
+                                                        this@LinkProcessActivity,
+                                                        QrCodeActivityNew::class.java
+                                                    ).apply {
+                                                        putExtra(
+                                                            PARAM_QRCODE_URL,
+                                                            getUrl().toString()
+                                                        )
+                                                        putExtra(
+                                                            PARAM_QRCODE_MESSAGE,
+                                                            "扫描二维码，访问\n${getUrl()}}"
+                                                        )
+                                                    })
+                                                finish()
+                                            },
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.loading_2233_error),
+                                            contentDescription = null
+                                        )
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Text(
+                                            text = "不支持跳转, 点击获取页面二维码",
+                                            color = Color.White,
+                                            fontFamily = puhuiFamily,
+                                            fontWeight = FontWeight.Medium,
+                                            textAlign = TextAlign.Center
+                                        )
+                                    }
+                                }
+                                3 -> {
+                                    Column(
+                                        modifier = Modifier
+                                            .clickVfx {
+                                                state.value = 0
+                                                verifyUrl()
+                                            }
+                                            .fillMaxWidth()
+                                            .padding(16.dp)
+                                            .align(Alignment.Center),
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.loading_2233_error),
+                                            contentDescription = null
+                                        )
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Text(
+                                            text = "加载失败了, 点击重试",
+                                            color = Color.White,
+                                            fontFamily = puhuiFamily,
+                                            fontWeight = FontWeight.Medium,
+                                            textAlign = TextAlign.Center
+                                        )
+                                    }
+                                }
                             }
                         }
                     }

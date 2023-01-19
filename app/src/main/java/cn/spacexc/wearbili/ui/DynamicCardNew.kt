@@ -363,7 +363,7 @@ fun DynamicContent(
                 text = item.modules.moduleAuthor.name,
                 fontFamily = puhuiFamily,
                 fontSize = 9.sp,
-                color = parseColor(item.modules.moduleAuthor.vip.nicknameColor.ifNullOrEmpty { "#FFFFFF" }),
+                color = parseColor(item.modules.moduleAuthor.vip?.nicknameColor.ifNullOrEmpty { "#FFFFFF" }),
                 fontWeight = FontWeight.Medium,
                 maxLines = 1
             )
@@ -707,7 +707,7 @@ fun ForwardShareDynamicCardNew(
 ) {
     Column(
         modifier = Modifier
-            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .padding(vertical = 4.dp)
             .clickVfx {
                 if (supportedDynamicTypes.contains(item.type)) {
                     val intent = Intent(context, NewDynamicDetailActivity::class.java)

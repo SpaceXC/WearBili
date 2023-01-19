@@ -27,9 +27,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        /*val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
-        val navController = navHostFragment.navController*/
         binding.viewpager.adapter = MainViewPagerAdapter(this)
         binding.viewpager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
@@ -48,7 +45,7 @@ class MainActivity : AppCompatActivity() {
             //intent.putExtra("this", this)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
-            overridePendingTransition(R.anim.activity_in_y, R.anim.activity_out_y)
+            overridePendingTransition(R.anim.activity_in_y, R.anim.activity_fade_out)
         }
 
         currentPageId.observe(this) {

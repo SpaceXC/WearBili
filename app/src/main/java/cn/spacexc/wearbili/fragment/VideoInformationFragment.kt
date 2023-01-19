@@ -52,6 +52,9 @@ import cn.spacexc.wearbili.Application
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
 import cn.spacexc.wearbili.activity.image.PhotoViewActivity
+import cn.spacexc.wearbili.activity.other.PARAM_QRCODE_MESSAGE
+import cn.spacexc.wearbili.activity.other.PARAM_QRCODE_URL
+import cn.spacexc.wearbili.activity.other.QrCodeActivityNew
 import cn.spacexc.wearbili.activity.settings.ChooseSettingsActivity
 import cn.spacexc.wearbili.activity.user.SpaceProfileActivity
 import cn.spacexc.wearbili.activity.video.*
@@ -688,15 +691,17 @@ class VideoInformationFragment : Fragment() {
                                         modifier = Modifier.weight(1f)
                                     ) {
                                         if (isAdded) {
-                                            val intent = Intent(
-                                                requireActivity(),
-                                                PlayOnPhoneActivity::class.java
-                                            )
-                                            intent.putExtra(
-                                                "qrCodeUrl",
-                                                "https://www.bilibili.com/video/${activity.videoId}"
-                                            )
-                                            startActivity(intent)
+                                            startActivity(
+                                                Intent(
+                                                    requireContext(),
+                                                    QrCodeActivityNew::class.java
+                                                ).apply {
+                                                    putExtra(
+                                                        PARAM_QRCODE_URL,
+                                                        "https://www.bilibili.com/video/${activity.videoId}"
+                                                    )
+                                                    putExtra(PARAM_QRCODE_MESSAGE, "手机扫描二维码\n继续观看")
+                                                })
                                         }
                                     }
                                 }

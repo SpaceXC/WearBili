@@ -45,7 +45,7 @@ class HistoryActivity : AppCompatActivity() {
                     if (SettingsManager.hasScrollVfx()) {
                         ScalingLazyColumn(modifier = Modifier.fillMaxSize()) {
                             historyList?.forEach {
-                                item {
+                                item(key = it.kid) {
                                     VideoCard(
                                         videoName = it.title,
                                         views = if (it.progress != -1) "看到 ${it.progress.secondToTime()}" else "已看完",

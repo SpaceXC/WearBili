@@ -268,7 +268,8 @@ object CirclesBackground {
                                         text = "加载失败了, 点击重试",
                                         color = Color.White,
                                         fontFamily = puhuiFamily,
-                                        fontWeight = FontWeight.Medium
+                                        fontWeight = FontWeight.Medium,
+                                        fontSize = 12.sp
                                     )
                                 }
                             }
@@ -289,7 +290,8 @@ object CirclesBackground {
                                     text = "玩命加载中",
                                     color = Color.White,
                                     fontFamily = puhuiFamily,
-                                    fontWeight = FontWeight.Medium
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 12.sp
                                 )
                             }
                         }

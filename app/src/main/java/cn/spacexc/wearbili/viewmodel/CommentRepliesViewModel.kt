@@ -45,6 +45,7 @@ class CommentRepliesViewModel : ViewModel() {
             MainScope().launch {
                 isLoading.value = false
                 ToastUtils.showText("网络异常")
+                isError.value = true
             }
         }, onSuccess = {
             MainScope().launch {

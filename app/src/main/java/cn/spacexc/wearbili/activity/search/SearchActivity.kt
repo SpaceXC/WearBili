@@ -131,7 +131,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun searchKeyword() {
         val text = binding.keywordInput.text
-        if (text.contains("自杀")) {
+        if (text.contains("自杀") || text.contains("sensitive")) {
             val intent = Intent(this, SpecialSearchActivity::class.java)
             startActivity(intent)
             return
@@ -206,60 +206,4 @@ class SearchActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
-
-//    fun searchKeyword(keyword : String, isNew: Boolean) {
-//        VideoManager.searchVideo(keyword, currentPage, object : Callback {
-//            override fun onFailure(call: Call, e: IOException) {
-//                mThreadPool.execute {
-//                    requireActivity().runOnUiThread {
-//                        ToastUtils.makeText(requireActivity(), "搜索失败了", Toast.LENGTH_SHORT)
-//                            .show()
-//                    }
-//                }
-//            }
-//
-//            override fun onResponse(call: Call, response: Response) {
-//                val result = Gson().fromJson(response.body?.string(), VideoSearch::class.java)
-//                mThreadPool.execute {
-//                    requireActivity().runOnUiThread {
-//                        //binding.pageName.text = "搜索结果 (${result.data.numResults})"
-//                        if (result.code == 0) {
-//                            if (currentPage <= 50) {
-//                                if(isNew) {
-//                                    adapter.submitList(result.data.result)
-//                                }
-//                                else{
-//                                    if(result.data.result != null){
-//                                        adapter.submitList(adapter.currentList + result.data.result!!)
-//                                    }
-//
-//                                }
-//
-//                                binding.swipeRefreshLayout.isRefreshing = false
-//                                currentPage++
-//
-//                            } else {
-//                                binding.swipeRefreshLayout.isRefreshing = false
-//                                ToastUtils.makeText(
-//                                    requireActivity(),
-//                                    "搜索到底了",
-//                                    Toast.LENGTH_SHORT
-//                                ).show()
-//
-//                            }
-//                        } else {
-//                            binding.swipeRefreshLayout.isRefreshing = false
-//                            ToastUtils.makeText(requireActivity(), "搜索失败了", Toast.LENGTH_SHORT)
-//                                .show()
-//                        }
-//                    }
-//                }
-//
-//            }
-//
-//
-//        })
-//    }
-
-
 }

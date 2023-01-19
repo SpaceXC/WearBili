@@ -421,7 +421,9 @@ data class CommentContentData(
         var up_reply: Boolean,
         var sub_reply_entry_text: String,
         var sub_reply_title_text: String,
-        var time_desc: String
+        var time_desc: String,
+        var max_line: Int,
+        var location: String?,
     )
 
     data class Replies(

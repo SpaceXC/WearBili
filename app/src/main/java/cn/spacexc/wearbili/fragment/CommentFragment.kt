@@ -206,11 +206,11 @@ class CommentFragment(private val isBangumiComment: Boolean = false) : Fragment(
                                                     .border(
                                                         width = (0.1).dp,
                                                         color = Color(112, 112, 112, 112),
-                                                        shape = RoundedCornerShape(10.dp)
+                                                        shape = RoundedCornerShape(8.dp)
                                                     )
-                                                    .clip(RoundedCornerShape(10.dp))
+                                                    .clip(RoundedCornerShape(8.dp))
                                                     .background(Color(36, 36, 36, 120))
-                                                    .padding(14.dp)
+                                                    .padding(12.dp)
 
                                             ) {
                                                 Row(modifier = Modifier.align(Alignment.Center)) {
@@ -225,7 +225,7 @@ class CommentFragment(private val isBangumiComment: Boolean = false) : Fragment(
                                                         text = "写一条友善的评论"/*(。・ω・。)*/,
                                                         color = Color.White,
                                                         fontFamily = puhuiFamily,
-                                                        fontSize = 10.sp,
+                                                        fontSize = 9.sp,
                                                         modifier = Modifier
                                                             /*.align(
                                                                 Alignment.Center
@@ -250,6 +250,8 @@ class CommentFragment(private val isBangumiComment: Boolean = false) : Fragment(
                                                     senderOfficialVerify = comment.member?.official_verify?.type
                                                         ?: -1,
                                                     senderMid = comment.member?.mid ?: 0,
+                                                    senderIpLocation = comment.reply_control?.location
+                                                        ?: "",
                                                     sendTimeStamp = comment.ctime.times(1000),
                                                     commentContent = comment.content?.message ?: "",
                                                     commentLikeCount = comment.like,
@@ -290,6 +292,8 @@ class CommentFragment(private val isBangumiComment: Boolean = false) : Fragment(
                                                     senderOfficialVerify = comment.member?.official_verify?.type
                                                         ?: -1,
                                                     senderMid = comment.member?.mid ?: 0,
+                                                    senderIpLocation = comment.reply_control?.location
+                                                        ?: "",
                                                     sendTimeStamp = comment.ctime.times(1000),
                                                     commentContent = comment.content?.message ?: "",
                                                     commentLikeCount = comment.like,

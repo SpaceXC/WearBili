@@ -35,5 +35,5 @@ data class ModuleAuthor(
     @SerializedName("type")
     val type: String,
     @SerializedName("vip")
-    val vip: Vip
+    val vip: Vip?
 )

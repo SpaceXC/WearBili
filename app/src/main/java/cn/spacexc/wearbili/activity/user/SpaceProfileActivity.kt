@@ -135,10 +135,12 @@ class SpaceProfileActivity : AppCompatActivity() {
                                     .fillMaxWidth()
                                     .height(0.dp)
                             )   //不！要！删！掉！这个是用来做伸缩topbar的！！很重要！
+
+
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .parallax(0.5f)
+                                    .parallax(0f)
                             ) {
                                 Row(
                                     modifier = Modifier
@@ -167,7 +169,7 @@ class SpaceProfileActivity : AppCompatActivity() {
                                                 contentDescription = null,
                                                 modifier = Modifier
                                                     .fillMaxWidth()
-                                                    .padding(6.dp)
+                                                    .padding(8.dp)
                                                     .clip(CircleShape)
                                                     .aspectRatio(1f)
 
@@ -235,7 +237,7 @@ class SpaceProfileActivity : AppCompatActivity() {
                                         Text(
                                             text = user?.data?.name ?: "加载中",
                                             fontFamily = puhuiFamily,
-                                            fontSize = 10.sp,
+                                            fontSize = 12.sp,
                                             fontWeight = FontWeight.Bold,
                                             color = parseColor(user?.data?.vip?.nickname_color.ifNullOrEmpty { "#FFFFFF" })
                                             //modifier = Modifier.scale(collapsingState.toolbarState.progress)
@@ -275,8 +277,8 @@ class SpaceProfileActivity : AppCompatActivity() {
 
                                                 .background(followButtonColor)
                                                 .padding(
-                                                    start = 10.dp,
-                                                    end = 13.dp,
+                                                    start = 8.dp,
+                                                    end = 11.dp,
                                                     top = 3.dp,
                                                     bottom = 5.dp
                                                 )
@@ -306,7 +308,7 @@ class SpaceProfileActivity : AppCompatActivity() {
                                                 }
                                             }
 
-                                            Spacer(modifier = Modifier.width(4.dp))
+                                            Spacer(modifier = Modifier.width(2.dp))
                                             Text(
                                                 text = "${if (isSubscribed == true) "已关注" else "关注"}  ${(fans ?: 0).toShortChinese()}",
                                                 color = Color.White,
@@ -322,12 +324,12 @@ class SpaceProfileActivity : AppCompatActivity() {
                                                         buttonTextHeight = with(localDensity) {
                                                             it.size.height.toDp()
                                                         }
-                                                    }, fontSize = 8.sp
+                                                    }, fontSize = 9.sp
                                             )
                                         }
                                     }
                                 }
-                                Spacer(modifier = Modifier.height(6.dp))
+                                Spacer(modifier = Modifier.height(2.dp))
                             }
                         }
                     ) {

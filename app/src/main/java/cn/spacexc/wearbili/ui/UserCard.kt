@@ -163,8 +163,8 @@ fun UserCard(
                                 .size(avatarBoxSize.times(0.2f))
                                 .align(Alignment.BottomEnd)
                                 .offset(
-                                    x = avatarBoxSize.times(-0.18f),
-                                    y = avatarBoxSize.times(-0.18f)
+                                    x = avatarBoxSize.times(-0.22f),
+                                    y = avatarBoxSize.times(-0.22f)
                                 )
                         )
                     }
