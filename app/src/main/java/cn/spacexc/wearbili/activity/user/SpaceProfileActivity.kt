@@ -210,8 +210,8 @@ class SpaceProfileActivity : AppCompatActivity() {
                                             Image(
                                                 painter = painterResource(
                                                     id = when (user?.data?.official?.type) {
-                                                        OFFICIAL_TYPE_ORG -> R.drawable.flash_blue
-                                                        OFFICIAL_TYPE_PERSONAL -> R.drawable.flash_yellow
+                                                        OFFICIAL_TYPE_ORG -> R.drawable.flash_business
+                                                        OFFICIAL_TYPE_PERSONAL -> R.drawable.flash_personal
                                                         else -> 0
                                                     }
                                                 ),
@@ -220,8 +220,8 @@ class SpaceProfileActivity : AppCompatActivity() {
                                                     .size(avatarBoxSize.times(0.25f))
                                                     .align(Alignment.BottomEnd)
                                                     .offset(
-                                                        x = avatarBoxSize.times(-0.1f),
-                                                        y = avatarBoxSize.times(-0.1f)
+                                                        x = (-8).dp,
+                                                        y = (-8).dp
                                                     )
                                             )
                                         }

@@ -273,15 +273,16 @@ class VideoInformationFragment : Fragment() {
                                                     Image(
                                                         painter = painterResource(
                                                             id = when (staff.official.type) {
-                                                                OFFICIAL_TYPE_ORG -> R.drawable.flash_blue
-                                                                OFFICIAL_TYPE_PERSONAL -> R.drawable.flash_yellow
+                                                                OFFICIAL_TYPE_ORG -> R.drawable.flash_business
+                                                                OFFICIAL_TYPE_PERSONAL -> R.drawable.flash_personal
                                                                 else -> 0
                                                             }
                                                         ),
                                                         contentDescription = null,
                                                         modifier = Modifier
-                                                            .size(avatarHeight.times(0.25f))
+                                                            .size(avatarHeight.times(0.35f))
                                                             .align(Alignment.BottomEnd)
+                                                            .offset(x = (-0.7).dp, y = (-0.7).dp)
                                                     )
                                                 }
                                             }

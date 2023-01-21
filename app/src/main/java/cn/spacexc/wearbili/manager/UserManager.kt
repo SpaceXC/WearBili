@@ -76,7 +76,7 @@ object UserManager {
     }
 
     fun getWatchLater(callback: Callback) {
-        NetworkUtils.getUrl("http://api.bilibili.com/x/v2/history/toview", callback)
+        NetworkUtils.getUrl("http://api.bilibili.com/x/v2/history/toview?jsonp=jsonp", callback)
     }
 
     fun deleteVideoFromWatchLater(aid: Long, callback: Callback): Boolean {

@@ -334,8 +334,8 @@ fun DynamicContent(
                 Image(
                     painter = painterResource(
                         id = when (item.modules.moduleAuthor.officialVerify.type) {
-                            OFFICIAL_TYPE_ORG -> R.drawable.flash_blue
-                            OFFICIAL_TYPE_PERSONAL -> R.drawable.flash_yellow
+                            OFFICIAL_TYPE_ORG -> R.drawable.flash_business
+                            OFFICIAL_TYPE_PERSONAL -> R.drawable.flash_personal
                             else -> 0
                         }
                     ),

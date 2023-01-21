@@ -17,7 +17,7 @@ import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.settings.SettingsActivity
 import cn.spacexc.wearbili.activity.user.*
 import cn.spacexc.wearbili.activity.video.VideoCacheActivity
-import cn.spacexc.wearbili.activity.video.WatchLaterActivity
+import cn.spacexc.wearbili.activity.video.WatchLaterActivityNew
 import cn.spacexc.wearbili.adapter.ButtonsAdapter
 import cn.spacexc.wearbili.databinding.FragmentProfileBinding
 import cn.spacexc.wearbili.dataclass.RoundButtonData
@@ -99,7 +99,7 @@ class ProfileFragment : Fragment() {
                         "稍后再看" -> {
                             if (isAdded) {
                                 val intent =
-                                    Intent(requireContext(), WatchLaterActivity::class.java)
+                                    Intent(requireContext(), WatchLaterActivityNew::class.java)
                                 startActivity(intent)
                             }
                         }

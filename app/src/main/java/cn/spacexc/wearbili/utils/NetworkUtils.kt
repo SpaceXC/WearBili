@@ -59,6 +59,7 @@ object NetworkUtils {
             .get()
             .header("User-Agent", USER_AGENT)
             .header("x-bili-aurora-zone", "sh001")
+            .header("Referer", "https://www.bilibili.com/")
             .header("x-bili-aurora-eid", "UlMFQVcABlAH")
             .build()
         clientWithoutRedirect.newCall(request).enqueue(callback)
@@ -71,6 +72,7 @@ object NetworkUtils {
             .header("User-Agent", USER_AGENT)
             .header("x-bili-aurora-zone", "sh001")
             .header("x-bili-aurora-eid", "UlMFQVcABlAH")
+            .header("Referer", "https://www.bilibili.com/")
             .build()
         client.newCall(request).enqueue(callback)
     }
@@ -98,6 +100,7 @@ object NetworkUtils {
             .header("User-Agent", USER_AGENT)
             .header("x-bili-aurora-zone", "sh001")
             .header("x-bili-aurora-eid", "UlMFQVcABlAH")
+            .header("Referer", "https://www.bilibili.com/")
             .build()
         return client.newCall(request).execute()
     }
@@ -109,6 +112,7 @@ object NetworkUtils {
             .header("User-Agent", USER_AGENT)
             .header("x-bili-aurora-zone", "sh001")
             .header("x-bili-aurora-eid", "UlMFQVcABlAH")
+            .header("Referer", "https://www.bilibili.com/")
             .build()
         client.newCall(request).enqueue(callback)
 
@@ -121,6 +125,7 @@ object NetworkUtils {
             .header("User-Agent", USER_AGENT)
             .header("x-bili-aurora-zone", "sh001")
             .header("x-bili-aurora-eid", "UlMFQVcABlAH")
+            .header("Referer", "https://www.bilibili.com/")
             .build()
         client.newCall(request).enqueue(callback)
     }

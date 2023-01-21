@@ -377,8 +377,8 @@ fun CommentCard(
                     Image(
                         painter = painterResource(
                             id = when (senderOfficialVerify) {
-                                OFFICIAL_TYPE_ORG -> R.drawable.flash_blue
-                                OFFICIAL_TYPE_PERSONAL -> R.drawable.flash_yellow
+                                OFFICIAL_TYPE_ORG -> R.drawable.flash_business
+                                OFFICIAL_TYPE_PERSONAL -> R.drawable.flash_personal
                                 else -> 0
                             }
                         ),
