@@ -26,6 +26,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.video.VideoPlayerV2"
+            android:exported="true" />
+        <activity
             android:name=".activity.video.WatchLaterActivityNew"
             android:exported="false" />
         <activity

@@ -140,29 +140,7 @@ class WelcomeActivity : AppCompatActivity() {
                 fontWeight = FontWeight.Medium
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Column(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(10.dp))
-                    /*.border(
-                        width = 0.1f.dp,
-                        color = Color(112, 112, 112, 70),
-                        shape = RoundedCornerShape(10.dp)
-                    )*/
-                    .background(color = Color(36, 36, 36, 128))
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp, horizontal = 6.dp)
-                    .clickVfx { pageCurrent.value = pageCurrent.value?.plus(1) },
-                horizontalAlignment = Alignment.CenterHorizontally
-                //.padding(start = 6.dp, end = 6.dp, top = 10.dp, bottom = 10.dp),
-            ) {
-                Text(
-                    text = "开始设置",
-                    color = Color.White,
-                    fontFamily = puhuiFamily,
-                    fontSize = 10.sp
-                    //fontWeight = FontWeight.Medium
-                )
-            }
+            Button(onClick = { pageCurrent.value = pageCurrent.value?.plus(1) }, text = "开始设置")
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = "$APP_VERSION | ${Build.DEVICE}",
@@ -212,53 +190,9 @@ class WelcomeActivity : AppCompatActivity() {
                 modifier = Modifier.alpha(0.8f)
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Column(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(10.dp))
-                    /*.border(
-                        width = 0.1f.dp,
-                        color = Color(112, 112, 112, 70),
-                        shape = RoundedCornerShape(10.dp)
-                    )*/
-                    .background(color = Color(36, 36, 36, 128))
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp, horizontal = 6.dp)
-                    .clickVfx { pageCurrent.value = pageCurrent.value?.plus(1) },
-                horizontalAlignment = Alignment.CenterHorizontally
-                //.padding(start = 6.dp, end = 6.dp, top = 10.dp, bottom = 10.dp),
-            ) {
-                Text(
-                    text = "阅读",
-                    color = Color.White,
-                    fontFamily = puhuiFamily,
-                    fontSize = 10.sp
-                    //fontWeight = FontWeight.Medium
-                )
-            }
+            Button(onClick = { pageCurrent.value = pageCurrent.value?.plus(1) }, text = "阅读")
             Spacer(modifier = Modifier.height(4.dp))
-            Column(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(10.dp))
-                    /*.border(
-                        width = 0.1f.dp,
-                        color = Color(112, 112, 112, 70),
-                        shape = RoundedCornerShape(10.dp)
-                    )*/
-                    .background(color = Color(36, 36, 36, 128))
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp, horizontal = 6.dp)
-                    .clickVfx { pageCurrent.value = pageCurrent.value?.minus(1) },
-                horizontalAlignment = Alignment.CenterHorizontally
-                //.padding(start = 6.dp, end = 6.dp, top = 10.dp, bottom = 10.dp),
-            ) {
-                Text(
-                    text = "返回",
-                    color = Color.White,
-                    fontFamily = puhuiFamily,
-                    fontSize = 10.sp
-                    //fontWeight = FontWeight.Medium
-                )
-            }
+            Button(onClick = { pageCurrent.value = pageCurrent.value?.minus(1) }, text = "返回")
             if (isRound()) Spacer(modifier = Modifier.height(40.dp))
         }
     }

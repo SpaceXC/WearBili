@@ -57,7 +57,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 import java.util.zip.Inflater
-
+@Deprecated(message = "求求了，快点让我过时吧uvu", replaceWith = ReplaceWith(expression = ""))
 class VideoPlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityVideoPlayerBinding
 

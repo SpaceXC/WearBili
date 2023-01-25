@@ -181,9 +181,6 @@ object VideoManager {
         )
     }
 
-    /**
-     * 貌似暂时没啥用，不过一定要用，不然传递太多东西可能会导致性能问题（或许？
-     */
     fun getVideoParts(bvid: String?, callback: Callback) {
         NetworkUtils.getUrl(
             "https://api.bilibili.com/x/player/pagelist?bvid=$bvid",

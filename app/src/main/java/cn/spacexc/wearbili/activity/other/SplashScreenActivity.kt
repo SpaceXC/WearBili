@@ -27,6 +27,7 @@ import cn.spacexc.wearbili.ui.ModifierExtends.clickVfx
 import cn.spacexc.wearbili.ui.puhuiFamily
 import cn.spacexc.wearbili.utils.NetworkUtils
 import cn.spacexc.wearbili.utils.SharedPreferencesUtils
+import cn.spacexc.wearbili.utils.ToastUtils
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import okhttp3.Call
@@ -42,6 +43,7 @@ class SplashScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         //setContentView(R.layout.activity_splash_screen)
         initApp()
+        var clickCount = 0
         setContent {
             val errorState by isError
             CirclesBackground.RegularBackgroundWithNoTitle {
@@ -94,7 +96,23 @@ class SplashScreenActivity : AppCompatActivity() {
                                 modifier = Modifier
                                     .weight(2f)
                                     .fillMaxWidth()
-                                    .aspectRatio(1f),
+                                    .aspectRatio(1f)
+                                    .clickVfx {
+                                        clickCount++
+                                        if (clickCount == 1) ToastUtils.showText("再次点击即可快速进入")
+                                        else {
+                                            val intent = Intent(
+                                                this@SplashScreenActivity,
+                                                MainActivity::class.java
+                                            )
+                                            startActivity(intent)
+                                            overridePendingTransition(
+                                                R.anim.activity_fade_in,
+                                                R.anim.activity_fade_out
+                                            )
+                                            finish()
+                                        }
+                                    },
                                 contentScale = ContentScale.FillBounds
                             )
                             Spacer(modifier = Modifier.weight(1f))

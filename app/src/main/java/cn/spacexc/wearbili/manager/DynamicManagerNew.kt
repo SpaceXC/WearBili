@@ -62,7 +62,11 @@ class DynamicManagerNew {
                             recommendDynamicOffset = result.data.offset
                             recommendDynamicPage++
                         } else {
-                            val exception = IllegalDataReturnException(result.message, result.code)
+                            val exception = IllegalDataReturnException(
+                                "https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/all?timezone_offset=-480&type=all${if (recommendDynamicOffset.isEmpty()) "" else "&offset=$recommendDynamicOffset"}&page=$recommendDynamicPage",
+                                result.message,
+                                result.code
+                            )
                             exception.printStackTrace()
                             onFailed(exception)
                         }
@@ -99,7 +103,11 @@ class DynamicManagerNew {
                             spaceDynamicOffset = result.data.offset
                             spaceDynamicPage++
                         } else {
-                            val exception = IllegalDataReturnException(result.message, result.code)
+                            val exception = IllegalDataReturnException(
+                                "https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space?timezone_offset=-480&host_mid=$mid&type=all${if (recommendDynamicOffset.isEmpty()) "" else "&offset=$recommendDynamicOffset"}&page=$recommendDynamicPage",
+                                result.message,
+                                result.code
+                            )
                             exception.printStackTrace()
                             onFailed(exception)
                         }
@@ -139,7 +147,11 @@ class DynamicManagerNew {
                     if (result.code == 0) {
                         onSuccess(result)
                     } else {
-                        val exception = IllegalDataReturnException(result.message, result.code)
+                        val exception = IllegalDataReturnException(
+                            "https://api.bilibili.com/x/polymer/web-dynamic/v1/detail?timezone_offset=-480&id=$dyId",
+                            result.message,
+                            result.code
+                        )
                         exception.printStackTrace()
                         onFailed(exception)
                     }
@@ -176,7 +188,11 @@ class DynamicManagerNew {
                             onSuccess(result)
                             commentPage++
                         } else {
-                            val exception = IllegalDataReturnException(result.message, result.code)
+                            val exception = IllegalDataReturnException(
+                                "https://api.bilibili.com/x/v2/reply/main?type=$type&oid=$dyId&sort=1&next=$commentPage",
+                                result.message,
+                                result.code
+                            )
                             exception.printStackTrace()
                             onFailed(exception)
                         }
