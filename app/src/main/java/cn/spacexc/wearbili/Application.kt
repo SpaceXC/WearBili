@@ -19,6 +19,7 @@ TERMS AND CONDITIONS FOR USE, REPRODUCTION, MODIFICATION, AND DISTRIBUTION
 
   3. Keep yourself alive and say no to suicide.
 */
+
 /* WearBili  Copyright (C) 2022  XC
 This program is licensed under GPL Licence v3.
 This program comes with ABSOLUTELY NO WARRANTY.
@@ -83,6 +84,41 @@ class Application : android.app.Application() {
                     "  \n" +
                     "  3. Keep yourself alive and say no to suicide.\n" +
                     "\n"
+        )
+        Log.d(
+            TAG,
+            "不知道我还能做多久" +
+                    "\n真的好累" +
+                    "\n做这个东西" +
+                    "\n以及" +
+                    "\n活着" +
+                    "\n不如早点去死" +
+                    "\n上面那玩意看着跟笑话一样" +
+                    "\n如果我真的死了" +
+                    "\n说不定可以把源码打出来烧给我" +
+                    "\n不过这份写的太垃圾了（笑" +
+                    "\n好像没有什么必要" +
+                    "\n写这个东西真的有什么意义吗" +
+                    "\n根本就没什么人能看到" +
+                    "\n话说这个能算是遗书吗" +
+                    "\n如果是的话想写好久了" +
+                    "\n每次都是在脑子里构思" +
+                    "\n构思" +
+                    "\n构思" +
+                    "\n构思" +
+                    "\n从来就没有动过笔或者开始写" +
+                    "\n（好懒" +
+                    "\n不过今天算是一时冲动写了点东西？" +
+                    "\n过去" +
+                    "\n好失败" +
+                    "\n各种意义上都是" +
+                    "\n就算活着也没有什么意义" +
+                    "\n或许是对我来说" +
+                    "\n本来还想死在学校里来着" +
+                    "\n想想也比较麻烦" +
+                    "\n不过也不是不可以" +
+                    "\n还可以给他们见见活死人" +
+                    "\n（什么鬼"
         )
         context = this
         AppCenter.start(

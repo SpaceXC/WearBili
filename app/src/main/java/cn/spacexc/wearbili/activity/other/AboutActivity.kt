@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.spacexc.wearbili.R
+import cn.spacexc.wearbili.activity.user.SpaceProfileActivity
 import cn.spacexc.wearbili.adapter.HorizontalButtonAdapter
 import cn.spacexc.wearbili.adapter.UserHorizontalButtonAdapter
 import cn.spacexc.wearbili.dataclass.HorizontalButtonData
@@ -35,6 +36,7 @@ class AboutActivity : AppCompatActivity() {
         HorizontalButtonData(0, "uid426907991", "图标设计师"),
         HorizontalButtonData(0, "uid293793435", "API仓库Owner"),
         HorizontalButtonData(0, "uid247874626", "技术协力"),
+        HorizontalButtonData(0, "uid30903557", "UI设计"),
         HorizontalButtonData(
             R.drawable.akari,       //Rechrd's Avatar
             "虚位以待",     //Rechrd
@@ -79,7 +81,14 @@ class AboutActivity : AppCompatActivity() {
 
             }
         }).also { it.submitList(firstList) }
-        recyclerView2.adapter = UserHorizontalButtonAdapter(this).also { it.submitList(secondList) }
+        recyclerView2.adapter = UserHorizontalButtonAdapter(this) {
+            if (it == "uid30903557") {
+                Intent(this, SpaceProfileActivity::class.java).apply {
+                    putExtra("userMid", 30903557)
+                    startActivity(this)
+                }
+            }
+        }.also { it.submitList(secondList) }
         recyclerView3.adapter = UserHorizontalButtonAdapter(this, listOf("uid198338518")) {
             if (it == "uid198338518") {
                 startActivity(Intent(this, ToDesignInfoActivity::class.java))

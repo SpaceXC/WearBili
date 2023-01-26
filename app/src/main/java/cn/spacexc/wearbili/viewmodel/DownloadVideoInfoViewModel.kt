@@ -38,7 +38,6 @@ class DownloadVideoInfoViewModel(application: Application) : AndroidViewModel(ap
                 MainScope().launch {
                     downloads.value = downloadsList
                     downloadings.value = downloadingsList
-
                 }
                 Thread.sleep(600)
             }

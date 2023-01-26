@@ -53,9 +53,10 @@ class DownloadService : DownloadService(
         return downloadManager
     }
 
-    override fun getScheduler(): Scheduler {
-        //return if (Util.SDK_INT >= 21) PlatformScheduler(this, JOB_ID) else null
-        return PlatformScheduler(this, JOB_ID)
+    override fun getScheduler(): Scheduler? {
+        return if (Util.SDK_INT >= 21) PlatformScheduler(this, JOB_ID) else null
+        //return PlatformScheduler(this, JOB_ID)
+        //return null
     }
 
     override fun getForegroundNotification(
