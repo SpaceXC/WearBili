@@ -8,13 +8,14 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -31,6 +32,7 @@ import cn.spacexc.wearbili.utils.VideoUtils
 import cn.spacexc.wearbili.viewmodel.RecommendViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.coroutines.launch
 
 
 class RecommendVideoFragment : Fragment() {
@@ -58,6 +60,15 @@ class RecommendVideoFragment : Fragment() {
             val isRefreshing by viewModel.isRefreshing.observeAsState()
             val isError by viewModel.isError.observeAsState()
             val refreshState = rememberSwipeRefreshState(isRefreshing ?: false)
+            val localDensity = LocalDensity.current
+            var containerHeight by remember {
+                mutableStateOf(0.dp)
+            }
+            var currentExpandItem by remember {
+                mutableStateOf(-1)
+            }
+            val scope = rememberCoroutineScope()
+            var isAnimating = false
             Crossfade(targetState = !(appVideoList.isNullOrEmpty() && webVideoList.isNullOrEmpty())) { loading ->
                 if (loading) {
                     SwipeRefresh(
@@ -67,6 +78,9 @@ class RecommendVideoFragment : Fragment() {
                                 "app" -> viewModel.getAppRecommendVideos(true)
                                 "web" -> viewModel.getWebRecommendVideos(true)
                             }
+                        }, modifier = Modifier.onGloballyPositioned {
+                            containerHeight =
+                                with(localDensity) { it.size.height.toDp().times(0.9f) }
                         }
                     ) {
                         if (SettingsManager.hasScrollVfx()) {
@@ -76,7 +90,7 @@ class RecommendVideoFragment : Fragment() {
                             ) {
                                 when (SettingsManager.getRecommendSource()) {
                                     "app" -> {
-                                        appVideoList?.forEach {
+                                        appVideoList?.forEachIndexed { index, it ->
                                             if (it.goto == "av"/* || it.goto == "bangumi"*/) {
                                                 item(key = it.param) {
                                                     VideoUis.VideoCard(
@@ -91,67 +105,7 @@ class RecommendVideoFragment : Fragment() {
                                                         context = requireContext(),
                                                         isBangumi = false, //it.goto == "bangumi",
                                                         epid = it.param,
-                                                        badge = it.badge ?: ""
-                                                    )
-                                                }
-                                            }
-                                        }
-                                        item {
-                                            LaunchedEffect(Unit) {
-                                                viewModel.getAppRecommendVideos(false)
-                                            }
-                                        }
-                                    }
-                                    "web" -> {
-                                        webVideoList?.forEach {
-                                            if (it.goto == "av") {
-                                                item(key = it.bvid) {
-                                                    VideoUis.VideoCard(
-                                                        videoName = it.title,
-                                                        uploader = it.owner?.name ?: "",
-                                                        views = it.stat?.view?.toShortChinese()
-                                                            ?: "",
-                                                        coverUrl = it.pic,
-                                                        hasViews = true,
-                                                        clickable = true,
-                                                        videoBvid = it.bvid,
-                                                        context = requireContext(),
-                                                    )
-                                                }
-                                            }
-                                        }
-                                        item {
-                                            LaunchedEffect(Unit) {
-                                                viewModel.getWebRecommendVideos(false)
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-                            LazyColumn(
-                                modifier = Modifier
-                                    .padding(start = 8.dp, end = 8.dp)
-                                    .fillMaxSize(), state = viewModel.lazyListState
-                            ) {
-                                when (SettingsManager.getRecommendSource()) {
-                                    "app" -> {
-                                        appVideoList?.forEach {
-                                            if (it.goto == "av") {
-                                                item(key = it.param) {
-                                                    VideoUis.VideoCard(
-                                                        videoName = it.title,
-                                                        views = it.cover_left_text_2 ?: "",
-                                                        uploader = it.args.up_name ?: "",
-                                                        coverUrl = it.cover ?: "",
-                                                        hasViews = true,
-                                                        clickable = true,   //it.goto == "av" || it.goto == "bangumi",
-                                                        videoBvid = it.bvid
-                                                            ?: VideoUtils.av2bv("av${it.param}"),
-                                                        context = requireContext(),
-                                                        isBangumi = false,  //it.goto == "bangumi",
-                                                        epid = it.param,
-                                                        badge = it.cover_badge ?: ""
+                                                        badge = it.badge ?: "",
                                                     )
                                                 }
                                             }
@@ -176,6 +130,95 @@ class RecommendVideoFragment : Fragment() {
                                                         clickable = true,
                                                         videoBvid = it.bvid,
                                                         context = requireContext()
+                                                    )
+                                                }
+                                            }
+                                        }
+                                        item {
+                                            LaunchedEffect(Unit) {
+                                                viewModel.getWebRecommendVideos(false)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            if (viewModel.lazyListState.isScrollInProgress && !isAnimating) {
+                                currentExpandItem = -1
+                            }
+                            LazyColumn(
+                                modifier = Modifier
+                                    .padding(start = 8.dp, end = 8.dp)
+                                    .fillMaxSize(), state = viewModel.lazyListState
+                            ) {
+                                when (SettingsManager.getRecommendSource()) {
+                                    "app" -> {
+                                        appVideoList?.forEachIndexed { index, it ->
+                                            if (it.goto == "av") {
+                                                item(key = it.param) {
+                                                    VideoUis.VideoCard(
+                                                        videoName = it.title,
+                                                        views = it.cover_left_text_2 ?: "",
+                                                        uploader = it.args.up_name ?: "",
+                                                        coverUrl = it.cover ?: "",
+                                                        hasViews = true,
+                                                        clickable = true,   //it.goto == "av" || it.goto == "bangumi",
+                                                        videoBvid = it.bvid
+                                                            ?: VideoUtils.av2bv("av${it.param}"),
+                                                        context = requireContext(),
+                                                        isBangumi = false,  //it.goto == "bangumi",
+                                                        epid = it.param,
+                                                        badge = it.cover_badge ?: "",
+                                                        expandHeight = containerHeight,
+                                                        isExpand = currentExpandItem == index,
+                                                        onExpandBack = { currentExpandItem = -1 },
+                                                        onLongClickExpand = {
+                                                            scope.launch {
+                                                                isAnimating = true
+                                                                viewModel.lazyListState.animateScrollToItem(
+                                                                    index
+                                                                )
+                                                                isAnimating = false
+                                                            }
+                                                            currentExpandItem = index
+                                                        }
+                                                    )
+                                                }
+                                            }
+                                        }
+                                        item {
+                                            LaunchedEffect(Unit) {
+                                                viewModel.getAppRecommendVideos(false)
+                                            }
+                                        }
+                                    }
+                                    "web" -> {
+                                        webVideoList?.forEachIndexed { index, it ->
+                                            if (it.goto == "av") {
+                                                item(key = it.bvid) {
+                                                    VideoUis.VideoCard(
+                                                        videoName = it.title,
+                                                        uploader = it.owner?.name ?: "",
+                                                        views = it.stat?.view?.toShortChinese()
+                                                            ?: "",
+                                                        coverUrl = it.pic,
+                                                        hasViews = true,
+                                                        clickable = true,
+                                                        videoBvid = it.bvid,
+                                                        context = requireContext(),
+                                                        expandHeight = containerHeight,
+                                                        isExpand = currentExpandItem == index,
+                                                        onExpandBack = { currentExpandItem = -1 },
+                                                        onLongClickExpand = {
+                                                            scope.launch {
+                                                                isAnimating = true
+                                                                viewModel.lazyListState.animateScrollToItem(
+                                                                    index
+                                                                )
+                                                                isAnimating = false
+                                                            }
+                                                            currentExpandItem = index
+                                                        }
                                                     )
                                                 }
                                             }

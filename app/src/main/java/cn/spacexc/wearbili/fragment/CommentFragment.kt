@@ -27,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -73,9 +72,7 @@ class CommentFragment(private val isBangumiComment: Boolean = false) : Fragment(
         }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         return ComposeView(requireContext())
     }
@@ -117,7 +114,6 @@ class CommentFragment(private val isBangumiComment: Boolean = false) : Fragment(
             val aidState by if (isBangumiComment) (activity as BangumiActivity).viewModel.currentAid.observeAsState() else remember {
                 mutableStateOf(aid)
             }
-            val localDensity = LocalDensity.current
             val commentList by viewModel.commentList.observeAsState()
             val topComment by viewModel.topComment.observeAsState()
             val isError by viewModel.isError.observeAsState()
@@ -133,8 +129,7 @@ class CommentFragment(private val isBangumiComment: Boolean = false) : Fragment(
                                     if (isBangumiComment) {
                                         (activity as BangumiActivity).pagerScrollTo(1)
                                     }
-                                },
-                            horizontalAlignment = Alignment.CenterHorizontally
+                                }, horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Image(
                                 painter = painterResource(id = R.drawable.empty),
@@ -161,18 +156,16 @@ class CommentFragment(private val isBangumiComment: Boolean = false) : Fragment(
                                                 width = (0.1).dp,
                                                 color = Color(112, 112, 112, 112),
                                                 shape = RoundedCornerShape(
-                                                    topStart = 8.dp,
-                                                    topEnd = 8.dp
+                                                    topStart = 8.dp, topEnd = 8.dp
                                                 )
                                             )
                                             .clip(
                                                 RoundedCornerShape(
-                                                    topStart = 8.dp,
-                                                    topEnd = 8.dp
+                                                    topStart = 8.dp, topEnd = 8.dp
                                                 )
                                             )
                                             .background(Color(36, 36, 36, 199)),
-                                        contentPadding = PaddingValues(8.dp),
+                                        contentPadding = PaddingValues(6.dp),
                                         state = viewModel.scrollState
                                     ) {
                                         /*item {
@@ -235,7 +228,7 @@ class CommentFragment(private val isBangumiComment: Boolean = false) : Fragment(
                                         }   //点我发评论捏*/
                                         topComment?.let { comment ->
                                             item {
-                                                Spacer(modifier = Modifier.height(12.dp))
+                                                Spacer(modifier = Modifier.height(8.dp))
                                                 CommentCard(
                                                     senderName = comment.member?.uname ?: "",
                                                     senderAvatar = comment.member?.avatar ?: "",
@@ -348,8 +341,7 @@ class CommentFragment(private val isBangumiComment: Boolean = false) : Fragment(
                                                         )
                                                     }
                                                 )
-                                            }*/,
-                                            horizontalAlignment = Alignment.CenterHorizontally
+                                            }*/, horizontalAlignment = Alignment.CenterHorizontally
                                         ) {
                                             Image(
                                                 painter = painterResource(id = R.drawable.empty),

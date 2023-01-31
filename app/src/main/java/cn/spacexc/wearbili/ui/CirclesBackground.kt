@@ -186,7 +186,7 @@ object CirclesBackground {
                             } else {
                                 Row(
                                     horizontalArrangement = Arrangement.SpaceBetween,
-                                    modifier = Modifier.padding(start = 7.5f.dp, end = 7.5f.dp)
+                                    modifier = Modifier.padding(start = 11.dp, end = 11.dp)
                                 ) {
                                     Row(
                                         verticalAlignment = Alignment.CenterVertically,
@@ -210,7 +210,7 @@ object CirclesBackground {
                                         //Spacer(Modifier.width(2.dp))
                                         Text(
                                             text = title,
-                                            fontSize = 11.sp,
+                                            fontSize = 13.sp,
                                             fontFamily = puhuiFamily,
                                             fontWeight = FontWeight.Bold,
                                             color = Color.White,
@@ -226,7 +226,7 @@ object CirclesBackground {
                                         Spacer(modifier = Modifier.weight(1f))
                                         Text(
                                             text = timeText,
-                                            fontSize = 11.sp,
+                                            fontSize = 13.sp,
                                             fontFamily = googleSansFamily,
                                             fontWeight = FontWeight.Medium,
                                             color = Color.White,
