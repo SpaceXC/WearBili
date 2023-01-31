@@ -1059,8 +1059,8 @@ class BangumiInfoFragment : Fragment() {
                                     bvid = activity.viewModel.currentBvid,
                                     cid = activity.viewModel.currentCid,
                                     subtitleUrl = null,
-                                    onTaskAdded = {}
-                                )
+                                    isHighResolution = SettingsManager.isHighResolution(),
+                                    onTaskAdded = {})
                     }
                     Spacer(modifier = Modifier.weight(1f))
                     Spacer(modifier = Modifier.weight(1f))

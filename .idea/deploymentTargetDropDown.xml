@@ -7,12 +7,12 @@
         <deviceKey>
           <Key>
             <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="$USER_HOME$/.android/avd/OppoWatch2_API_30.avd" />
+            <value value="$USER_HOME$/.android/avd/Oppo_Watch_2_API_30.avd" />
           </Key>
         </deviceKey>
       </Target>
     </targetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2023-01-18T12:06:47.141098Z" />
+    <timeTargetWasSelectedWithDropDown value="2023-01-26T02:32:25.079967Z" />
     <targetsSelectedWithDialog>
       <Target>
         <type value="QUICK_BOOT_TARGET" />

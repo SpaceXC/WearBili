@@ -25,6 +25,7 @@ import cn.spacexc.wearbili.databinding.ActivityVideoPlayerBinding
 import cn.spacexc.wearbili.dataclass.OnlineInfos
 import cn.spacexc.wearbili.dataclass.VideoStreamsFlv
 import cn.spacexc.wearbili.dataclass.subtitle.Subtitle
+import cn.spacexc.wearbili.manager.SettingsManager
 import cn.spacexc.wearbili.manager.UserManager
 import cn.spacexc.wearbili.manager.VideoManager
 import cn.spacexc.wearbili.utils.*
@@ -82,6 +83,7 @@ class VideoPlayerActivity : AppCompatActivity() {
     private var BatteryTemp //电池使用情况
             : String? = null
 
+    private var currentResolution = ""
 
     val viewModel by viewModels<VideoPlayerViewModel>()
 
@@ -126,13 +128,15 @@ class VideoPlayerActivity : AppCompatActivity() {
 
                 })
 
-                while (true) {
-                    binding.watchStats?.text =
-                        "电量$BatteryN% 温度${BatteryT * 0.1}°C ${TimeUtils.getCurrentTime()}"
-                    delay(500)
-                }
             }
 
+        }
+        lifecycleScope.launch {
+            while (true) {
+                binding.watchStats?.text =
+                    "${currentResolution} 电量$BatteryN% 温度${BatteryT * 0.1}°C ${TimeUtils.getCurrentTime()}"
+                delay(500)
+            }
         }
 
 
@@ -176,6 +180,7 @@ class VideoPlayerActivity : AppCompatActivity() {
 
             videoResolution.observe(this@VideoPlayerActivity) {
                 binding.progress.max = mediaPlayer.duration.toInt()
+                currentResolution = "${it.first}x${it.second}"
             }
             bufferPercent.observe(this@VideoPlayerActivity) {
                 binding.progress.secondaryProgress =
@@ -190,9 +195,6 @@ class VideoPlayerActivity : AppCompatActivity() {
                 //binding.settingsButton.visibility = it
                 binding.videoTitle.requestFocus()
                 binding.watchStats?.isVisible = !(it == View.VISIBLE)
-            }
-            videoResolution.observe(this@VideoPlayerActivity) {
-                //resizeVideo(it.first, it.second)
             }
             //在viewmodel监听播放状态，更改控制按钮图标
             playerStat.observe(this@VideoPlayerActivity) {
@@ -635,7 +637,7 @@ class VideoPlayerActivity : AppCompatActivity() {
                                                         binding.loadingStatText.text =
                                                             "${binding.loadingStatText.text}\n字幕加载成功"
                                                         this@VideoPlayerActivity.runOnUiThread {
-                                                            viewModel.loadVideo(videoUrls.data.durl[0].url)
+                                                            viewModel.loadVideo(if (SettingsManager.isHighResolution()) videoUrls.data.durl[0].url else videoUrls.data.durl.last().url)
                                                         }
 
                                                     }
@@ -731,7 +733,7 @@ class VideoPlayerActivity : AppCompatActivity() {
                     BatteryManager.BATTERY_HEALTH_OVERHEAT -> BatteryTemp = "电池过热"
                 }
                 binding.watchStats?.text =
-                    "电量$BatteryN% 温度${BatteryT * 0.1}°C ${TimeUtils.getCurrentTime()}"
+                    "${currentResolution} 电量$BatteryN% 温度${BatteryT * 0.1}°C ${TimeUtils.getCurrentTime()}"
             }
         }
     }

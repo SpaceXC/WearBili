@@ -47,7 +47,8 @@ class DynamicManagerNew {
     ) {
         if (isRefresh) recommendDynamicPage = 1
         NetworkUtils.getUrl(
-            "https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/all?timezone_offset=-480&type=all${if (recommendDynamicOffset.isEmpty() || isRefresh) "" else "&offset=$recommendDynamicOffset"}&page=$recommendDynamicPage".log(),
+            "https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/all?timezone_offset=-480&type=all${if (recommendDynamicOffset.isEmpty() || isRefresh) "" else "&offset=$recommendDynamicOffset"}&page=$recommendDynamicPage".log()
+                .log(),
             object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     onFailed(e)

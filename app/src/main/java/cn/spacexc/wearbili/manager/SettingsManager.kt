@@ -105,6 +105,15 @@ object SettingsManager {
         ),
         SettingItem(
             type = SettingType.TYPE_SWITCH,
+            settingName = "isHighResolution",
+            displayName = "高清视频",
+            description = "观看高清视频",
+            iconRes = R.drawable.baseline_hd_24,
+            defBool = false,
+            requireSave = true,
+        ),
+        SettingItem(
+            type = SettingType.TYPE_SWITCH,
             settingName = "isDebugging",
             displayName = "调试开关",
             description = "显示调试信息",
@@ -160,6 +169,7 @@ object SettingsManager {
     }
 
     fun isDebug(): Boolean = SharedPreferencesUtils.getBoolean("isDebugging", false)
+    fun isHighResolution(): Boolean = SharedPreferencesUtils.getBoolean("isHighResolution", false)
     fun hasScrollVfx(): Boolean = SharedPreferencesUtils.getBoolean(
         "hasScrollVfx",
         Application.context?.resources?.configuration?.isScreenRound!!,
