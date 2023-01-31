@@ -165,10 +165,11 @@ class ExoPlayerUtils(context: Context) {
         partName: String,
         bvid: String,
         cid: Long,
+        isHighResolution: Boolean,
         subtitleUrl: String?,
         onTaskAdded: () -> Unit
     ) {
-        VideoManager.getVideoUrl(bvid, cid, object : Callback {
+        val callback = object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 MainScope().launch {
                     ToastUtils.showText("网络异常")
@@ -178,9 +179,13 @@ class ExoPlayerUtils(context: Context) {
             override fun onResponse(call: Call, response: Response) {
                 val result = Gson().fromJson(response.body?.string(), VideoStreamsFlv::class.java)
                 val downloadRequest =
-                    DownloadRequest.Builder(
+                    if (isHighResolution) DownloadRequest.Builder(
                         "$cid///$title///$partName",
                         Uri.parse(result.data.durl[0].url)
+                    )
+                        .build() else DownloadRequest.Builder(
+                        "$cid///$title///$partName",
+                        Uri.parse(result.data.durl.last().url)
                     )
                         .build()
                 DownloadService.sendAddDownload(
@@ -236,7 +241,8 @@ class ExoPlayerUtils(context: Context) {
                     onTaskAdded()
                 }
             }
-        })
+        }
+        VideoManager.getVideoUrl(bvid, cid, callback, isHighResolution)
     }
 
     companion object {

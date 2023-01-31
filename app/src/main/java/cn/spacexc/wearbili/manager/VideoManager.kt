@@ -61,10 +61,15 @@ object VideoManager {
         }
     }
 
-    fun getVideoUrl(bvid: String, cid: Long, callback: Callback) {
+    fun getVideoUrl(
+        bvid: String,
+        cid: Long,
+        callback: Callback,
+        isHighResolution: Boolean = SettingsManager.isHighResolution()
+    ) {
         //NetworkUtils.getUrl("http://api.bilibili.com/x/player/playurl?cid=$cid&bvid=$bvid&fnval=1", callback)
         NetworkUtils.getUrl(
-            "https://api.bilibili.com/x/player/playurl?cid=$cid&bvid=$bvid&platform=web&qn=80",
+            "https://api.bilibili.com/x/player/playurl?cid=$cid&bvid=$bvid&platform=web${if (isHighResolution) "&qn=80" else "&fnval=1"}".log(),
             callback
         )
     }

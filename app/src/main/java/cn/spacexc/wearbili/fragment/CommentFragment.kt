@@ -17,31 +17,26 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.runtime.*
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
 import cn.spacexc.wearbili.R
 import cn.spacexc.wearbili.activity.bangumi.BangumiActivity
-import cn.spacexc.wearbili.activity.comment.COMMENT_TYPE
-import cn.spacexc.wearbili.activity.comment.COMMENT_TYPE_VIDEO
-import cn.spacexc.wearbili.activity.comment.PostActivity
 import cn.spacexc.wearbili.activity.video.VideoActivity
 import cn.spacexc.wearbili.dataclass.CommentContentData
 import cn.spacexc.wearbili.ui.CommentCard
@@ -180,7 +175,7 @@ class CommentFragment(private val isBangumiComment: Boolean = false) : Fragment(
                                         contentPadding = PaddingValues(8.dp),
                                         state = viewModel.scrollState
                                     ) {
-                                        item {
+                                        /*item {
                                             var textHeight by remember {
                                                 mutableStateOf(0.dp)
                                             }
@@ -222,14 +217,14 @@ class CommentFragment(private val isBangumiComment: Boolean = false) : Fragment(
                                                     )
                                                     Spacer(modifier = Modifier.width(4.dp))
                                                     Text(
-                                                        text = "写一条友善的评论"/*(。・ω・。)*/,
+                                                        text = "写一条友善的评论"*//*(。・ω・。)*//*,
                                                         color = Color.White,
                                                         fontFamily = puhuiFamily,
                                                         fontSize = 9.sp,
                                                         modifier = Modifier
-                                                            /*.align(
+                                                            *//*.align(
                                                                 Alignment.Center
-                                                            )*/
+                                                            )*//*
                                                             .onGloballyPositioned {
                                                                 textHeight =
                                                                     with(localDensity) { it.size.height.toDp() }
@@ -237,7 +232,7 @@ class CommentFragment(private val isBangumiComment: Boolean = false) : Fragment(
                                                     )
                                                 }
                                             }
-                                        }   //点我发评论捏
+                                        }   //点我发评论捏*/
                                         topComment?.let { comment ->
                                             item {
                                                 Spacer(modifier = Modifier.height(12.dp))
@@ -337,23 +332,23 @@ class CommentFragment(private val isBangumiComment: Boolean = false) : Fragment(
                                                 .fillMaxWidth()
                                                 .padding(16.dp)
                                                 .align(Alignment.Center)
-                                                .clickVfx {
-                                                    activityResultLauncher.launch(
-                                                        Intent(
-                                                            requireActivity(),
-                                                            PostActivity::class.java
-                                                        ).apply {
-                                                            putExtra(
-                                                                COMMENT_TYPE,
-                                                                COMMENT_TYPE_VIDEO
-                                                            )
-                                                            putExtra(
-                                                                "oid",
-                                                                aid
-                                                            )
-                                                        }
-                                                    )
-                                                },
+                                            /*.clickVfx {
+                                                activityResultLauncher.launch(
+                                                    Intent(
+                                                        requireActivity(),
+                                                        PostActivity::class.java
+                                                    ).apply {
+                                                        putExtra(
+                                                            COMMENT_TYPE,
+                                                            COMMENT_TYPE_VIDEO
+                                                        )
+                                                        putExtra(
+                                                            "oid",
+                                                            aid
+                                                        )
+                                                    }
+                                                )
+                                            }*/,
                                             horizontalAlignment = Alignment.CenterHorizontally
                                         ) {
                                             Image(
@@ -362,7 +357,7 @@ class CommentFragment(private val isBangumiComment: Boolean = false) : Fragment(
                                             )
                                             Spacer(modifier = Modifier.height(4.dp))
                                             Text(
-                                                text = "点我来发出第一条评论叭",
+                                                text = "一条评论都没有啊",
                                                 color = Color.White,
                                                 fontFamily = puhuiFamily,
                                                 fontWeight = FontWeight.Medium
