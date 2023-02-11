@@ -47,7 +47,7 @@ class AboutActivity : AppCompatActivity() {
     )
     private val thirdList = listOf(
         HorizontalButtonData(0, "uid198338518", "设计组织"),
-        HorizontalButtonData(0, "uid1463193869", "开发协力")
+        HorizontalButtonData(0, "uid473777430", "开发协力")
     )
     private val forthList = listOf(
         HorizontalButtonData(R.drawable.ic_github, "bilibili-API-collect", "SocialSisterYi"),
