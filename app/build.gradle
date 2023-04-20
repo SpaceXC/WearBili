@@ -40,6 +40,7 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
     }
+    namespace 'cn.spacexc.wearbili'
     android.applicationVariants.all {
         variant ->
             variant.outputs.all {
