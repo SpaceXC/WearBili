@@ -7,12 +7,12 @@ plugins {
 
 android {
     compileSdk 33
-
+    def currentVersionCode = getVersionCode()
     defaultConfig {
         applicationId "cn.spacexc.wearbili"
         minSdk 25
         targetSdk 33
-        versionCode 1
+        versionCode currentVersionCode
         versionName "Rel-AL 0.23.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -45,6 +45,24 @@ android {
             variant.outputs.all {
                 outputFileName = "${variant.versionName}.apk"
             }
+    }
+}
+
+def getVersionCode() {
+    def versionCodeFile = file('version_code.properties')
+    if (versionCodeFile.canRead()){
+        Properties properties = new Properties()
+        properties.load(new FileInputStream(versionCodeFile))
+        def versionCode = properties['VERSION_CODE'].toInteger()
+        def runTasks = gradle.startParameter.taskNames
+        def task = ':app:assembleDebug'
+        if (task in runTasks) {
+            properties['VERSION_CODE'] = (++versionCode).toString()
+            properties.store(versionCodeFile.newWriter(),null)
+        }
+        return versionCode
+    } else {
+        throw new GradleException("cannot read version_code.properties file")
     }
 }
 
