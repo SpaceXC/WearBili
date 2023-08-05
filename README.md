@@ -1,3 +1,29 @@
+The official support is no longer supported by the original developer(XCちゃん, @SpaceXC) due to the development of the newer generation of the app.
+
+由于新版应用的开发，原开发者将不再提供关于此软件的支持。
+
+Please do not file any issues or pull requests.
+
+请不要继续提交任何issues或pull request。
+
+Check out the [repository of the latest app Re:WearBili](https://github.com/SpaceXC/Re-Wearbili) for detailed information.
+
+详情参阅[Re:WearBili的仓库](https://github.com/SpaceXC/Re-Wearbili)。
+
+You are not allowed to contact the developer during the development phase. Groups like QQ are not available either.
+
+开发阶段将不会提供开发者的联系方式，请不要通过任何方式(QQ/email/Github issues/...)联系开发者。此阶段不开放QQ群等群组。
+
+Thanks for your cooperation.
+
+感谢你的合作。
+
+Aug.5, 2023
+
+2023.8.5
+
+XCちゃん
+
 # WearBili - 第三方Bilibili手表客户端
 
 ## 关于软件
